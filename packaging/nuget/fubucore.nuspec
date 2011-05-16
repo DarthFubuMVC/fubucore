@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <id>FubuMVC</id>
+    <id>FubuCore</id>
     <version>0.9.0.1</version>
     <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
     <owners>Jeremy D. Miller</owners>
@@ -9,7 +9,7 @@
     <projectUrl>http://fubumvc.com</projectUrl>
     <iconUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A foundational library of </description>
+    <description>A foundational library for .Net frameworks including model binding and localization</description>
     <tags>utilities</tags>
     <dependencies>
       <dependency id="CommonServiceLocator" version="1.0" />
