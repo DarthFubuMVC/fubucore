@@ -9,27 +9,22 @@ namespace FubuCore.Configuration
     {
         public static SettingsData Parse(string file)
         {
-            return Parse(file, new Dictionary<string, string>());
-        }
-
-        public static SettingsData Parse(string file, IDictionary<string, string> substitutions)
-        {
             var document = new XmlDocument();
             document.Load(file);
 
-            var data = Parse(document.DocumentElement, substitutions);
+            var data = Parse(document.DocumentElement);
             data.Provenance = file;
 
             return data;
         }
 
-        public static SettingsData Parse(XmlElement element, IDictionary<string, string> substitutions)
+        public static SettingsData Parse(XmlElement element)
         {
             var category = (SettingCategory)(element.HasAttribute("category")
                                                ? Enum.Parse(typeof(SettingCategory), element.GetAttribute("category"))
                                                : SettingCategory.core);
 
-            var data = new SettingsData(category, substitutions);
+            var data = new SettingsData(category);
 
             element.SelectNodes("add").OfType<XmlElement>().Each(elem =>
             {
@@ -39,11 +34,6 @@ namespace FubuCore.Configuration
             });
 
             return data;
-        }
-
-        public static SettingsData Parse(XmlElement element)
-        {
-            return Parse(element, new Dictionary<string, string>());
         }
 
 
