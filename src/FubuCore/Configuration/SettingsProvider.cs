@@ -29,8 +29,7 @@ namespace FubuCore.Configuration
 
         public object SettingsFor(Type settingsType)
         {
-            SettingsRequestData settingsData = getSettingsData();
-            var prefixedData = new PrefixedRequestData(settingsData, settingsType.Name + ".");
+            var prefixedData = createRequestData(settingsType);
 
             var result = _resolver.BindModel(settingsType, prefixedData);
             result.AssertNoProblems(settingsType);
@@ -38,7 +37,13 @@ namespace FubuCore.Configuration
             return result.Value;
         }
 
-        private SettingsRequestData getSettingsData()
+        protected virtual IRequestData createRequestData(Type settingsType)
+        {
+            SettingsRequestData settingsData = getSettingsData();
+            return new PrefixedRequestData(settingsData, settingsType.Name + ".");
+        }
+
+        protected SettingsRequestData getSettingsData()
         {
             return new SettingsRequestData(_sources.SelectMany(x => x.FindSettingData()));
         }

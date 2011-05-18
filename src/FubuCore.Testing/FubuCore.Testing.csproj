@@ -104,6 +104,7 @@
     <Compile Include="Configuration\SettingsProviderDiagnosticsTester.cs" />
     <Compile Include="Configuration\SettingsProviderIntegratedTester.cs" />
     <Compile Include="Configuration\SettingsRequestDataTester.cs" />
+    <Compile Include="Configuration\SubstitutedRequestDataTester.cs" />
     <Compile Include="Configuration\XmlSettingsDataTester.cs" />
     <Compile Include="Configuration\XmlSettingsIntegratedTester.cs" />
     <Compile Include="DependencyAnalysis\Bottle.cs" />
