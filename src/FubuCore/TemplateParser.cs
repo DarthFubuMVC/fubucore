@@ -12,7 +12,7 @@ namespace FubuCore
         static TemplateParser()
         {
             TemplateGroup = "Template";
-            TemplateExpression = new Regex(@"\{(?<" + TemplateGroup + @">\w+)\}", RegexOptions.Compiled);
+            TemplateExpression = new Regex(@"\{(?<" + TemplateGroup + @">[A-Za-z0-9_-]+)\}", RegexOptions.Compiled);
         }
 
         public static string Parse(string template, IDictionary<string, string> substitutions)

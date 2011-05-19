@@ -22,6 +22,21 @@ namespace FubuCore.Testing
 		}
 
         [Test]
+        public void should_replace_a_single_variable_with_a_dash()
+        {
+            var template = "this is a {test-name} template";
+            var substitutions = new Dictionary<string, string>
+                                    {
+                                        {"test-name", "replaced"},
+                                    };
+
+            TemplateParser
+                .Parse(template, substitutions)
+                .ShouldEqual("this is a replaced template");
+        }
+
+
+        [Test]
         public void template_is_one_from_the_end()
         {
             var template = "*{db}*";
