@@ -5,7 +5,7 @@ namespace FubuCore.CommandLine
 {
     public static class ConsoleWriter
     {
-        private static int CONSOLE_WIDTH = 80;
+        private static int CONSOLE_WIDTH = 300;
 
         private static string HL;
 
