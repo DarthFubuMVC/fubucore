@@ -95,14 +95,19 @@ namespace FubuCore.Configuration
                 Provenance = file
             };
 
+            ReadFromFile(file, data);
+
+            return data;
+        }
+
+        public static void ReadFromFile(string file, SettingsData data)
+        {
             new FileSystem().ReadTextFile(file, text =>
             {
                 if (text.IsEmpty()) return;
 
                 data.Read(text);
             });
-
-            return data;
         }
     }
 }
