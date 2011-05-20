@@ -112,6 +112,7 @@
     <Compile Include="Configuration\ISettingsSource.cs" />
     <Compile Include="Configuration\SettingCategory.cs" />
     <Compile Include="Configuration\SettingsRequestData.cs" />
+    <Compile Include="Configuration\SubstitutedRequestData.cs" />
     <Compile Include="Configuration\SubstitutedSettingsProvider.cs" />
     <Compile Include="Configuration\XmlSettingsParser.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />
@@ -119,6 +120,10 @@
     <Compile Include="DependencyAnalysis\DirectedGraph.cs" />
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
+    <Compile Include="FileSystemExtensions.cs" />
+    <Compile Include="FlatFileWriter.cs" />
+    <Compile Include="IFileSystem.cs" />
+    <Compile Include="IFlatFileWriter.cs" />
     <Compile Include="Reflection\TypeDescriptorCache.cs" />
     <Compile Include="Binding\ValueConverter.cs" />
     <Compile Include="Binding\ValueConverterRegistry.cs" />

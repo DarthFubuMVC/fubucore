@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Configuration
             theDictionary = new Dictionary<string, string>();
             theInnerData = new InMemoryRequestData();
 
-            theSubstitutedData = new SubstitutedRequestData(theInnerData, theDictionary);
+            theSubstitutedData = new SubstitutedRequestData(theInnerData, new DictionaryKeyValues(theDictionary));
         }
 
         [Test]

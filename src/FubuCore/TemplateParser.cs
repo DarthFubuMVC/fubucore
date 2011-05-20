@@ -1,9 +1,36 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace FubuCore
 {
+    public interface IKeyValues
+    {
+        bool ContainsKey(string key);
+        string Get(string key);
+    }
+
+    public class DictionaryKeyValues : IKeyValues
+    {
+        private readonly IDictionary<string, string> _dictionary;
+
+        public DictionaryKeyValues(IDictionary<string, string> dictionary)
+        {
+            _dictionary = dictionary;
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
+
+        public string Get(string key)
+        {
+            return _dictionary[key];
+        }
+    }
+
     public static class TemplateParser
     {
         private static readonly string TemplateGroup;
@@ -17,6 +44,13 @@ namespace FubuCore
 
         public static string Parse(string template, IDictionary<string, string> substitutions)
         {
+            var values = new DictionaryKeyValues(substitutions);
+
+            return Parse(template, values);
+        }
+
+        public static string Parse(string template, IKeyValues values)
+        {
             var matches = TemplateExpression.Matches(template);
             if (matches.Count == 0) return template;
 
@@ -25,10 +59,10 @@ namespace FubuCore
             foreach (Match match in matches)
             {
                 var key = match.Groups[TemplateGroup].Value;
-                if ((lastIndex == 0 || match.Index > lastIndex) && substitutions.ContainsKey(key))
+                if ((lastIndex == 0 || match.Index > lastIndex) && values.ContainsKey(key))
                 {
                     builder.Append(template.Substring(lastIndex, match.Index - lastIndex));
-                    builder.Append(substitutions[key]);
+                    builder.Append(values.Get(key));
                 }
 
                 lastIndex = match.Index + match.Length;

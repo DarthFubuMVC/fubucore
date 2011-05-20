@@ -1,11 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Binding;
 
 namespace FubuCore.Configuration
 {
-    public class SettingsRequestData : IRequestData
+
+    public class SettingsRequestData : IRequestData, IKeyValues
     {
         private readonly SettingsStep _profileStep;
         private readonly SettingsStep _environmentStep;
@@ -99,6 +101,16 @@ namespace FubuCore.Configuration
         private SettingDataSource diagnosticSourceForKey(string key)
         {
             return _steps.FirstValue(x => x.DiagnosticValueOf(key));
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return Value(key, o => { });
+        }
+
+        public string Get(string key)
+        {
+            return Value(key) as string;
         }
     }
 }

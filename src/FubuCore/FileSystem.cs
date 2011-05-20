@@ -8,109 +8,6 @@ using System.Linq;
 
 namespace FubuCore
 {
-    public interface IFileSystem
-    {
-        bool FileExists(string filename);
-        void DeleteFile(string filename);
-        void MoveFile(string from, string to);
-        void MoveDirectory(string from, string to);
-        bool IsFile(string path);
-
-        string GetFullPath(string path);
-
-
-        void Copy(string source, string destination);
-
-        void WriteStreamToFile(string filename, Stream stream);
-        void WriteStringToFile(string filename, string text);
-        void AppendStringToFile(string filename, string text);
-
-        string ReadStringFromFile(string filename);
-        void WriteObjectToFile(string filename, object target);
-        T LoadFromFile<T>(string filename) where T : new();
-
-        void CreateDirectory(string directory);
-
-        /// <summary>
-        /// Deletes the directory
-        /// </summary>
-        void DeleteDirectory(string directory);
-
-        /// <summary>
-        /// Deletes the directory to clear the content
-        /// Then recreates it. An empty clean, happy, directory.
-        /// </summary>
-        /// <param name="directory"></param>
-        void CleanDirectory(string directory);
-
-        bool DirectoryExists(string directory);
-
-        void LaunchEditor(string filename);
-        IEnumerable<string> ChildDirectoriesFor(string directory);
-        IEnumerable<string> FindFiles(string directory, FileSet searchSpecification);
-
-        void ReadTextFile(string path, Action<string> reader);
-        void MoveFiles(string from, string to);
-
-        string GetDirectory(string path);
-        string GetFileName(string path);
-
-        void AlterFlatFile(string path, Action<List<string>> alteration);
-    }
-
-    public static class FileSystemExtensions
-    {
-        public static bool DirectoryExists(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            return fileSystem.DirectoryExists(FileSystem.Combine(pathParts));
-        }
-
-        public static void LaunchEditor(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            fileSystem.LaunchEditor(FileSystem.Combine(pathParts));
-        }
-
-        public static bool FileExists(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            return fileSystem.FileExists(FileSystem.Combine(pathParts));
-        }
-
-        public static T LoadFromFile<T>(this IFileSystem fileSystem, params string[] pathParts) where T : new()
-        {
-            return fileSystem.LoadFromFile<T>(FileSystem.Combine(pathParts));
-        }
-
-        public static IEnumerable<string> ChildDirectoriesFor(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            return fileSystem.ChildDirectoriesFor(FileSystem.Combine(pathParts));
-        }
-
-        public static IEnumerable<string> FileNamesFor(this IFileSystem fileSystem, FileSet set, params string[] pathParts)
-        {
-            return fileSystem.FindFiles(FileSystem.Combine(pathParts), set);
-        }
-
-        public static string ReadStringFromFile(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            return fileSystem.ReadStringFromFile(FileSystem.Combine(pathParts));
-        }
-
-        public static void PersistToFile(this IFileSystem fileSystem, object target, params string[] pathParts)
-        {
-            fileSystem.WriteObjectToFile(FileSystem.Combine(pathParts), target);
-        }
-
-        public static void DeleteDirectory(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            fileSystem.DeleteDirectory(FileSystem.Combine(pathParts));
-        }
-
-        public static void CreateDirectory(this IFileSystem fileSystem, params string[] pathParts)
-        {
-            fileSystem.CreateDirectory(FileSystem.Combine(pathParts));
-        }
-    }
-
     public class FileSystem : IFileSystem
     {
         public void CreateDirectory(string path)
@@ -416,7 +313,7 @@ namespace FubuCore
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    callback(line);
+                    callback(line.Trim());
                 }
             }
         }

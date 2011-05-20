@@ -9,12 +9,30 @@ namespace FubuCore.Testing.Configuration
     [TestFixture]
     public class SettingsRequestDataTester
     {
-        [SetUp]
-        public void SetUp()
+        [Test]
+        public void contains_key_negative()
         {
-            
+            var core1 = new SettingsData(SettingCategory.core).With("key1", "core1");
+
+            var environment = new SettingsData(SettingCategory.environment).With("key1", "environment1");
+
+            var request = SettingsRequestData.For(core1, environment);
+
+            request.ContainsKey("notKey").ShouldBeFalse();
         }
 
+        [Test]
+        public void contains_key_positive()
+        {
+            var core1 = new SettingsData(SettingCategory.core).With("key1", "core1");
+            var environment = new SettingsData(SettingCategory.environment).With("key1", "environment1");
+
+            var request = SettingsRequestData.For(core1, environment);  
+
+            request.ContainsKey("key1").ShouldBeTrue();
+        }
+
+        
 
         [Test]
         public void environment_has_priority_over_core_when_resolving_data()
