@@ -35,5 +35,12 @@ namespace FubuCore.Testing.Configuration
             settings.Direction.ShouldEqual("North");
             settings.Threshold.ShouldEqual(3);
         }
+
+        [Test]
+        public void does_the_substitutions()
+        {
+            var settings = theProvider.SettingsFor<OneSettings>();
+            settings.Server.ShouldEqual("*env-server*");
+        }
     }
 }

@@ -39,8 +39,9 @@ namespace FubuCore.Configuration
 
         protected virtual IRequestData createRequestData(Type settingsType)
         {
-            SettingsRequestData settingsData = getSettingsData();
-            return new PrefixedRequestData(settingsData, settingsType.Name + ".");
+            var settingsData = getSettingsData();
+            var prefixedData = new PrefixedRequestData(settingsData, settingsType.Name + ".");
+            return new SubstitutedRequestData(prefixedData, settingsData);
         }
 
         protected SettingsRequestData getSettingsData()

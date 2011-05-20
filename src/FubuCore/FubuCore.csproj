@@ -113,7 +113,6 @@
     <Compile Include="Configuration\SettingCategory.cs" />
     <Compile Include="Configuration\SettingsRequestData.cs" />
     <Compile Include="Configuration\SubstitutedRequestData.cs" />
-    <Compile Include="Configuration\SubstitutedSettingsProvider.cs" />
     <Compile Include="Configuration\XmlSettingsParser.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraph.cs" />

@@ -38,12 +38,15 @@ namespace FubuCore.Testing.Configuration
             var data = theData.First(x => x.Provenance.Contains("Environment"));
             data.Get("OneSettings.Name").ShouldEqual("Max");
         }
+
+
     }
 
     public class OneSettings
     {
         public string Name { get; set; }
         public int Age { get; set; }
+        public string Server { get; set; }
     }
 
     public class TwoSettings
