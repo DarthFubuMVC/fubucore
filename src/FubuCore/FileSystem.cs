@@ -38,7 +38,7 @@ namespace FubuCore
             var fullDestPath = Path.GetFullPath(destination);
 
 
-            var isFile = destinationIsFile(source, destination);
+            var isFile = destinationIsFile(destination);
 
             string destinationDir = fullDestPath;
             if(isFile)
@@ -71,7 +71,7 @@ namespace FubuCore
                 });
         }
 
-        bool destinationIsFile(string source, string destination)
+        bool destinationIsFile(string destination)
         {
             if(FileExists(destination) || DirectoryExists(destination))
             {

@@ -7,6 +7,12 @@ namespace FubuCore
 {
     public static class FileSystemExtensions
     {
+        public static void CopyToDirectory(this IFileSystem fileSystem, string source, string destination)
+        {
+            fileSystem.CreateDirectory(destination);
+            fileSystem.Copy(source, destination);
+        }
+
         public static void WriteToFlatFile(this IFileSystem system, string path, Action<IFlatFileWriter> configuration)
         {
             system.AlterFlatFile(path, list => configuration(new FlatFileWriter(list)));
