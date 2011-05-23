@@ -119,5 +119,22 @@ namespace FubuCore.Testing.Configuration
             var settings = XmlSettingsParser.Parse(document.DocumentElement);
             settings.Category.ShouldEqual(SettingCategory.package);
         }
+
+        [Test]
+        public void write_and_read()
+        {
+            var settings = new SettingsData(SettingCategory.package);
+            settings["a"] = "1";
+            settings["b"] = "2";
+        
+            XmlSettingsParser.Write(settings, "config.xml");
+
+            var settings2 = XmlSettingsParser.Parse("config.xml");
+
+            settings2.Category.ShouldEqual(SettingCategory.package);
+
+            settings2["a"].ShouldEqual("1");
+            settings2["b"].ShouldEqual("2");
+        }
     }
 }

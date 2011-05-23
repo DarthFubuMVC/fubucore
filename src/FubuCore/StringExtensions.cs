@@ -30,6 +30,22 @@ namespace FubuCore
             return Path.GetFullPath(path);
         }
 
+        /// <summary>
+        /// Equivalent of FileSystem.Combine( [Union of path, parts] )
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="parts"></param>
+        /// <returns></returns>
+        public static string AppendPath(this string path, params string[] parts)
+        {
+            var list = new List<string>{
+                path
+            };
+
+            list.AddRange(parts);
+            return FileSystem.Combine(list.ToArray());
+        }
+
         public static string PathRelativeTo(this string path, string root)
         {
             var pathParts = path.getPathParts();
