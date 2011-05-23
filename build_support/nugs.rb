@@ -8,6 +8,7 @@ namespace :nug do
 	desc "Build the nuget package"
 	task :build do
 		sh "#{@nuget} pack packaging/nuget/fubucore.nuspec -o #{ARTIFACTS} -Version #{BUILD_NUMBER}"
+		sh "#{@nuget} pack packaging/nuget/fubulocalization.nuspec -o #{ARTIFACTS} -Version #{BUILD_NUMBER}"
 	end
 	
 	desc "pulls new NuGet updates from your local machine"
