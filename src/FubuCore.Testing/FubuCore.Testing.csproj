@@ -101,6 +101,7 @@
     <Compile Include="CommandLine\InputParserTester.cs" />
     <Compile Include="CommandLine\StringTokenizerTester.cs" />
     <Compile Include="CommandLine\UsageGraphTester.cs" />
+    <Compile Include="Configuration\AppSettingsSettingSourceTester.cs" />
     <Compile Include="Configuration\SettingsDataTester.cs" />
     <Compile Include="Configuration\SettingsProviderDiagnosticsTester.cs" />
     <Compile Include="Configuration\SettingsProviderIntegratedTester.cs" />
@@ -156,6 +157,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="FubuCore.Testing.dll.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Configuration\Environment.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
