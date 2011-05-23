@@ -17,6 +17,6 @@
   </metadata>
   <files>
 	<file src="..\..\build\FubuCore.*" target="lib" />
-	<file src="..\..\build\FubuLocalization.*" target="lib" />
+	<file src="..\..\build\FubuTestingSupport.*" target="lib" />
   </files>
 </package>
