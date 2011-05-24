@@ -35,6 +35,20 @@ namespace FubuCore.Testing.CommandLine
             argFor(x => x.Ages).ToUsageDescription().ShouldEqual("<ages1 ages2 ages3 ...>");
         }
 
+        [Test]
+        public void handle()
+        {
+            var target = new EnumerableArgumentTarget();
+            var queue = new Queue<string>();
+            queue.Enqueue("a");
+            queue.Enqueue("b");
+            queue.Enqueue("c");
+
+            argFor(x => x.Names).Handle(target, queue);
+
+            target.Names.ShouldHaveTheSameElementsAs("a", "b", "c");
+        }
+
     }
 
     
