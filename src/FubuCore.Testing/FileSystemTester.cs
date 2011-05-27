@@ -95,6 +95,29 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void find_file_in_directories_success()
+        {
+            _fileSystem.CreateDirectory("a");
+            _fileSystem.CreateDirectory("b");
+            _fileSystem.CreateDirectory("c");
+
+            _fileSystem.WriteStringToFile("a".AppendPath("1.txt"), "a");
+            _fileSystem.WriteStringToFile("b".AppendPath("2.txt"), "b");
+            _fileSystem.WriteStringToFile("c".AppendPath("3.txt"), "a");
+
+            var directories = new List<string>{
+                "a",
+                "b",
+                "c"
+            };
+
+            _fileSystem.FindFileInDirectories(directories, "1.txt").ShouldEqual("a".AppendPath("1.txt"));
+            _fileSystem.FindFileInDirectories(directories, "2.txt").ShouldEqual("b".AppendPath("2.txt"));
+            _fileSystem.FindFileInDirectories(directories, "3.txt").ShouldEqual("c".AppendPath("3.txt"));
+            _fileSystem.FindFileInDirectories(directories, "4.txt").ShouldBeNull();
+        }
+
+        [Test]
         public void folders_should_be_created_when_writing_to_a_file_path_having_folders_that_do_not_exist()
         {
             var pathDoesNotExist = Path.Combine(_basePath, randomName());

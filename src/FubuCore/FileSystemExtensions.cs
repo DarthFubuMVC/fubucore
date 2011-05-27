@@ -7,6 +7,15 @@ namespace FubuCore
 {
     public static class FileSystemExtensions
     {
+        public static string FindFileInDirectories(this IFileSystem fileSystem, IEnumerable<string> directories, string fileName)
+        {
+            return directories
+                .Select(dir => dir.AppendPath(fileName))
+                .FirstOrDefault(fileSystem.FileExists);          
+        }
+
+
+
         public static void CopyToDirectory(this IFileSystem fileSystem, string source, string destination)
         {
             fileSystem.CreateDirectory(destination);
