@@ -14,7 +14,10 @@ namespace FubuCore
                 .FirstOrDefault(fileSystem.FileExists);          
         }
 
-
+        public static string FindFileInDirectoryArray(this IFileSystem fileSystem, string filename, params string[] directories)
+        {
+            return fileSystem.FindFileInDirectories(directories, filename);
+        }
 
         public static void CopyToDirectory(this IFileSystem fileSystem, string source, string destination)
         {
