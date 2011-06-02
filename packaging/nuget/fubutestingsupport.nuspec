@@ -1,22 +1,25 @@
 <?xml version="1.0"?>
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <id>FubuCore</id>
+    <id>FubuTestingSupport</id>
     <version>0.0.0</version>
     <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
     <owners>Jeremy D. Miller</owners>
     <licenseUrl>https://github.com/DarthFubuMVC/fubucore/raw/master/license.txt</licenseUrl>
     <projectUrl>http://fubumvc.com</projectUrl>
-    <iconUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A foundational library for .Net frameworks including model binding and localization</description>
+    <description>Localization utilities</description>
     <tags>utilities</tags>
     <dependencies>
-      <dependency id="CommonServiceLocator" version="1.0" />
+      <dependency id="FubuCore" />
+      <dependency id="NUnit" version="2.5" />
+      <dependency id="RhinoMocks" version="3.5" />
+      <dependency id="structuremap" version="2.6.2" />
+      <dependency id="structuremap.automocking" version="2.6.2" />
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\build\FubuCore.*" target="lib" />
-    <file src="..\..\src\FubuCore\**\*.cs" target="src" />
+    <file src="..\..\build\FubuTestingSupport.*" target="lib" />
+    <file src="..\..\src\FubuTestingSupport\**\*.cs" target="src" />
   </files>
 </package>
