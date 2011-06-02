@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Util;
 using Microsoft.Practices.ServiceLocation;
-using StructureMap;
 
 namespace FubuCore.Testing.Binding
 {

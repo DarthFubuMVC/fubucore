@@ -7,7 +7,6 @@ using System.Threading;
 using FubuCore.Testing.Binding;
 using FubuTestingSupport;
 using NUnit.Framework;
-using StructureMap;
 
 namespace FubuCore.Testing
 {

@@ -3,7 +3,6 @@ using System.IO;
 using FubuCore.Binding;
 using FubuTestingSupport;
 using NUnit.Framework;
-using StructureMap;
 using System.Linq;
 
 namespace FubuCore.Testing.Binding
