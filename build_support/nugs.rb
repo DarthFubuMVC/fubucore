@@ -56,7 +56,9 @@ end
     artifact = open(artifact_url)
     unzip_file artifact.path, "packaging/release"
     FileList['packaging/release/*.nupkg'].exclude(".symbols.nupkg").each do |nupkg|
-      sh "#{@nuget} push #{nupkg}"
+      sh "#{@nuget} push #{nupkg}" do |ok, res|
+        puts "May not have published #{nupkg}" unless ok
+      end
     end
 	end
 end
