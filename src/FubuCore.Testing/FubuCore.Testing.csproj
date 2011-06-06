@@ -101,6 +101,7 @@
     <Compile Include="CommandLine\StringTokenizerTester.cs" />
     <Compile Include="CommandLine\UsageGraphTester.cs" />
     <Compile Include="Configuration\AppSettingsSettingSourceTester.cs" />
+    <Compile Include="Configuration\OverrideSubstitutedRequestDataTester.cs" />
     <Compile Include="Configuration\SettingsDataTester.cs" />
     <Compile Include="Configuration\SettingsProviderDiagnosticsTester.cs" />
     <Compile Include="Configuration\SettingsProviderIntegratedTester.cs" />

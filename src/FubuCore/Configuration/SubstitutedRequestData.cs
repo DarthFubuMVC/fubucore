@@ -19,7 +19,12 @@ namespace FubuCore.Configuration
             var rawValue = _inner.Value(key);
             if (rawValue == null) return null;
 
-            return TemplateParser.Parse(rawValue.ToString(), _substitutions);
+            var parsedValue = rawValue.ToString();
+            while(TemplateParser.ContainsTemplates(parsedValue))
+            {
+                parsedValue = TemplateParser.Parse(parsedValue, _substitutions);
+            }
+            return parsedValue;
         }
 
         public bool Value(string key, Action<object> callback)

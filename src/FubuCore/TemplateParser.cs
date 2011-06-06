@@ -49,6 +49,11 @@ namespace FubuCore
             return Parse(template, values);
         }
 
+        public static bool ContainsTemplates(string template)
+        {
+            return TemplateExpression.Matches(template).Count > 0;
+        }
+
         public static string Parse(string template, IKeyValues values)
         {
             var matches = TemplateExpression.Matches(template);
