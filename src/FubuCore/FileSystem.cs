@@ -2,14 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Xml.Serialization;
-using System.Linq;
 
 namespace FubuCore
 {
+    public enum CopyBehavior
+    {
+        overwrite,
+        preserve
+    }
+
     public class FileSystem : IFileSystem
     {
+        public const int BufferSize = 32768;
+
         public void CreateDirectory(string path)
         {
             if (path.IsEmpty()) return;
@@ -24,69 +32,19 @@ namespace FubuCore
 
         public void Copy(string source, string destination)
         {
-            if(IsFile(source))
-                internalFileCopy(source, destination);
+            Copy(source, destination, CopyBehavior.overwrite);
+        }
+
+        public void Copy(string source, string destination, CopyBehavior behavior)
+        {
+            if (IsFile(source))
+            {
+                internalFileCopy(source, destination, behavior);
+            }
             else
-                internalDirectoryCopy(source, destination);
-        }
-
-        void internalFileCopy(string source, string destination)
-        {
-            var fileName = Path.GetFileName(source);
-
-            var fullSourcePath = Path.GetFullPath(source);
-            var fullDestPath = Path.GetFullPath(destination);
-
-
-            var isFile = destinationIsFile(destination);
-
-            string destinationDir = fullDestPath;
-            if(isFile)
-                destinationDir = Path.GetDirectoryName(fullDestPath);
-
-            CreateDirectory(destinationDir);
-
-            if(!isFile) //aka its a directory
-                fullDestPath = Combine(fullDestPath, fileName);
-
-            try
             {
-                File.Copy(fullSourcePath, fullDestPath, true);
+                internalDirectoryCopy(source, destination, behavior);
             }
-            catch (Exception ex)
-            {
-                var msg = "Was trying to copy '{0}' to '{1}' and encountered an error. :(".ToFormat(fullSourcePath, fullDestPath);
-                throw new Exception(msg, ex);
-            }
-        }
-
-        void internalDirectoryCopy(string source, string destination)
-        {
-            var files = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
-            files.Each(f =>
-                {
-                    //need to test this for name correctness
-                    var destName = Combine(destination, Path.GetFileName(f));
-                    internalFileCopy(f, destName);
-                });
-        }
-
-        bool destinationIsFile(string destination)
-        {
-            if(FileExists(destination) || DirectoryExists(destination))
-            {
-                //it exists 
-                return IsFile(destination);
-            }
-
-            if(destination.Last() == Path.DirectorySeparatorChar)
-            {
-                //last char is a '/' so its a directory
-                return false;
-            }
-
-            //last char is not a '/' so its a file
-            return true;
         }
 
         public bool IsFile(string path)
@@ -95,27 +53,19 @@ namespace FubuCore
             path = Path.GetFullPath(path);
 
             if (!File.Exists(path) && !Directory.Exists(path))
+            {
                 throw new IOException("This path '{0}' doesn't exist!".ToFormat(path));
+            }
 
             var attr = File.GetAttributes(path);
-            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-            {
-                return false;
-            }
-            return true;
-        }
 
-        public static string Combine(params string[] paths)
-        {
-            return paths.Aggregate(Path.Combine);
+            return (attr & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         public bool FileExists(string filename)
         {
             return File.Exists(filename);
         }
-
-        public const int BufferSize = 32768;
 
         public void WriteStreamToFile(string filename, Stream stream)
         {
@@ -138,7 +88,6 @@ namespace FubuCore
                 } while (bytesRead > 0);
                 fileStream.Flush();
             }
-
         }
 
         public void WriteStringToFile(string filename, string text)
@@ -224,13 +173,13 @@ namespace FubuCore
         {
             if (!FileExists(filename)) return new T();
 
-            var serializer = new XmlSerializer(typeof(T));
+            var serializer = new XmlSerializer(typeof (T));
 
             using (var stream = new FileStream(filename, FileMode.Open, FileAccess.Read))
             {
                 try
                 {
-                    return (T)serializer.Deserialize(stream);
+                    return (T) serializer.Deserialize(stream);
                 }
                 catch (Exception e)
                 {
@@ -244,11 +193,6 @@ namespace FubuCore
         public void LaunchEditor(string filename)
         {
             Process.Start("notepad", filename);
-        }
-
-        public void LaunchBrowser(string filename)
-        {
-            Process.Start("explorer", filename);
         }
 
         public void DeleteFile(string filename)
@@ -280,7 +224,7 @@ namespace FubuCore
             {
                 var partialPath = file.Replace(from, "");
                 if (partialPath.StartsWith(@"\")) partialPath = partialPath.Substring(1);
-                var newPath = FileSystem.Combine(to, partialPath);
+                var newPath = Combine(to, partialPath);
                 MoveFile(file, newPath);
             }
         }
@@ -319,10 +263,92 @@ namespace FubuCore
                 }
             }
         }
-        
+
         public string GetFullPath(string path)
         {
             return Path.GetFullPath(path);
+        }
+
+        public string GetDirectory(string path)
+        {
+            return Path.GetDirectoryName(path);
+        }
+
+        private void internalFileCopy(string source, string destination, CopyBehavior behavior)
+        {
+            var fileName = Path.GetFileName(source);
+
+            var fullSourcePath = Path.GetFullPath(source);
+            var fullDestPath = Path.GetFullPath(destination);
+
+
+            var isFile = destinationIsFile(destination);
+
+            var destinationDir = fullDestPath;
+            if (isFile)
+            {
+                destinationDir = Path.GetDirectoryName(fullDestPath);
+            }
+
+            CreateDirectory(destinationDir);
+
+            if (!isFile) //aka its a directory
+            {
+                fullDestPath = Combine(fullDestPath, fileName);
+            }
+
+            var overwrite = behavior == CopyBehavior.overwrite;
+            if (!overwrite && FileExists(fullDestPath)) return;
+
+            try
+            {
+                File.Copy(fullSourcePath, fullDestPath, overwrite);
+            }
+            catch (Exception ex)
+            {
+                var msg = "Was trying to copy '{0}' to '{1}' and encountered an error. :(".ToFormat(fullSourcePath,
+                                                                                                    fullDestPath);
+                throw new Exception(msg, ex);
+            }
+        }
+
+        private void internalDirectoryCopy(string source, string destination, CopyBehavior behavior)
+        {
+            var files = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
+            files.Each(f =>
+            {
+                //need to test this for name correctness
+                var destName = Combine(destination, Path.GetFileName(f));
+                internalFileCopy(f, destName, behavior);
+            });
+        }
+
+        private bool destinationIsFile(string destination)
+        {
+            if (FileExists(destination) || DirectoryExists(destination))
+            {
+                //it exists 
+                return IsFile(destination);
+            }
+
+            if (destination.Last() == Path.DirectorySeparatorChar)
+            {
+                //last char is a '/' so its a directory
+                return false;
+            }
+
+            //last char is not a '/' so its a file
+            return true;
+        }
+
+        public static string Combine(params string[] paths)
+        {
+            return paths.Aggregate(Path.Combine);
+        }
+
+        public void LaunchBrowser(string filename)
+        {
+            Process.Start("explorer", filename);
         }
 
         public static IEnumerable<string> GetChildDirectories(string directory)
@@ -333,11 +359,5 @@ namespace FubuCore
 
             return Directory.GetDirectories(directory);
         }
-
-        public string GetDirectory(string path)
-        {
-            return Path.GetDirectoryName(path);
-        }
-
     }
 }

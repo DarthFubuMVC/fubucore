@@ -15,6 +15,29 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void copy_with_preserve()
+        {
+            var system = new FileSystem();
+            system.WriteStringToFile("a.txt", "something");
+            system.WriteStringToFile("b.txt", "else");
+            system.Copy("a.txt", "b.txt", CopyBehavior.preserve);
+
+            system.ReadStringFromFile("b.txt").ShouldEqual("else");
+
+        }
+
+        [Test]
+        public void copy_with_overwrite()
+        {
+            var system = new FileSystem();
+            system.WriteStringToFile("a.txt", "something");
+            system.WriteStringToFile("b.txt", "else");
+            system.Copy("a.txt", "b.txt", CopyBehavior.overwrite);
+
+            system.ReadStringFromFile("b.txt").ShouldEqual("something"); 
+        }
+
+        [Test]
         public void get_relative_path()
         {
             fullPath("a", "b", "1.bat").PathRelativeTo(fullPath("a", "b"))

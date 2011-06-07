@@ -52,5 +52,6 @@ namespace FubuCore
         string GetFileName(string path);
 
         void AlterFlatFile(string path, Action<List<string>> alteration);
+        void Copy(string source, string destination, CopyBehavior behavior);
     }
 }
