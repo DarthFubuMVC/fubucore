@@ -101,6 +101,7 @@
     <Compile Include="CommandLine\HelpCommand.cs" />
     <Compile Include="CommandLine\HelpInput.cs" />
     <Compile Include="Configuration\AppSettingsSettingSource.cs" />
+    <Compile Include="Configuration\SettingAttribute.cs" />
     <Compile Include="Configuration\SettingDataSource.cs" />
     <Compile Include="CommandLine\TwoLineReport.cs" />
     <Compile Include="Configuration\SettingsProvider.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="Configuration\ISettingsSource.cs" />
     <Compile Include="Configuration\SettingCategory.cs" />
     <Compile Include="Configuration\SettingsRequestData.cs" />
+    <Compile Include="Configuration\SettingType.cs" />
     <Compile Include="Configuration\SubstitutedRequestData.cs" />
     <Compile Include="Configuration\XmlSettingsParser.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />

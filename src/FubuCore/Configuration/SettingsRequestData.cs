@@ -1,12 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Binding;
 
 namespace FubuCore.Configuration
 {
-
     public class SettingsRequestData : IRequestData, IKeyValues
     {
         private readonly SettingsStep _profileStep;

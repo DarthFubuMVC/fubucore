@@ -20,10 +20,9 @@ namespace FubuCore.Configuration
             if (rawValue == null) return null;
 
             var parsedValue = rawValue.ToString();
-            while(TemplateParser.ContainsTemplates(parsedValue))
-            {
-                parsedValue = TemplateParser.Parse(parsedValue, _substitutions);
-            }
+
+            parsedValue = TemplateParser.Parse(parsedValue, _substitutions);
+
             return parsedValue;
         }
 

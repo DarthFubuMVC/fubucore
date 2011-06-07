@@ -54,6 +54,23 @@ namespace FubuCore.Configuration
             return getSettingsData().CreateDiagnosticReport();
         }
 
+        public IEnumerable<SettingDataSource> CreateResolvedDiagnosticReport()
+        {
+            var settingsData = getSettingsData();
+            var resolved = new List<SettingDataSource>();
+            
+            settingsData.CreateDiagnosticReport().Each(s =>
+            {
+                resolved.Add(new SettingDataSource()
+                             {
+                                 Key = s.Key,
+                                 Value = TemplateParser.Parse(s.Value, settingsData),
+                                 Provenance =  s.Provenance
+                             });
+            });
+            return resolved;
+        }
+
         public static SettingsProvider For(params SettingsData[] data)
         {
             return new SettingsProvider(ObjectResolver.Basic(), data);

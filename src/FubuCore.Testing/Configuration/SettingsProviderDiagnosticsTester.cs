@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Diagnostics;
 using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -66,6 +64,5 @@ namespace FubuCore.Testing.Configuration
                 .Single(x => x.Key == "Friend")
                 .Value.ShouldEqual("Chad");
         }
-
     }
 }
