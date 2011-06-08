@@ -27,6 +27,13 @@ namespace FubuCore.Configuration
             return (T) SettingsFor(typeof (T));
         }
 
+        public object SettingFor(string key)
+        {
+            //TODO: REVIEW
+            var sub = new SubstitutedRequestData(getSettingsData(), getSettingsData());
+            return sub.Value(key);
+        }
+
         public object SettingsFor(Type settingsType)
         {
             var prefixedData = createRequestData(settingsType);
@@ -57,18 +64,13 @@ namespace FubuCore.Configuration
         public IEnumerable<SettingDataSource> CreateResolvedDiagnosticReport()
         {
             var settingsData = getSettingsData();
-            var resolved = new List<SettingDataSource>();
             
-            settingsData.CreateDiagnosticReport().Each(s =>
-            {
-                resolved.Add(new SettingDataSource()
-                             {
-                                 Key = s.Key,
-                                 Value = TemplateParser.Parse(s.Value, settingsData),
-                                 Provenance =  s.Provenance
-                             });
-            });
-            return resolved;
+            return settingsData.CreateDiagnosticReport().Select(s => new SettingDataSource()
+                                                                     {
+                                                                         Key = s.Key,
+                                                                         Value = TemplateParser.Parse(s.Value, settingsData),
+                                                                         Provenance =  s.Provenance
+                                                                     });
         }
 
         public static SettingsProvider For(params SettingsData[] data)

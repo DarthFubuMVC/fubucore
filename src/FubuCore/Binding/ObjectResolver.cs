@@ -1,5 +1,4 @@
 using System;
-using FubuCore.Reflection;
 using FubuMVC.Core;
 using Microsoft.Practices.ServiceLocation;
 
