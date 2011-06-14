@@ -22,12 +22,13 @@ namespace FubuCore
         {
             if (path.IsEmpty()) return;
 
-            if (Directory.Exists(path))
+            var dir = new DirectoryInfo(path);
+            if (dir.Exists)
             {
                 return;
             }
 
-            Directory.CreateDirectory(path);
+            dir.Create();
         }
 
         public void Copy(string source, string destination)
