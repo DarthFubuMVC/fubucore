@@ -54,6 +54,15 @@ namespace FubuCore
             return TemplateExpression.Matches(template).Count > 0;
         }
 
+        public static IEnumerable<string> GetSubstitutions(string template)
+        {
+            var matches = TemplateExpression.Matches(template);
+            foreach (Match match in matches)
+            {
+                yield return match.Groups[TemplateGroup].Value;
+            }
+        }
+
         public static string Parse(string template, IKeyValues values)
         {
             while(ContainsTemplates(template))

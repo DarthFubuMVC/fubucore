@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using FubuCore.Binding;
 
 namespace FubuCore.Configuration
@@ -13,7 +14,6 @@ namespace FubuCore.Configuration
         private SettingsProvider(IObjectResolver resolver, IEnumerable<SettingsData> settings)
             : this(resolver, new ISettingsSource[]{new SettingsSource(settings)})
         {
-            
         }
 
         public SettingsProvider(IObjectResolver resolver, IEnumerable<ISettingsSource> sources)
@@ -27,13 +27,6 @@ namespace FubuCore.Configuration
             return (T) SettingsFor(typeof (T));
         }
 
-        public object SettingFor(string key)
-        {
-            //TODO: REVIEW
-            var sub = new SubstitutedRequestData(getSettingsData(), getSettingsData());
-            return sub.Value(key);
-        }
-
         public object SettingsFor(Type settingsType)
         {
             var prefixedData = createRequestData(settingsType);
@@ -42,6 +35,13 @@ namespace FubuCore.Configuration
             result.AssertNoProblems(settingsType);
 
             return result.Value;
+        }
+
+        public object SettingFor(string key)
+        {
+            //TODO: REVIEW
+            var sub = new SubstitutedRequestData(getSettingsData(), getSettingsData());
+            return sub.Value(key);
         }
 
         protected virtual IRequestData createRequestData(Type settingsType)
@@ -64,19 +64,45 @@ namespace FubuCore.Configuration
         public IEnumerable<SettingDataSource> CreateResolvedDiagnosticReport()
         {
             var settingsData = getSettingsData();
-            
-            return settingsData.CreateDiagnosticReport().Select(s => new SettingDataSource()
-                                                                     {
-                                                                         Key = s.Key,
-                                                                         Value = TemplateParser.Parse(s.Value, settingsData),
-                                                                         Provenance =  s.Provenance
-                                                                     });
+
+            return settingsData.CreateDiagnosticReport().Select(s => new SettingDataSource{
+                Key = s.Key,
+                Value = TemplateParser.Parse(s.Value, settingsData),
+                Provenance = s.Provenance
+            });
         }
 
         public static SettingsProvider For(params SettingsData[] data)
         {
             return new SettingsProvider(ObjectResolver.Basic(), data);
         }
+
+        public void AssertAllSubstitutionsCanBeResolved()
+        {
+            var report = CreateDiagnosticReport();
+            var substitutions = report.SelectMany(x => TemplateParser.GetSubstitutions(x.Value)).Distinct();
+
+            var missing = substitutions.Where(x => !report.Any(s => s.Key == x));
+            if (missing.Any())
+            {
+                throw new SettingProviderException("Missing required values for " + missing.Join(", "));
+            }
+        }
     }
 
+    [Serializable]
+    public class SettingProviderException : Exception
+    {
+        public SettingProviderException(string message) : base(message)
+        {
+        }
+
+        public SettingProviderException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected SettingProviderException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+    }
 }

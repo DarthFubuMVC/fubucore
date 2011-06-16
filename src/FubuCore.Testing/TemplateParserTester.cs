@@ -91,5 +91,11 @@ namespace FubuCore.Testing
 				.Parse(template, substitutions)
 				.ShouldEqual("this is a replaced template");
 		}
+
+        [Test]
+        public void get_substitutions()
+        {
+            TemplateParser.GetSubstitutions("{that} is a {test} template").ShouldHaveTheSameElementsAs("that", "test");
+        }
     }
 }
