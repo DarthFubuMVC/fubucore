@@ -316,11 +316,10 @@ namespace FubuCore
         private void internalDirectoryCopy(string source, string destination, CopyBehavior behavior)
         {
             var files = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
-            files.Each(f =>
+            files.Each(file =>
             {
-                //need to test this for name correctness
-                var destName = Combine(destination, Path.GetFileName(f));
-                internalFileCopy(f, destName, behavior);
+                var relative = file.PathRelativeTo(source);
+                internalFileCopy(file, destination.AppendPath(relative), behavior);
             });
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -115,6 +116,11 @@ namespace FubuCore
         public override string ToString()
         {
             return string.Format("Include: {0}, Exclude: {1}", Include, Exclude);
+        }
+
+        public static FileSet Everything()
+        {
+            return new FileSet(){DeepSearch = true, Include = "*.*"};
         }
     }
 }

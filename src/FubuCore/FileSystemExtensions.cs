@@ -7,6 +7,17 @@ namespace FubuCore
 {
     public static class FileSystemExtensions
     {
+        /// <summary>
+        /// Shortcut to delete and recreate a directory
+        /// </summary>
+        /// <param name="fileSystem"></param>
+        /// <param name="directory"></param>
+        public static void ResetDirectory(this IFileSystem fileSystem, string directory)
+        {
+            fileSystem.DeleteDirectory(directory);
+            fileSystem.CreateDirectory(directory);
+        }
+
         public static string FindFileInDirectories(this IFileSystem fileSystem, IEnumerable<string> directories, string fileName)
         {
             return directories

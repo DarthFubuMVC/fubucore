@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using FubuTestingSupport;
 using NUnit.Framework;
+using System.Linq;
 
 namespace FubuCore.Testing
 {
@@ -206,6 +207,34 @@ namespace FubuCore.Testing
         private static string randomName()
         {
             return Guid.NewGuid().ToString().Replace("-", String.Empty);
+        }
+
+
+        [Test]
+        public void copy_directory()
+        {
+            var system = new FileSystem();
+
+            system.ResetDirectory("dagobah");
+            system.WriteStringToFile("dagobah".AppendPath("f1", "a.txt"), "something");
+            system.WriteStringToFile("dagobah".AppendPath("f2", "a.txt"), "something");
+            system.WriteStringToFile("dagobah".AppendPath("f3", "a.txt"), "something");
+            system.WriteStringToFile("dagobah".AppendPath("f1", "f1a", "a.txt"), "something");
+            system.WriteStringToFile("dagobah".AppendPath("f1", "f1a", "f1b", "a.txt"), "something");
+            system.WriteStringToFile("dagobah".AppendPath("a.txt"), "something");
+
+            system.DeleteDirectory("rhenvar");
+            system.Copy("dagobah", "rhenvar");
+            
+            system.FindFiles("rhenvar", FileSet.Everything()).Select(x => x.PathRelativeTo("rhenvar")).OrderBy(x => x)
+                .ShouldHaveTheSameElementsAs(
+                    "a.txt",
+                    FileSystem.Combine("f1", "a.txt"),
+                    FileSystem.Combine("f1", "f1a", "a.txt"),
+                    FileSystem.Combine("f1", "f1a", "f1b", "a.txt"),
+                    FileSystem.Combine("f2", "a.txt"),
+                    FileSystem.Combine("f3", "a.txt")
+                );
         }
     }
 
