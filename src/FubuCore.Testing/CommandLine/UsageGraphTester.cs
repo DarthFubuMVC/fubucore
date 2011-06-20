@@ -40,13 +40,13 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void has_the_arguments()
         {
-            theUsageGraph.Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder", "PackageFolder");
+            theUsageGraph.Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder", "PackageFolder", "Stuff");
         }
 
         [Test]
         public void has_the_flags()
         {
-            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag","StuffFlag");
+            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void second_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag", "StuffFlag");
+            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
         }
 
         [Test]
@@ -90,7 +90,7 @@ namespace FubuCore.Testing.CommandLine
         public void get_the_command_usage_of_the_link_usage()
         {
             var usg = theUsageGraph.FindUsage("link");
-            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r] [-cleanall] [-notepad] [-stuff <stuffflag1 stuffflag2 stuffflag3 ...>]");
+            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r] [-cleanall] [-notepad]");
         }
 
         [Test]
@@ -167,7 +167,7 @@ namespace FubuCore.Testing.CommandLine
 
         [Description("An array of stuff")]
         [ValidUsage("link")]
-        public string[] StuffFlag { get; set; }
+        public string[] Stuff { get; set; }
     }
 
     [Usage("list", "List the links")]
