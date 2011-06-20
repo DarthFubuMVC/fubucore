@@ -221,18 +221,24 @@ namespace FubuCore.Testing.CommandLine
 
     public class InputModel
     {
+        [RequiredUsage("default", "ages")]
         public string File { get; set; }
         public Color ColorFlag { get; set; }
+
+        [RequiredUsage("default", "ages")]
         public Color Color { get; set; }
         public int OrderFlag { get; set; }
         public bool TrueFalseFlag { get; set; }
 
+        [RequiredUsage("ages")]
         public IEnumerable<int> Ages { get; set; }
 
         [FlagAlias("a")]
         public string AliasedFlag { get; set; }
     }
 
+    [Usage("default", "whatever")]
+    [Usage("ages", "whatever")]
     public class InputCommand : FubuCommand<InputModel>
     {
         public override bool Execute(InputModel input)

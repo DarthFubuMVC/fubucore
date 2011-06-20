@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace FubuCore.CommandLine
 {
-    public class EnumerableArgument : TokenHandlerBase
+    public class EnumerableArgument : Argument
     {
         private readonly ObjectConverter _converter;
         private readonly PropertyInfo _property;
 
-        public EnumerableArgument(PropertyInfo property, ObjectConverter converter) : base(property)
+        public EnumerableArgument(PropertyInfo property, ObjectConverter converter) : base(property, converter)
         {
             _property = property;
             _converter = converter;
