@@ -45,9 +45,14 @@ namespace FubuCore.CommandLine
 
         public static string ToFlagName(PropertyInfo property)
         {
-            var name = property.Name.Substring(0, property.Name.Length - 4);
-            property.ForAttribute<FlagAliasAttribute>(att => name = att.Alias);
 
+            var name = property.Name;
+            if(name.EndsWith("Flag"))
+            {
+                name = name.Substring(0, property.Name.Length - 4);
+            }
+                
+            property.ForAttribute<FlagAliasAttribute>(att => name = att.Alias);
             return FLAG_PREFIX + name.ToLower();
         }
 
