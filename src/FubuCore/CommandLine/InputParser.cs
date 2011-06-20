@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
@@ -47,11 +47,11 @@ namespace FubuCore.CommandLine
         {
 
             var name = property.Name;
-            if(name.EndsWith("Flag"))
+            if (name.EndsWith("Flag"))
             {
                 name = name.Substring(0, property.Name.Length - 4);
             }
-                
+
             property.ForAttribute<FlagAliasAttribute>(att => name = att.Alias);
             return FLAG_PREFIX + name.ToLower();
         }
