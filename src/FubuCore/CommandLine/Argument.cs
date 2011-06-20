@@ -10,7 +10,7 @@ namespace FubuCore.CommandLine
     {
         private readonly ObjectConverter _converter;
         private readonly PropertyInfo _property;
-        private bool _latched;
+        private bool _isLatched;
 
         public Argument(PropertyInfo property, ObjectConverter converter) : base(property)
         {
@@ -20,14 +20,14 @@ namespace FubuCore.CommandLine
 
         public override bool Handle(object input, Queue<string> tokens)
         {
-            if (_latched) return false;
+            if (_isLatched) return false;
 
-            if (tokens.Peek().StartsWith("-")) return false;
+            if (tokens.Peek().StartsWith(InputParser.FLAG_PREFIX)) return false;
 
             var value = _converter.FromString(tokens.Dequeue(), _property.PropertyType);
             _property.SetValue(input, value, null);
 
-            _latched = true;
+            _isLatched = true;
 
             return true;
         }

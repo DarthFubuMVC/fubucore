@@ -46,7 +46,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void has_the_flags()
         {
-            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
+            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag","StuffFlag");
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void second_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
+            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag", "StuffFlag");
         }
 
         [Test]
@@ -89,7 +89,8 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_the_command_usage_of_the_link_usage()
         {
-            theUsageGraph.FindUsage("link").Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r] [-cleanall] [-notepad]");
+            var usg = theUsageGraph.FindUsage("link");
+            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r] [-cleanall] [-notepad] [-stuff <stuffflag1 stuffflag2 stuffflag3 ...>]");
         }
 
         [Test]
@@ -163,6 +164,10 @@ namespace FubuCore.Testing.CommandLine
 
         [Description("Opens the application manifest in notepad")]
         public bool NotepadFlag { get; set; }
+
+        [Description("An array of stuff")]
+        [ValidUsage("link")]
+        public string[] StuffFlag { get; set; }
     }
 
     [Usage("list", "List the links")]

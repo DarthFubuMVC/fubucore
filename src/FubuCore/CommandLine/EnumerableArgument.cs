@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,8 +7,8 @@ namespace FubuCore.CommandLine
 {
     public class EnumerableArgument : TokenHandlerBase
     {
-        private readonly PropertyInfo _property;
         private readonly ObjectConverter _converter;
+        private readonly PropertyInfo _property;
 
         public EnumerableArgument(PropertyInfo property, ObjectConverter converter) : base(property)
         {
@@ -23,7 +22,7 @@ namespace FubuCore.CommandLine
             var list = typeof (List<>).CloseAndBuildAs<IList>(elementType);
 
             var wasHandled = false;
-            while (tokens.Count > 0 && !tokens.Peek().StartsWith("-"))
+            while (tokens.Count > 0 && !tokens.Peek().StartsWith(InputParser.FLAG_PREFIX))
             {
                 var value = _converter.FromString(tokens.Dequeue(), elementType);
                 list.Add(value);
@@ -41,12 +40,7 @@ namespace FubuCore.CommandLine
 
         public override string ToUsageDescription()
         {
-            return "<{0}1 {0}2 {0}3 ...>".ToFormat(_property.Name.ToLower());
-        }
-
-        public override bool OptionalForUsage(string usage)
-        {
-            return false;
+            return "[{0} <{1}1 {1}2 {1}3 ...>]".ToFormat(InputParser.ToFlagName(_property), _property.Name.ToLower());
         }
     }
 }
