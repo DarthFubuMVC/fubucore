@@ -25,6 +25,13 @@ namespace FubuCore
                 .FirstOrDefault(fileSystem.FileExists);          
         }
 
+        public static string FindDirectoryInDirectories(this IFileSystem fileSystem, IEnumerable<string> directories, string directory)
+        {
+            return directories
+                .Select(dir => dir.AppendPath(directory))
+                .FirstOrDefault(fileSystem.DirectoryExists);
+        }
+
         public static string FindFileInDirectoryArray(this IFileSystem fileSystem, string filename, params string[] directories)
         {
             return fileSystem.FindFileInDirectories(directories, filename);
