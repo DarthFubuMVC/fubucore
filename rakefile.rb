@@ -1,4 +1,5 @@
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
+CLR_TOOLS_VERSION = "v4.0.30319"
 
 buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
 raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
@@ -12,7 +13,6 @@ RESULTS_DIR = "results"
 PRODUCT = "FubuCore"
 COPYRIGHT = 'Copyright 2008-2011 Jeremy D. Miller, Josh Arnold, Joshua Flanagan, et al. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
-CLR_TOOLS_VERSION = "v4.0.30319"
 
 @teamcity_build_id = "bt396"
 tc_build_number = ENV["BUILD_NUMBER"]
