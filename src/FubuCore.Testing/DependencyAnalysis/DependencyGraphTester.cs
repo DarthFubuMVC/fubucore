@@ -146,7 +146,7 @@ namespace FubuCore.Testing.DependencyAnalysis
         {
             typeof (InvalidOperationException).ShouldBeThrownBy(()=>
                 {
-                    var order = _tree.GetLoadOrder().ToList();
+                    _tree.GetLoadOrder().ToList();
                 });
         }
 
