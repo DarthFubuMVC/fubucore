@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Linq;
 using FubuTestingSupport;
 
-namespace FubuCore.Testing.Configuration
+namespace FubuCore.Testing
 {
     [TestFixture]
     public class AppSettingsSettingSourceTester
