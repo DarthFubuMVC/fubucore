@@ -52,6 +52,27 @@ namespace FubuCore.Testing
         {
             return theFileSet.ExcludedFilesFor("target").Select(Path.GetFileName).OrderBy(x => x);
         }
+		
+		[Test]
+		public void find_includes_directoy_as_part_of_include_pattern_with_one()
+		{
+			writeFile("config/zee.config");
+			theFileSet.Include = "config/*.config";
+			
+			includedFiles().ShouldHaveTheSameElementsAs("zee.config");			
+		}
+		
+		[Test]
+		public void find_includes_directoy_as_part_of_include_pattern_with_many()
+		{
+			writeFile("config/a.config");
+			writeFile("config/b.config");
+			writeFile("config/zeppelin.yaml");
+			writeFile("hitchhiker.config");
+			
+			theFileSet.Include = "config/*.config;config/zeppelin.yaml";			
+			includedFiles().ShouldHaveTheSameElementsAs("a.config", "b.config", "zeppelin.yaml");			
+		}
 
         [Test]
         public void a_null_include_finds_everything()

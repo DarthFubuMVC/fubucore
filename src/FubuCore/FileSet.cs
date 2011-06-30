@@ -47,20 +47,26 @@ namespace FubuCore
         private IEnumerable<string> getAllDistinctFiles(string path, string pattern)
         {
             if (pattern.IsEmpty()) return new string[0];
-
-            return pattern.Split(';').SelectMany(x =>
+			            
+			return pattern.Split(';').SelectMany(x =>
             {
-                var parts = x.Split(Path.DirectorySeparatorChar);
-                if (parts.Count() > 1)
+				var fullPath = path;
+                var dirParts = x.Split(Path.DirectorySeparatorChar);
+                var filePattern = x;
+				
+				if (dirParts.Length > 1)
                 {
-                    var subFolder = parts.Reverse().Skip(1).Reverse().Join(Path.DirectorySeparatorChar.ToString());
-                    if (!Directory.Exists(Path.Combine(path, subFolder)))
+                    var subFolder = dirParts.Take(dirParts.Length - 1).Join(Path.DirectorySeparatorChar.ToString());					
+					fullPath = Path.Combine(fullPath, subFolder);                    
+					if (!Directory.Exists(fullPath))
                     {
                         return new string[0];
                     }
+					
+					filePattern = dirParts.Last(); 
                 }
 
-                return Directory.GetFiles(path, x, DeepSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                return Directory.GetFiles(fullPath, filePattern, DeepSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
             }).Distinct<string>();
         }
 
