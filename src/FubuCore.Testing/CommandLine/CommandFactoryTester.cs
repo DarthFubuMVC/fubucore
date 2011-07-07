@@ -16,6 +16,17 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void get_the_command_name_for_a_class_not_ending_in_command()
+        {
+            CommandFactory.CommandNameFor(typeof(Silly)).ShouldEqual("silly");
+        }
+        [Test]
+        public void get_the_command_name_for_a_class_that_has_a_longer_name()
+        {
+            CommandFactory.CommandNameFor(typeof(RebuildAuthorizationCommand)).ShouldEqual("rebuildauthorization");
+        }
+
+        [Test]
         public void get_the_command_name_for_a_class_decorated_with_the_attribute()
         {
             CommandFactory.CommandNameFor(typeof (DecoratedCommand)).ShouldEqual("this");
@@ -36,7 +47,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_the_command_name_for_a_class_decorated_with_the_attribute_but_without_the_name_specified()
         {
-            CommandFactory.CommandNameFor(typeof(My2Command)).ShouldEqual("my2");
+            CommandFactory.CommandNameFor(typeof (My2Command)).ShouldEqual("my2");
         }
 
         [Test]
@@ -115,7 +126,7 @@ namespace FubuCore.Testing.CommandLine
             var run = factory.HelpRun(new Queue<string>());
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
-                .ShouldContain(typeof(MyCommand));
+                .ShouldContain(typeof (MyCommand));
         }
 
         [Test]
@@ -127,7 +138,7 @@ namespace FubuCore.Testing.CommandLine
             var run = factory.BuildRun(new string[0]);
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
-                .ShouldContain(typeof(MyCommand));
+                .ShouldContain(typeof (MyCommand));
         }
 
         [Test]
@@ -136,10 +147,10 @@ namespace FubuCore.Testing.CommandLine
             var factory = new CommandFactory();
             factory.RegisterCommands(GetType().Assembly);
 
-            var run = factory.BuildRun(new string[]{"help"});
+            var run = factory.BuildRun(new string[] {"help"});
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
-                .ShouldContain(typeof(MyCommand));
+                .ShouldContain(typeof (MyCommand));
         }
 
 
@@ -149,10 +160,10 @@ namespace FubuCore.Testing.CommandLine
             var factory = new CommandFactory();
             factory.RegisterCommands(GetType().Assembly);
 
-            var run = factory.BuildRun(new string[] { "?" });
+            var run = factory.BuildRun(new string[] {"?"});
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
-                .ShouldContain(typeof(MyCommand));
+                .ShouldContain(typeof (MyCommand));
         }
 
         [Test]
@@ -164,6 +175,23 @@ namespace FubuCore.Testing.CommandLine
         }
 
 
+    }
+
+
+    public class RebuildAuthorizationCommand : FubuCommand<MyCommandInput>
+    {
+        public override bool Execute(MyCommandInput input)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class Silly : FubuCommand<MyCommandInput>
+    {
+        public override bool Execute(MyCommandInput input)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class MyCommand : FubuCommand<MyCommandInput>

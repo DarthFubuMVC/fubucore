@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using FubuCore.Reflection;
 using FubuCore.Util;
 
@@ -151,12 +152,20 @@ namespace FubuCore.CommandLine
             };
         }
 
+        static readonly Regex regex = new Regex("(?<name>.+)Command",RegexOptions.Compiled);
         public static string CommandNameFor(Type type)
         {
-            var name = type.Name.TrimEnd("Command".ToCharArray()).ToLower();
+            
+            var match = regex.Match(type.Name);
+            var name = type.Name;
+            if(match.Success)
+            {
+                name = match.Groups["name"].Value;
+            }
+            
             type.ForAttribute<CommandDescriptionAttribute>(att => name = att.Name ?? name);
 
-            return name;
+            return name.ToLower();
         }
 
         public static string DescriptionFor(Type type)
