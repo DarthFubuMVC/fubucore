@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -36,38 +35,37 @@ namespace FubuCore
 
         public IEnumerable<string> IncludedFilesFor(string path)
         {
-            if (!Directory.Exists(path))
-            {
-                return new string[0];
-            }
+            var directory = new DirectoryInfo(path);
 
-            return getAllDistinctFiles(path, Include.IsEmpty() ? "*.*" : Include);
+            return directory.Exists
+                ? getAllDistinctFiles(path, Include.IsEmpty() ? "*.*" : Include)
+                : new string[0];
         }
 
         private IEnumerable<string> getAllDistinctFiles(string path, string pattern)
         {
             if (pattern.IsEmpty()) return new string[0];
-			            
-			return pattern.Split(';').SelectMany(x =>
+
+            return pattern.Split(';').SelectMany(x =>
             {
-				var fullPath = path;
+                var fullPath = path;
                 var dirParts = x.Split(Path.DirectorySeparatorChar);
                 var filePattern = x;
-				
-				if (dirParts.Length > 1)
+
+                if (dirParts.Length > 1)
                 {
-                    var subFolder = dirParts.Take(dirParts.Length - 1).Join(Path.DirectorySeparatorChar.ToString());					
-					fullPath = Path.Combine(fullPath, subFolder);                    
-					if (!Directory.Exists(fullPath))
-                    {
-                        return new string[0];
-                    }
-					
-					filePattern = dirParts.Last(); 
+                    var subFolder = dirParts.Take(dirParts.Length - 1).Join(Path.DirectorySeparatorChar.ToString());
+                    fullPath = Path.Combine(fullPath, subFolder);
+                    filePattern = dirParts.Last();
                 }
 
-                return Directory.GetFiles(fullPath, filePattern, DeepSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
-            }).Distinct<string>();
+                var directory = new DirectoryInfo(fullPath);
+                var searchOption = DeepSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+                return directory.Exists
+                    ? Directory.GetFiles(fullPath, filePattern, searchOption)
+                    : new string[0];
+            }).Distinct();
         }
 
         public IEnumerable<string> ExcludedFilesFor(string path)
