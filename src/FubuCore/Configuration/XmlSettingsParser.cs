@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using FubuCore.Util;
+using FubuMVC.Core;
 
 namespace FubuCore.Configuration
 {
@@ -10,13 +11,20 @@ namespace FubuCore.Configuration
     {
         public static SettingsData Parse(string file)
         {
-            var document = new XmlDocument();
-            document.Load(file);
+            try
+            {
+                var document = new XmlDocument();
+                document.Load(file);
 
-            var data = Parse(document.DocumentElement);
-            data.Provenance = file;
+                var data = Parse(document.DocumentElement);
+                data.Provenance = file;
 
-            return data;
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new FubuException(2203, ex, "Tried to parse the file '{0}' but there was a problem", file);
+            }
         }
 
         public static SettingsData Parse(XmlElement element)
