@@ -91,7 +91,7 @@ namespace FubuCore
             return querystring.ToFormat(values.Select(value => value.ToString().UrlEncoded()).ToArray());
         }
 
-        public static string WithoutQueryStringValues(this string querystring)
+        public static string WithoutQueryString(this string querystring)
         {
             var questionMarkIndex = querystring.IndexOf('?');
 
