@@ -94,8 +94,6 @@ namespace FubuCore.Testing
             "http://somewhere.com/someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://somewhere.com/someUrl");
         }
 
-
-
         [Test]
         public void get_path_for_unrooted_url()
         {
@@ -113,5 +111,18 @@ namespace FubuCore.Testing
         {
             "~/someUrl".ToPhysicalPath().ShouldEqual(@"\app\someUrl");
         }
+
+        [Test]
+        public void get_url_without_querystring()
+        {
+            "/someUrl?query=foo".WithoutQueryString().ShouldEqual(@"/someUrl");
+        }
+
+        [Test]
+        public void get_url_without_querystring_having_no_querystring_does_nothing()
+        {
+            "/someUrl".WithoutQueryString().ShouldEqual(@"/someUrl");
+        }
+
     }
 }

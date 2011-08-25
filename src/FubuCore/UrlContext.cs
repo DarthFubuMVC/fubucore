@@ -91,6 +91,15 @@ namespace FubuCore
             return querystring.ToFormat(values.Select(value => value.ToString().UrlEncoded()).ToArray());
         }
 
+        public static string WithoutQueryStringValues(this string querystring)
+        {
+            var questionMarkIndex = querystring.IndexOf('?');
+
+            if (questionMarkIndex == -1) return querystring;
+
+            return querystring.Substring(0, questionMarkIndex);
+        }
+
         public static string UrlEncoded(this object target)
         {
             //properly encoding URI: http://blogs.msdn.com/yangxind/default.aspx
