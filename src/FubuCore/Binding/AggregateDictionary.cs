@@ -202,5 +202,13 @@ namespace FubuCore.Binding
         }
 
         #endregion
+
+        public IEnumerable<string> GetAllKeys()
+        {
+            return _locators.SelectMany(locator =>
+            {
+                return locator.AllKeys();
+            }).Distinct();
+        }
     }
 }
