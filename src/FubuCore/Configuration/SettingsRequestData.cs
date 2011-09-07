@@ -110,5 +110,10 @@ namespace FubuCore.Configuration
         {
             return Value(key) as string;
         }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _steps.SelectMany(s => s.AllKeys);
+        }
     }
 }

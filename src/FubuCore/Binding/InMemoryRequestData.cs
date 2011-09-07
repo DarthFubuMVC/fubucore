@@ -34,5 +34,10 @@ namespace FubuCore.Binding
         {
             return _values.GetAllKeys().Any(x => x.StartsWith(key));
         }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _values.GetAllKeys();
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq.Expressions;
 using FubuCore.Binding;
@@ -39,6 +40,11 @@ namespace FubuCore.Configuration
         {
             var key = KeyFor(property);
             return (ConfigurationManager.AppSettings.AllKeys.Contains(key)) ? ConfigurationManager.AppSettings[key] : string.Empty;
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return ConfigurationManager.AppSettings.AllKeys;
         }
     }
 }

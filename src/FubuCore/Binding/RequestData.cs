@@ -49,5 +49,10 @@ namespace FubuCore.Binding
         protected virtual void record(string key, RequestDataSource source, object @object)
         {
         }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _dictionary.GetAllKeys();
+        }
     }
 }

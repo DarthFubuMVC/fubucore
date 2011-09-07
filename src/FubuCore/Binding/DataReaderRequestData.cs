@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using FubuCore.Util;
+using System.Linq;
 
 namespace FubuCore.Binding
 {
@@ -59,6 +60,11 @@ namespace FubuCore.Binding
         public void SetAlias(string name, string alias)
         {
             _aliases[name] = alias;
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _columns.Keys.Union(_aliases.GetAllKeys());
         }
     }
 }

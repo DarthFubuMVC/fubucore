@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
@@ -49,6 +50,11 @@ namespace FubuCore.Binding
         public void Alias(string header, string alias)
         {
             _indices.WithValue(header, i => _indices[alias] = i);
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _indices.GetAllKeys();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace FubuCore.Binding
 {
@@ -26,6 +27,11 @@ namespace FubuCore.Binding
         public bool HasAnyValuePrefixedWith(string key)
         {
             return _inner.HasAnyValuePrefixedWith(_prefix + key);
+        }
+
+        public IEnumerable<string> GetKeys()
+        {
+            return _inner.GetKeys();
         }
     }
 }
