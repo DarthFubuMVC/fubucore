@@ -44,6 +44,11 @@ namespace FubuCore.Binding
             return _locator.GetInstance<T>();
         }
 
+        public object Service(Type typeToFind)
+        {
+            return _locator.GetInstance(typeToFind);
+        }
+
         public object ValueAs(Type type, string name)
         {
             foreach (var naming in _namingStrategies)

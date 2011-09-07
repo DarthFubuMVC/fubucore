@@ -23,6 +23,7 @@ namespace FubuCore.Binding
         /// <returns></returns>
         IBindingContext PrefixWith(string prefix);
 
+
         /// <summary>
         /// Performs the binding action in the continuation passed to the method
         /// if a matching value for the property can be found in the request data.
@@ -145,6 +146,13 @@ namespace FubuCore.Binding
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         T Service<T>();
+
+        /// <summary>
+        /// Service locator method to the IoC container for the current request
+        /// </summary>
+        /// <param name="typeToFind">The type to find</param>
+        /// <returns></returns>
+        object Service(Type typeToFind);
 
         /// <summary>
         /// Retrieves the PropertyValue converted to the type T
