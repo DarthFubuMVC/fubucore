@@ -28,6 +28,8 @@ task :default => [:compile, :unit_test]
 desc "Target used for the CI server"
 task :ci => [:default,:package,"nuget:build"]
 
+
+
 desc "Update the version information for the build"
 assemblyinfo :version do |asm|
   asm_version = BUILD_VERSION + ".0"
