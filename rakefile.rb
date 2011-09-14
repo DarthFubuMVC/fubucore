@@ -26,7 +26,7 @@ desc "**Default**, compiles and runs tests"
 task :default => [:compile, :unit_test]
 
 desc "Target used for the CI server"
-task :ci => [:update_all_depencencies, :default,:package,"nuget:build"]
+task :ci => [:update_all_depencencies, :default, :history, :publish]
 
 
 
@@ -93,11 +93,4 @@ desc "Runs unit tests"
 task :unit_test => :compile do
   runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :source => 'src', :platform => 'x86'
   runner.executeTests ['FubuCore.Testing', 'FubuLocalization.Tests']
-end
-
-desc "ZIPs up the build results"
-zip :package do |zip|
-	zip.directories_to_zip = [props[:stage]]
-	zip.output_file = 'FubuCore.zip'
-	zip.output_path = [props[:artifacts]]
 end
