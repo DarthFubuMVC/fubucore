@@ -1,1 +1,1 @@
-..\ripple\ripple.exe %*
+buildsupport\ripple.exe %*
