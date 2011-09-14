@@ -28,11 +28,7 @@ task :default => [:compile, :unit_test]
 desc "Target used for the CI server"
 task :ci => [:update_all_depencencies, :default,:package,"nuget:build"]
 
-task :update_all_depencencies do
-  sh 'ripple clean'
-  sh 'ripple update'
-  sh 'ripple restore'
-end
+
 
 desc "Update the version information for the build"
 assemblyinfo :version do |asm|
