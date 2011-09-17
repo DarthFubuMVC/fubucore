@@ -6,11 +6,11 @@
     <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
     <owners>Jeremy D. Miller</owners>
     <licenseUrl>https://github.com/DarthFubuMVC/fubucore/raw/master/license.txt</licenseUrl>
-    <projectUrl>http://fubumvc.com</projectUrl>
-    <iconUrl>https://github.com/DarthFubuMVC/fubumvc/raw/master/doc/logo/FubuMVC_Logo_package_icon.png</iconUrl>
+    <projectUrl>http://core.fubu-project.org</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuCore_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A foundational library for .Net frameworks including model binding and localization</description>
-    <tags>utilities</tags>
+    <tags>utilities, fubu</tags>
     <dependencies>
       <dependency id="CommonServiceLocator" version="1.0" />
     </dependencies>
