@@ -25,9 +25,28 @@ namespace FubuCore
             return Path.Combine(root, path);
         }
 
+        public static void IfNotNull(this string target, Action<string> continuation)
+        {
+            if (target != null)
+            {
+                continuation(target);
+            }
+        }
+
         public static string ToFullPath(this string path)
         {
             return Path.GetFullPath(path);
+        } 
+
+        /// <summary>
+        /// Retrieve the parent directory of a directory or file
+        /// Shortcut to Path.GetDirectoryName(path)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static string ParentDirectory(this string path)
+        {
+            return Path.GetDirectoryName(path);
         }
 
         /// <summary>

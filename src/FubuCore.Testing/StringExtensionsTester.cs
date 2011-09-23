@@ -4,6 +4,7 @@ using System.IO;
 using FubuTestingSupport;
 using NUnit.Framework;
 using System;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing
 {
@@ -13,6 +14,34 @@ namespace FubuCore.Testing
         [SetUp]
         public void SetUp()
         {
+        }
+
+        [Test]
+        public void parent_directory()
+        {
+            var path = ".".ToFullPath();
+            path.ParentDirectory().ShouldEqual(Path.GetDirectoryName(path));
+        }
+
+        [Test]
+        public void if_not_null_positive()
+        {
+            var action = MockRepository.GenerateMock<Action<string>>();
+
+            "a".IfNotNull(action);
+
+            action.AssertWasCalled(x => x.Invoke("a"));
+        }
+
+        [Test]
+        public void if_not_null_negative()
+        {
+            var action = MockRepository.GenerateMock<Action<string>>();
+            string a = null;
+
+            a.IfNotNull(action);
+
+            action.AssertWasNotCalled(x => x.Invoke(null), x => x.IgnoreArguments());
         }
 
         [Test]
