@@ -6,10 +6,11 @@
     <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
     <owners>Jeremy D. Miller</owners>
     <licenseUrl>https://github.com/DarthFubuMVC/fubucore/raw/master/license.txt</licenseUrl>
-    <projectUrl>http://fubumvc.com</projectUrl>
+    <projectUrl>http://localization.fubu-project.org</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuLocalization_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Localization utilities</description>
-    <tags>utilities</tags>
+    <tags>utilities, fubu</tags>
     <dependencies>
       <dependency id="FubuCore"/>
     </dependencies>
