@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq;
 
 namespace FubuCore.Reflection.Expressions
 {
@@ -17,6 +20,49 @@ namespace FubuCore.Reflection.Expressions
         public override string Text
         {
             get { return "starts with"; }
+        }
+    }
+
+    public class CollectionContainsPropertyOperation : IPropertyOperation
+    {
+        private const string _operationName = "Contains";
+        private const string _description = "contains";
+        private static MethodInfo _indexOfMethod;
+
+        static CollectionContainsPropertyOperation()
+        {
+            _indexOfMethod =
+                ReflectionHelper.GetMethod<IEnumerable<object>>(s => s.Contains(""));
+        }
+
+        
+
+        public string OperationName { get { return _operationName; } }
+        
+        public string Text
+        {
+            get { return _description; }
+        }
+
+        public Func<object, Expression<Func<T, bool>>> GetPredicateBuilder<T>(MemberExpression propertyPath)
+        {
+            return valuesToCheck =>
+            {
+                var suckIt = (IEnumerable<object>)valuesToCheck;
+                if (suckIt == null) return c => false;
+
+                return c => suckIt.Contains(((PropertyInfo) propertyPath.Member).GetValue(c, null));
+                
+
+//                ConstantExpression valueToCheckConstant = Expression.Constant(valuesToCheck);
+//                MethodCallExpression indexOfCall =
+//                    Expression.Call(Expression.Coalesce(propertyPath, Expression.Constant(String.Empty)), _indexOfMethod,
+//                                    valueToCheckConstant);                
+//                BinaryExpression comparison = Expression.MakeBinary(ExpressionType.IsTrue, indexOfCall,
+//                                                                    Expression.Constant(0));
+//                ParameterExpression lambdaParameter = propertyPath.GetParameter<T>();
+//                return Expression.Lambda<Func<T, bool>>(comparison, lambdaParameter);
+            };
         }
     }
 
