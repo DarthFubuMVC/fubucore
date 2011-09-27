@@ -27,16 +27,7 @@ namespace FubuCore.Reflection.Expressions
     {
         private const string _operationName = "Contains";
         private const string _description = "contains";
-        private static MethodInfo _indexOfMethod;
-
-        static CollectionContainsPropertyOperation()
-        {
-            _indexOfMethod =
-                ReflectionHelper.GetMethod<IEnumerable<object>>(s => s.Contains(""));
-        }
-
-        
-
+                
         public string OperationName { get { return _operationName; } }
         
         public string Text
@@ -48,20 +39,10 @@ namespace FubuCore.Reflection.Expressions
         {
             return valuesToCheck =>
             {
-                var suckIt = (IEnumerable<object>)valuesToCheck;
-                if (suckIt == null) return c => false;
+                var enumerationOfObjects = (IEnumerable<object>)valuesToCheck;
+                if (enumerationOfObjects == null) return c => false;
 
-                return c => suckIt.Contains(((PropertyInfo) propertyPath.Member).GetValue(c, null));
-                
-
-//                ConstantExpression valueToCheckConstant = Expression.Constant(valuesToCheck);
-//                MethodCallExpression indexOfCall =
-//                    Expression.Call(Expression.Coalesce(propertyPath, Expression.Constant(String.Empty)), _indexOfMethod,
-//                                    valueToCheckConstant);                
-//                BinaryExpression comparison = Expression.MakeBinary(ExpressionType.IsTrue, indexOfCall,
-//                                                                    Expression.Constant(0));
-//                ParameterExpression lambdaParameter = propertyPath.GetParameter<T>();
-//                return Expression.Lambda<Func<T, bool>>(comparison, lambdaParameter);
+                return c => enumerationOfObjects.Contains(((PropertyInfo) propertyPath.Member).GetValue(c, null));                
             };
         }
     }
