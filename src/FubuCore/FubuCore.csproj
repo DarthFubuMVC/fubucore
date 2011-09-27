@@ -122,6 +122,7 @@
     <Compile Include="FlatFileWriter.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFlatFileWriter.cs" />
+    <Compile Include="Reflection\Expressions\OrOperation.cs" />
     <Compile Include="Reflection\TypeDescriptorCache.cs" />
     <Compile Include="Binding\ValueConverter.cs" />
     <Compile Include="Binding\ValueConverterRegistry.cs" />

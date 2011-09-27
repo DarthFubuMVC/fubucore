@@ -133,6 +133,7 @@
     <Compile Include="Reflection\Expressions\StringEndsWithPropertyOperationTester.cs" />
     <Compile Include="Reflection\Expressions\StringEqualsPropertyOperationTester.cs" />
     <Compile Include="Reflection\Expressions\StringStartsWithPropertyOperationTester.cs" />
+    <Compile Include="Reflection\Expressions\when_building_an_or_predicate.cs" />
     <Compile Include="Reflection\PropertyChainTester.cs" />
     <Compile Include="Reflection\ReflectionExtensionsTester.cs" />
     <Compile Include="Reflection\ReflectionHelperTester.cs" />
