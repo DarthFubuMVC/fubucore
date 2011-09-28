@@ -35,15 +35,17 @@ namespace FubuCore.Reflection.Expressions
 
             var leftOptions = _listOfOperations.First();
             var leftPredicateBuilder = leftOptions.Item1.GetPredicateBuilder<T>(leftOptions.Item2);
-            var leftPredicate = leftPredicateBuilder(leftOptions.Item3).Compile();
+            var leftPredicate = leftPredicateBuilder(leftOptions.Item3);
 
             var rightOptions = _listOfOperations.Skip(1).First();
             var rightPredicateBuilder = rightOptions.Item1.GetPredicateBuilder<T>(rightOptions.Item2);
-            var rightPredicate = rightPredicateBuilder(rightOptions.Item3).Compile();
+            var rightPredicate = rightPredicateBuilder(rightOptions.Item3);
 
+            ParameterExpression lambdaParameter = Expression.Parameter(typeof (T));
+            var orElse = Expression.OrElse(Expression.Invoke(leftPredicate, lambdaParameter), Expression.Invoke(rightPredicate, lambdaParameter));
+            var expressionToReturn = Expression.Lambda<Func<T, bool>>(orElse, lambdaParameter);
 
-
-            return valueToTest => leftPredicate(valueToTest) || rightPredicate(valueToTest);
+            return expressionToReturn;
         }
     }
     public class OrOperation
@@ -51,27 +53,19 @@ namespace FubuCore.Reflection.Expressions
         
         public Expression<Func<T, bool>> GetPredicateBuilder<T>(Expression<Func<T, object>> leftPath, object leftValue, Expression<Func<T, object>> rightPath, object rightValue)
         {
-            var left = leftPath.GetMemberExpression(true);
-            var right = rightPath.GetMemberExpression(true);
-
-            var leftGuard = new EqualsPropertyOperation().GetPredicateBuilder<T>(left);
-            var rightGuard = new EqualsPropertyOperation().GetPredicateBuilder<T>(right);
-
-            return valueToTest => leftGuard(leftValue).Compile()(valueToTest) || rightGuard(rightValue).Compile()(valueToTest);
+            var comp = new ComposableOrOperation();
+            comp.Set(leftPath, leftValue);
+            comp.Set(rightPath, rightValue);
+            return comp.GetPredicateBuilder<T>();
         }
 
 
         public Expression<Func<T, bool>> GetPredicateBuilder<T>(Expression<Func<T, object>> leftPath, object leftValue, Expression<Func<T, object>> rightPath, IEnumerable<object> rightValue)
         {
-            var left = leftPath.GetMemberExpression(true);
-            var right = rightPath.GetMemberExpression(true);
-
-            var leftGuard = new EqualsPropertyOperation().GetPredicateBuilder<T>(left);
-
-            //use brando's class here
-            var rightGuard = new CollectionContainsPropertyOperation().GetPredicateBuilder<T>(right);
-
-            return valueToTest => leftGuard(leftValue).Compile()(valueToTest) || rightGuard(rightValue).Compile()(valueToTest);
+            var comp = new ComposableOrOperation();
+            comp.Set(leftPath, leftValue);
+            comp.Set(rightPath, rightValue);
+            return comp.GetPredicateBuilder<T>();
         }
     }
 }
