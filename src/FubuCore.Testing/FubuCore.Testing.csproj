@@ -63,6 +63,7 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BasicExtensionsTester.cs" />
     <Compile Include="Binding\ASPNetObjectConversionFamilyTester.cs" />
     <Compile Include="Binding\BasicTypeConverterTester.cs" />
     <Compile Include="Binding\BindingResultTester.cs" />
