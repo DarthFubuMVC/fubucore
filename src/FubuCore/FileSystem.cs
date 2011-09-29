@@ -31,6 +31,11 @@ namespace FubuCore
             dir.Create();
         }
 
+        public long FileSizeOf(string path)
+        {
+            return new FileInfo(path).Length;
+        }
+
         public void Copy(string source, string destination)
         {
             Copy(source, destination, CopyBehavior.overwrite);

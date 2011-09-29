@@ -14,6 +14,7 @@ namespace FubuCore
 
         string GetFullPath(string path);
 
+        long FileSizeOf(string path);
 
         void Copy(string source, string destination);
 
