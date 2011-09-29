@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Linq;
 
 namespace FubuCore.Reflection.Expressions
 {
@@ -17,6 +20,30 @@ namespace FubuCore.Reflection.Expressions
         public override string Text
         {
             get { return "starts with"; }
+        }
+    }
+
+    public class CollectionContainsPropertyOperation : IPropertyOperation
+    {
+        private const string _operationName = "Contains";
+        private const string _description = "contains";
+                
+        public string OperationName { get { return _operationName; } }
+        
+        public string Text
+        {
+            get { return _description; }
+        }
+
+        public Func<object, Expression<Func<T, bool>>> GetPredicateBuilder<T>(MemberExpression propertyPath)
+        {
+            return valuesToCheck =>
+            {
+                var enumerationOfObjects = (IEnumerable<object>)valuesToCheck;
+                if (enumerationOfObjects == null) return c => false;
+
+                return c => enumerationOfObjects.Contains(((PropertyInfo) propertyPath.Member).GetValue(c, null));                
+            };
         }
     }
 
