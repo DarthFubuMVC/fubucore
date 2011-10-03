@@ -29,6 +29,8 @@ namespace FubuCore.Binding
 
         public BindingContext(IRequestData requestData, IServiceLocator locator, IBindingLogger logger)
         {
+            if (logger == null) throw new ArgumentNullException("logger");
+
             _requestData = requestData;
             _locator = locator;
             _logger = logger;

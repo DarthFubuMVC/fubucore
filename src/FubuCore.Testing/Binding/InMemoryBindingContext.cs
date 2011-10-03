@@ -22,6 +22,15 @@ namespace FubuCore.Testing.Binding
             _data = data;
         }
 
+        private InMemoryBindingContext(InMemoryRequestData data, StubServiceLocator services, IBindingLogger logger)
+            : base(data, services, logger)
+        {
+            _services = services;
+            _data = data;
+        }
+
+
+
         public void RegisterService<T>(T @object)
         {
             _services.Services[typeof (T)] = @object;

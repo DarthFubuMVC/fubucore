@@ -40,6 +40,8 @@ namespace FubuCore.Binding
                     type.AssemblyQualifiedName);
             }
 
+            context.Logger.ChoseModelBinder(type, binder);
+
             return executeModelBinder(type, binder, context);
         }
 

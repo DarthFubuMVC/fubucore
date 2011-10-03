@@ -81,6 +81,7 @@
     <Compile Include="Binding\MapWebToPhysicalPathFamilyTester.cs" />
     <Compile Include="Binding\ModelBinderCacheTester.cs" />
     <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
+    <Compile Include="Binding\ObjectResolverTester.cs" />
     <Compile Include="Binding\PassthroughBinderTester.cs" />
     <Compile Include="Binding\PropertyBinderTester.cs" />
     <Compile Include="Binding\ReaderBinderTester.cs" />
