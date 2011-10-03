@@ -1,11 +1,43 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Reflection;
+using FubuCore.Testing.Reflection.Expressions;
 using FubuTestingSupport;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
+
+    [TestFixture]
+    public class when_populating_a_property : InteractionContext<StandardModelBinder>
+    {
+        private PropertyInfo theProperty;
+        private IPropertyBinder thePropertyBinder;
+
+        protected override void beforeEach()
+        {
+            theProperty = ReflectionHelper.GetProperty<Case>(x => x.Identifier);
+
+            MockFor<IBindingContext>().Stub(x => x.Logger).Return(MockFor<IBindingLogger>());
+
+            thePropertyBinder = MockFor<IPropertyBinder>();
+            MockFor<IPropertyBinderCache>().Stub(x => x.BinderFor(theProperty))
+                .Return(thePropertyBinder);
+
+            ClassUnderTest.PopulateProperty(typeof(Case), theProperty, MockFor<IBindingContext>());
+        }
+
+        [Test]
+        public void should_log_the_property_binder_chosen()
+        {
+            MockFor<IBindingLogger>().AssertWasCalled(x => x.ChosePropertyBinder(theProperty, thePropertyBinder));
+        }
+    }
+
+
     [TestFixture]
     public class StandardModelBinderTester
     {
@@ -56,6 +88,7 @@ namespace FubuCore.Testing.Binding
             public Guid Id { get; set; }
             public bool X_Requested_With { get; set; }
         }
+
 
         [Test]
         public void

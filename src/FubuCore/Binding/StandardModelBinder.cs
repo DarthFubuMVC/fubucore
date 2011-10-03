@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding
@@ -51,7 +52,14 @@ namespace FubuCore.Binding
 
         private void populate(Type type, IBindingContext context)
         {
-            _typeCache.ForEachProperty(type, prop => { _propertyBinders.BinderFor(prop).Bind(prop, context); });
+            _typeCache.ForEachProperty(type, prop => PopulateProperty(type, prop, context));
+        }
+
+        public void PopulateProperty(Type type, PropertyInfo property, IBindingContext context)
+        {
+            var propertyBinder = _propertyBinders.BinderFor(property);
+            context.Logger.ChosePropertyBinder(property, propertyBinder);
+            propertyBinder.Bind(property, context);
         }
     }
 }
