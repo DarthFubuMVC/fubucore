@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using System.Text;
 using FubuCore.Util;
 using Microsoft.Practices.ServiceLocation;
@@ -33,7 +33,7 @@ namespace FubuCore.Binding
             var data = new FlatFileRequestData(request.Concatenator, headers);
             _aliases.Each((header, alias) => data.Alias(header, alias));
 
-            var context = new BindingContext(data, _services);
+            var context = new BindingContext(data, _services, new NulloBindingLogger());
 
             string line;
             while ((line = reader.ReadLine()) != null)

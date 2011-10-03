@@ -56,7 +56,7 @@ namespace FubuCore.Binding
         {
             IDataReader reader = input.Reader;
             var request = new DataReaderRequestData(reader, _aliases);
-            var context = new BindingContext(request, _services);
+            var context = new BindingContext(request, _services, new NulloBindingLogger());
 
             while (reader.Read())
             {

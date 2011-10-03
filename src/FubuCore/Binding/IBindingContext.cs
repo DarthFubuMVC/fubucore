@@ -4,12 +4,42 @@ using System.Reflection;
 
 namespace FubuCore.Binding
 {
+
+    public interface IBindingLogger
+    {
+        void ChoseModelBinder(Type modelType, IModelBinder binder);
+        void ChosePropertyBinder(PropertyInfo property, IPropertyBinder binder);
+        void ChoseValueConverter(PropertyInfo property, ValueConverter converter);
+    }
+
+    public class NulloBindingLogger : IBindingLogger
+    {
+        public void ChoseModelBinder(Type modelType, IModelBinder binder)
+        {
+        }
+
+        public void ChosePropertyBinder(PropertyInfo property, IPropertyBinder binder)
+        {
+        }
+
+        public void ChoseValueConverter(PropertyInfo property, ValueConverter converter)
+        {
+        }
+    }
+
+
     /// <summary>
     /// BindingContext represents the state of model binding as well
     /// as providing some common functionality
     /// </summary>
     public interface IBindingContext
     {
+
+        /// <summary>
+        /// Expose logging to the model binding subsystem
+        /// </summary>
+        IBindingLogger Logger { get; }
+
         /// <summary>
         /// List of all data conversion errors encountered during
         /// a model binding operation
@@ -169,5 +199,10 @@ namespace FubuCore.Binding
         /// <param name="continuation"></param>
         /// <returns></returns>
         bool ValueAs<T>(Action<T> continuation);
+
+        /// <summary>
+        /// Expose logging to the model binding subsystem
+        /// </summary>
+        IBindingLogger Logger { get; }
     }
 }

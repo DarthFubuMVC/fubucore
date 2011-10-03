@@ -7,6 +7,7 @@ namespace FubuCore.Binding
     public class ObjectResolver : IObjectResolver
     {
         private readonly IModelBinderCache _binders;
+        private readonly IBindingLogger _logger;
         private readonly IServiceLocator _services;
 
         // Leave this here
@@ -14,15 +15,16 @@ namespace FubuCore.Binding
         {
         }
 
-        public ObjectResolver(IServiceLocator services, IModelBinderCache binders)
+        public ObjectResolver(IServiceLocator services, IModelBinderCache binders, IBindingLogger logger)
         {
             _services = services;
             _binders = binders;
+            _logger = logger;
         }
 
         public virtual BindResult BindModel(Type type, IRequestData data)
         {
-            var context = new BindingContext(data, _services);
+            var context = new BindingContext(data, _services, _logger);
             return BindModel(type, context);
         }
 
@@ -70,7 +72,7 @@ namespace FubuCore.Binding
 
         public static ObjectResolver Basic()
         {
-            return new ObjectResolver(null, ModelBinderCache.Basic());
+            return new ObjectResolver(null, ModelBinderCache.Basic(), new NulloBindingLogger());
         }
     }
 }

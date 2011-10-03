@@ -26,7 +26,7 @@ namespace FubuCore.Configuration
 
         public object SettingsFor(Type settingsType)
         {
-            IBindingContext context = new BindingContext(new AppSettingsRequestData(), _locator)
+            IBindingContext context = new BindingContext(new AppSettingsRequestData(), _locator, new NulloBindingLogger())
                 .PrefixWith(settingsType.Name + ".");
 
             BindResult result = _resolver.BindModel(settingsType, context);

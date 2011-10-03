@@ -16,7 +16,7 @@ namespace FubuCore.Testing.Binding
         }
 
         private InMemoryBindingContext(InMemoryRequestData data, StubServiceLocator services)
-            : base(data, services)
+            : base(data, services, new NulloBindingLogger())
         {
             _services = services;
             _data = data;

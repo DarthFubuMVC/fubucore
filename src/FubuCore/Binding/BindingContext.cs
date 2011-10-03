@@ -11,6 +11,7 @@ namespace FubuCore.Binding
     {
         private static readonly List<Func<string, string>> _namingStrategies;
         private readonly IServiceLocator _locator;
+        private readonly IBindingLogger _logger;
         private readonly IRequestData _requestData;
         private readonly IList<ConvertProblem> _problems = new List<ConvertProblem>();
         private readonly Lazy<ISmartRequest> _request;
@@ -26,12 +27,18 @@ namespace FubuCore.Binding
             };
         }
 
-        public BindingContext(IRequestData requestData, IServiceLocator locator)
+        public BindingContext(IRequestData requestData, IServiceLocator locator, IBindingLogger logger)
         {
             _requestData = requestData;
             _locator = locator;
+            _logger = logger;
 
             _request = new Lazy<ISmartRequest>(() => new SmartRequest(_requestData, _locator.GetInstance<IObjectConverter>()));
+        }
+
+        public IBindingLogger Logger
+        {
+            get { return _logger; }
         }
 
         public IList<ConvertProblem> Problems
@@ -191,7 +198,7 @@ namespace FubuCore.Binding
         private BindingContext prefixWith(string prefix, IEnumerable<PropertyInfo> properties)
         {
             var prefixedData = new PrefixedRequestData(_requestData, prefix);
-            var child = new BindingContext(prefixedData, _locator);
+            var child = new BindingContext(prefixedData, _locator, Logger);
             
                 
             properties.Each(p => child._propertyStack.Push(p));
