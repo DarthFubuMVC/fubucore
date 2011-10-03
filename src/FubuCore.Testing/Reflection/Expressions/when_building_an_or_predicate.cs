@@ -39,10 +39,20 @@ namespace FubuCore.Testing.Reflection.Expressions
         [Test]
         public void should_work_for_collections()
         {
-            var orish = new OrOperation().GetPredicateBuilder<Contract>(c => c.Status, "x", c => c.Status, new List<string>{"open","closed"});
+            var orish = new OrOperation().GetPredicateBuilder<Contract>(c => c.Status, new List<string>{"open1","closed1"}, c=>c.Status, "open");
 
             var contract = new Contract();
             contract.Status = "open";
+
+            orish.Compile()(contract).ShouldBeTrue();
+        }
+        [Test]
+        public void should_work_for_collections_and_other()
+        {
+            var orish = new OrOperation().GetPredicateBuilder<Contract>( c => c.Status, new List<string>{"open","closed"}, c=>c.Status, "x");
+
+            var contract = new Contract();
+            contract.Status = "x";
 
             orish.Compile()(contract).ShouldBeTrue();
         }
@@ -94,8 +104,23 @@ namespace FubuCore.Testing.Reflection.Expressions
         {
 
             var orish = new ComposableOrOperation();
-            orish.Set<Contract>(c => c.Status, "open");
+            orish.Set<Contract>(c => c.Status, "closed");
             orish.Set<Contract>(c => c.Status, new List<string> { "open", "closed" });
+
+            var x = orish.GetPredicateBuilder<Contract>();
+
+            var contract = new Contract();
+            contract.Status = "open";
+
+            x.Compile()(contract).ShouldBeTrue();
+        }
+        [Test]
+        public void should_work_for_collections_a()
+        {
+
+            var orish = new ComposableOrOperation();
+            orish.Set<Contract>(c => c.Status, new List<string> { "open", "closed" });
+            orish.Set<Contract>(c => c.Status, "closed");
 
             var x = orish.GetPredicateBuilder<Contract>();
 

@@ -11,6 +11,7 @@ namespace FubuCore.Reflection.Expressions
 
         public void Set<T>(Expression<Func<T, object>> path, object value)
         {
+            //why am I falling into here
             var memberExpression = path.GetMemberExpression(true);
             var operation = new EqualsPropertyOperation();
             _listOfOperations.Add(new Tuple<IPropertyOperation, MemberExpression, object>(operation, memberExpression, value));
@@ -87,10 +88,20 @@ namespace FubuCore.Reflection.Expressions
         }
         Expression rebuildMethodCall(MethodCallExpression exp, ParameterExpression parameter)
         {
-            //currently only works with extension methods
-            var args = new[] {exp.Arguments.First(), parameter };
+            if (exp.Method.IsStatic)
+            {
+                var aa = exp.Arguments.Skip(1).First();
+                if (aa.NodeType != ExpressionType.Constant)
+                {
+                    aa = rebuildMemberExpression((MemberExpression) exp.Arguments.Skip(1).First(), parameter);
+                }
 
-            return Expression.Call(exp.Method, args);
+                //if second arg is a constant of our type swap other wise continue down the rabbit hole
+                var args = new[] {exp.Arguments.First(), aa};
+                return Expression.Call(exp.Method, args);
+            }
+
+            return Expression.Call(parameter, exp.Method, exp.Arguments.First());
         }
 
     }
@@ -105,6 +116,13 @@ namespace FubuCore.Reflection.Expressions
             return comp.GetPredicateBuilder<T>();
         }
 
+        public Expression<Func<T, bool>> GetPredicateBuilder<T>(Expression<Func<T, object>> leftPath, IEnumerable<object> leftValue, Expression<Func<T, object>> rightPath, object rightValue)
+        {
+            var comp = new ComposableOrOperation();
+            comp.Set(leftPath, leftValue);
+            comp.Set(rightPath, rightValue);
+            return comp.GetPredicateBuilder<T>();
+        }
 
         public Expression<Func<T, bool>> GetPredicateBuilder<T>(Expression<Func<T, object>> leftPath, object leftValue, Expression<Func<T, object>> rightPath, IEnumerable<object> rightValue)
         {
