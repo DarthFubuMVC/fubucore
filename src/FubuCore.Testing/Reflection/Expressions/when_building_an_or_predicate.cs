@@ -94,7 +94,7 @@ namespace FubuCore.Testing.Reflection.Expressions
         {
 
             var orish = new ComposableOrOperation();
-            orish.Set<Contract>(c => c.Status, "a");
+            orish.Set<Contract>(c => c.Status, "open");
             orish.Set<Contract>(c => c.Status, new List<string> { "open", "closed" });
 
             var x = orish.GetPredicateBuilder<Contract>();
