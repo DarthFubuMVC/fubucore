@@ -25,10 +25,13 @@ namespace FubuCore.Binding
             {
                 var converter = _cache[property];
 
+                context.Logger.ChoseValueConverter(property, converter);
+
                 var value = converter.Convert(x);
                     
                 property.SetValue(x.Object, value, null);
             });
         }
+
     }
 }

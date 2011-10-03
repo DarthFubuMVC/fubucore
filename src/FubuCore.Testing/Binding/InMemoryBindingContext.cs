@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Util;
 using Microsoft.Practices.ServiceLocation;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -11,7 +12,7 @@ namespace FubuCore.Testing.Binding
         private readonly InMemoryRequestData _data;
         private readonly StubServiceLocator _services;
 
-        public InMemoryBindingContext() : this(new InMemoryRequestData(), new StubServiceLocator())
+        public InMemoryBindingContext() : this(new InMemoryRequestData(), new StubServiceLocator(), MockRepository.GenerateMock<IBindingLogger>())
         {
         }
 
