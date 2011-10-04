@@ -23,7 +23,9 @@ namespace FubuCore.DependencyAnalysis
         public void RegisterItem(T item)
         {
             var name = _getName(item);
-            _items.Add(name, item);
+
+            _items.SmartAdd(name, item);
+            
             _cycleDetector.AddNode(new Node(name));
             foreach (var dep in _getDependencies(item))
             {
