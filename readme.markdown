@@ -25,3 +25,12 @@ If you do not have ruby:
 
   * type: `echo // > src\CommonAssemblyInfo.cs`
 1. open src\FubuCore.sln with Visual Studio and Build the solution
+
+Where are the project dependencies? (EX: CommonServiceLocator)
+--
+
+1. run `git submodule init`
+2. then `git submodule update`
+3. then `ripple.cmd restore`
+
+You should now be able to open the src\FuBuCore.sln and build the project.
