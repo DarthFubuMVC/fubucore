@@ -114,6 +114,7 @@ namespace FubuCore.Testing.Reflection.Expressions
 
             x.Compile()(contract).ShouldBeTrue();
         }
+
         [Test]
         public void should_work_for_collections_a()
         {
@@ -129,5 +130,23 @@ namespace FubuCore.Testing.Reflection.Expressions
 
             x.Compile()(contract).ShouldBeTrue();
         }
+
+        [Test]
+        public void should_work_for_path()
+        {
+
+            var orish = new ComposableOrOperation();
+            orish.Set<Contract>(c => c.Part.IsUsed, true);
+            orish.Set<Contract>(c => c.Status, new List<string> { "open", "closed" });
+
+            var x = orish.GetPredicateBuilder<Contract>();
+
+            var contract = new Contract();
+            contract.Status = "opn";
+            contract.Part.IsUsed = true;
+
+            x.Compile()(contract).ShouldBeTrue();
+        }
+
     }
 }

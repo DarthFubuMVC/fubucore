@@ -63,48 +63,12 @@ namespace FubuCore.Reflection.Expressions
         {
             var lb = (LambdaExpression) exp;
             var targetBody = lb.Body;
-            if(targetBody.NodeType == ExpressionType.Equal)
-            {
-                return rebuildBinary((BinaryExpression)targetBody, parameter);
-            }
-            else if(targetBody.NodeType == ExpressionType.Call)
-            {
-                return rebuildMethodCall((MethodCallExpression)targetBody, parameter);
-            }
-            else
-            {
-                return null;
-            }
-        }
 
-        Expression rebuildMemberExpression(MemberExpression mem, ParameterExpression param)
-        {
-            return Expression.MakeMemberAccess(param ,mem.Member);
-        }
-        Expression rebuildBinary(BinaryExpression exp, ParameterExpression parameter)
-        {
-            var a = rebuildMemberExpression((MemberExpression)exp.Left, parameter);
-            return Expression.Equal(a, exp.Right);
-        }
-        Expression rebuildMethodCall(MethodCallExpression exp, ParameterExpression parameter)
-        {
-            if (exp.Method.IsStatic)
-            {
-                var aa = exp.Arguments.Skip(1).First();
-                if (aa.NodeType != ExpressionType.Constant)
-                {
-                    aa = rebuildMemberExpression((MemberExpression) exp.Arguments.Skip(1).First(), parameter);
-                }
-
-                //if second arg is a constant of our type swap other wise continue down the rabbit hole
-                var args = new[] {exp.Arguments.First(), aa};
-                return Expression.Call(exp.Method, args);
-            }
-
-            return Expression.Call(parameter, exp.Method, exp.Arguments.First());
+            return new RewriteToLambda(parameter).Visit(targetBody);
         }
 
     }
+
     public class OrOperation
     {
         
@@ -130,6 +94,63 @@ namespace FubuCore.Reflection.Expressions
             comp.Set(leftPath, leftValue);
             comp.Set(rightPath, rightValue);
             return comp.GetPredicateBuilder<T>();
+        }
+    }
+
+    public class RewriteToLambda : ExpressionVisitorBase
+    {
+        private ParameterExpression _parameter;
+
+        public RewriteToLambda(ParameterExpression parameter)
+        {
+            _parameter = parameter;
+        }
+
+        protected override Expression VisitBinary(BinaryExpression exp)
+        {
+            var a = VisitMemberAccess((MemberExpression) exp.Left);
+            return Expression.Equal(a, exp.Right);    
+        }
+
+        protected override Expression VisitMemberAccess(MemberExpression m)
+        {
+            Expression exp = null;
+            if(m.Expression.NodeType == ExpressionType.Parameter)
+            {
+                //c.IsThere
+                exp = Expression.MakeMemberAccess(_parameter, m.Member);
+            }
+
+            if(m.Expression.NodeType == ExpressionType.MemberAccess)
+            {
+                //c.Thing.IsThere
+                var intermediate = VisitMemberAccess((MemberExpression)m.Expression);
+
+                // now combine with rest
+
+                exp = Expression.MakeMemberAccess(intermediate, m.Member);
+
+            }
+
+            return exp;
+        }
+
+        protected override Expression VisitMethodCall(MethodCallExpression exp)
+        {
+            if (exp.Method.IsStatic)
+            {
+                var aa = exp.Arguments.Skip(1).First();
+                if(aa.NodeType != ExpressionType.Constant)
+                {
+                    aa = VisitMemberAccess((MemberExpression) exp.Arguments.Skip(1).First());
+                }
+
+                //if second arg is a constant of our type swap other wise continue down the rabbit hole
+                var args = new[] {exp.Arguments.First(), aa};
+                return Expression.Call(exp.Method, args);
+            }
+
+            return Expression.Call(_parameter, exp.Method, exp.Arguments.First());
         }
     }
 }
