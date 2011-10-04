@@ -124,12 +124,12 @@ namespace FubuCore.Reflection.Expressions
             if(m.Expression.NodeType == ExpressionType.MemberAccess)
             {
                 //c.Thing.IsThere
+
+                //rewrite c.Thing
                 var intermediate = VisitMemberAccess((MemberExpression)m.Expression);
 
-                // now combine with rest
-
+                //now combine 'c.Thing' with '.IsThere'
                 exp = Expression.MakeMemberAccess(intermediate, m.Member);
-
             }
 
             return exp;

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FubuCore.Reflection.Expressions;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -26,12 +27,43 @@ namespace FubuCore.Testing.Reflection.Expressions
         }
 
         public Part Part { get; set; }
+        public Signature Signature { get; set; }
     }
 
 
     public class Part
     {
         public bool IsUsed { get; set; }
+    }
+
+    public class Signature
+    {
+        public Signature(string name)
+        {
+            Name = name;
+        }
+
+        public string Name { get; set; }
+
+        public bool Equals(Signature other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other.Name, Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (Signature)) return false;
+            return Equals((Signature) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Name != null ? Name.GetHashCode() : 0);
+        }
     }
 
     [TestFixture]
