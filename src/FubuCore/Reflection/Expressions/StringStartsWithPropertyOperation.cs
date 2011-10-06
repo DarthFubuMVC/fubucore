@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Linq;
@@ -44,9 +45,11 @@ namespace FubuCore.Reflection.Expressions
                 var enumerationOfObjects = (IEnumerable<object>) valuesToCheck;
                 if (enumerationOfObjects == null) return c => false;
 
-
                 //what's the type of the collection?
-                var collectionOf = valuesToCheck.GetType().GetGenericArguments()[0];
+                var valuesToCheckType = valuesToCheck.GetType();
+                var collectionOf = valuesToCheckType.IsAnEnumerationOf();
+                
+                
 
                 //capture and close the Enumerbable.Contains method
                 var closedMethod = method.MakeGenericMethod(collectionOf);

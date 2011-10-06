@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using FubuTestingSupport;
 using NUnit.Framework;
 using FubuCore.Testing;
 using Rhino.Mocks;
+using FubuCore;
 
 namespace FubuCore.Testing
 {
@@ -270,6 +272,21 @@ namespace FubuCore.Testing
             typeof(IMessage).IsConcreteWithDefaultCtor().ShouldBeFalse();
 
             typeof(ClassWithGreedyCtor).IsConcreteWithDefaultCtor().ShouldBeFalse();
+        }
+
+        [Test]
+        public void is_a_collection_of_should_handle_arrays()
+        {
+            var arrayType = typeof (string[]);
+            arrayType.IsAnEnumerationOf().ShouldEqual(typeof (string));
+        }
+
+        [Test]
+        public void is_a_collection_of_should_handle_generic_collections()
+        {
+            var arrayType = typeof (List<string>);
+            arrayType.IsAnEnumerationOf().ShouldEqual(typeof (string));
+            
         }
 
         public interface IMessage{}

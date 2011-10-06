@@ -20,7 +20,7 @@ namespace FubuCore
 
         public static bool IsNullableOfT(this Type theType)
         {
-            return theType.IsGenericType && theType.GetGenericTypeDefinition().Equals(typeof(Nullable<>));
+            return theType.IsGenericType && theType.GetGenericTypeDefinition().Equals(typeof (Nullable<>));
         }
 
         public static bool IsNullableOf(this Type theType, Type otherType)
@@ -30,7 +30,7 @@ namespace FubuCore
 
         public static bool IsTypeOrNullableOf<T>(this Type theType)
         {
-            Type otherType = typeof(T);
+            Type otherType = typeof (T);
             return theType == otherType ||
                    (theType.IsNullableOfT() && theType.GetGenericArguments()[0].Equals(otherType));
         }
@@ -38,7 +38,7 @@ namespace FubuCore
         public static bool CanBeCastTo<T>(this Type type)
         {
             if (type == null) return false;
-            Type destinationType = typeof(T);
+            Type destinationType = typeof (T);
 
             return CanBeCastTo(type, destinationType);
         }
@@ -64,7 +64,7 @@ namespace FubuCore
         public static bool IsGenericEnumerable(this Type type)
         {
             var genericArgs = type.GetGenericArguments();
-            return genericArgs.Length == 1 && typeof(IEnumerable<>).MakeGenericType(genericArgs).IsAssignableFrom(type);
+            return genericArgs.Length == 1 && typeof (IEnumerable<>).MakeGenericType(genericArgs).IsAssignableFrom(type);
         }
 
         public static bool IsConcreteTypeOf<T>(this Type pluggedType)
@@ -96,7 +96,7 @@ namespace FubuCore
         {
             if (type.IsInterface && type.IsGenericType && type.GetGenericTypeDefinition() == openType) return type;
 
-            
+
             foreach (Type interfaceType in type.GetInterfaces())
             {
                 if (interfaceType.IsGenericType && interfaceType.GetGenericTypeDefinition() == openType)
@@ -207,7 +207,7 @@ namespace FubuCore
         /// <returns></returns>
         public static bool IsDateTime(this Type typeToCheck)
         {
-            return typeToCheck == typeof(DateTime) || typeToCheck == typeof(DateTime?);
+            return typeToCheck == typeof (DateTime) || typeToCheck == typeof (DateTime?);
         }
 
         public static bool IsBoolean(this Type typeToCheck)
@@ -273,24 +273,24 @@ namespace FubuCore
         }
 
         private static readonly IList<Type> _integerTypes = new List<Type>
-                                    {
-                                        typeof (byte),
-                                        typeof (short),
-                                        typeof (int),
-                                        typeof (long),
-                                        typeof (sbyte),
-                                        typeof (ushort),
-                                        typeof (uint),
-                                        typeof (ulong),
-                                        typeof (byte?),
-                                        typeof (short?),
-                                        typeof (int?),
-                                        typeof (long?),
-                                        typeof (sbyte?),
-                                        typeof (ushort?),
-                                        typeof (uint?),
-                                        typeof (ulong?)
-                                    };
+                                                            {
+                                                                typeof (byte),
+                                                                typeof (short),
+                                                                typeof (int),
+                                                                typeof (long),
+                                                                typeof (sbyte),
+                                                                typeof (ushort),
+                                                                typeof (uint),
+                                                                typeof (ulong),
+                                                                typeof (byte?),
+                                                                typeof (short?),
+                                                                typeof (int?),
+                                                                typeof (long?),
+                                                                typeof (sbyte?),
+                                                                typeof (ushort?),
+                                                                typeof (uint?),
+                                                                typeof (ulong?)
+                                                            };
 
         /// <summary>
         /// Returns a boolean value indicating whether or not the type is:
@@ -300,7 +300,7 @@ namespace FubuCore
         /// <returns>Bool indicating whether the type is floating point</returns>
         public static bool IsFloatingPoint(this Type type)
         {
-            return type == typeof(decimal) || type == typeof(float) || type == typeof(double);
+            return type == typeof (decimal) || type == typeof (float) || type == typeof (double);
         }
 
 
@@ -313,7 +313,7 @@ namespace FubuCore
         public static T CloseAndBuildAs<T>(this Type openType, object ctorArgument, params Type[] parameterTypes)
         {
             var closedType = openType.MakeGenericType(parameterTypes);
-            return (T)Activator.CreateInstance(closedType, ctorArgument);
+            return (T) Activator.CreateInstance(closedType, ctorArgument);
         }
 
         public static bool PropertyMatches(this PropertyInfo prop1, PropertyInfo prop2)
@@ -330,5 +330,27 @@ namespace FubuCore
         {
             return Activator.CreateInstance(type);
         }
-    }
+
+
+        public static Type IsAnEnumerationOf(this Type type)
+        {
+            if(!type.Closes(typeof(IEnumerable<>)))
+            {
+                throw new Exception("Duh, its gotta be enumerable");
+            }
+
+            if(type.IsArray)
+            {
+                return type.GetElementType();
+            }
+
+            if(type.IsGenericType)
+            {
+                return type.GetGenericArguments()[0];
+            }
+
+
+            throw new Exception("I don't know how to figure out what this is a collection of. Can you tell me? {0}".ToFormat(type));
+        }
+}
 }
