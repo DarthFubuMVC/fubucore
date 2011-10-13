@@ -161,5 +161,43 @@ namespace FubuCore.Testing
             "My name is {0} and I was born in {1}, {2}".ToFormat("Jeremy", "Carthage", "Missouri")
                 .ShouldEqual("My name is Jeremy and I was born in Carthage, Missouri");
         }
+
+        [Test]
+        public void read_lines_to_an_enumerable()
+        {
+            var text = @"a
+b
+c
+d
+e
+";
+
+            text.ReadLines().ShouldHaveTheSameElementsAs("a", "b", "c", "d", "e");
+            
+        }
+
+        [Test]
+        public void read_lines_to_an_action()
+        {
+            var action = MockRepository.GenerateMock<Action<string>>();
+
+            var text = @"a
+b
+c
+d
+e
+";
+
+
+            text.ReadLines(action);
+
+            action.AssertWasCalled(x => x.Invoke("a"));
+            action.AssertWasCalled(x => x.Invoke("b"));
+            action.AssertWasCalled(x => x.Invoke("c"));
+            action.AssertWasCalled(x => x.Invoke("d"));
+            action.AssertWasCalled(x => x.Invoke("e"));
+
+            
+        }
     }
 }
