@@ -1,11 +1,33 @@
-﻿using FubuTestingSupport;
+﻿using System;
+using FubuTestingSupport;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing
 {
     [TestFixture]
     public class BasicExtensionsTester
     {
+
+        [Test]
+        public void if_not_null_against_a_nullable()
+        {
+            int? x = null;
+
+            var action = MockRepository.GenerateMock<Action<int>>();
+
+            x.IfNotNull(i =>
+            {
+                Assert.Fail("Should not have been called");
+            });
+
+            x = 3;
+
+            x.IfNotNull(action);
+
+            action.AssertWasCalled(i => i.Invoke(3));
+
+        }
          
         [Test]
         public void should_be_able_to_handle_null_targets()

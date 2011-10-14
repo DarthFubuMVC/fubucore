@@ -36,5 +36,13 @@ namespace FubuCore
         {
             return target == null ? null : valueFunc();
         }
+
+        public static void IfNotNull<T>(this T? target, Action<T> action) where T : struct
+        {
+            if (target.HasValue)
+            {
+                action(target.Value);
+            }
+        }
     }
 }
