@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,6 +8,8 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace FubuCore
 {
+    
+
     public class Stringifier
     {
         private readonly List<PropertyOverrideStrategy> _overrides = new List<PropertyOverrideStrategy>();
@@ -21,6 +24,18 @@ namespace FubuCore
 
                 return findConverter(request.GetRequestForNullableType());
             }
+
+            if (request.PropertyType.IsArray)
+            {
+                if (request.RawValue == null) return r => string.Empty;
+
+                return r =>
+                {
+                    if (r.RawValue == null) return string.Empty;
+
+                    return r.RawValue.As<Array>().OfType<object>().Select(GetString).Join(", ");
+                };
+            }        
 
             StringifierStrategy strategy = _strategies.FirstOrDefault(x => x.Matches(request));
             return strategy == null ? toString : strategy.StringFunction;
@@ -163,6 +178,17 @@ namespace FubuCore
             };
         }
 
+        public GetStringRequest GetRequestForElementType()
+        {
+            return new GetStringRequest{
+                _locator = _locator,
+                Property = Property,
+                PropertyType = PropertyType.GetElementType(),
+                RawValue = RawValue,
+                OwnerType = OwnerType
+            };
+        }
+
         public T Get<T>()
         {
             return _locator.GetInstance<T>();
@@ -194,5 +220,7 @@ namespace FubuCore
                 return result;
             }
         }
+
+
     }
 }

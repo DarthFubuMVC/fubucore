@@ -39,6 +39,22 @@ namespace FubuCore.Testing
         {
             public Address Shipping { get; set; }
             public Address Billing { get; set; }
+
+            public string[] Names { get; set; }
+        }
+
+        [Test]
+        public void get_string_array_out_of_the_box()
+        {
+            var array = new string[]{"a", "b", "c"};
+            stringifier.GetString(array).ShouldEqual("a, b, c");
+        }
+
+        [Test]
+        public void get_int_array_out_of_the_box()
+        {
+            var array = new int[]{1, 2, 4, 8};
+            stringifier.GetString(array).ShouldEqual("1, 2, 4, 8");
         }
 
         [Test]
