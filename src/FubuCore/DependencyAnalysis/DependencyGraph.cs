@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace FubuCore.DependencyAnalysis
 {
-    public class DependencyGraph<T>
+    public class DependencyGraph<T> where T : class
     {
         readonly DirectedGraph _cycleDetector;
         readonly IDictionary<string, T> _items;
@@ -56,11 +56,13 @@ namespace FubuCore.DependencyAnalysis
 
         public IEnumerable<T> Ordered()
         {
-            return GetLoadOrder().Select(convert).ToList();
+            return GetLoadOrder().Select(convert).Where(x => x != null).ToList();
         }
 
         T convert(string name)
         {
+            if (!_items.ContainsKey(name)) return null;
+
             try
             {
                 return _items[name];
