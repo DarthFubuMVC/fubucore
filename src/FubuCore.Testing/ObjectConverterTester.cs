@@ -64,10 +64,13 @@ namespace FubuCore.Testing
 
         private ObjectConverter finder;
 
+
+        public class Weird{}
+
         [Test]
         public void array_of_non_simple_type_that_does_not_have_a_finder_cannot_be_parsed()
         {
-            finder.CanBeParsed(typeof(Service[])).ShouldBeFalse();
+            finder.CanBeParsed(typeof(Weird[])).ShouldBeFalse();
         }
 
         [Test]
@@ -80,7 +83,7 @@ namespace FubuCore.Testing
         [Test]
         public void enumerable_of_non_simple_type_that_does_not_have_a_finder_cannot_be_parsed()
         {
-            finder.CanBeParsed(typeof(IEnumerable<Service>)).ShouldBeFalse();
+            finder.CanBeParsed(typeof(IEnumerable<Weird>)).ShouldBeFalse();
         }
 
         [Test]
@@ -209,7 +212,13 @@ namespace FubuCore.Testing
         [Test]
         public void non_simple_type_that_does_not_have_a_finder_cannot_be_parsed()
         {
-            finder.CanBeParsed(typeof(Service)).ShouldBeFalse();
+            finder.CanBeParsed(typeof(Weird)).ShouldBeFalse();
+        }
+
+        [Test]
+        public void type_with_a_string_ctor_can_be_parsed()
+        {
+            finder.CanBeParsed(typeof(Service)).ShouldBeTrue();
         }
 
         [Test]
