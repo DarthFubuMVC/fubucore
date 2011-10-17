@@ -8,15 +8,12 @@ using FubuCore.Util;
 
 namespace FubuCore.CommandLine
 {
-    // TODO -- test this nonsense
-
     public class CommandFactory : ICommandFactory
     {
         private static readonly string[] _helpCommands = new string[]{"help", "?"}; 
         private readonly Cache<string, Type> _commandTypes = new Cache<string, Type>();
         private string _appName;
 
-        // TODO -- deal with the Help thing
         public CommandRun BuildRun(string commandLine)
         {
             var args = StringTokenizer.Tokenize(commandLine);

@@ -4,7 +4,6 @@ using Rhino.Mocks;
 
 namespace FubuCore.Testing.CommandLine
 {
-    // TODO -- switch to BDD style later
     [TestFixture]
     public class CommandExecutorTester
     {

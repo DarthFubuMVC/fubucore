@@ -47,8 +47,6 @@ namespace FubuCore.Binding
                     return false;
                 };
 
-            //TODO: work in the IElementNamingConvention somehow
-
             var formatString = property.Name + "[{0}]";
 
             int index = 0;

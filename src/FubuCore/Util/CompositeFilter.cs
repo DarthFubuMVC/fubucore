@@ -29,10 +29,9 @@ namespace FubuCore.Util
             }
         }
 
-        // TODO -- unit test for this
         public bool MatchesAll(T target)
         {
-            return Includes.MatchesAll(target) && !Excludes.MatchesAny(target);
+            return Includes.MatchesAll(target) && Excludes.DoesNotMatchAny(target);
         }
 
         public string GetDescriptionOfFirstMatchingInclude(T target)

@@ -8,6 +8,51 @@ namespace FubuCore.Testing.Util
     public class CompositeFilterTester
     {
         [Test]
+        public void matches_all_with_only_includes()
+        {
+            var filter = new CompositeFilter<string>();
+            filter.Includes += x => x.StartsWith("a");
+            filter.Includes += x => x.EndsWith("c");
+            filter.Includes += x => x.Contains("b");
+
+            filter.MatchesAll("abc").ShouldBeTrue();
+            filter.MatchesAll("ac").ShouldBeFalse();
+            filter.MatchesAll("abdc").ShouldBeTrue();
+            filter.MatchesAll("abdd").ShouldBeFalse();
+            filter.MatchesAll("babdc").ShouldBeFalse();
+        }
+
+        [Test]
+        public void matches_all_with_excludes()
+        {
+            var filter = new CompositeFilter<string>();
+            filter.Excludes += x => x.EndsWith("*");
+            filter.Excludes += x => x.EndsWith("$");
+
+            filter.MatchesAll("a").ShouldBeTrue();
+            filter.MatchesAll("a*").ShouldBeFalse();
+            filter.MatchesAll("a$").ShouldBeFalse();
+        }
+
+        [Test]
+        public void matches_all_with_mixed_includes_and_excludes()
+        {
+            var filter = new CompositeFilter<string>();
+            filter.Includes += x => x.StartsWith("a");
+            filter.Includes += x => x.EndsWith("c");
+
+            filter.Excludes += x => x.Contains("*");
+            filter.Excludes += x => x.Contains("$");
+
+            filter.MatchesAll("ac").ShouldBeTrue();
+            filter.MatchesAll("abc").ShouldBeTrue();
+            filter.MatchesAll("abdc").ShouldBeTrue();
+            filter.MatchesAll("abd*c").ShouldBeFalse();
+            filter.MatchesAll("abd$c").ShouldBeFalse();
+        }
+
+
+        [Test]
         public void has_changed()
         {
             var filter = new CompositeFilter<string>();
