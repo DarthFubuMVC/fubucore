@@ -120,6 +120,7 @@
     <Compile Include="DependencyAnalysis\Node.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="FlatFileWriter.cs" />
+    <Compile Include="GetStringRequest.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFlatFileWriter.cs" />
     <Compile Include="Reflection\Expressions\OrOperation.cs" />
@@ -193,6 +194,7 @@
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Stringifier.cs" />
+    <Compile Include="StringifierStrategy.cs" />
     <Compile Include="TemplateParser.cs" />
     <Compile Include="TypeExtensions.cs" />
     <Compile Include="TypeResolver.cs" />

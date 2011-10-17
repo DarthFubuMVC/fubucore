@@ -121,6 +121,7 @@
     <Compile Include="FlatFileWriterTester.cs" />
     <Compile Include="FubuExceptionTester.cs" />
     <Compile Include="GenericEnumerableExtensionsTester.cs" />
+    <Compile Include="GetStringRequestTester.cs" />
     <Compile Include="NumberExtensionsTester.cs" />
     <Compile Include="ObjectConverterTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
