@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Text;
 using FubuCore.CommandLine;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -117,6 +120,50 @@ namespace FubuCore.Testing.CommandLine
             input.ForceFlag.ShouldBeTrue();
         }
 
+
+        private CommandFactory GetCustomValidFileCommandFactory(TextWriter textWriter = null)
+        {
+            var factory = new CommandFactory(textWriter ?? Console.Out);
+            factory.RegisterCommands(GetType().Assembly);
+
+            factory.AddCustomInputConvention(
+                propetyInfo => propetyInfo.Name.EndsWith("FileName"),
+                propertyInfo => new MyValidFileTokenHandler(propertyInfo)
+            );
+            return factory;
+        }
+
+        [Test]
+        public void build_command_with_custom_input_handler()
+        {
+            var factory = GetCustomValidFileCommandFactory();
+
+            string tempFileName = Path.GetTempFileName();
+
+            var run = factory.BuildRun("file \"" + tempFileName + "\"");
+
+            run.Command.ShouldBeOfType<ValidFileNameCommand>();
+            var input = run.Input.ShouldBeOfType<ValidFileNameInput>();
+
+            input.InputFileName.ShouldEqual(tempFileName);
+
+            if (File.Exists(tempFileName))
+                File.Delete(tempFileName);
+        }
+
+        [Test]
+        public void build_command_with_custom_input_handler_but_fails_()
+        {
+            var stringBuilder = new StringBuilder();
+            var stringWriter = new StringWriter(stringBuilder);
+            var factory = GetCustomValidFileCommandFactory(stringWriter);
+
+            var run = factory.BuildRun("file \"M:\\FileShouldNotBeFound.txt\"");
+
+            stringBuilder.ToString().ShouldContain("FileNotFoundException");
+        }
+
+
         [Test]
         public void fetch_the_help_command_run()
         {
@@ -227,5 +274,50 @@ namespace FubuCore.Testing.CommandLine
     {
         public string Name { get; set; }
         public bool ForceFlag { get; set; }
+    }
+
+
+    [CommandDescription("valid file name", Name = "file")]
+    public class ValidFileNameCommand : FubuCommand<ValidFileNameInput>
+    {
+        public override bool Execute(ValidFileNameInput input)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public class ValidFileNameInput
+    {
+        public string InputFileName { get; set; }
+    }
+    public class MyValidFileTokenHandler : TokenHandlerBase
+    {
+        private readonly PropertyInfo _property;
+
+        public MyValidFileTokenHandler(PropertyInfo property)
+            : base(property)
+        {
+            _property = property;
+        }
+
+        public override bool Handle(object input, Queue<string> tokens)
+        {
+            var requestedFileName = tokens.Dequeue();
+
+            if (System.IO.File.Exists(requestedFileName))
+            {
+                _property.SetValue(input, requestedFileName, null);
+                return true;
+            }
+
+            throw new FileNotFoundException("File supplied does not exist", requestedFileName);
+        }
+
+
+        public override string ToUsageDescription()
+        {
+            var flagName = InputParser.ToFlagName(_property);
+
+            return "[{0} <{1}>]".ToFormat(flagName, _property.Name.ToLower());
+        }
     }
 }

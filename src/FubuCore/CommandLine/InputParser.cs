@@ -21,8 +21,24 @@ namespace FubuCore.CommandLine
                 .Select(BuildHandler).ToList();
         }
 
+        private static List<Tuple<Predicate<PropertyInfo>, Func<PropertyInfo, ITokenHandler>>> _handlers =
+            new List<Tuple<Predicate<PropertyInfo>, Func<PropertyInfo, ITokenHandler>>>(); 
+        public static void AddBuildHandler(Predicate<PropertyInfo> shouldHandleProperty, Func<PropertyInfo, ITokenHandler> tokenHandler)
+        {
+            var item = new Tuple<Predicate<PropertyInfo>, Func<PropertyInfo, ITokenHandler>>(shouldHandleProperty,
+                                                                                             tokenHandler);
+            _handlers.Add(item);
+        }
+
         public static ITokenHandler BuildHandler(PropertyInfo property)
         {
+
+            foreach (var handler in _handlers)
+            {
+                if (handler.Item1(property))
+                    return handler.Item2(property);
+            }
+
             if (property.PropertyType != typeof(string) && property.PropertyType.Closes(typeof(IEnumerable<>)))
             {
                 return new EnumerableArgument(property, _converter);

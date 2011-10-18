@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -12,9 +13,21 @@ namespace FubuCore.CommandLine
 
     public class CommandFactory : ICommandFactory
     {
+        private TextWriter _textWriter;
         private static readonly string[] _helpCommands = new string[]{"help", "?"}; 
         private readonly Cache<string, Type> _commandTypes = new Cache<string, Type>();
         private string _appName;
+
+        public CommandFactory()
+            : this(Console.Out)
+        {
+
+        }
+
+        public CommandFactory(TextWriter outputWriter)
+        {
+            _textWriter = outputWriter;
+        }
 
         // TODO -- deal with the Help thing
         public CommandRun BuildRun(string commandLine)
@@ -81,25 +94,25 @@ namespace FubuCore.CommandLine
             catch (InvalidUsageException e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Invalid usage");
+                _textWriter.WriteLine("Invalid usage");
 
                 if (e.Message.IsNotEmpty())
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine(e.Message);
+                    _textWriter.WriteLine(e.Message);
                 }
 
                 Console.ResetColor();
-                Console.WriteLine();
+                _textWriter.WriteLine();
             }
             catch (Exception e)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Error parsing input");
+                _textWriter.WriteLine("Error parsing input");
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine(e);
+                _textWriter.WriteLine(e);
                 Console.ResetColor();
-                Console.WriteLine();
+                _textWriter.WriteLine();
             }
 
             return HelpRun(commandName);
@@ -179,6 +192,11 @@ namespace FubuCore.CommandLine
         public void SetAppName(string appName)
         {
             _appName = appName;
+        }
+
+        public void AddCustomInputConvention(Predicate<PropertyInfo> shouldHandleProperty, Func<PropertyInfo, ITokenHandler> tokenHandler)
+        {
+            InputParser.AddBuildHandler(shouldHandleProperty, tokenHandler);
         }
     }
 }
