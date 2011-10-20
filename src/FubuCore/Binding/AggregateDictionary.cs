@@ -20,16 +20,14 @@ namespace FubuCore.Binding
         Other
     }
 
-    public class AggregateDictionary
+    public class AspNetAggregateDictionary : AggregateDictionary
     {
         private static readonly Cache<string, Func<HttpRequestBase, object>> _requestProperties =
             new Cache<string, Func<HttpRequestBase, object>>();
 
         private static readonly IList<PropertyInfo> _systemProperties = new List<PropertyInfo>();
-        private readonly IList<Locator> _locators = new List<Locator>();
 
-
-        static AggregateDictionary()
+        static AspNetAggregateDictionary()
         {
             AddRequestProperty(r => r.AcceptTypes);
             AddRequestProperty(r => r.ApplicationPath);
@@ -69,11 +67,11 @@ namespace FubuCore.Binding
             AddRequestProperty(r => r.UserLanguages);
         }
 
-        public AggregateDictionary()
+        private AspNetAggregateDictionary()
         {
         }
 
-        public AggregateDictionary(RequestContext context)
+        public AspNetAggregateDictionary(RequestContext context)
         {
             Func<string, object> locator = key =>
             {
@@ -85,9 +83,31 @@ namespace FubuCore.Binding
 
             AddLocator(RequestDataSource.Route, locator, () => context.RouteData.Values.Keys);
 
-            HttpContextBase @base = context.HttpContext;
+            var @base = context.HttpContext;
 
             configureForRequest(@base);
+        }
+
+        private void configureForRequest(HttpContextBase @base)
+        {
+            var request = @base.Request;
+
+            AddLocator(RequestDataSource.Request, key => request[key], () => keysForRequest(request));
+
+            AddLocator(RequestDataSource.File,
+                       key => request.Files[key],
+                       () => request.Files.AllKeys);
+            AddLocator(RequestDataSource.Header, key => request.Headers[key], () => request.Headers.AllKeys);
+            AddLocator(RequestDataSource.RequestProperty, key => GetRequestProperty(request, key),
+                       () => _requestProperties.GetAllKeys());
+        }
+
+        public static AspNetAggregateDictionary ForHttpContext(HttpContextWrapper context)
+        {
+            var dict = new AspNetAggregateDictionary();
+            dict.configureForRequest(context);
+
+            return dict;
         }
 
         public static bool IsSystemProperty(PropertyInfo property)
@@ -99,18 +119,10 @@ namespace FubuCore.Binding
 
         public static void AddRequestProperty(Expression<Func<HttpRequestBase, object>> expression)
         {
-            PropertyInfo property = ReflectionHelper.GetProperty(expression);
+            var property = ReflectionHelper.GetProperty(expression);
             _systemProperties.Add(property);
 
             _requestProperties[property.Name] = expression.Compile();
-        }
-
-        public static AggregateDictionary ForHttpContext(HttpContextWrapper context)
-        {
-            var dict = new AggregateDictionary();
-            dict.configureForRequest(context);
-
-            return dict;
         }
 
 
@@ -127,88 +139,81 @@ namespace FubuCore.Binding
             }
         }
 
-        private void configureForRequest(HttpContextBase @base)
-        {
-            HttpRequestBase request = @base.Request;
-
-            AddLocator(RequestDataSource.Request, key => request[key], () => keysForRequest(request));
-
-            AddLocator(RequestDataSource.File,
-                       key => request.Files[key],
-                       () => request.Files.AllKeys);
-            AddLocator(RequestDataSource.Header, key => request.Headers[key], () => request.Headers.AllKeys);
-            AddLocator(RequestDataSource.RequestProperty, key => GetRequestProperty(request, key), () => _requestProperties.GetAllKeys());
-        }
 
         private static object GetRequestProperty(HttpRequestBase request, string key)
         {
             return _requestProperties.Has(key) ? _requestProperties[key](request) : null;
         }
+    }
+
+    public class AggregateDictionary
+    {
+        private readonly IList<Locator> _locators = new List<Locator>();
 
         public bool HasAnyValuePrefixedWith(string key)
         {
             return _locators.Any(x => x.StartsWith(key));
         }
 
-        public void Value(string key, Action<RequestDataSource, object> callback)
+        public void Value(string key, Action<string, object> callback)
         {
             _locators.Any(x => x.Locate(key, callback));
         }
 
-        public AggregateDictionary AddLocator(RequestDataSource source, Func<string, object> locator, Func<IEnumerable<string>> allKeys)
+        public AggregateDictionary AddLocator(RequestDataSource source, Func<string, object> locator,
+                                              Func<IEnumerable<string>> allKeys)
+        {
+            return AddLocator(source.ToString(), locator, allKeys);
+        }
+
+        public AggregateDictionary AddLocator(string source, Func<string, object> locator,
+                                              Func<IEnumerable<string>> allKeys)
         {
             _locators.Add(new Locator
-                          {
-                              Getter = locator,
-                              Source = source,
-                              AllKeys = allKeys
-                          });
+            {
+                Getter = locator,
+                Source = source,
+                AllKeys = allKeys
+            });
 
             return this;
         }
 
         public AggregateDictionary AddDictionary(IDictionary<string, object> dictionary)
         {
-            AddLocator(RequestDataSource.Other, key => dictionary.ContainsKey(key) ? dictionary[key] : null, () => dictionary.Keys);
+            AddLocator(RequestDataSource.Other, key => dictionary.ContainsKey(key) ? dictionary[key] : null,
+                       () => dictionary.Keys);
             return this;
         }
 
-        #region Nested type: Locator
-
-        public class Locator
-        {
-            public Func<IEnumerable<string>> AllKeys { get; set; }
-            public RequestDataSource Source { get; set; }
-            public Func<string, object> Getter { get; set; }
-
-
-
-            public bool Locate(string key, Action<RequestDataSource, object> callback)
-            {
-                object value = Getter(key);
-                if (value != null)
-                {
-                    callback(Source, value);
-                    return true;
-                }
-
-                return false;
-            }
-            
-            public bool StartsWith(string key)
-            {
-                return AllKeys().Any(x => x.StartsWith(key));
-            }
-        }
-
-        #endregion
-
         public IEnumerable<string> GetAllKeys()
         {
-            return _locators.SelectMany(locator =>
+            return _locators.SelectMany(locator => locator.AllKeys()).Distinct();
+        }
+    }
+
+    public class Locator
+    {
+        public Func<IEnumerable<string>> AllKeys { get; set; }
+        public string Source { get; set;}
+        
+        public Func<string, object> Getter { get; set; }
+
+        public bool Locate(string key, Action<string, object> callback)
+        {
+            var value = Getter(key);
+            if (value != null)
             {
-                return locator.AllKeys();
-            }).Distinct();
+                callback(Source, value);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool StartsWith(string key)
+        {
+            return AllKeys().Any(x => x.StartsWith(key));
         }
     }
 }

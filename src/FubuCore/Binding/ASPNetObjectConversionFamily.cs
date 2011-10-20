@@ -1,6 +1,4 @@
-using System;
 using System.Reflection;
-using FubuCore.Binding;
 
 namespace FubuCore.Binding
 {
@@ -8,7 +6,7 @@ namespace FubuCore.Binding
     {
         public override bool Matches(PropertyInfo property)
         {
-            return AggregateDictionary.IsSystemProperty(property);
+            return AspNetAggregateDictionary.IsSystemProperty(property);
         }
 
         public override object Convert(IPropertyContext context)

@@ -46,7 +46,7 @@ namespace FubuCore.Binding
             return new RequestData(dict);
         }
 
-        protected virtual void record(string key, RequestDataSource source, object @object)
+        protected virtual void record(string key, string source, object @object)
         {
         }
 
