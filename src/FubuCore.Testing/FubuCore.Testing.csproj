@@ -77,8 +77,6 @@
     <Compile Include="Binding\FlatFileRequestDataTester.cs" />
     <Compile Include="Binding\InMemoryBindingContext.cs" />
     <Compile Include="Binding\InMemoryRequestDataTester.cs" />
-    <Compile Include="Binding\MapFromWebPathFamilyTester.cs" />
-    <Compile Include="Binding\MapWebToPhysicalPathFamilyTester.cs" />
     <Compile Include="Binding\ModelBinderCacheTester.cs" />
     <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
     <Compile Include="Binding\ObjectResolverTester.cs" />

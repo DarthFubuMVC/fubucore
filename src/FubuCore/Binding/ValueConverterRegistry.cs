@@ -36,8 +36,6 @@ namespace FubuCore.Binding
             Add<ASPNetObjectConversionFamily>();
 
             Add<ExpandEnvironmentVariablesFamily>();
-            Add<MapFromWebPathFamily>();
-            Add<MapWebToPhysicalPathFamily>();
             Add<ResolveConnectionStringFamily>();
 
             Add<BooleanFamily>();

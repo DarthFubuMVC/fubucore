@@ -1,3 +1,4 @@
+using System;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -19,97 +20,60 @@ namespace FubuCore.Testing
          *   FubuMVC.HelloWorld\Controllers\IntegrationTests\RunView.aspx
          **************************************************************************/
 
-        [Test]
-        public void get_absolute_for_unrooted_url_with_empty_stubbed_root()
-        {
-            UrlContext.Stub("");
-            "someUrl".ToAbsoluteUrl().ShouldEqual("someUrl");
-        }
+        //[Test]
+        //public void get_absolute_for_unrooted_url_with_empty_stubbed_root()
+        //{
+        //    UrlContext.Stub("");
+        //    "someUrl".ToAbsoluteUrl().ShouldEqual("someUrl");
+        //}
 
-        [SetUp]
-        public void SetUp()
-        {
-            UrlContext.Stub("/app");
-        }
+        //[SetUp]
+        //public void SetUp()
+        //{
+        //    UrlContext.Stub("/app");
+        //}
 
         [Test]
         public void get_absolute_for_unrooted_url()
         {
-            "someUrl".ToAbsoluteUrl().ShouldEqual("/app/someUrl");
+            "someUrl".ToAbsoluteUrl("http://server").ShouldEqual("http://server/someUrl");
         }
 
         [Test]
         public void get_absolute_for_rooted_url()
         {
-            "/folder/someUrl".ToAbsoluteUrl().ShouldEqual("/folder/someUrl");
+            "/folder/someUrl".ToAbsoluteUrl("http://server").ShouldEqual("http://server/folder/someUrl");
         }
 
 
         [Test]
         public void get_absolute_for_rooted_url_with_route_info()
         {
-            "/folder/someUrl/{something}".ToAbsoluteUrl().ShouldEqual("/folder/someUrl/{something}");
+            "/folder/someUrl/{something}".ToAbsoluteUrl("http://server").ShouldEqual("http://server/folder/someUrl/{something}");
         }
 
         [Test]
         public void get_absolute_for_app_relative_url()
         {
-            "~/someUrl".ToAbsoluteUrl().ShouldEqual("/app/someUrl");
+            "~/someUrl".ToAbsoluteUrl("http://server/app").ShouldEqual("http://server/app/someUrl");
         }
 
         [Test]
         public void get_absolute_for_fully_qualified_url()
         {
-            "http://somewhere.com/someUrl".ToAbsoluteUrl().ShouldEqual("http://somewhere.com/someUrl");
+            "http://somewhere.com/someUrl".ToAbsoluteUrl("http://server").ShouldEqual("http://somewhere.com/someUrl");
         }
 
         [Test]
         public void get_absolute_for_empty_url()
         {
-            "".ToAbsoluteUrl().ShouldEqual("/app/");
-        }
-
-
-        [Test]
-        public void get_server_Url_for_unrooted_url()
-        {
-            "someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://www.someserver/app/someUrl");
-        }
-
-        [Test]
-        public void get_server_Url_for_rooted_url()
-        {
-            "/folder/someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://www.someserver/folder/someUrl");
-        }
-
-        [Test]
-        public void get_server_Url_for_app_relative_url()
-        {
-            "~/someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://www.someserver/app/someUrl");
+            "".ToAbsoluteUrl("http://server").ShouldEqual("http://server");
         }
 
         [Test]
         public void get_server_Url_for_fully_qualified_url()
         {
             "http://somewhere.com/someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://somewhere.com/someUrl");
-        }
-
-        [Test]
-        public void get_path_for_unrooted_url()
-        {
-            "someUrl".ToPhysicalPath().ShouldEqual(@"\app\someUrl");
-        }
-
-        [Test]
-        public void get_path_for_rooted_url()
-        {
-            "/folder/someUrl".ToPhysicalPath().ShouldEqual(@"\folder\someUrl");
-        }
-
-        [Test]
-        public void get_path_for_app_relative_url()
-        {
-            "~/someUrl".ToPhysicalPath().ShouldEqual(@"\app\someUrl");
         }
 
         [Test]
