@@ -25,38 +25,28 @@ namespace FubuCore.Reflection.Expressions
             _listOfOperations.Add(new Tuple<IPropertyOperation, MemberExpression, object>(operation, memberExpression, value));
         }
 
-
-
         public Expression<Func<T, bool>> GetPredicateBuilder<T>()
         {
-            if(_listOfOperations.Count() > 2)
+            if(_listOfOperations.Count() == 0)
             {
-                throw new Exception("You can't have more than two operations registered for an 'or' operation (you have {0})".ToFormat(_listOfOperations.Count));
+                throw new Exception("You must have at least one operation registered for an 'or' operation (you have {0})".ToFormat(_listOfOperations.Count));
             }
 
             //the parameter to use
             var lambdaParameter = Expression.Parameter(typeof (T));
 
+            var initialPredicate = Expression.Constant(false);
+            Expression builtUpPredicate = initialPredicate;
 
-            //make predicates
-            var leftOptions = _listOfOperations.First();
-            var leftPredicateBuilder = leftOptions.Item1.GetPredicateBuilder<T>(leftOptions.Item2);
-            var leftPredicate = leftPredicateBuilder(leftOptions.Item3);
+            foreach (var operation in _listOfOperations)
+            {
+                var predBuilder = operation.Item1.GetPredicateBuilder<T>(operation.Item2);
+                var predicate = predBuilder(operation.Item3);
+                var expPredicate = rebuild(predicate, lambdaParameter);
+                builtUpPredicate = Expression.MakeBinary(ExpressionType.OrElse, builtUpPredicate, expPredicate);
+            }
 
-            var rightOptions = _listOfOperations.Skip(1).First();
-            var rightPredicateBuilder = rightOptions.Item1.GetPredicateBuilder<T>(rightOptions.Item2);
-            var rightPredicate = rightPredicateBuilder(rightOptions.Item3);
-
-            
-
-            //to avoid invokes and calls I need to rebuild the predicates with OUR parameter
-            var lb = rebuild(leftPredicate, lambdaParameter);
-            var rb = rebuild(rightPredicate, lambdaParameter);
-
-            var orElse = Expression.OrElse(lb, rb);
-            var expressionToReturn = Expression.Lambda<Func<T, bool>>(orElse, lambdaParameter);
-
-            return expressionToReturn;
+            return Expression.Lambda<Func<T,bool>>(builtUpPredicate, lambdaParameter);
         }
 
         Expression rebuild(Expression exp, ParameterExpression parameter)

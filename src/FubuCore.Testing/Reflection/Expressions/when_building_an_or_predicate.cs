@@ -69,11 +69,12 @@ namespace FubuCore.Testing.Reflection.Expressions
             var orish = new ComposableOrOperation();//.GetPredicateBuilder<Contract>(, c => c.Status, "closed");
             orish.Set<Contract>(c => c.Status, "open");
             orish.Set<Contract>(c => c.Status, "closed");
+            orish.Set<Contract>(c => c.Status, "hold");
 
             var x = orish.GetPredicateBuilder<Contract>();
 
             var contract = new Contract();
-            contract.Status = "open";
+            contract.Status = "hold";
 
             x.Compile()(contract).ShouldBeTrue();
 
@@ -82,6 +83,14 @@ namespace FubuCore.Testing.Reflection.Expressions
 
 
             x.Compile()(contract2).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_work_with_zero_ors()
+        {
+            var orish = new ComposableOrOperation();
+
+            orish.GetPredicateBuilder<Contract>().Compile()(new Contract()).ShouldBeFalse();
         }
 
         [Test]
