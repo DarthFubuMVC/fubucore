@@ -29,7 +29,7 @@ namespace FubuCore.Binding
 
                 var value = converter.Convert(x);
                     
-                property.SetValue(x.Object, value, null);
+                x.SetPropertyValue(value);
             });
         }
 

@@ -14,11 +14,17 @@ namespace FubuCore.Binding
         public PropertyBinderCache(IEnumerable<IPropertyBinder> binders, IValueConverterRegistry converters, ICollectionTypeProvider collectionTypeProvider)
         {
             _binders.AddRange(binders);
+            _binders.Add(new AttributePropertyBinder());
             _binders.Add(new ConversionPropertyBinder(converters));
             _binders.Add(new CollectionPropertyBinder(collectionTypeProvider));
             _binders.Add(new NestedObjectPropertyBinder());
 
             _cache.OnMissing = prop => _binders.FirstOrDefault(x => x.Matches(prop));
+        }
+
+        public IList<IPropertyBinder> Binders
+        {
+            get { return _binders; }
         }
 
         public IPropertyBinder BinderFor(PropertyInfo property)

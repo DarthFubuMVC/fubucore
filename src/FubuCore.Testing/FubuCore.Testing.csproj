@@ -66,6 +66,7 @@
     <Compile Include="BasicExtensionsTester.cs" />
     <Compile Include="Binding\AggregateDictionaryTester.cs" />
     <Compile Include="Binding\BasicTypeConverterTester.cs" />
+    <Compile Include="Binding\BindingAttributeTester.cs" />
     <Compile Include="Binding\BindingContextTester.cs" />
     <Compile Include="Binding\BindingResultTester.cs" />
     <Compile Include="Binding\BooleanFamilyTester.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
     <Compile Include="Binding\ObjectResolverTester.cs" />
     <Compile Include="Binding\PassthroughBinderTester.cs" />
+    <Compile Include="Binding\PropertyBinderCacheTester.cs" />
     <Compile Include="Binding\PropertyBinderTester.cs" />
     <Compile Include="Binding\ReaderBinderTester.cs" />
     <Compile Include="Binding\RequestDataTester.cs" />

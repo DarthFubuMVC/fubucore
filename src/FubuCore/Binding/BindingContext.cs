@@ -16,6 +16,11 @@ namespace FubuCore.Binding
         private readonly IList<ConvertProblem> _problems = new List<ConvertProblem>();
         private readonly Lazy<ISmartRequest> _request;
 
+        public static void AddNamingStrategy(Func<string, string> strategy)
+        {
+            _namingStrategies.Add(strategy);
+        }
+
         static BindingContext()
         {
             _namingStrategies = new List<Func<string, string>>
@@ -41,6 +46,11 @@ namespace FubuCore.Binding
         public IBindingLogger Logger
         {
             get { return _logger; }
+        }
+
+        public void SetPropertyValue(object value)
+        {
+            Property.SetValue(Object, value, null);
         }
 
         public IList<ConvertProblem> Problems

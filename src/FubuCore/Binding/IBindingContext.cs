@@ -204,5 +204,13 @@ namespace FubuCore.Binding
         /// Expose logging to the model binding subsystem
         /// </summary>
         IBindingLogger Logger { get; }
+
+
+        /// <summary>
+        /// Shortcut to call PropertyInfo.SetValue(Object, value, null)
+        /// </summary>
+        /// <param name="value"></param>
+        void SetPropertyValue(object value);
     }
+
 }
