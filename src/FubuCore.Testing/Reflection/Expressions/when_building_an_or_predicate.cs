@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore.Reflection.Expressions;
 using FubuTestingSupport;
@@ -90,7 +91,10 @@ namespace FubuCore.Testing.Reflection.Expressions
         {
             var orish = new ComposableOrOperation();
 
-            orish.GetPredicateBuilder<Contract>().Compile()(new Contract()).ShouldBeFalse();
+            Exception<Exception>.ShouldBeThrownBy(() =>
+            {
+                orish.GetPredicateBuilder<Contract>().Compile()(new Contract());
+            });
         }
 
         [Test]
