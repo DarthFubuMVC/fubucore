@@ -42,7 +42,7 @@ namespace FubuCore.Binding
 
         public static RequestData ForDictionary(IDictionary<string, object> dictionary)
         {
-            AggregateDictionary dict = new AggregateDictionary().AddDictionary(dictionary);
+            AggregateDictionary dict = new AggregateDictionary().AddDictionary("Other", dictionary);
             return new RequestData(dict);
         }
 

@@ -64,7 +64,7 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BasicExtensionsTester.cs" />
-    <Compile Include="Binding\ASPNetObjectConversionFamilyTester.cs" />
+    <Compile Include="Binding\AggregateDictionaryTester.cs" />
     <Compile Include="Binding\BasicTypeConverterTester.cs" />
     <Compile Include="Binding\BindingContextTester.cs" />
     <Compile Include="Binding\BindingResultTester.cs" />

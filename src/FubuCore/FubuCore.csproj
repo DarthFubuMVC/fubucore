@@ -51,7 +51,6 @@
     <Compile Include="Attributes.cs" />
     <Compile Include="BasicExtensions.cs" />
     <Compile Include="Binding\AggregateDictionary.cs" />
-    <Compile Include="Binding\ASPNetObjectConversionFamily.cs" />
     <Compile Include="Binding\BindingContext.cs" />
     <Compile Include="Binding\BindResult.cs" />
     <Compile Include="Binding\BindResultAssertionException.cs" />
