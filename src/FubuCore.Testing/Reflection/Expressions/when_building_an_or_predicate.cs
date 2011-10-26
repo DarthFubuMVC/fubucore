@@ -183,6 +183,25 @@ namespace FubuCore.Testing.Reflection.Expressions
             x.Compile()(contract).ShouldBeTrue();
         }
 
+        [Test]
+        public void should_work_for_two_where()
+        {
+            var orish = new ComposableOrOperation();
+            orish.Set<Contract>(c => c.Part.IsUsed, true);
+            orish.Set<Contract>(c => c.Purchased, 2);
+
+            var x = orish.GetPredicateBuilder<Contract>();
+            
+            var contract = new Contract();
+            contract.Status = "open";
+            contract.Purchased = 2;
+            contract.Part.IsUsed = false;
+            contract.Signature = new Signature("brandon");
+            contract.IsUnitBased = false;
+            
+            x.Compile()(contract).ShouldBeTrue();
+        }
+
 
     }
 }
