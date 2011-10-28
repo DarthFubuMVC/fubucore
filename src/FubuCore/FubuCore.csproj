@@ -115,6 +115,7 @@
     <Compile Include="DependencyAnalysis\DirectedGraph.cs" />
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
+    <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="FlatFileWriter.cs" />
     <Compile Include="GetStringRequest.cs" />
