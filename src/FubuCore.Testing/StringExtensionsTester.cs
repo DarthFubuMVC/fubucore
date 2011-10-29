@@ -199,5 +199,12 @@ e
 
             
         }
+
+        [Test]
+        public void to_hash_is_repeatable()
+        {
+            "something".ToHash().ShouldEqual("something".ToHash());
+            "else".ToHash().ShouldNotEqual("something".ToHash());
+        }
     }
 }

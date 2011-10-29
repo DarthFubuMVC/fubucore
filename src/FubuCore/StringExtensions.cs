@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
@@ -256,6 +258,16 @@ namespace FubuCore
             {
                 callback(line);
             }
+        }
+
+        /// <summary>
+        /// Just uses MD5 to create a repeatable hash
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public static string ToHash(this string text)
+        {
+            return MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(text)).Select(b => b.ToString("x2")).Join("");
         }
     }
 }

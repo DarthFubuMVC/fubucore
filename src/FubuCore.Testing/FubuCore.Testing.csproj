@@ -117,6 +117,7 @@
     <Compile Include="DependencyAnalysis\DependencyGraphTester.cs" />
     <Compile Include="DictionaryExtensionsTester.cs" />
     <Compile Include="FileChangePollingWatcherTester.cs" />
+    <Compile Include="FileHashingExtensionsTester.cs" />
     <Compile Include="FileSetTester.cs" />
     <Compile Include="FileSystemTester.cs" />
     <Compile Include="FlatFileWriterTester.cs" />

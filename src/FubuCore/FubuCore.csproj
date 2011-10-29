@@ -116,6 +116,7 @@
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
+    <Compile Include="FileHashingExtensions.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="FlatFileWriter.cs" />
     <Compile Include="GetStringRequest.cs" />
