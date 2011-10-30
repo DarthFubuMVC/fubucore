@@ -6,7 +6,7 @@ using System.Linq;
 namespace FubuCore.Util
 {
     [Serializable]
-    public class Cache<TKey, TValue> : IEnumerable<TValue> 
+    public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
         private readonly object _locker = new object();
         private readonly IDictionary<TKey, TValue> _values;
@@ -14,9 +14,10 @@ namespace FubuCore.Util
         private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
         private Action<TValue> _onAddition = x => { };
+
         private Func<TKey, TValue> _onMissing = delegate(TKey key)
         {
-            string message = string.Format("Key '{0}' could not be found", key);
+            var message = string.Format("Key '{0}' could not be found", key);
             throw new KeyNotFoundException(message);
         };
 
@@ -41,12 +42,26 @@ namespace FubuCore.Util
             _values = dictionary;
         }
 
-        public Action<TValue> OnAddition { set { _onAddition = value; } }
-        public Func<TKey, TValue> OnMissing { set { _onMissing = value; } }
+        public Action<TValue> OnAddition
+        {
+            set { _onAddition = value; }
+        }
 
-        public Func<TValue, TKey> GetKey { get { return _getKey; } set { _getKey = value; } }
+        public Func<TKey, TValue> OnMissing
+        {
+            set { _onMissing = value; }
+        }
 
-        public int Count { get { return _values.Count; } }
+        public Func<TValue, TKey> GetKey
+        {
+            get { return _getKey; }
+            set { _getKey = value; }
+        }
+
+        public int Count
+        {
+            get { return _values.Count; }
+        }
 
         public TValue First
         {
@@ -61,41 +76,24 @@ namespace FubuCore.Util
             }
         }
 
-        public TValue this[TKey key] { get {
-            FillDefault(key);
-
-            return _values[key];
-        } set
+        public TValue this[TKey key]
         {
-            _onAddition(value);
-            if (_values.ContainsKey(key))
+            get
             {
-                _values[key] = value;
-            }
-            else
-            {
-                _values.Add(key, value);
-            }
-        }
-        }
+                FillDefault(key);
 
-        /// <summary>
-        /// Guarantees that the Cache has the default value for a given key.
-        /// If it does not already exist, it's created.
-        /// </summary>
-        /// <param name="key"></param>
-        public void FillDefault(TKey key)
-        {
-            if (!_values.ContainsKey(key))
+                return _values[key];
+            }
+            set
             {
-                lock (_locker)
+                _onAddition(value);
+                if (_values.ContainsKey(key))
                 {
-                    if (!_values.ContainsKey(key))
-                    {
-                        TValue value = _onMissing(key);
-                        _onAddition(value);
-                        _values.Add(key, value);
-                    }
+                    _values[key] = value;
+                }
+                else
+                {
+                    _values.Add(key, value);
                 }
             }
         }
@@ -108,6 +106,33 @@ namespace FubuCore.Util
         public IEnumerator<TValue> GetEnumerator()
         {
             return _values.Values.GetEnumerator();
+        }
+
+        /// <summary>
+        ///   Guarantees that the Cache has the default value for a given key.
+        ///   If it does not already exist, it's created.
+        /// </summary>
+        /// <param name = "key"></param>
+        public void FillDefault(TKey key)
+        {
+            Fill(key, _onMissing);
+        }
+
+        public void Fill(TKey key, Func<TKey, TValue> onMissing)
+        {
+            if (!_values.ContainsKey(key))
+            {
+                lock (_locker)
+                {
+                    if (!_values.ContainsKey(key))
+                    {
+                        
+                        var value = onMissing(key);
+                        _onAddition(value);
+                        _values.Add(key, value);
+                    }
+                }
+            }
         }
 
         public void Fill(TKey key, TValue value)
@@ -143,7 +168,7 @@ namespace FubuCore.Util
 
         public bool Exists(Predicate<TValue> predicate)
         {
-            bool returnValue = false;
+            var returnValue = false;
 
             Each(delegate(TValue value) { returnValue |= predicate(value); });
 

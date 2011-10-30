@@ -27,6 +27,21 @@ namespace FubuCore.Testing.Util
         }
 
         [Test]
+        public void non_default_fill()
+        {
+            var count = 0;
+
+            cache.OnMissing = key => ++count;
+
+            cache.FillDefault("number");
+            cache["number"].ShouldEqual(1);
+
+            cache.Fill("diff", key => 1000);
+
+            cache["diff"].ShouldEqual(1000);
+        }
+
+        [Test]
         public void on_addition_should_fire_when_a_cache_adds_something_from_its_on_missing_catch()
         {
             var list = new List<int>();
