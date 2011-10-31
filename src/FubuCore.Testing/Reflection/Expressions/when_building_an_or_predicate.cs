@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore.Reflection.Expressions;
 using FubuTestingSupport;
@@ -69,11 +70,12 @@ namespace FubuCore.Testing.Reflection.Expressions
             var orish = new ComposableOrOperation();//.GetPredicateBuilder<Contract>(, c => c.Status, "closed");
             orish.Set<Contract>(c => c.Status, "open");
             orish.Set<Contract>(c => c.Status, "closed");
+            orish.Set<Contract>(c => c.Status, "hold");
 
             var x = orish.GetPredicateBuilder<Contract>();
 
             var contract = new Contract();
-            contract.Status = "open";
+            contract.Status = "hold";
 
             x.Compile()(contract).ShouldBeTrue();
 
@@ -82,6 +84,17 @@ namespace FubuCore.Testing.Reflection.Expressions
 
 
             x.Compile()(contract2).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_work_with_zero_ors()
+        {
+            var orish = new ComposableOrOperation();
+
+            Exception<Exception>.ShouldBeThrownBy(() =>
+            {
+                orish.GetPredicateBuilder<Contract>().Compile()(new Contract());
+            });
         }
 
         [Test]
@@ -166,6 +179,25 @@ namespace FubuCore.Testing.Reflection.Expressions
             var contract = new Contract();
             contract.Part.IsUsed = false;
             contract.Signature = new Signature("brandon");
+            
+            x.Compile()(contract).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_work_for_two_where()
+        {
+            var orish = new ComposableOrOperation();
+            orish.Set<Contract>(c => c.Part.IsUsed, true);
+            orish.Set<Contract>(c => c.Purchased, 2);
+
+            var x = orish.GetPredicateBuilder<Contract>();
+            
+            var contract = new Contract();
+            contract.Status = "open";
+            contract.Purchased = 2;
+            contract.Part.IsUsed = false;
+            contract.Signature = new Signature("brandon");
+            contract.IsUnitBased = false;
             
             x.Compile()(contract).ShouldBeTrue();
         }
