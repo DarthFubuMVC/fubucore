@@ -13,6 +13,24 @@ namespace FubuCore
             DeepSearch = true;
         }
 
+        public void AppendInclude(string include)
+        {
+            if (Include == "*.*")
+            {
+                Include = string.Empty;
+            }
+
+            if (Include.IsEmpty())
+            {
+                Include = include;
+            }
+            else
+            {
+                Include += ";" + include;
+            }
+
+        }
+
         [XmlAttribute]
         public string Include { get; set; }
 

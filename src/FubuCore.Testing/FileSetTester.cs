@@ -24,6 +24,17 @@ namespace FubuCore.Testing
             theFileSet = new FileSet();
         }
 
+        [Test]
+        public void append_include()
+        {
+            theFileSet.Include.ShouldEqual("*.*");
+            theFileSet.AppendInclude("*.config");
+
+            theFileSet.Include.ShouldEqual("*.config");
+            theFileSet.AppendInclude("*.as*x");
+
+            theFileSet.Include.ShouldEqual("*.config;*.as*x");
+        }
 
         private void writeFile(string name)
         {
