@@ -48,6 +48,19 @@ namespace FubuCore.Testing.Binding
             theRequest.Value(typeof(int), "int").ShouldEqual(5);
         }
 
+        public enum SampleEnum {a, B}
+        [Test]
+        public void convert_case_miss_enum()
+        {
+
+            theData["enum-a"] = "A";
+            theData["enum-b"] = "b";
+            theRequest.Value<SampleEnum>("enum-a").ShouldEqual(SampleEnum.a);
+            theRequest.Value<SampleEnum>("enum-b").ShouldEqual(SampleEnum.B);
+            theRequest.Value(typeof (SampleEnum), "enum-a").ShouldEqual(SampleEnum.a);
+
+        }
+
         [Test]
         public void missing_value_with_continuation_does_nothing()
         {

@@ -239,7 +239,7 @@ namespace FubuCore
 
         public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
         {
-            return stringValue => Enum.Parse(type, stringValue);
+            return stringValue => Enum.Parse(type, stringValue, true);
         }
     }
 
