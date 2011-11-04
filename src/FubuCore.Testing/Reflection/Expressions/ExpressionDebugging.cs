@@ -15,14 +15,9 @@ namespace FubuCore.Testing.Reflection.Expressions
     [TestFixture, Explicit]
     public class ExpressionDebugging
     {
-        private MethodInfo _indexOfMethod =
-                ReflectionHelper.GetMethod<IEnumerable<object>>(s => s.Contains(""));
-
         [Test]
         public void blah()
         {
-
-
             Expression<Func<Kase, object>> foo = x => x.Queue;
             var bb = new CollectionContainsPropertyOperation();
             var aa = bb.GetPredicateBuilder<Kase>(foo.GetMemberExpression(true));
