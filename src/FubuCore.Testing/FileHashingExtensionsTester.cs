@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using FubuTestingSupport;
+using System.Threading;
+using System.IO;
 
 namespace FubuCore.Testing
 {
@@ -29,10 +31,14 @@ namespace FubuCore.Testing
         {
             var file1 = "a.txt";
             new FileSystem().WriteStringToFile(file1, "something");
-
+			
+			Thread.Sleep(1000);
+			
             var hash1 = file1.HashByModifiedDate();
 
             new FileSystem().WriteStringToFile(file1, "else");
+			
+			Thread.Sleep(1000);
 
             var hash2 = file1.HashByModifiedDate();
 
@@ -48,7 +54,9 @@ namespace FubuCore.Testing
             new FileSystem().WriteStringToFile(file1, "something");
             new FileSystem().WriteStringToFile(file2, "else");
             new FileSystem().WriteStringToFile(file3, "altogether");
-
+			
+			Thread.Sleep(1000);
+			
             // Isn't dependent upon order of the files
             var hash1 = new string[]{file1, file2, file3}.HashByModifiedDate();
             var hash2 = new string[] { file2, file3, file1 }.HashByModifiedDate();
@@ -60,7 +68,10 @@ namespace FubuCore.Testing
             hash4.ShouldNotEqual(hash1);
 
             new FileSystem().WriteStringToFile(file1, "else");
-            var hash5 = new string[] { file2, file1, file3 }.HashByModifiedDate();
+			
+			Thread.Sleep(1000);
+            
+			var hash5 = new string[] { file2, file1, file3 }.HashByModifiedDate();
 
             hash5.ShouldNotEqual(hash1);
         }

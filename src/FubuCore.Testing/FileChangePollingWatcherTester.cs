@@ -20,7 +20,9 @@ namespace FubuCore.Testing
             system.WriteStringToFile("a.txt", "something");
             system.WriteStringToFile("b.txt", "else");
             system.WriteStringToFile("c.txt", "altogether");
-
+			
+			Thread.Sleep(1000);
+			
             theWatcher = new FileChangePollingWatcher();
 
             action1 = MockRepository.GenerateMock<System.Action>();
@@ -41,13 +43,13 @@ namespace FubuCore.Testing
         [Test]
         public void catch_changes_1()
         {
-            theWatcher.StartWatching(1000);
+            theWatcher.StartWatching(1500);
             new FileSystem().WriteStringToFile("a.txt", "more");
 
             var reset = new ManualResetEvent(false);
             theWatcher.PollingCallback = () => reset.Set();
 
-            reset.WaitOne(2000);
+            reset.WaitOne(2500);
 
             action1.AssertWasCalled(x => x.Invoke());
             action2.AssertWasNotCalled(x => x.Invoke());
@@ -58,14 +60,14 @@ namespace FubuCore.Testing
         [Test]
         public void catch_changes_2()
         {
-            theWatcher.StartWatching(1000);
+            theWatcher.StartWatching(1500);
             new FileSystem().WriteStringToFile("a.txt", "more");
             new FileSystem().WriteStringToFile("c.txt", "more");
 
             var reset = new ManualResetEvent(false);
             theWatcher.PollingCallback = () => reset.Set();
 
-            reset.WaitOne(2000);
+            reset.WaitOne(2500);
 
             action1.AssertWasCalled(x => x.Invoke());
             action2.AssertWasNotCalled(x => x.Invoke());
