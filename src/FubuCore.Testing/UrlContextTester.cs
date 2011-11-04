@@ -40,6 +40,7 @@ namespace FubuCore.Testing
         }
 
         [Test]
+		[Platform(Exclude="Mono")]
         public void get_absolute_for_rooted_url()
         {
             "/folder/someUrl".ToAbsoluteUrl("http://server").ShouldEqual("http://server/folder/someUrl");
