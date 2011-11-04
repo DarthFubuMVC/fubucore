@@ -1,4 +1,4 @@
-COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
+COMPILE_TARGET = ENV['config'].nil? ? "Debug" : ENV['config']
 CLR_TOOLS_VERSION = "v4.0.30319"
 
 buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
