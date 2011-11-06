@@ -97,11 +97,12 @@ namespace FubuCore
             {
                 throw new ArgumentOutOfRangeException("applicationUrl", "applicationUrl must be an absolute url");
             }
-
-            if (Uri.IsWellFormedUriString(url, UriKind.Absolute)) return url;
-            url = url ?? string.Empty;
+			
+			url = url ?? string.Empty;
             url = url.TrimStart('~', '/').TrimStart('/');
-
+			
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute)) return url;			
+			
             return (applicationUrl.TrimEnd('/') + "/" + url).TrimEnd('/');
         }
 

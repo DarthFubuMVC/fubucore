@@ -40,12 +40,10 @@ namespace FubuCore.Testing
         }
 
         [Test]
-		[Platform(Exclude="Mono")]
         public void get_absolute_for_rooted_url()
         {
             "/folder/someUrl".ToAbsoluteUrl("http://server").ShouldEqual("http://server/folder/someUrl");
         }
-
 
         [Test]
         public void get_absolute_for_rooted_url_with_route_info()
@@ -72,7 +70,7 @@ namespace FubuCore.Testing
         }
 
         [Test]
-        public void get_server_Url_for_fully_qualified_url()
+        public void get_server_url_for_fully_qualified_url()
         {
             "http://somewhere.com/someUrl".ToServerQualifiedUrl(SERVER_BASE).ShouldEqual("http://somewhere.com/someUrl");
         }
@@ -88,6 +86,5 @@ namespace FubuCore.Testing
         {
             "/someUrl".WithoutQueryString().ShouldEqual(@"/someUrl");
         }
-
     }
 }
