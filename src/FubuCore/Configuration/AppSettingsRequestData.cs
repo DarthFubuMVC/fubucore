@@ -10,14 +10,21 @@ namespace FubuCore.Configuration
 {
     public class AppSettingsRequestData : IRequestData
     {
+        private static readonly KeyValueConfigurationCollection Settings;
+        static AppSettingsRequestData()
+        {
+            var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            Settings = config.AppSettings.Settings;
+        }
+
         public object Value(string key)
         {
-            return ConfigurationManager.AppSettings[key];
+            return Settings[key].Value;
         }
 
         public bool Value(string key, Action<object> callback)
         {
-            if (ConfigurationManager.AppSettings.AllKeys.Contains(key))
+            if (Settings.AllKeys.Contains(key))
             {
                 callback(Value(key));
                 return true;
@@ -28,7 +35,7 @@ namespace FubuCore.Configuration
 
         public bool HasAnyValuePrefixedWith(string key)
         {
-            return ConfigurationManager.AppSettings.AllKeys.Any(x => x.StartsWith(key));
+            return Settings.AllKeys.Any(x => x.StartsWith(key));
         }
 
         public static string KeyFor<T>(Expression<Func<T, object>> property)
@@ -39,12 +46,12 @@ namespace FubuCore.Configuration
         public static string GetValueFor<T>(Expression<Func<T, object>> property)
         {
             var key = KeyFor(property);
-            return (ConfigurationManager.AppSettings.AllKeys.Contains(key)) ? ConfigurationManager.AppSettings[key] : string.Empty;
+            return (Settings.AllKeys.Contains(key)) ? Settings[key].Value : string.Empty;
         }
 
         public IEnumerable<string> GetKeys()
         {
-            return ConfigurationManager.AppSettings.AllKeys;
+            return Settings.AllKeys;
         }
     }
 }
