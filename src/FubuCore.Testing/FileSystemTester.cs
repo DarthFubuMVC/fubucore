@@ -238,4 +238,37 @@ namespace FubuCore.Testing
         }
     }
 
+
+    [TestFixture]
+    public class Searching_up_the_tree_for_a_dir
+    {
+        private IFileSystem _fileSystem;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _fileSystem = new FileSystem();
+            _fileSystem.CreateDirectory("deep/a/b/c");
+            _fileSystem.CreateDirectory("deep/config");
+        }
+
+        [Test]
+        public void found()
+        {
+            var expected = Environment.CurrentDirectory.AppendPath("deep\\config");
+            
+            var dir = _fileSystem.SearchUpForDirectory("deep/a/b/c".ToFullPath(), "config");
+
+            dir.ShouldEqual(expected);
+        }
+        [Test]
+        public void miss()
+        {
+           
+            var dir = _fileSystem.SearchUpForDirectory("deep/a/b/c".ToFullPath(), "conig");
+
+            dir.ShouldBeNull();
+        }
+    }
+
 }

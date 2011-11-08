@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using FubuCore.CommandLine;
 
@@ -113,6 +114,30 @@ namespace FubuCore
         public static void CreateDirectory(this IFileSystem fileSystem, params string[] pathParts)
         {
             fileSystem.CreateDirectory(FileSystem.Combine(pathParts));
+        }
+
+        public static string SearchUpForDirectory(this IFileSystem fileSystem, string startingPoint, string directoryToFind)
+        {
+            var dirs = fileSystem.ChildDirectoriesFor(startingPoint).Select(dir => new DirectoryInfo(dir));
+            if(!dirs.Any(dir=>dir.Name.EqualsIgnoreCase(directoryToFind)))
+            {
+                var par = Directory.GetParent(startingPoint);
+                if(par.Parent == null)
+                {
+                    return null;
+                }
+                return fileSystem.SearchUpForDirectory(par.FullName, directoryToFind);
+            }
+
+            //need a break clause
+
+            return dirs.First(dir=>dir.Name.EqualsIgnoreCase(directoryToFind)).FullName;
+        }
+
+
+        public static string SearchUpForDirectory(this IFileSystem fileSystem, string directoryToFind)
+        {
+            return fileSystem.SearchUpForDirectory(".", directoryToFind);
         }
     }
 }
