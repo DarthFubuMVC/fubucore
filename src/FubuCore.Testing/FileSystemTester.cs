@@ -248,14 +248,14 @@ namespace FubuCore.Testing
         public void SetUp()
         {
             _fileSystem = new FileSystem();
-            _fileSystem.CreateDirectory("deep/a/b/c");
-            _fileSystem.CreateDirectory("deep/config");
+            _fileSystem.CreateDirectory("deep".AppendPath("a","b","c"));
+            _fileSystem.CreateDirectory("deep".AppendPath("config"));
         }
 
         [Test]
         public void found()
         {
-            var expected = Environment.CurrentDirectory.AppendPath("deep\\config");
+            var expected = Environment.CurrentDirectory.AppendPath("deep".AppendPath("config"));
             
             var dir = _fileSystem.SearchUpForDirectory("deep/a/b/c".ToFullPath(), "config");
 
@@ -265,7 +265,7 @@ namespace FubuCore.Testing
         public void miss()
         {
            
-            var dir = _fileSystem.SearchUpForDirectory("deep/a/b/c".ToFullPath(), "conig");
+            var dir = _fileSystem.SearchUpForDirectory("deep".AppendPath("a","b","c").ToFullPath(), "conig");
 
             dir.ShouldBeNull();
         }
