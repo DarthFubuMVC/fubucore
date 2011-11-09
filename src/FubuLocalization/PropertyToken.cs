@@ -1,12 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using FubuCore.Reflection;
+using FubuCore;
 
 namespace FubuLocalization
 {
     public class PropertyToken
     {
+        private readonly IDictionary<string, string> _defaultHeaders = new Dictionary<string, string>();
+        private string _header;
+
         public PropertyToken()
         {
         }
@@ -24,9 +29,36 @@ namespace FubuLocalization
                 throw new ArgumentNullException("property");
             }
 
+            property.ForAttribute<HeaderTextAttribute>(att =>
+            {
+                if (att.Culture.IsEmpty())
+                {
+                    _header = att.Text;
+                }
+                else
+                {
+                    _defaultHeaders.Add(att.Culture, att.Text);
+                }
+            });
+
             ParentType = property.DeclaringType;
             ParentTypeName = property.DeclaringType.FullName;
             PropertyName = property.Name;
+        }
+
+        public string DefaultHeaderText(CultureInfo culture)
+        {
+            if (_defaultHeaders.ContainsKey(culture.Name))
+            {
+                return _defaultHeaders[culture.Name];
+            }
+
+            return null;
+        }
+
+        public string Header
+        {
+            get { return _header; }
         }
 
         public string ParentTypeName { get; set; }
@@ -79,5 +111,14 @@ namespace FubuLocalization
 
             return header;
         }
+        
+        public string StringTokenKey
+        {
+            get
+            {
+                return "{0}:{1}:Header".ToFormat(ParentTypeName, PropertyName);
+            }
+        }
+
     }
 }

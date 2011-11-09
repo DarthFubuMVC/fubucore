@@ -46,6 +46,7 @@
     <Reference Include="StructureMap">
       <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
     </Reference>
+    <Reference Include="StructureMap.AutoMocking, Version=2.6.3.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -55,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\LocalizationMissingHandlerTester.cs" />
     <Compile Include="Basic\LocalizationProviderFactoryIntegratedTester.cs" />
     <Compile Include="LocalizationManagerTester.cs" />
     <Compile Include="LocalStringTester.cs" />
