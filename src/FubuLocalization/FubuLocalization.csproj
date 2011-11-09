@@ -46,6 +46,7 @@
     <Compile Include="ILocaleCacheContext.cs" />
     <Compile Include="ILocalizationDataProvider.cs" />
     <Compile Include="ILocalizationMissingHandler.cs" />
+    <Compile Include="ILocalizationStorage.cs" />
     <Compile Include="LocalizationExtensions.cs" />
     <Compile Include="LocalizationKey.cs" />
     <Compile Include="LocalizationManager.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml;
 using FubuCore.Util;
@@ -73,6 +74,19 @@ namespace FubuCore.Configuration
         public static XmlDocument FromFile(this XmlDocument document, string fileName)
         {
             document.Load(fileName);
+            return document;
+        }
+
+        public static XmlDocument XmlFromFileWithRoot(this string fileName, string root)
+        {
+            if (File.Exists(fileName))
+            {
+                return new XmlDocument().FromFile(fileName);
+            }
+
+            var document = new XmlDocument();
+            document.WithRoot(root);
+
             return document;
         }
 

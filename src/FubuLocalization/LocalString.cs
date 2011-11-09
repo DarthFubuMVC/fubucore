@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FubuCore;
 
 namespace FubuLocalization
 {
@@ -6,10 +9,35 @@ namespace FubuLocalization
     {
         private string _value;
 
+        public static LocalString ReadFrom(string line)
+        {
+            var parts = line.Trim().Split('=');
+            if (parts.Length != 2)
+            {
+                throw new ArgumentException("LocalString must be expressed as 'value=display', '{0}' is invalid".ToFormat(line));
+            }
+
+            return new LocalString(parts.First(), parts.Last());
+        }
+
+        public static IEnumerable<LocalString> ReadAllFrom(string text)
+        {
+            return text.ReadLines()
+                .Select(x => x.Trim())
+                .Where(x => x.IsNotEmpty())
+                .Select(ReadFrom);
+        }
+
         public LocalString(string value)
         {
             this.value = value;
             display = value;
+        }
+
+        public LocalString(string value, string display)
+        {
+            _value = value;
+            this.display = display;
         }
 
         public LocalString()
@@ -39,7 +67,7 @@ namespace FubuLocalization
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return Equals(obj.value, value);
+            return Equals(obj.value, value) && Equals(obj.display, display);
         }
 
         public int CompareTo(LocalString other)
