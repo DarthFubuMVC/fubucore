@@ -4,6 +4,7 @@ using System.Xml;
 using FubuCore;
 using System.Collections.Generic;
 using FubuCore.Util;
+using FubuLocalization.Basic;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
@@ -226,6 +227,8 @@ namespace FubuLocalization.Tests
 "));
 
         }
+
+
 
         [Test]
         public void merge_missing()

@@ -1,0 +1,17 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+
+namespace FubuLocalization.Basic
+{
+    
+
+    public interface ILocalizationStorage
+    {
+        void WriteMissing(string key, string text, CultureInfo culture);
+
+        void LoadAll(Action<CultureInfo, IEnumerable<LocalString>> callback);
+
+        IEnumerable<LocalString> Load(CultureInfo culture);
+    }
+}

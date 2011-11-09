@@ -8,17 +8,8 @@ using FubuCore;
 using FubuCore.Configuration;
 using FubuCore.Util;
 
-namespace FubuLocalization
+namespace FubuLocalization.Basic
 {
-    public interface ILocalizationStorage
-    {
-        void WriteMissing(string key, string text, CultureInfo culture);
-
-        void LoadAll(Action<CultureInfo, IEnumerable<LocalString>> callback);
-
-        IEnumerable<LocalString> Load(CultureInfo culture);
-    }
-
     public class XmlDirectoryLocalizationStorage : ILocalizationStorage
     {
         public const string MissingLocaleConfigFile = "missing.locale.config";
@@ -40,7 +31,7 @@ namespace FubuLocalization
         {
             _directories = directories;
 
-            _missingLocaleFile = directories.First().AppendPath(MissingLocaleConfigFile);
+            _missingLocaleFile = StringExtensions.AppendPath(directories.First(), MissingLocaleConfigFile);
         }
 
         public void WriteMissing(string key, string text, CultureInfo culture)

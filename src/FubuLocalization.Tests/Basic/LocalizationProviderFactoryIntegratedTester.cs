@@ -1,0 +1,82 @@
+using System.Globalization;
+using FubuCore;
+using FubuLocalization.Basic;
+using FubuTestingSupport;
+using NUnit.Framework;
+
+namespace FubuLocalization.Tests.Basic
+{
+    [TestFixture]
+    public class LocalizationProviderFactoryIntegratedTester
+    {
+        [SetUp]
+        public void SetUp()
+        {
+            var system = new FileSystem();
+            system.DeleteDirectory("localization1");
+            system.DeleteDirectory("localization2");
+            system.DeleteDirectory("localization3");
+
+            system.CreateDirectory("localization1");
+            system.CreateDirectory("localization2");
+            system.CreateDirectory("localization3");
+        }
+
+        // values = "value=display"
+        private void write(string directory, CultureInfo culture, string values)
+        {
+            XmlDirectoryLocalizationStorage.Write(directory, culture, LocalString.ReadAllFrom(values));
+        }
+
+        [Test]
+        public void load_all()
+        {
+            write("localization1", new CultureInfo("en-US"),
+                  @"
+                a=us-a
+                b=us-b
+                f=us-f
+            ");
+
+            write("localization2", new CultureInfo("en-US"),
+                  @"
+                c=us-c
+                d=us-d
+            ");
+
+            write("localization3", new CultureInfo("en-US"), @"
+                e=us-e
+            ");
+
+            write("localization1", new CultureInfo("en-GB"),
+                  @"
+                a=gb-a
+                b=gb-b
+                f=gb-f
+            ");
+
+            write("localization2", new CultureInfo("en-GB"),
+                  @"
+                c=gb-c
+                d=gb-d
+            ");
+
+
+            var source = new XmlDirectoryLocalizationStorage(new[]{"localization1", "localization2", "localization3"});
+            var factory = new LocalizationProviderFactory(source, null, new LocalizationCache());
+            factory.LoadAll();
+
+            factory.SelectProvider(new CultureInfo("en-US"))
+                .GetTextForKey(StringToken.FromKeyString("a"))
+                .ShouldEqual("us-a");
+
+            factory.SelectProvider(new CultureInfo("en-US"))
+                .GetTextForKey(StringToken.FromKeyString("e"))
+                .ShouldEqual("us-e");
+
+            factory.SelectProvider(new CultureInfo("en-GB"))
+                .GetTextForKey(StringToken.FromKeyString("a"))
+                .ShouldEqual("gb-a");
+        }
+    }
+}

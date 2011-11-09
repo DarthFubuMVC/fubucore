@@ -9,6 +9,5 @@ namespace FubuLocalization
         string GetTextForKey(StringToken key);
         string GetHeader(PropertyInfo property);
         string GetHeader(PropertyToken property);
-        string GetDefaultText(PropertyToken property);
     }
 }

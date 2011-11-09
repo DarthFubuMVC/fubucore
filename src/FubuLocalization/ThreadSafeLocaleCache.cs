@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
+using FubuCore;
 
 namespace FubuLocalization
 {
@@ -10,6 +11,14 @@ namespace FubuLocalization
         private readonly CultureInfo _culture;
         private readonly IDictionary<LocalizationKey, string> _data;
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+
+        public ThreadSafeLocaleCache(CultureInfo culture, IEnumerable<LocalString> strings)
+        {
+            _data = new Dictionary<LocalizationKey, string>();
+            strings.Each(s => _data.Add(new LocalizationKey(s.value), s.display));
+
+            _culture = culture;
+        }
 
         public ThreadSafeLocaleCache(CultureInfo culture, IDictionary<LocalizationKey, string> data)
         {
@@ -21,8 +30,7 @@ namespace FubuLocalization
 
         public void Append(LocalizationKey key, string value)
         {
-            _lock.EnterWriteLock();
-            try
+            _lock.Write(() =>
             {
                 if (_data.ContainsKey(key))
                 {
@@ -32,11 +40,7 @@ namespace FubuLocalization
                 {
                     _data.Add(key, value);
                 }
-            }
-            finally
-            {
-                _lock.ExitWriteLock();
-            }
+            });
         }
 
         public string Retrieve(LocalizationKey key, Func<string> missing)
@@ -54,15 +58,7 @@ namespace FubuLocalization
 
         private string initialRead(LocalizationKey key)
         {
-            _lock.EnterReadLock();
-            try
-            {
-                return !_data.ContainsKey(key) ? null : _data[key];
-            }
-            finally
-            {
-                _lock.ExitReadLock();
-            }
+            return _lock.Read(() => !_data.ContainsKey(key) ? null : _data[key]);
         }
     }
 }

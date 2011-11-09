@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Basic\LocalizationProviderFactoryIntegratedTester.cs" />
     <Compile Include="LocalizationManagerTester.cs" />
     <Compile Include="LocalStringTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
