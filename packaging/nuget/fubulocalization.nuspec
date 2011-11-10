@@ -17,6 +17,9 @@
   </metadata>
   <files>
     <file src="..\..\build\FubuLocalization.*" target="lib" />
-    <file src="..\..\src\FubuLocalization\**\*.cs" target="src" />
+    <file src="..\..\build\FubuLocalization.*" target="tools" />
+    <file src="..\..\build\FubuCore.*" target="tools" />
+    <file src="..\..\build\localizer.*" target="tools" />
+    <file src="..\..\build\Microsoft.Practices.ServiceLocation.*" target="tools" />
   </files>
 </package>
