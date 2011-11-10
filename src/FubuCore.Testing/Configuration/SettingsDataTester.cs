@@ -29,6 +29,15 @@ namespace FubuCore.Testing.Configuration
             data.Get("A").ShouldEqual("1");
         }
 
+        [Test]
+        public void reading_an_entry_with_a_key_but_no_value_should_bork()
+        {
+            Exception<Exception>.ShouldBeThrownBy(() =>
+            {
+                var data = new SettingsData(SettingCategory.core);
+                data.Read("Key");
+            });
+        }
         
         [Test]
         public void read_text()

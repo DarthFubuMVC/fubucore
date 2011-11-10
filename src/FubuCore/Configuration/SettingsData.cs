@@ -81,7 +81,7 @@ namespace FubuCore.Configuration
         public void Read(string text)
         {
             var parts = text.Split('=');
-            if (parts.Length == 0)
+            if (parts.Length<=1)
             {
                 throw new Exception("Invalid settings data text for '{0}'".ToFormat(text));
             }
