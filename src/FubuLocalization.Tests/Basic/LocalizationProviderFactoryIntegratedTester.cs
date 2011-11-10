@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Threading;
 using FubuCore;
 using FubuLocalization.Basic;
 using FubuTestingSupport;
@@ -66,17 +67,67 @@ namespace FubuLocalization.Tests.Basic
             var factory = new LocalizationProviderFactory(source, null, new LocalizationCache());
             factory.LoadAll();
 
-            factory.SelectProvider(new CultureInfo("en-US"))
+            factory.BuildProvider(new CultureInfo("en-US"))
                 .GetTextForKey(StringToken.FromKeyString("a"))
                 .ShouldEqual("us-a");
 
-            factory.SelectProvider(new CultureInfo("en-US"))
+            factory.BuildProvider(new CultureInfo("en-US"))
                 .GetTextForKey(StringToken.FromKeyString("e"))
                 .ShouldEqual("us-e");
 
-            factory.SelectProvider(new CultureInfo("en-GB"))
+            factory.BuildProvider(new CultureInfo("en-GB"))
                 .GetTextForKey(StringToken.FromKeyString("a"))
                 .ShouldEqual("gb-a");
+        }
+
+        [Test]
+        public void put_it_all_together()
+        {
+            write("localization1", new CultureInfo("en-US"),
+                  @"
+                a=us-a
+                b=us-b
+                f=us-f
+            ");
+
+            write("localization2", new CultureInfo("en-US"),
+                  @"
+                c=us-c
+                d=us-d
+            ");
+
+            write("localization3", new CultureInfo("en-US"), @"
+                e=us-e
+            ");
+
+            write("localization1", new CultureInfo("en-GB"),
+                  @"
+                a=gb-a
+                b=gb-b
+                f=gb-f
+            ");
+
+            write("localization2", new CultureInfo("en-GB"),
+                  @"
+                c=gb-c
+                d=gb-d
+            ");
+
+
+            var source = new XmlDirectoryLocalizationStorage(new[] { "localization1", "localization2", "localization3" });
+            var factory = new LocalizationProviderFactory(source, new LocalizationMissingHandler(source, new CultureInfo("en-US")), new LocalizationCache());
+            factory.LoadAll();
+            factory.ApplyToLocalizationManager();
+
+            var token = StringToken.FromKeyString("a", "Wrong!");
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-US");
+
+            token.ToString().ShouldEqual("us-a");
+
+            Thread.CurrentThread.CurrentUICulture = new CultureInfo("en-GB");
+
+            token.ToString().ShouldEqual("gb-a");
         }
     }
 }
