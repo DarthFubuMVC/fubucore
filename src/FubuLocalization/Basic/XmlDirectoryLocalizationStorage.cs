@@ -81,6 +81,12 @@ namespace FubuLocalization.Basic
                 .SelectMany(LoadFrom);
         }
 
+        public bool HasMissingLocalizationKeys()
+        {
+            var document = getMissingKeysDocument();
+            return document.DocumentElement.SelectNodes(Missing).Count > 0;
+        }
+
 
         public static void Write(string directory, CultureInfo culture, IEnumerable<LocalString> strings)
         {
@@ -101,8 +107,14 @@ namespace FubuLocalization.Basic
             document.Save(file);
         }
 
+        public string MissingLocaleFile
+        {
+            get { return _missingLocaleFile; }
+        }
+
         public void MergeAllMissing()
         {
+
             var cache = new Cache<string, IList<LocalString>> (key => new List<LocalString>());
             var document = getMissingKeysDocument();
             foreach (XmlElement element in document.DocumentElement.SelectNodes(Missing))
@@ -123,12 +135,23 @@ namespace FubuLocalization.Basic
             var filename = GetFileName(culture);
             var file = _directories.First().AppendPath(filename);
 
+            Console.WriteLine("Writing new to " + file);
+
             var existingStrings = LoadFrom(file);
             var newStrings = missingStrings.ToList();
             newStrings.RemoveAll(x => existingStrings.Any(s => s.value == x.value));
 
-            Write(file, existingStrings.Union(newStrings));
+            // TODO -- come from behind and move this out into some kind of observer
+            var length = newStrings.Max(x => x.value.Length) + 5;
+            newStrings.Each(x =>
+            {
+                Console.WriteLine("{0} = {1}", x.value.PadLeft(length), x.display);
+            });
 
+            Console.WriteLine();
+            Console.WriteLine();
+
+            Write(file, existingStrings.Union(newStrings));
         }
 
         
