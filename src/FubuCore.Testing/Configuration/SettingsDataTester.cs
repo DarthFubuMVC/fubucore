@@ -44,6 +44,17 @@ namespace FubuCore.Testing.Configuration
         }
 
         [Test]
+        public void read_complex_escaped_value()
+        {
+            var data = new SettingsData(SettingCategory.core);
+            data.Read("DatabaseSettings.ConnectionString=\"Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;\"");
+
+            data.AllKeys.ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
+
+            data.Get("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
+        }
+
+        [Test]
         public void subset_by_prefix()
         {
             var data = new SettingsData(SettingCategory.core);
