@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Basic\ILocalizationCache.cs" />
+    <Compile Include="Basic\ILocalizationProviderFactory.cs" />
     <Compile Include="Basic\LocalizationCache.cs" />
     <Compile Include="Basic\LocalizationMissingHandler.cs" />
     <Compile Include="Basic\LocalizationProviderFactory.cs" />

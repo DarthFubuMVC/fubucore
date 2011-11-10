@@ -4,7 +4,7 @@ using FubuCore.Util;
 
 namespace FubuLocalization.Basic
 {
-    public class LocalizationProviderFactory
+    public class LocalizationProviderFactory : ILocalizationProviderFactory
     {
         private readonly ILocalizationStorage _storage;
         private readonly ILocalizationMissingHandler _missingHandler;
