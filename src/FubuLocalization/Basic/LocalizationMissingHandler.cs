@@ -1,5 +1,7 @@
 using System;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
 using FubuCore;
 
 namespace FubuLocalization.Basic
@@ -31,7 +33,7 @@ namespace FubuLocalization.Basic
         public string FindMissingProperty(PropertyToken property, CultureInfo culture)
         {
             var defaultValue = culture.Equals(_defaultCulture)
-                                   ? property.Header ?? property.DefaultHeaderText(culture) ?? property.PropertyName
+                                   ? property.Header ?? property.DefaultHeaderText(culture) ?? BreakUpCamelCase(property.PropertyName)
                                    : property.DefaultHeaderText(culture) ?? culture.Name + "_" + property.PropertyName;
 
             _storage.WriteMissing(property.StringTokenKey, defaultValue, culture);
@@ -39,6 +41,17 @@ namespace FubuLocalization.Basic
             return defaultValue;
         }
 
-
+        public static string BreakUpCamelCase(string fieldName)
+        {
+            var patterns = new[]
+                {
+                    "([a-z])([A-Z])",
+                    "([0-9])([a-zA-Z])",
+                    "([a-zA-Z])([0-9])"
+                };
+            var output = patterns.Aggregate(fieldName,
+                (current, pattern) => Regex.Replace(current, pattern, "$1 $2", RegexOptions.IgnorePatternWhitespace));
+            return output.Replace('_', ' ');
+        }
     }
 }

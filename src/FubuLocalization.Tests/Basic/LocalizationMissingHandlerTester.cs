@@ -91,7 +91,7 @@ namespace FubuLocalization.Tests.Basic
         [Test]
         public void find_missing_property_with_header_attribute_that_does_not_match_the_culture()
         {
-            findMissingProperty(x => x.AnotherTitle, theDefaultCulture).ShouldEqual("AnotherTitle");
+            findMissingProperty(x => x.AnotherTitle, theDefaultCulture).ShouldEqual("Another Title");
         }
 
         [Test]
