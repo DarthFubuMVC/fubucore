@@ -191,5 +191,10 @@ namespace FubuLocalization.Basic
             return new CultureInfo(cultureName);
             
         }
+
+        public IEnumerable<string> Directories
+        {
+            get { return _directories; }
+        }
     }
 }
