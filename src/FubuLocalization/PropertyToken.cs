@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore.Reflection;
 using FubuCore;
@@ -9,6 +10,13 @@ namespace FubuLocalization
 {
     public class PropertyToken
     {
+        public static PropertyToken For<T>(Expression<Func<T, object>> expression)
+        {
+            var property = ReflectionHelper.GetProperty(expression);
+
+            return new PropertyToken(property);
+        }
+
         private readonly IDictionary<string, string> _defaultHeaders = new Dictionary<string, string>();
         private string _header;
 
