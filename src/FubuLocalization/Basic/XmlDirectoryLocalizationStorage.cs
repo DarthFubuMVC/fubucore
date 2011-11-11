@@ -54,7 +54,7 @@ namespace FubuLocalization.Basic
             return _missingLocaleFile.XmlFromFileWithRoot("missing-localization");
         }
 
-        public void LoadAll(Action<CultureInfo, IEnumerable<LocalString>> callback)
+        public void LoadAll(Action<string> tracer, Action<CultureInfo, IEnumerable<LocalString>> callback)
         {
             var fileSet = new FileSet{
                 DeepSearch = false,
@@ -66,7 +66,11 @@ namespace FubuLocalization.Basic
                 .GroupBy(CultureFor)
                 .Each(group =>
                 {
-                    var strings = group.SelectMany(LoadFrom);
+                    var strings = group.SelectMany(f =>
+                    {
+                        tracer("Reading localization data from " + f);
+                        return LoadFrom(f);
+                    });
                     callback(group.Key, strings);
                 });
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Threading;
 using FubuCore.Util;
@@ -21,11 +22,11 @@ namespace FubuLocalization.Basic
             _providers = new Cache<CultureInfo, ILocalizationDataProvider>(culture => BuildProvider(culture));
         }
 
-        public void LoadAll()
+        public void LoadAll(Action<string> tracer)
         {
             _cache.LoadCaches(loader =>
             {
-                _storage.LoadAll((c, keys) =>
+                _storage.LoadAll(tracer, (c, keys) =>
                 {
                     loader(c, new ThreadSafeLocaleCache(c, keys));
                 });

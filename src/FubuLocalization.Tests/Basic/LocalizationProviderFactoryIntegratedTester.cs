@@ -65,7 +65,7 @@ namespace FubuLocalization.Tests.Basic
 
             var source = new XmlDirectoryLocalizationStorage(new[]{"localization1", "localization2", "localization3"});
             var factory = new LocalizationProviderFactory(source, null, new LocalizationCache());
-            factory.LoadAll();
+            factory.LoadAll(x => { });
 
             factory.BuildProvider(new CultureInfo("en-US"))
                 .GetTextForKey(StringToken.FromKeyString("a"))
@@ -116,7 +116,7 @@ namespace FubuLocalization.Tests.Basic
 
             var source = new XmlDirectoryLocalizationStorage(new[] { "localization1", "localization2", "localization3" });
             var factory = new LocalizationProviderFactory(source, new LocalizationMissingHandler(source, new CultureInfo("en-US")), new LocalizationCache());
-            factory.LoadAll();
+            factory.LoadAll(x => { });
             factory.ApplyToLocalizationManager();
 
             var token = StringToken.FromKeyString("a", "Wrong!");

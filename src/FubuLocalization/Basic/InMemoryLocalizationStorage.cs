@@ -26,7 +26,7 @@ namespace FubuLocalization.Basic
             _missing[culture].Add(new LocalString(key, text));
         }
 
-        public void LoadAll(Action<CultureInfo, IEnumerable<LocalString>> callback)
+        public void LoadAll(Action<string> tracer, Action<CultureInfo, IEnumerable<LocalString>> callback)
         {
             _cache.Each(callback);
         }

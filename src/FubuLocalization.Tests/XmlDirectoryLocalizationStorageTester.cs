@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Xml;
@@ -207,7 +208,7 @@ namespace FubuLocalization.Tests
 
             var source = new XmlDirectoryLocalizationStorage(new string[] { "localization1", "localization2", "localization3" });
 
-            source.LoadAll((c, strings) => allKeys[c.Name].AddRange(strings));
+            source.LoadAll(text => Debug.WriteLine(text), (c, strings) => allKeys[c.Name].AddRange(strings));
 
             allKeys["en-US"].ShouldHaveTheSameElementsAs(LocalString.ReadAllFrom(@"
                 a=us-a

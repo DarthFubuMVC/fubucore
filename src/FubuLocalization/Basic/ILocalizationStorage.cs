@@ -10,7 +10,7 @@ namespace FubuLocalization.Basic
     {
         void WriteMissing(string key, string text, CultureInfo culture);
 
-        void LoadAll(Action<CultureInfo, IEnumerable<LocalString>> callback);
+        void LoadAll(Action<string> tracer, Action<CultureInfo, IEnumerable<LocalString>> callback);
 
         IEnumerable<LocalString> Load(CultureInfo culture);
     }
