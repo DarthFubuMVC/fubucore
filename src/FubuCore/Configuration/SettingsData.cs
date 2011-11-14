@@ -81,12 +81,20 @@ namespace FubuCore.Configuration
         public void Read(string text)
         {
             var parts = text.Split('=');
-            if (parts.Length != 2)
+            if (parts.Length<=1)
             {
-                throw new ApplicationException("Invalid settings data text for '{0}'".ToFormat(text));
+                throw new Exception("Invalid settings data text for '{0}'".ToFormat(text));
             }
 
-            _values[parts[0].Trim()] = parts[1].Trim();
+            var key = parts[0].Trim();
+            var value = parts.Skip(1).Join("=").Trim();
+
+            if(value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                value = value.Substring(1, value.Length - 2);
+            }
+
+            _values[key] = value;
         }
 
         public static SettingsData ReadFromFile(SettingCategory category, string file)

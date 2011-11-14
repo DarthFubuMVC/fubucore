@@ -29,6 +29,15 @@ namespace FubuCore.Testing.Configuration
             data.Get("A").ShouldEqual("1");
         }
 
+        [Test]
+        public void reading_an_entry_with_a_key_but_no_value_should_bork()
+        {
+            Exception<Exception>.ShouldBeThrownBy(() =>
+            {
+                var data = new SettingsData(SettingCategory.core);
+                data.Read("Key");
+            });
+        }
         
         [Test]
         public void read_text()
@@ -41,6 +50,17 @@ namespace FubuCore.Testing.Configuration
 
             data.Get("Key").ShouldEqual("Value1");
             data.Get("A.Key").ShouldEqual("Value2");
+        }
+
+        [Test]
+        public void read_complex_escaped_value()
+        {
+            var data = new SettingsData(SettingCategory.core);
+            data.Read("DatabaseSettings.ConnectionString=\"Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;\"");
+
+            data.AllKeys.ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
+
+            data.Get("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
         }
 
         [Test]
