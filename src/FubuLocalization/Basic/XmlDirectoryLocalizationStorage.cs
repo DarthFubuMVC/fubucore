@@ -31,7 +31,7 @@ namespace FubuLocalization.Basic
         {
             _directories = directories;
 
-            _missingLocaleFile = StringExtensions.AppendPath(directories.First(), MissingLocaleConfigFile);
+            _missingLocaleFile = directories.First().AppendPath(MissingLocaleConfigFile);
         }
 
         public void WriteMissing(string key, string text, CultureInfo culture)
@@ -58,11 +58,15 @@ namespace FubuLocalization.Basic
         {
             var fileSet = new FileSet{
                 DeepSearch = false,
-                Include = "*.locale.config"
+                Include = "*.locale.config",
+                Exclude = "missing.locale.config"
             };
 
-            _directories
+            var files = _directories
                 .SelectMany(dir => _fileSystem.FindFiles(dir, fileSet))
+                .Where(file => !Path.GetFileName(file).StartsWith("missing."));
+
+            files
                 .GroupBy(CultureFor)
                 .Each(group =>
                 {
