@@ -52,6 +52,10 @@ namespace FubuCore.Testing
         [SetUp]
         public void SetUp()
         {
+            theOriginalCulture = Thread.CurrentThread.CurrentCulture;
+
+            Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
+
             finder = new ObjectConverter();
 			
 			// Determines which time zone id to use for the time_zone_info test, since 
@@ -60,9 +64,16 @@ namespace FubuCore.Testing
 			timeZoneId = timeZones.Where(timeZone => timeZone.Id.Equals("Eastern Standard Time") || timeZone.Id.Equals("US/Eastern")).Single().Id;
         }
 
+        [TearDown]
+        public void Teardown()
+        {
+            Thread.CurrentThread.CurrentCulture = theOriginalCulture;
+        }
+
         #endregion
 
         private ObjectConverter finder;
+        private CultureInfo theOriginalCulture;
 
 
         public class Weird{}
