@@ -39,6 +39,12 @@ namespace FubuLocalization.Basic
             lock (_missingLocker)
             {
                 var document = getMissingKeysDocument();
+
+                var xpath = "{0}[@{1}='{2}']".ToFormat(Missing, Key, key);
+                if (document.DocumentElement.SelectSingleNode(xpath) != null)
+                {
+                    return;
+                }
                     
                 document.DocumentElement.AddElement(Missing)
                     .WithAtt(Key, key)

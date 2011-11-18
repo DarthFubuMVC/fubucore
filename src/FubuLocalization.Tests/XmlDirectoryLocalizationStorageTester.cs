@@ -168,6 +168,23 @@ namespace FubuLocalization.Tests
         }
 
         [Test]
+        public void do_not_double_dip_in_missing_when_writing()
+        {
+            var source = new XmlDirectoryLocalizationStorage(new string[] { "localization1", "localization2", "localization3" });
+
+            source.WriteMissing("a", "us-a", new CultureInfo("en-US"));
+            source.WriteMissing("a", "us-a", new CultureInfo("en-US"));
+            source.WriteMissing("a", "us-a", new CultureInfo("en-US"));
+            source.WriteMissing("a", "us-a", new CultureInfo("en-US"));
+            source.WriteMissing("a", "us-a", new CultureInfo("en-US"));
+
+            var document = new XmlDocument()
+                .FromFile("localization1".AppendPath(XmlDirectoryLocalizationStorage.MissingLocaleConfigFile));
+
+            document.DocumentElement.ChildNodes.Count.ShouldEqual(1);
+        }
+
+        [Test]
         public void CultureFor()
         {
             XmlDirectoryLocalizationStorage.CultureFor("en-US.locale.config").ShouldEqual(new CultureInfo("en-US"));
