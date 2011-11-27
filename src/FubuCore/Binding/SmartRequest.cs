@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {

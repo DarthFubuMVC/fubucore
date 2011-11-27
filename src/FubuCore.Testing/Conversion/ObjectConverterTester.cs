@@ -4,11 +4,12 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using FubuCore.Conversion;
 using FubuCore.Testing.Binding;
 using FubuTestingSupport;
 using NUnit.Framework;
 
-namespace FubuCore.Testing
+namespace FubuCore.Testing.Conversion
 {
     public class Service
     {

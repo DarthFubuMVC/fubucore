@@ -1,5 +1,6 @@
 using System;
 using FubuCore.Binding;
+using FubuCore.Conversion;
 using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;

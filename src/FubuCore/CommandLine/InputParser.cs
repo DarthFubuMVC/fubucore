@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using FubuCore.Conversion;
 using FubuCore.Reflection;
 
 namespace FubuCore.CommandLine

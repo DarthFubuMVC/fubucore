@@ -1,4 +1,5 @@
 using System;
+using FubuCore.Conversion;
 using Microsoft.Practices.ServiceLocation;
 
 namespace FubuCore

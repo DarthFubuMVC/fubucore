@@ -5,7 +5,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using FubuTestingSupport;
 
-namespace FubuCore.Testing
+namespace FubuCore.Testing.Conversion
 {
     [TestFixture]
     public class GetStringRequestTester

@@ -90,6 +90,7 @@
     <Compile Include="Binding\ServiceArgumentsTester.cs" />
     <Compile Include="Binding\SmartRequestTester.cs" />
     <Compile Include="Binding\StandardModelBinderTester.cs" />
+    <Compile Include="Conversion\TypeDescripterConverterFamilyTester.cs" />
     <Compile Include="Binding\TypeDescriptorCacheTester.cs" />
     <Compile Include="Binding\ValueConverterRegistryTester.cs" />
     <Compile Include="BooleanExtensionsTester.cs" />
@@ -123,9 +124,9 @@
     <Compile Include="FlatFileWriterTester.cs" />
     <Compile Include="FubuExceptionTester.cs" />
     <Compile Include="GenericEnumerableExtensionsTester.cs" />
-    <Compile Include="GetStringRequestTester.cs" />
+    <Compile Include="Conversion\GetStringRequestTester.cs" />
     <Compile Include="NumberExtensionsTester.cs" />
-    <Compile Include="ObjectConverterTester.cs" />
+    <Compile Include="Conversion\ObjectConverterTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensionsTester.cs" />
     <Compile Include="Reflection\Expressions\ConstructorBuilderTester.cs" />
@@ -146,7 +147,7 @@
     <Compile Include="Reflection\ReflectionExtensionsTester.cs" />
     <Compile Include="Reflection\ReflectionHelperTester.cs" />
     <Compile Include="Reflection\SinglePropertyTester.cs" />
-    <Compile Include="StringConstructorConverterFamilyTester.cs" />
+    <Compile Include="Conversion\StringConstructorConverterFamilyTester.cs" />
     <Compile Include="StringExtensionsTester.cs" />
     <Compile Include="StringifierTester.cs" />
     <Compile Include="TemplateParserTester.cs" />

@@ -51,6 +51,8 @@
     <Compile Include="Attributes.cs" />
     <Compile Include="BasicExtensions.cs" />
     <Compile Include="Binding\AggregateDictionary.cs" />
+    <Compile Include="Binding\AttributePropertyBinder.cs" />
+    <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingContext.cs" />
     <Compile Include="Binding\BindResult.cs" />
     <Compile Include="Binding\BindResultAssertionException.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Binding\IBindingContext.cs" />
     <Compile Include="Binding\ICollectionTypeProvider.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
+    <Compile Include="Binding\IgnorePropertyBinder.cs" />
     <Compile Include="Binding\IModelBinder.cs" />
     <Compile Include="Binding\IModelBinderCache.cs" />
     <Compile Include="Binding\InMemoryRequestData.cs" />
@@ -92,6 +95,7 @@
     <Compile Include="Binding\SmartRequest.cs" />
     <Compile Include="Binding\StandardModelBinder.cs" />
     <Compile Include="Binding\StatelessConverter.cs" />
+    <Compile Include="Binding\TypeDescriptorConverterFamily.cs" />
     <Compile Include="CommandLine\CommandFailureException.cs" />
     <Compile Include="CommandLine\ConsoleWriter.cs" />
     <Compile Include="CommandLine\EnumerableArgument.cs" />
@@ -110,6 +114,14 @@
     <Compile Include="Configuration\SettingType.cs" />
     <Compile Include="Configuration\SubstitutedRequestData.cs" />
     <Compile Include="Configuration\XmlSettingsParser.cs" />
+    <Compile Include="Conversion\ArrayConverterFamily.cs" />
+    <Compile Include="Conversion\EnumConverterFamily.cs" />
+    <Compile Include="Conversion\IObjectConverter.cs" />
+    <Compile Include="Conversion\IObjectConverterFamily.cs" />
+    <Compile Include="Conversion\NullableConverterFamily.cs" />
+    <Compile Include="Conversion\StringConstructorConverterFamily.cs" />
+    <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
+    <Compile Include="Conversion\TypeDescriptorFamily.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraph.cs" />
     <Compile Include="DependencyAnalysis\DirectedGraph.cs" />
@@ -163,7 +175,7 @@
     <Compile Include="FileSystem.cs" />
     <Compile Include="FubuException.cs" />
     <Compile Include="NumberExtensions.cs" />
-    <Compile Include="ObjectConverter.cs" />
+    <Compile Include="Conversion\ObjectConverter.cs" />
     <Compile Include="Reflection\Expressions\BinaryComparisonPropertyOperation.cs" />
     <Compile Include="Reflection\Expressions\CaseInsensitiveStringMethodPropertyOperation.cs" />
     <Compile Include="Reflection\Expressions\EqualsPropertyOperation.cs" />
