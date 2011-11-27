@@ -50,17 +50,13 @@ namespace FubuCore.Binding
 
         public object Convert(IPropertyContext context)
         {
-            var propertyType = context.Property.PropertyType;
-
             if (context.PropertyValue == null) return _defaulter.Default();
 
 
-            return context.PropertyValue.GetType() == propertyType
+            return context.PropertyValue.GetType().CanBeCastTo(_propertyType)
                        ? context.PropertyValue
                        : _converter.FromString(context.PropertyValue.ToString(), _propertyType);
         }
-
-        #region Nested type: DefaultMaker
 
         public class DefaultMaker<T> : IDefaultMaker
         {
@@ -70,15 +66,9 @@ namespace FubuCore.Binding
             }
         }
 
-        #endregion
-
-        #region Nested type: IDefaultMaker
-
         public interface IDefaultMaker
         {
             object Default();
         }
-
-        #endregion
     }
 }

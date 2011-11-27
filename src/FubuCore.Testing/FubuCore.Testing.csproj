@@ -66,6 +66,7 @@
     <Compile Include="BasicExtensionsTester.cs" />
     <Compile Include="Binding\AggregateDictionaryTester.cs" />
     <Compile Include="Binding\BasicConverterTester.cs" />
+    <Compile Include="Binding\BasicValueConverterTester.cs" />
     <Compile Include="Binding\BindingAttributeTester.cs" />
     <Compile Include="Binding\BindingContextTester.cs" />
     <Compile Include="Binding\BindingResultTester.cs" />
