@@ -38,8 +38,7 @@ namespace FubuCore.Conversion
                 return family.CreateConverter(type, _froms);
             }
 
-            // TODO -- change to using the TypeDescriptor stuff
-            return stringValue => Convert.ChangeType(stringValue, type);
+            throw new ArgumentException("No conversion exists for ");
         }
 
         public bool CanBeParsed(Type type)
@@ -71,6 +70,7 @@ namespace FubuCore.Conversion
             _families.Add(new NullableConverterFamily());
             _families.Add(new TypeDescriptorFamily());
             _families.Add(new StringConstructorConverterFamily());
+            _families.Add(new TypeDescripterConverterFamily());
         }
 
         public virtual object FromString(string stringValue, Type type)
