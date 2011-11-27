@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -59,7 +60,7 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             context = new InMemoryBindingContext();
-            theConverterRegistry = new ValueConverterRegistry(new IConverterFamily[0]);
+            theConverterRegistry = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
             propertyBinder = new ConversionPropertyBinder(theConverterRegistry);
         }
 

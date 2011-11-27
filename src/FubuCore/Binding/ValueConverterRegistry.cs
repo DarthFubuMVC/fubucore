@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web;
+using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
@@ -9,11 +11,15 @@ namespace FubuCore.Binding
     {
         private readonly List<IConverterFamily> _families = new List<IConverterFamily>();
 
-        public ValueConverterRegistry(IEnumerable<IConverterFamily> families)
+        public ValueConverterRegistry(IEnumerable<IConverterFamily> families, IObjectConverter converter)
         {
+            if (converter == null) throw new ArgumentNullException("converter");
+
             _families.AddRange(families);
 
             addPolicies();
+
+            _families.Add(new BasicConverterFamily(converter));
         }
 
         public IEnumerable<IConverterFamily> Families
@@ -39,7 +45,6 @@ namespace FubuCore.Binding
 
             Add<BooleanFamily>();
             Add<NumericTypeFamily>();
-            Add<TypeDescriptorConverterFamily>();
         }
 
         public void Add<T>() where T : IConverterFamily, new()

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using FubuCore.Conversion;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding
@@ -38,7 +39,7 @@ namespace FubuCore.Binding
         {
             return
                 new StandardModelBinder(
-                    new PropertyBinderCache(new IPropertyBinder[0], new ValueConverterRegistry(new IConverterFamily[0]),
+                    new PropertyBinderCache(new IPropertyBinder[0], new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter()),
                                             new DefaultCollectionTypeProvider()),
                     new TypeDescriptorCache());
         }
