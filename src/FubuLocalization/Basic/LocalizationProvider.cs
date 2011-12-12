@@ -33,7 +33,7 @@ namespace FubuLocalization.Basic
 
         public string GetHeader(PropertyToken property)
         {
-            var localizationKey = property.ToLocalizationKey();
+            var localizationKey = new LocalizationKey(property.StringTokenKey);
             return _localeCache
                 .Retrieve(localizationKey, () => _missingHandler.FindMissingProperty(property, _localeCache.Culture));
         }
