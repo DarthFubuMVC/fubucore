@@ -18,7 +18,7 @@ namespace FubuCore.Binding
             return _cache[property] != null;
         }
 
-        // TODO -- need an integrated test with Connection String providers
+
         public void Bind(PropertyInfo property, IBindingContext context)
         {
             context.ForProperty(property, x =>

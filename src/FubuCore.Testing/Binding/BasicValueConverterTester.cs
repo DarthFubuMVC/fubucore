@@ -1,10 +1,8 @@
-using System;
-using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Conversion;
+using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Binding
 {
@@ -17,16 +15,14 @@ namespace FubuCore.Testing.Binding
             var context = MockRepository.GenerateMock<IPropertyContext>();
             context.Stub(x => x.PropertyValue).Return(null);
 
-            new BasicValueConverter(new ObjectConverter(), typeof(string)).Convert(context)
+            new BasicValueConverter(new ObjectConverter(), typeof (string)).Convert(context)
                 .ShouldBeNull();
 
-            new BasicValueConverter(new ObjectConverter(), typeof(int)).Convert(context)
+            new BasicValueConverter(new ObjectConverter(), typeof (int)).Convert(context)
                 .ShouldEqual(default(int));
 
-            new BasicValueConverter(new ObjectConverter(), typeof(bool)).Convert(context)
+            new BasicValueConverter(new ObjectConverter(), typeof (bool)).Convert(context)
                 .ShouldEqual(default(bool));
         }
     }
-
-
 }

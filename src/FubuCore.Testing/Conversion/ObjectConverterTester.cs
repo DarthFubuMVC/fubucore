@@ -353,6 +353,12 @@ namespace FubuCore.Testing.Conversion
         }
 
         [Test]
+        public void parse_timespan_as_minutes_2()
+        {
+            finder.FromString<TimeSpan>("  1   minutes ").ShouldEqual(new TimeSpan(0, 1, 0));
+        }
+
+        [Test]
         public void parse_timespan_as_seconds()
         {
             finder.FromString<TimeSpan>("15 seconds").ShouldEqual(new TimeSpan(0, 0, 15));
