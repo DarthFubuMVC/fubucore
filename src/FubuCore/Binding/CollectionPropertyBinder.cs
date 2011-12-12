@@ -33,7 +33,8 @@ namespace FubuCore.Binding
                 type = _collectionTypeProvider.GetCollectionType(type, itemType);
             }
 
-            object collection = Activator.CreateInstance(type);
+            var currentCollection = property.GetValue(context.Object, null);
+            object collection = currentCollection ?? Activator.CreateInstance(type);
             var collectionType = collection.GetType();
 
             Func<object, bool> addToCollection = obj =>
