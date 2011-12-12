@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Reflection;
 using FubuTestingSupport;
@@ -49,6 +50,27 @@ namespace FubuCore.Testing.Binding
             propertyBinder.Bind(property, context);
 
             model.Localities[0].ZipCode.ShouldEqual("84115");
+        }
+
+        [Test]
+        public void existing_collection_is_not_discarded()
+        {
+            var model = new AddressViewModel
+            {
+                Localities = new List<LocalityViewModel>
+                {
+                    new LocalityViewModel {ZipCode = "previously_set_zipcode"}
+                }
+            };
+
+            context.WithData("Localities[0]ZipCode", "84115");
+            context.StartObject(model);
+
+            var property = ReflectionHelper.GetProperty<AddressViewModel>(x => x.Localities);
+            propertyBinder.Bind(property, context);
+
+            model.Localities[0].ZipCode.ShouldEqual("previously_set_zipcode");
+            model.Localities[1].ZipCode.ShouldEqual("84115");
         }
     }
 }
