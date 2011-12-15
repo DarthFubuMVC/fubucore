@@ -29,7 +29,7 @@ namespace FubuCore.Testing.Conversion
         public void create_converter()
         {
             var func = new StringConstructorConverterFamily().CreateConverter(typeof (Component), null);
-            func("something").ShouldBeOfType<Component>()
+            func.Convert("something").ShouldBeOfType<Component>()
                 .Text.ShouldEqual("something");
         }
     }

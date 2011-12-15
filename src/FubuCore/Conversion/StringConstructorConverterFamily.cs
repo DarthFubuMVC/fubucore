@@ -14,20 +14,14 @@ namespace FubuCore.Conversion
             return constructorInfo != null;
         }
 
-        public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
+        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
-            var builder = typeof (FuncBuilder<>).CloseAndBuildAs<FuncBuilder>(type);
-            return builder.Build;
+            return typeof(FuncBuilder<>).CloseAndBuildAs<IConverterStrategy>(type);
         }
 
-        public interface FuncBuilder
+        public class FuncBuilder<T> : IConverterStrategy
         {
-            object Build(string value);
-        }
-
-        public class FuncBuilder<T> : FuncBuilder
-        {
-            private Func<string, T> _func;
+            private readonly Func<string, T> _func;
 
             public FuncBuilder()
             {
@@ -35,10 +29,12 @@ namespace FubuCore.Conversion
                     .Compile().As<Func<string, T>>();
             }
 
-            public object Build(string value)
+            public object Convert(IConversionRequest request)
             {
-                return _func(value);
+                return _func(request.Text);
             }
         }
+
+        
     }
 }

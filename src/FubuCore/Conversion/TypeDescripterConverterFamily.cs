@@ -21,11 +21,26 @@ namespace FubuCore.Conversion
             }
         }
 
-        public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
+        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
-            var converter = TypeDescriptor.GetConverter(type);
+            return new TypeDescriptorConversionStrategy(type);
+        }
 
-            return text => converter.ConvertFrom(text);
+        public class TypeDescriptorConversionStrategy : IConverterStrategy
+        {
+            private readonly TypeConverter _converter;
+            private Type _type; // Captured for diagnostics
+
+            public TypeDescriptorConversionStrategy(Type type)
+            {
+                _converter = TypeDescriptor.GetConverter(type);
+                _type = type;
+            }
+
+            public object Convert(IConversionRequest request)
+            {
+                return _converter.ConvertFromString(request.Text);
+            }
         }
     }
 }

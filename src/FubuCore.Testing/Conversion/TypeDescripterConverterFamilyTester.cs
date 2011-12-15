@@ -33,11 +33,11 @@ namespace FubuCore.Testing.Conversion
             var boolConverter = family.CreateConverter(typeof (bool), null);
             var intConverter = family.CreateConverter(typeof (int), null);
 
-            boolConverter("true").ShouldEqual(true);
-            boolConverter("false").ShouldEqual(false);
+            boolConverter.Convert("true").ShouldEqual(true);
+            boolConverter.Convert("false").ShouldEqual(false);
 
-            intConverter("123").ShouldEqual(123);
-            intConverter("456").ShouldEqual(456);
+            intConverter.Convert("123").ShouldEqual(123);
+            intConverter.Convert("456").ShouldEqual(456);
 
         }
     }

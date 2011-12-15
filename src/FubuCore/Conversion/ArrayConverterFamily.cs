@@ -15,30 +15,45 @@ namespace FubuCore.Conversion
             return (type.IsGenericEnumerable() && converter.CanBeParsed(type.GetGenericArguments()[0]));
         }
 
-        public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
+        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
             var innerType = type.IsGenericEnumerable() ? type.GetGenericArguments()[0] : type.GetElementType();
 
             var singleObjectFinder = converters[innerType];
 
-            return stringValue =>
+            return new ArrayConverterStrategy(innerType, singleObjectFinder);
+        }
+
+        public class ArrayConverterStrategy : IConverterStrategy
+        {
+            private readonly Type _innerType;
+            private readonly IConverterStrategy _inner;
+
+            public ArrayConverterStrategy(Type innerType, IConverterStrategy inner)
             {
+                _innerType = innerType;
+                _inner = inner;
+            }
+
+            public object Convert(IConversionRequest request)
+            {
+                var stringValue = request.Text;
                 if (stringValue.ToUpper() == ObjectConverter.EMPTY)
                 {
-                    return Array.CreateInstance(innerType, 0);
+                    return Array.CreateInstance(_innerType, 0);
                 }
 
                 var strings = stringValue.ToDelimitedArray();
-                var array = Array.CreateInstance(innerType, strings.Length);
+                var array = Array.CreateInstance(_innerType, strings.Length);
 
                 for (var i = 0; i < strings.Length; i++)
                 {
-                    var value = singleObjectFinder(strings[i]);
+                    var value = _inner.Convert(request.AnotherRequest(strings[i]));
                     array.SetValue(value, i);
                 }
 
                 return array;
-            };
+            }
         }
     }
 }

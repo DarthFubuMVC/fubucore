@@ -10,17 +10,31 @@ namespace FubuCore.Conversion
             return type.IsNullable();
         }
 
-        public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
+        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
-            Func<string, object> inner = converters[type.GetInnerTypeFromNullable()];
+            var inner = converters[type.GetInnerTypeFromNullable()];
+            return new NullableConverterStrategy(inner, type);
+        }
+    }
 
-            return stringValue =>
-            {
-                if (stringValue == ObjectConverter.NULL || stringValue == null) return null;
-                if (stringValue == string.Empty && type != typeof(string)) return null;
+    public class NullableConverterStrategy : IConverterStrategy
+    {
+        private readonly IConverterStrategy _inner;
+        private readonly Type _type;
 
-                return inner(stringValue);
-            };
+        public NullableConverterStrategy(IConverterStrategy inner, Type type)
+        {
+            _inner = inner;
+            _type = type;
+        }
+
+        public object Convert(IConversionRequest request)
+        {
+            var stringValue = request.Text;
+            if (stringValue == ObjectConverter.NULL || stringValue == null) return null;
+            if (stringValue == string.Empty && _type != typeof(string)) return null;
+
+            return _inner.Convert(request);
         }
     }
 }

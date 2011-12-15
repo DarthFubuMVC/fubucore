@@ -10,9 +10,24 @@ namespace FubuCore.Conversion
             return type.IsEnum;
         }
 
-        public Func<string, object> CreateConverter(Type type, Cache<Type, Func<string, object>> converters)
+        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
-            return stringValue => Enum.Parse(type, stringValue, true);
+            return new EnumConversionStrategy(type);
+        }
+
+        public class EnumConversionStrategy : IConverterStrategy
+        {
+            private readonly Type _enumType;
+
+            public EnumConversionStrategy(Type enumType)
+            {
+                _enumType = enumType;
+            }
+
+            public object Convert(IConversionRequest request)
+            {
+                return Enum.Parse(_enumType, request.Text, true);
+            }
         }
     }
 }

@@ -6,6 +6,22 @@ using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
+    /*
+     * TODO:
+     * 1.) get the time and date formatting out of here
+     * 2.) IObjectConverterFamily -- change the signature of the CreateConverter method?  Have it return an object?  Makes diagnostics better.
+     * 3.) Go ahead and make IConversionStrategy -- Func<string, object>
+     * 4.) Make ObjectConverter depend on services
+     * 5.) ConversionRequest
+     *      a.) Get<T>()
+     *      b.) string Text
+     * 6.) Have a signature that takes in ConversionRequest -- and that's what's used by model binding
+     * 7.) ServiceEnabledObjectConverter can do it for itself
+     * 
+     * 8.) Obsolete the IConverterFamily interface
+     * 9.) Don't worry about caching the conversion just at the moment.  Come back and do that later?  Not necessary, IValueConverterRegistry will beat that
+     */
+
     public class ObjectConverter : IObjectConverter
     {
         public const string EMPTY = "EMPTY";
@@ -21,16 +37,16 @@ namespace FubuCore.Conversion
 
         public const string TODAY = "TODAY";
 
-        private readonly Cache<Type, Func<string, object>> _froms;
+        private readonly Cache<Type, IConverterStrategy> _froms;
         private readonly IList<IObjectConverterFamily> _families = new List<IObjectConverterFamily>();
 
         public ObjectConverter()
         {
-            _froms = new Cache<Type, Func<string, object>>(createFinder);
+            _froms = new Cache<Type, IConverterStrategy>(createFinder);
             Clear();
         }
 
-        private Func<string, object> createFinder(Type type)
+        private IConverterStrategy createFinder(Type type)
         {
             var family = _families.FirstOrDefault(x => x.Matches(type, this));
             if (family != null)
@@ -38,7 +54,7 @@ namespace FubuCore.Conversion
                 return family.CreateConverter(type, _froms);
             }
 
-            throw new ArgumentException("No conversion exists for ");
+            throw new ArgumentException("No conversion exists for " + type.AssemblyQualifiedName);
         }
 
         public bool CanBeParsed(Type type)
@@ -48,7 +64,7 @@ namespace FubuCore.Conversion
 
         public void RegisterConverter<T>(Func<string, T> finder)
         {
-            _froms[typeof(T)] = x => finder(x);
+            _froms[typeof(T)] = new LambdaConverterStrategy<T>(finder);
         }
 
         public void RegisterConverterFamily(IObjectConverterFamily family)
@@ -59,23 +75,22 @@ namespace FubuCore.Conversion
         public void Clear()
         {
             _froms.ClearAll();
-            _froms[typeof(string)] = parseString;
-            _froms[typeof(DateTime)] = key => GetDateTime(key);
-            _froms[typeof(TimeSpan)] = key => GetTimeSpan(key);
-            _froms[typeof (TimeZoneInfo)] = key => TimeZoneInfo.FindSystemTimeZoneById(key);
+            RegisterConverter(parseString);
+            RegisterConverter(GetDateTime);
+            RegisterConverter(GetTimeSpan);
+            RegisterConverter(TimeZoneInfo.FindSystemTimeZoneById);
 
             _families.Clear();
             _families.Add(new EnumConverterFamily());
             _families.Add(new ArrayConverterFamily());
             _families.Add(new NullableConverterFamily());
-            _families.Add(new TypeDescriptorFamily());
             _families.Add(new StringConstructorConverterFamily());
             _families.Add(new TypeDescripterConverterFamily());
         }
 
         public virtual object FromString(string stringValue, Type type)
         {
-            return stringValue == NULL ? null : _froms[type](stringValue);
+            return stringValue == NULL ? null : _froms[type].Convert(stringValue);
         }
 
         public virtual T FromString<T>(string stringValue)

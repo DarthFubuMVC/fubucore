@@ -121,7 +121,6 @@
     <Compile Include="Conversion\NullableConverterFamily.cs" />
     <Compile Include="Conversion\StringConstructorConverterFamily.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
-    <Compile Include="Conversion\TypeDescriptorFamily.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraph.cs" />
     <Compile Include="DependencyAnalysis\DirectedGraph.cs" />
