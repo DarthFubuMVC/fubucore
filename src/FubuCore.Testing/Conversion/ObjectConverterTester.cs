@@ -147,7 +147,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void get_date_time_for_day_and_time()
         {
-            DateTime date = ObjectConverter.GetDateTime("Saturday 14:30");
+            DateTime date = DateTimeConverter.GetDateTime("Saturday 14:30");
 
             date.DayOfWeek.ShouldEqual(DayOfWeek.Saturday);
             date.Date.AddHours(14).AddMinutes(30).ShouldEqual(date);
@@ -157,7 +157,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void get_date_time_for_day_and_time_2()
         {
-            DateTime date = ObjectConverter.GetDateTime("Monday 14:30");
+            DateTime date = DateTimeConverter.GetDateTime("Monday 14:30");
 
             date.DayOfWeek.ShouldEqual(DayOfWeek.Monday);
             date.Date.AddHours(14).AddMinutes(30).ShouldEqual(date);
@@ -167,7 +167,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void get_date_time_for_day_and_time_3()
         {
-            DateTime date = ObjectConverter.GetDateTime("Wednesday 14:30");
+            DateTime date = DateTimeConverter.GetDateTime("Wednesday 14:30");
 
             date.DayOfWeek.ShouldEqual(DayOfWeek.Wednesday);
             date.Date.AddHours(14).AddMinutes(30).ShouldEqual(date);
@@ -177,7 +177,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void get_date_time_from_24_hour_time()
         {
-            ObjectConverter.GetDateTime("14:30").ShouldEqual(DateTime.Today.AddHours(14).AddMinutes(30));
+            DateTimeConverter.GetDateTime("14:30").ShouldEqual(DateTime.Today.AddHours(14).AddMinutes(30));
         }
 
         [Test]
