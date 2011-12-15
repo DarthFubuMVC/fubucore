@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
+using Microsoft.Practices.ServiceLocation;
 
 namespace FubuCore.Conversion
 {
@@ -19,24 +20,93 @@ namespace FubuCore.Conversion
      * 
 
 
-     * 10.) Tweak up ServiceEnabledObjectConverter
+             ----- Might be best to keep the converter library separate from ObjectConverter
      */
 
-    public class ObjectConverter : IObjectConverter
+
+
+
+    public interface IObjectConverter
     {
-        public const string EMPTY = "EMPTY";
-        public const string NULL = "NULL";
-        public const string BLANK = "BLANK";
+        /// <summary>
+        /// Given a string and a .Net type, read this string
+        /// and give me back a corresponding instance of that
+        /// type
+        /// </summary>
+        /// <param name="stringValue">The value to convert</param>
+        /// <param name="type">The desired destination type</param>
+        /// <returns>The value converted into the specified desination type</returns>
+        object FromString(string stringValue, Type type);
+        /// <summary>
+        /// Given a string and a .Net type, T, read this string
+        /// and give me back a corresponding instance of type T.
+        /// </summary>
+        /// <typeparam name="T">The desired destination type</typeparam>
+        /// <param name="stringValue">The value to convert</param>
+        /// <returns>The value converted into the specified desination type</returns>
+        T FromString<T>(string stringValue);
+        /// <summary>
+        /// Determines whether there is conversion support registered for the specified type
+        /// </summary>
+        /// <param name="type">The desired destination type</param>
+        /// <returns>True if conversion to this type is supported, otherwise False.</returns>
+        bool CanBeParsed(Type type);
 
 
 
+        /// <summary>
+        /// Returns an IConverterStrategy that "knows" how to convert
+        /// to a particular type from a string. 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        IConverterStrategy StrategyFor(Type type);
+
+        object From(IConversionRequest request, Type type);
+    }
+
+
+    public class ConverterLibrary
+    {
         private readonly Cache<Type, IConverterStrategy> _froms;
         private readonly IList<IObjectConverterFamily> _families = new List<IObjectConverterFamily>();
 
-        public ObjectConverter()
+        public ConverterLibrary() : this(new IObjectConverterFamily[0])
+        {
+        }
+
+        public ConverterLibrary(IEnumerable<IObjectConverterFamily> families)
         {
             _froms = new Cache<Type, IConverterStrategy>(createFinder);
-            Clear();
+
+            // Strategies that are injected *must* be put first
+            _families.AddRange(families);
+
+            _families.Add(new StringConverterStrategy());
+            _families.Add(new DateTimeConverter());
+            _families.Add(new TimeSpanConverter());
+            _families.Add(new TimeZoneConverter());
+
+            _families.Add(new EnumConverterFamily());
+            _families.Add(new ArrayConverterFamily());
+            _families.Add(new NullableConverterFamily());
+            _families.Add(new StringConstructorConverterFamily());
+            _families.Add(new TypeDescripterConverterFamily());
+        }
+
+        public void RegisterConverter<T>(Func<string, T> finder)
+        {
+            _froms[typeof(T)] = new LambdaConverterStrategy<T>(finder);
+        }
+
+        public void RegisterConverter<TReturnType, TService>(Func<TService, string, TReturnType> converter)
+        {
+            _froms[typeof (TReturnType)] = new LambdaConverterStrategy<TReturnType, TService>(converter);
+        }
+
+        public void RegisterConverterFamily(IObjectConverterFamily family)
+        {
+            _families.Insert(0, family);
         }
 
         private IConverterStrategy createFinder(Type type)
@@ -59,48 +129,50 @@ namespace FubuCore.Conversion
         {
             return _froms[type];
         }
+    }
 
-        public void RegisterConverter<T>(Func<string, T> finder)
+
+    public class ObjectConverter : IObjectConverter
+    {
+        private readonly ConverterLibrary _library;
+        private readonly Func<Type, object> _finder;
+
+        public const string NULL = "NULL";
+
+
+        public ObjectConverter() : this(type => { throw new NotSupportedException(); }, new ConverterLibrary(new IObjectConverterFamily[0]))
         {
-            _froms[typeof(T)] = new LambdaConverterStrategy<T>(finder);
         }
 
-        public void RegisterConverterFamily(IObjectConverterFamily family)
+        public ObjectConverter(IServiceLocator services, ConverterLibrary library)
+            : this(type => services.GetInstance(type), library)
         {
-            _families.Insert(0, family);
         }
 
-        public void Clear()
+        private ObjectConverter(Func<Type, object> finder, ConverterLibrary library)
         {
-            _froms.ClearAll();
-            RegisterConverter(parseString);
-            RegisterConverter(DateTimeConverter.GetDateTime);
-            RegisterConverter(DateTimeConverter.GetTimeSpan);
-            RegisterConverter(TimeZoneInfo.FindSystemTimeZoneById);
-
-            _families.Clear();
-            _families.Add(new EnumConverterFamily());
-            _families.Add(new ArrayConverterFamily());
-            _families.Add(new NullableConverterFamily());
-            _families.Add(new StringConstructorConverterFamily());
-            _families.Add(new TypeDescripterConverterFamily());
+            _library = library;
+            _finder = finder;
         }
 
-        protected virtual object getService(Type type)
+        public bool CanBeParsed(Type type)
         {
-            throw new NotSupportedException();
+            return _library.CanBeParsed(type);
+        }
+
+        public IConverterStrategy StrategyFor(Type type)
+        {
+            return _library.StrategyFor(type);
         }
 
         public virtual object From(IConversionRequest request, Type type)
         {
-            return request.Text == NULL ? null : _froms[type].Convert(request);
+            return request.Text == NULL ? null : StrategyFor(type).Convert(request);
         }
-
-        
 
         public virtual object FromString(string stringValue, Type type)
         {
-            return From(new ConversionRequest(stringValue, getService), type);
+            return From(new ConversionRequest(stringValue, _finder), type);
         }
 
         public virtual T FromString<T>(string stringValue)
@@ -108,20 +180,6 @@ namespace FubuCore.Conversion
             return (T)FromString(stringValue, typeof(T));
         }
 
-        private static string parseString(string stringValue)
-        {
-            if (stringValue == BLANK || stringValue == EMPTY)
-            {
-                return string.Empty;
-            }
-
-            if (stringValue == NULL)
-            {
-                return null;
-            }
-
-            return stringValue;
-        }
 
 
     }

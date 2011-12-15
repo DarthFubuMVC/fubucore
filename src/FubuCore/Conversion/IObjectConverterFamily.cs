@@ -8,7 +8,7 @@ namespace FubuCore.Conversion
         // ObjectConverter calls this method on unknown types
         // to ask an IObjectConverterFamily if it "knows" how
         // to convert a string into the given type
-        bool Matches(Type type, IObjectConverter converter);
+        bool Matches(Type type, ConverterLibrary converter);
 
         // If Matches() returns true for a given type, 
         // ObjectConverter asks this IObjectConverterFamily
@@ -21,7 +21,7 @@ namespace FubuCore.Conversion
 
     public abstract class StatelessConverter : IObjectConverterFamily, IConverterStrategy
     {
-        public abstract bool Matches(Type type, IObjectConverter converter);
+        public abstract bool Matches(Type type, ConverterLibrary converter);
 
         public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
         {
@@ -29,6 +29,21 @@ namespace FubuCore.Conversion
         }
 
         public abstract object Convert(IConversionRequest request);
+    }
+
+    public abstract class StatelessConverter<TReturnType> : StatelessConverter
+    {
+        public sealed override bool Matches(Type type, ConverterLibrary converter)
+        {
+            return type == typeof (TReturnType);
+        }
+
+        public sealed override object Convert(IConversionRequest request)
+        {
+            return convert(request.Text);
+        }
+
+        protected abstract TReturnType convert(string text);
     }
 
     
@@ -104,7 +119,22 @@ namespace FubuCore.Conversion
         }
     }
 
-    
 
+    // TODO -- come back here and add the object descriptor stuff
+    // for diagnostics
+    public class LambdaConverterStrategy<TReturnType, TService> : IConverterStrategy
+    {
+        private readonly Func<TService, string, TReturnType> _finder;
+
+        public LambdaConverterStrategy(Func<TService, string, TReturnType> finder)
+        {
+            _finder = finder;
+        }
+
+        public object Convert(IConversionRequest request)
+        {
+            return _finder(request.Get<TService>(), request.Text);
+        }
+    }
     
 }

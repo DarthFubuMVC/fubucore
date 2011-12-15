@@ -58,7 +58,9 @@ namespace FubuCore.Testing.Conversion
 
             Thread.CurrentThread.CurrentCulture = new CultureInfo("en-US");
 
-            finder = new ObjectConverter();
+            theLibrary = new ConverterLibrary();
+
+            finder = new ObjectConverter(new StubServiceLocator(), theLibrary);
 			
 			// Determines which time zone id to use for the time_zone_info test, since 
 			// the value can differ based on platform the test is running on
@@ -76,6 +78,7 @@ namespace FubuCore.Testing.Conversion
 
         private ObjectConverter finder;
         private CultureInfo theOriginalCulture;
+        private ConverterLibrary theLibrary;
 
 
         public class Weird{}
@@ -89,7 +92,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void array_of_non_simple_type_that_has_a_finder_can_be_parsed()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.CanBeParsed(typeof(Service[])).ShouldBeTrue();
         }
 
@@ -108,14 +111,14 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void enumerable_of_non_simple_type_that_has_a_finder_can_be_parsed()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.CanBeParsed(typeof(IEnumerable<Service>)).ShouldBeTrue();
         }
 
         [Test]
         public void enumerable_of_non_simple_type_that_has_a_finder_can_be_resolved()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.FromString<IEnumerable<Service>>("Josh, Chad, Jeremy, Brandon").ShouldHaveTheSameElementsAs(new[]
             {
                 new Service("Josh"), 
@@ -184,11 +187,11 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void get_EMPTY_as_an_empty_array()
         {
-            finder.FromString<int[]>(ObjectConverter.EMPTY)
+            finder.FromString<int[]>(StringConverterStrategy.EMPTY)
                 .ShouldBeOfType<int[]>()
                 .Length.ShouldEqual(0);
 
-            finder.FromString<string[]>(ObjectConverter.EMPTY)
+            finder.FromString<string[]>(StringConverterStrategy.EMPTY)
                 .ShouldBeOfType<string[]>()
                 .Length.ShouldEqual(0);
         }
@@ -237,7 +240,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void non_simple_type_that_has_a_finder_can_be_parsed()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.CanBeParsed(typeof(Service)).ShouldBeTrue();
         }
 
@@ -277,7 +280,7 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void parsing_a_nullable_should_use_the_finder_for_the_inner_type()
         {
-            finder.RegisterConverter<int>(text => 99);
+            theLibrary.RegisterConverter<int>(text => 99);
 
             finder.FromString<int>("45").ShouldEqual(99);
             finder.FromString<int?>("32").ShouldEqual(99);
@@ -299,7 +302,7 @@ namespace FubuCore.Testing.Conversion
         public void parse_a_string()
         {
             finder.FromString<string>("something").ShouldEqual("something");
-            finder.FromString<string>(ObjectConverter.BLANK).ShouldEqual(string.Empty);
+            finder.FromString<string>(StringConverterStrategy.BLANK).ShouldEqual(string.Empty);
             finder.FromString<string>(ObjectConverter.NULL).ShouldBeNull();
         }
 
@@ -414,14 +417,14 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void register_and_retrieve_from_a_custom_finder_method()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.FromString<Service>("Josh").Name.ShouldEqual("Josh");
         }
 
         [Test]
         public void register_and_retrieve_from_a_custom_finder_method_as_array()
         {
-            finder.RegisterConverter(x => new Service(x));
+            theLibrary.RegisterConverter(x => new Service(x));
             finder.FromString<Service[]>("Josh, Chad, Jeremy, Brandon")
                 .ShouldEqual(new[]
                 {
@@ -441,8 +444,8 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void register_and_retrieve_a_new_type_of_complex_object()
         {
-            var finder = new ObjectConverter();
-            finder.RegisterConverter<Contact>(text =>
+            var library = new ConverterLibrary();
+            library.RegisterConverter<Contact>(text =>
             {
                 var parts = text.Split(' ');
                 return new Contact(){
@@ -450,6 +453,10 @@ namespace FubuCore.Testing.Conversion
                     LastName = parts[1]
                 };
             });
+
+
+
+            var finder = new ObjectConverter(null, library);
 
             var c = finder.FromString<Contact>("Jeremy Miller");
 
@@ -461,8 +468,9 @@ namespace FubuCore.Testing.Conversion
         public void how_about_getting_an_array_of_those_complex_objects()
         {
             // Same converter as before
-            var finder = new ObjectConverter();
-            finder.RegisterConverter<Contact>(text =>
+            var library = new ConverterLibrary();
+            var finder = new ObjectConverter(null, library);
+            library.RegisterConverter<Contact>(text =>
             {
                 var parts = text.Split(' ');
                 return new Contact()
@@ -524,24 +532,22 @@ namespace FubuCore.Testing.Conversion
 
 
     [TestFixture]
-    public class ServiceEnabledObjectConverterTester
+    public class ObjectConverter_explicit_registration_Tester
     {
-        private ServiceEnabledObjectConverter finder;
+        private ObjectConverter finder;
 
-        [SetUp]
-        public void SetUp()
-        {
-            var locator = new StubServiceLocator();
-            locator.Services[typeof (WidgetFinderService)] = new WidgetFinderService();
-
-            finder = new ServiceEnabledObjectConverter(locator, new IObjectConverterFamily[0]);
-        }
 
         [Test]
         public void can_register_and_use_a_service_for_the_conversion()
         {
+            var locator = new StubServiceLocator();
+            locator.Services[typeof(WidgetFinderService)] = new WidgetFinderService();
+
+            var library = new ConverterLibrary();
+
+            finder = new ObjectConverter(locator, library);
             
-            finder.RegisterConverter<Widget, WidgetFinderService>((service, text) => service.Build(text));
+            library.RegisterConverter<Widget, WidgetFinderService>((service, text) => service.Build(text));
 
             finder.FromString<Widget>("red").ShouldBeOfType<Widget>().Color.ShouldEqual("red");
         }
@@ -549,9 +555,9 @@ namespace FubuCore.Testing.Conversion
 
 
     [TestFixture]
-    public class ServiceEnabledObjectConverter_with_an_injected_converter_family_Tester
+    public class ObjectConverter_with_an_injected_converter_family_Tester
     {
-        private ServiceEnabledObjectConverter finder;
+        private ObjectConverter finder;
 
         [SetUp]
         public void SetUp()
@@ -559,7 +565,9 @@ namespace FubuCore.Testing.Conversion
             var locator = new StubServiceLocator();
             locator.Services[typeof (WidgetFinderService)] = new WidgetFinderService();
 
-            finder = new ServiceEnabledObjectConverter(locator, new IObjectConverterFamily[]{new WidgetFinderStrategy()});
+            var library = new ConverterLibrary(new IObjectConverterFamily[]{new WidgetFinderStrategy()});
+
+            finder = new ObjectConverter(locator, library);
         }
 
         [Test]
@@ -571,7 +579,7 @@ namespace FubuCore.Testing.Conversion
 
     public class WidgetFinderStrategy : StatelessConverter
     {
-        public override bool Matches(Type type, IObjectConverter converter)
+        public override bool Matches(Type type, ConverterLibrary converter)
         {
             return type == typeof (Widget);
         }

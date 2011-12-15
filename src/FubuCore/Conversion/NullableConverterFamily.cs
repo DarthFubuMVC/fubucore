@@ -5,7 +5,7 @@ namespace FubuCore.Conversion
 {
     public class NullableConverterFamily : IObjectConverterFamily
     {
-        public bool Matches(Type type, IObjectConverter converter)
+        public bool Matches(Type type, ConverterLibrary converter)
         {
             return type.IsNullable();
         }

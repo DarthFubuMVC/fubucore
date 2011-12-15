@@ -116,11 +116,13 @@
     <Compile Include="Configuration\XmlSettingsParser.cs" />
     <Compile Include="Conversion\ArrayConverterFamily.cs" />
     <Compile Include="Conversion\DateTimeConverter.cs" />
+    <Compile Include="Conversion\TimeSpanConverter.cs" />
     <Compile Include="Conversion\EnumConverterFamily.cs" />
-    <Compile Include="Conversion\IObjectConverter.cs" />
     <Compile Include="Conversion\IObjectConverterFamily.cs" />
     <Compile Include="Conversion\NullableConverterFamily.cs" />
     <Compile Include="Conversion\StringConstructorConverterFamily.cs" />
+    <Compile Include="Conversion\StringConverterStrategy.cs" />
+    <Compile Include="Conversion\TimeZoneConverter.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
     <Compile Include="DependencyAnalysis\Cycle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraph.cs" />
@@ -202,7 +204,6 @@
     <Compile Include="Reflection\SingleProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DisplayConversionRegistry.cs" />
-    <Compile Include="ServiceEnabledObjectConverter.cs" />
     <Compile Include="StackFrameExtensions.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="StringExtensions.cs" />

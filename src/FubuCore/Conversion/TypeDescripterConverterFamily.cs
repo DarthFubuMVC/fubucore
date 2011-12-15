@@ -9,7 +9,7 @@ namespace FubuCore.Conversion
     /// </summary>
     public class TypeDescripterConverterFamily : IObjectConverterFamily
     {
-        public bool Matches(Type type, IObjectConverter converter)
+        public bool Matches(Type type, ConverterLibrary converter)
         {
             try
             {

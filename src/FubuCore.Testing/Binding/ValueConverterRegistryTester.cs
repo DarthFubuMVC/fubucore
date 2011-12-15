@@ -27,14 +27,14 @@ namespace FubuCore.Testing.Binding
         public void return_a_null_converter()
         {
             var property = ReflectionHelper.GetProperty<TargetHolder>(x => x.Target);
-            new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter()).FindConverter(property).ShouldBeNull();
+            new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary()).FindConverter(property).ShouldBeNull();
         }
 
         [Test]
         public void should_convert_nonnull_values_for_nullable_types()
         {
             PropertyInfo nullIntProp = ReflectionHelper.GetProperty<Target>(x => x.NullInt);
-            var reg = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
+            var reg = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
             var value = new InMemoryBindingContext().WithPropertyValue("99");
             value.ForProperty(nullIntProp, c =>
             {
@@ -48,7 +48,7 @@ namespace FubuCore.Testing.Binding
         public void should_convert_null_values_for_nullable_types()
         {
             PropertyInfo nullIntProp = ReflectionHelper.GetProperty<Target>(x => x.NullInt);
-            var reg = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
+            var reg = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
 
             var value = new InMemoryBindingContext().WithPropertyValue(null);
             value.ForProperty(nullIntProp, c =>

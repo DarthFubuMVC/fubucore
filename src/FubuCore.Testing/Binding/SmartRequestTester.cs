@@ -15,12 +15,14 @@ namespace FubuCore.Testing.Binding
         private InMemoryRequestData theData;
         private SmartRequest theRequest;
         private ObjectConverter objectConverter;
+        private ConverterLibrary theLibrary;
 
         [SetUp]
         public void SetUp()
         {
             theData = new InMemoryRequestData();
-            objectConverter = new ObjectConverter();
+            theLibrary = new ConverterLibrary();
+            objectConverter = new ObjectConverter(new StubServiceLocator(), theLibrary);
             theRequest = new SmartRequest(theData, objectConverter);
         }
 
@@ -35,7 +37,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void do_not_convert_the_type_if_it_is_already_in_the_correct_type()
         {
-            objectConverter.RegisterConverter<Blob>(b => new Blob());
+            theLibrary.RegisterConverter<Blob>(b => new Blob());
             var theBlob = new Blob();
             theData["blob"] = theBlob;
             theRequest.Value<Blob>("blob").ShouldBeTheSameAs(theBlob);

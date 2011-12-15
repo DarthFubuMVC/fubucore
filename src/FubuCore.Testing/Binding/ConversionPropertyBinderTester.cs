@@ -60,7 +60,7 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             context = new InMemoryBindingContext();
-            theConverterRegistry = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
+            theConverterRegistry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
             propertyBinder = new ConversionPropertyBinder(theConverterRegistry);
         }
 

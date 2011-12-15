@@ -39,7 +39,7 @@ namespace FubuCore.Binding
         {
             return
                 new StandardModelBinder(
-                    new PropertyBinderCache(new IPropertyBinder[0], new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter()),
+                    new PropertyBinderCache(new IPropertyBinder[0], new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary()),
                                             new DefaultCollectionTypeProvider()),
                     new TypeDescriptorCache());
         }

@@ -20,8 +20,8 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            theObjectConverter = new ObjectConverter();
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], theObjectConverter);
+            theLibrary = new ConverterLibrary();
+            _registry = new ValueConverterRegistry(new IConverterFamily[0], theLibrary);
             _property = typeof (PropertyHolder).GetProperty("Property");
             _basicConverterFamily = _registry.Families.SingleOrDefault(cf =>
                                                                        cf.Matches(_property)) as BasicConverterFamily;
@@ -40,7 +40,7 @@ namespace FubuCore.Testing.Binding
         private PropertyInfo _property;
         private IPropertyContext _context;
         private string _propertyValue;
-        private ObjectConverter theObjectConverter;
+        private ConverterLibrary theLibrary;
 
         private class PropertyHolder
         {
@@ -78,7 +78,7 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
+            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
             _property = typeof (PropertyHolder).GetProperty("Property");
             _numericTypeFamily = _registry.Families.FirstOrDefault(cf =>
                                                                    cf.Matches(_property)) as NumericTypeFamily;
@@ -130,7 +130,7 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ObjectConverter());
+            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
             _property = typeof (PropertyHolder).GetProperty("Property");
             _numericTypeFamily = _registry.Families.FirstOrDefault(cf =>
                                                                    cf.Matches(_property)) as NumericTypeFamily;

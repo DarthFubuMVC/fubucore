@@ -1,25 +1,24 @@
 using System;
 using System.Reflection;
 using FubuCore.Conversion;
-using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
     public class BasicConverterFamily : IConverterFamily
     {
-        private readonly IObjectConverter _converter;
+        private readonly ConverterLibrary _library;
 
 
-        public BasicConverterFamily(IObjectConverter converter)
+        public BasicConverterFamily(ConverterLibrary library)
         {
-            if (converter == null) throw new ArgumentNullException("converter");
+            if (library == null) throw new ArgumentNullException("library");
 
-            _converter = converter;
+            _library = library;
         }
 
         public bool Matches(PropertyInfo property)
         {
-            return _converter.CanBeParsed(property.PropertyType);
+            return _library.CanBeParsed(property.PropertyType);
         }
 
 
@@ -27,7 +26,7 @@ namespace FubuCore.Binding
         {
             var propertyType = property.PropertyType;
 
-            var strategy = _converter.StrategyFor(propertyType);
+            var strategy = _library.StrategyFor(propertyType);
             return new BasicValueConverter(strategy, propertyType);
         }
     }
@@ -35,8 +34,8 @@ namespace FubuCore.Binding
     public class BasicValueConverter : ValueConverter
     {
         private readonly IDefaultMaker _defaulter;
-        private readonly IConverterStrategy _strategy;
         private readonly Type _propertyType;
+        private readonly IConverterStrategy _strategy;
 
         public BasicValueConverter(IConverterStrategy strategy, Type propertyType)
         {
@@ -55,6 +54,8 @@ namespace FubuCore.Binding
                        : _strategy.Convert(context);
         }
 
+        #region Nested type: DefaultMaker
+
         public class DefaultMaker<T> : IDefaultMaker
         {
             public object Default()
@@ -63,9 +64,15 @@ namespace FubuCore.Binding
             }
         }
 
+        #endregion
+
+        #region Nested type: IDefaultMaker
+
         public interface IDefaultMaker
         {
             object Default();
         }
+
+        #endregion
     }
 }

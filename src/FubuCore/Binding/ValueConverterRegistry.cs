@@ -11,15 +11,15 @@ namespace FubuCore.Binding
     {
         private readonly List<IConverterFamily> _families = new List<IConverterFamily>();
 
-        public ValueConverterRegistry(IEnumerable<IConverterFamily> families, IObjectConverter converter)
+        public ValueConverterRegistry(IEnumerable<IConverterFamily> families, ConverterLibrary library)
         {
-            if (converter == null) throw new ArgumentNullException("converter");
+            if (library == null) throw new ArgumentNullException("library");
 
             _families.AddRange(families);
 
             addPolicies();
 
-            _families.Add(new BasicConverterFamily(converter));
+            _families.Add(new BasicConverterFamily(library));
         }
 
         public IEnumerable<IConverterFamily> Families

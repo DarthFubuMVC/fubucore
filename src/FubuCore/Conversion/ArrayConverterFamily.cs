@@ -5,7 +5,7 @@ namespace FubuCore.Conversion
 {
     public class ArrayConverterFamily : IObjectConverterFamily
     {
-        public bool Matches(Type type, IObjectConverter converter)
+        public bool Matches(Type type, ConverterLibrary converter)
         {
             if (type.IsArray && converter.CanBeParsed(type.GetElementType())) return true;
 
@@ -38,7 +38,7 @@ namespace FubuCore.Conversion
             public object Convert(IConversionRequest request)
             {
                 var stringValue = request.Text;
-                if (stringValue.ToUpper() == ObjectConverter.EMPTY)
+                if (stringValue.ToUpper() == StringConverterStrategy.EMPTY)
                 {
                     return Array.CreateInstance(_innerType, 0);
                 }

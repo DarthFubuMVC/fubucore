@@ -6,7 +6,7 @@ namespace FubuCore.Conversion
 {
     public class StringConstructorConverterFamily : IObjectConverterFamily
     {
-        public bool Matches(Type type, IObjectConverter converter)
+        public bool Matches(Type type, ConverterLibrary converter)
         {
             if (type.IsArray) return false;
 
