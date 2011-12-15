@@ -36,14 +36,13 @@ namespace FubuCore.Conversion
             return _library.StrategyFor(type);
         }
 
-        public virtual object From(IConversionRequest request, Type type)
-        {
-            return request.Text == NULL ? null : StrategyFor(type).Convert(request);
-        }
-
         public virtual object FromString(string stringValue, Type type)
         {
-            return From(new ConversionRequest(stringValue, _finder), type);
+            if (stringValue == NULL) return null;
+
+            var request = new ConversionRequest(stringValue, _finder);
+            return StrategyFor(type).Convert(request);
+
         }
 
         public virtual T FromString<T>(string stringValue)

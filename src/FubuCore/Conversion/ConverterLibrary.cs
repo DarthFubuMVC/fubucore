@@ -5,6 +5,10 @@ using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
+    /// <summary>
+    /// Acts as an improved version of the System.ComponentModel.TypeDescriptor class
+    /// to store and access strategies for converting a string into a certain Type
+    /// </summary>
     public class ConverterLibrary
     {
         private readonly IList<IObjectConverterFamily> _families = new List<IObjectConverterFamily>();
@@ -33,15 +37,29 @@ namespace FubuCore.Conversion
             _families.Add(new TypeDescripterConverterFamily());
         }
 
+        /// <summary>
+        /// Register a conversion strategy for a single type by a Func
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="finder"></param>
         public void RegisterConverter<T>(Func<string, T> finder)
         {
             _froms[typeof (T)] = new LambdaConverterStrategy<T>(finder);
         }
 
+
+        /// <summary>
+        /// Register a conversion strategy for a single type TReturnType that uses
+        /// an instance of a service type TService
+        /// </summary>
+        /// <typeparam name="TReturnType"></typeparam>
+        /// <typeparam name="TService"></typeparam>
+        /// <param name="converter"></param>
         public void RegisterConverter<TReturnType, TService>(Func<TService, string, TReturnType> converter)
         {
             _froms[typeof (TReturnType)] = new LambdaConverterStrategy<TReturnType, TService>(converter);
         }
+
 
         public void RegisterConverterFamily(IObjectConverterFamily family)
         {
@@ -59,11 +77,21 @@ namespace FubuCore.Conversion
             throw new ArgumentException("No conversion exists for " + type.AssemblyQualifiedName);
         }
 
+        /// <summary>
+        /// Can the ConverterLibrary determine a strategy for parsing a string into the Type?
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public bool CanBeParsed(Type type)
         {
             return _froms.Has(type) || _families.Any(x => x.Matches(type, this));
         }
 
+        /// <summary>
+        /// Locates or resolves a strategy for converting a string into the requested Type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         public IConverterStrategy StrategyFor(Type type)
         {
             return _froms[type];
