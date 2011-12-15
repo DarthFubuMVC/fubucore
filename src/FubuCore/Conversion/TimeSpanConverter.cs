@@ -21,6 +21,8 @@ namespace FubuCore.Conversion
                 return TimeSpan.Parse(timeString);
             }
 
+            
+
             var number = double.Parse(match.Groups["quantity"].Value);
             var units = match.Groups["units"].Value.ToLower();
             switch (units)
@@ -43,6 +45,13 @@ namespace FubuCore.Conversion
                 case "day":
                 case "days":
                     return TimeSpan.FromDays(number);
+
+                case "0":
+                    if (timeString.Length == 4 && !timeString.Contains(":"))
+                    {
+                        return TimeSpan.ParseExact(timeString, "hhmm", null);
+                    }
+                    break;
             }
 
             throw new ApplicationException("Time periods must be expressed in seconds, minutes, hours, or days.");
