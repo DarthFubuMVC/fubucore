@@ -10,9 +10,9 @@ namespace FubuCore.Conversion
             return type.IsNullable();
         }
 
-        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
+        public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
-            var inner = converters[type.GetInnerTypeFromNullable()];
+            var inner = converterSource(type.GetInnerTypeFromNullable());
             return new NullableConverterStrategy(inner, type);
         }
     }

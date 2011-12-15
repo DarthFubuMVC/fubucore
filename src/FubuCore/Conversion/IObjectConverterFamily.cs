@@ -15,7 +15,7 @@ namespace FubuCore.Conversion
         // for a converter Lambda and calls its 
         // RegisterFinder() method behind the scenes to cache
         // the Lambda for later usage
-        IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters);
+        IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource);
     }
 
 
@@ -23,7 +23,7 @@ namespace FubuCore.Conversion
     {
         public abstract bool Matches(Type type, ConverterLibrary converter);
 
-        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
+        public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
             return this;
         }

@@ -21,7 +21,7 @@ namespace FubuCore.Conversion
             }
         }
 
-        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
+        public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
             return new TypeDescriptorConversionStrategy(type);
         }

@@ -10,7 +10,7 @@ namespace FubuCore.Conversion
             return type.IsEnum;
         }
 
-        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
+        public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
             return new EnumConversionStrategy(type);
         }

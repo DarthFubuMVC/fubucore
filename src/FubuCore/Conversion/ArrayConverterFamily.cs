@@ -15,11 +15,11 @@ namespace FubuCore.Conversion
             return (type.IsGenericEnumerable() && converter.CanBeParsed(type.GetGenericArguments()[0]));
         }
 
-        public IConverterStrategy CreateConverter(Type type, Cache<Type, IConverterStrategy> converters)
+        public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
             var innerType = type.IsGenericEnumerable() ? type.GetGenericArguments()[0] : type.GetElementType();
 
-            var singleObjectFinder = converters[innerType];
+            var singleObjectFinder = converterSource(innerType);
 
             return new ArrayConverterStrategy(innerType, singleObjectFinder);
         }

@@ -11,16 +11,6 @@ namespace FubuCore.Conversion
 
      * 2.) IObjectConverterFamily -- change the signature of the CreateConverter method?  Have it return an object?  Makes diagnostics better.
 
-     * 4.) Make ObjectConverter depend on services?
-     * 5.) ConversionRequest
-     *      a.) Get<T>()
-     *      b.) string Text
-
-     * 7.) ServiceEnabledObjectConverter can do it for itself
-     * 
-
-
-             ----- Might be best to keep the converter library separate from ObjectConverter
      */
 
 
@@ -114,7 +104,7 @@ namespace FubuCore.Conversion
             var family = _families.FirstOrDefault(x => x.Matches(type, this));
             if (family != null)
             {
-                return family.CreateConverter(type, _froms);
+                return family.CreateConverter(type, t => _froms[t]);
             }
 
             throw new ArgumentException("No conversion exists for " + type.AssemblyQualifiedName);
