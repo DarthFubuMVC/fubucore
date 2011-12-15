@@ -7,9 +7,5 @@ namespace FubuLocalization
             return new LocalizationKey(propertyInfo.PropertyName, propertyInfo.ParentTypeName);
         }
 
-        public static LocalizationKey ToLocalizationKey(this StringToken stringToken)
-        {
-            return new LocalizationKey(stringToken.Key);
-        }
     }
 }

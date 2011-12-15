@@ -59,11 +59,13 @@
     <Compile Include="Basic\AssemblyScannerTester.cs" />
     <Compile Include="Basic\LocalizationMissingHandlerTester.cs" />
     <Compile Include="Basic\LocalizationProviderFactoryIntegratedTester.cs" />
+    <Compile Include="fill_in_keys_on_string_token.cs" />
     <Compile Include="LocalizationManagerTester.cs" />
     <Compile Include="LocalStringTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyTokenTester.cs" />
     <Compile Include="StringTokenTester.cs" />
+    <Compile Include="StringTokenToLocalizationKeyTester.cs" />
     <Compile Include="ThreadSafeLocaleCacheTester.cs" />
     <Compile Include="XmlDirectoryLocalizationStorageTester.cs" />
   </ItemGroup>
