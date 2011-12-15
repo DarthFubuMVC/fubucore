@@ -301,5 +301,20 @@ namespace FubuCore.Binding
 
             return false;
         }
+
+        T IConversionRequest.Get<T>()
+        {
+            return _locator.GetInstance<T>();
+        }
+
+        string IConversionRequest.Text
+        {
+            get { return PropertyValue as string; }
+        }
+
+        IConversionRequest IConversionRequest.AnotherRequest(string text)
+        {
+            return new ConversionRequest(text, type => _locator.GetInstance(type));
+        }
     }
 }

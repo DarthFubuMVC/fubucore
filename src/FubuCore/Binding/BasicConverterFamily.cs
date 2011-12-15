@@ -9,16 +9,12 @@ namespace FubuCore.Binding
     {
         private readonly IObjectConverter _converter;
 
-        private readonly Cache<Type, ValueConverter> _valueConverters
-            = new Cache<Type, ValueConverter>();
 
         public BasicConverterFamily(IObjectConverter converter)
         {
             if (converter == null) throw new ArgumentNullException("converter");
 
             _converter = converter;
-
-            _valueConverters.OnMissing = type => new BasicValueConverter(_converter, type);
         }
 
         public bool Matches(PropertyInfo property)
@@ -31,19 +27,20 @@ namespace FubuCore.Binding
         {
             var propertyType = property.PropertyType;
 
-            return _valueConverters[propertyType];
+            var strategy = _converter.StrategyFor(propertyType);
+            return new BasicValueConverter(strategy, propertyType);
         }
     }
 
     public class BasicValueConverter : ValueConverter
     {
-        private readonly IObjectConverter _converter;
         private readonly IDefaultMaker _defaulter;
+        private readonly IConverterStrategy _strategy;
         private readonly Type _propertyType;
 
-        public BasicValueConverter(IObjectConverter converter, Type propertyType)
+        public BasicValueConverter(IConverterStrategy strategy, Type propertyType)
         {
-            _converter = converter;
+            _strategy = strategy;
             _propertyType = propertyType;
             _defaulter = typeof (DefaultMaker<>).CloseAndBuildAs<IDefaultMaker>(propertyType);
         }
@@ -55,7 +52,7 @@ namespace FubuCore.Binding
 
             return context.PropertyValue.GetType().CanBeCastTo(_propertyType)
                        ? context.PropertyValue
-                       : _converter.FromString(context.PropertyValue.ToString(), _propertyType);
+                       : _strategy.Convert(context);
         }
 
         public class DefaultMaker<T> : IDefaultMaker

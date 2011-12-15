@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
@@ -152,7 +153,7 @@ namespace FubuCore.Binding
     /// session.  This interface is typically consumed within
     /// custom PropertyBinder's
     /// </summary>
-    public interface IPropertyContext
+    public interface IPropertyContext : IConversionRequest
     {
         /// <summary>
         /// The raw value in the current request data

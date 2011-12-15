@@ -62,6 +62,11 @@ namespace FubuCore.Conversion
             return _froms.Has(type) || _families.Any(x => x.Matches(type, this));
         }
 
+        public IConverterStrategy StrategyFor(Type type)
+        {
+            return _froms[type];
+        }
+
         public void RegisterConverter<T>(Func<string, T> finder)
         {
             _froms[typeof(T)] = new LambdaConverterStrategy<T>(finder);

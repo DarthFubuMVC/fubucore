@@ -33,5 +33,9 @@ namespace FubuCore.Binding
             });
         }
 
+        public ValueConverter FindConverter(PropertyInfo property)
+        {
+            return _cache[property];
+        }
     }
 }

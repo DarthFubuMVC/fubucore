@@ -96,7 +96,7 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
-        public void seting_a_property_should_register_a_value_converter()
+        public void seting_a_property_should_log_a_value_converter()
         {
             var address = new Address();
             context.WithData("Address1", "2035 Ozark");
@@ -106,7 +106,7 @@ namespace FubuCore.Testing.Binding
 
             propertyBinder.Bind(property, context);
 
-            var converter = theConverterRegistry.FindConverter(property);
+            var converter = propertyBinder.As<ConversionPropertyBinder>().FindConverter(property);
             context.Logger.AssertWasCalled(x => x.ChoseValueConverter(property, converter));
         }
     }

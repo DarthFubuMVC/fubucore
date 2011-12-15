@@ -15,13 +15,13 @@ namespace FubuCore.Testing.Binding
             var context = MockRepository.GenerateMock<IPropertyContext>();
             context.Stub(x => x.PropertyValue).Return(null);
 
-            new BasicValueConverter(new ObjectConverter(), typeof (string)).Convert(context)
+            new BasicValueConverter(null, typeof (string)).Convert(context)
                 .ShouldBeNull();
 
-            new BasicValueConverter(new ObjectConverter(), typeof (int)).Convert(context)
+            new BasicValueConverter(null, typeof (int)).Convert(context)
                 .ShouldEqual(default(int));
 
-            new BasicValueConverter(new ObjectConverter(), typeof (bool)).Convert(context)
+            new BasicValueConverter(null, typeof (bool)).Convert(context)
                 .ShouldEqual(default(bool));
         }
     }

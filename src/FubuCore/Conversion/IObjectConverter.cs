@@ -27,5 +27,15 @@ namespace FubuCore.Conversion
         /// <param name="type">The desired destination type</param>
         /// <returns>True if conversion to this type is supported, otherwise False.</returns>
         bool CanBeParsed(Type type);
+
+
+
+        /// <summary>
+        /// Returns an IConverterStrategy that "knows" how to convert
+        /// to a particular type from a string. 
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        IConverterStrategy StrategyFor(Type type);
     }
 }
