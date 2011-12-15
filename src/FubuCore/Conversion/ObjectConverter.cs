@@ -86,9 +86,21 @@ namespace FubuCore.Conversion
             _families.Add(new TypeDescripterConverterFamily());
         }
 
+        protected virtual object getService(Type type)
+        {
+            throw new NotSupportedException();
+        }
+
+        public virtual object From(IConversionRequest request, Type type)
+        {
+            return request.Text == NULL ? null : _froms[type].Convert(request);
+        }
+
+        
+
         public virtual object FromString(string stringValue, Type type)
         {
-            return stringValue == NULL ? null : _froms[type].Convert(stringValue);
+            return From(new ConversionRequest(stringValue, getService), type);
         }
 
         public virtual T FromString<T>(string stringValue)

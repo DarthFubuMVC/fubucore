@@ -37,5 +37,7 @@ namespace FubuCore.Conversion
         /// <param name="type"></param>
         /// <returns></returns>
         IConverterStrategy StrategyFor(Type type);
+
+        object From(IConversionRequest request, Type type);
     }
 }

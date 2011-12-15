@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using FubuCore.Conversion;
 using FubuCore.Testing.Binding;
+using FubuCore.Util;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -533,7 +534,7 @@ namespace FubuCore.Testing.Conversion
             var locator = new StubServiceLocator();
             locator.Services[typeof (WidgetFinderService)] = new WidgetFinderService();
 
-            finder = new ServiceEnabledObjectConverter(locator);
+            finder = new ServiceEnabledObjectConverter(locator, new IObjectConverterFamily[0]);
         }
 
         [Test]
@@ -543,6 +544,42 @@ namespace FubuCore.Testing.Conversion
             finder.RegisterConverter<Widget, WidgetFinderService>((service, text) => service.Build(text));
 
             finder.FromString<Widget>("red").ShouldBeOfType<Widget>().Color.ShouldEqual("red");
+        }
+    }
+
+
+    [TestFixture]
+    public class ServiceEnabledObjectConverter_with_an_injected_converter_family_Tester
+    {
+        private ServiceEnabledObjectConverter finder;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var locator = new StubServiceLocator();
+            locator.Services[typeof (WidgetFinderService)] = new WidgetFinderService();
+
+            finder = new ServiceEnabledObjectConverter(locator, new IObjectConverterFamily[]{new WidgetFinderStrategy()});
+        }
+
+        [Test]
+        public void can_register_and_use_a_service_for_the_conversion()
+        {
+            finder.FromString<Widget>("red").ShouldBeOfType<Widget>().Color.ShouldEqual("red");
+        }
+    }
+
+    public class WidgetFinderStrategy : StatelessConverter
+    {
+        public override bool Matches(Type type, IObjectConverter converter)
+        {
+            return type == typeof (Widget);
+        }
+        
+
+        public override object Convert(IConversionRequest request)
+        {
+            return request.Get<WidgetFinderService>().Build(request.Text);
         }
     }
 
