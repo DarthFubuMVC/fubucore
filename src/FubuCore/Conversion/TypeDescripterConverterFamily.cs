@@ -1,11 +1,10 @@
 using System;
 using System.ComponentModel;
-using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
     /// <summary>
-    /// Uses the built in TypeDescriptor in .Net to convert objects from strings
+    ///   Uses the built in TypeDescriptor in .Net to convert objects from strings
     /// </summary>
     public class TypeDescripterConverterFamily : IObjectConverterFamily
     {
@@ -13,7 +12,7 @@ namespace FubuCore.Conversion
         {
             try
             {
-                return TypeDescriptor.GetConverter(type).CanConvertFrom(typeof(string));
+                return TypeDescriptor.GetConverter(type).CanConvertFrom(typeof (string));
             }
             catch (Exception)
             {
@@ -25,6 +24,8 @@ namespace FubuCore.Conversion
         {
             return new TypeDescriptorConversionStrategy(type);
         }
+
+        #region Nested type: TypeDescriptorConversionStrategy
 
         public class TypeDescriptorConversionStrategy : IConverterStrategy
         {
@@ -42,5 +43,7 @@ namespace FubuCore.Conversion
                 return _converter.ConvertFromString(request.Text);
             }
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
@@ -32,7 +31,7 @@ namespace FubuCore.Conversion
         {
             var stringValue = request.Text;
             if (stringValue == ObjectConverter.NULL || stringValue == null) return null;
-            if (stringValue == string.Empty && _type != typeof(string)) return null;
+            if (stringValue == string.Empty && _type != typeof (string)) return null;
 
             return _inner.Convert(request);
         }

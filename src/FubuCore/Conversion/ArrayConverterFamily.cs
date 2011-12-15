@@ -1,5 +1,4 @@
 using System;
-using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
@@ -8,8 +7,6 @@ namespace FubuCore.Conversion
         public bool Matches(Type type, ConverterLibrary converter)
         {
             if (type.IsArray && converter.CanBeParsed(type.GetElementType())) return true;
-
-
 
 
             return (type.IsGenericEnumerable() && converter.CanBeParsed(type.GetGenericArguments()[0]));
@@ -24,10 +21,12 @@ namespace FubuCore.Conversion
             return new ArrayConverterStrategy(innerType, singleObjectFinder);
         }
 
+        #region Nested type: ArrayConverterStrategy
+
         public class ArrayConverterStrategy : IConverterStrategy
         {
-            private readonly Type _innerType;
             private readonly IConverterStrategy _inner;
+            private readonly Type _innerType;
 
             public ArrayConverterStrategy(Type innerType, IConverterStrategy inner)
             {
@@ -55,5 +54,7 @@ namespace FubuCore.Conversion
                 return array;
             }
         }
+
+        #endregion
     }
 }

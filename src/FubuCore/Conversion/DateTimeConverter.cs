@@ -14,7 +14,7 @@ namespace FubuCore.Conversion
 
         public static DateTime GetDateTime(string dateString)
         {
-            string trimmedString = dateString.Trim();
+            var trimmedString = dateString.Trim();
             if (trimmedString == TODAY)
             {
                 return DateTime.Today;
@@ -22,8 +22,8 @@ namespace FubuCore.Conversion
 
             if (trimmedString.Contains(TODAY))
             {
-                string dayString = trimmedString.Substring(5, trimmedString.Length - 5);
-                int days = int.Parse(dayString);
+                var dayString = trimmedString.Substring(5, trimmedString.Length - 5);
+                var days = int.Parse(dayString);
 
                 return DateTime.Today.AddDays(days);
             }
@@ -39,11 +39,11 @@ namespace FubuCore.Conversion
         private static DateTime convertToDateFromDayAndTime(string dateString)
         {
             dateString = dateString.Replace("  ", " ");
-            string[] parts = dateString.Split(' ');
-            var day = (DayOfWeek)Enum.Parse(typeof(DayOfWeek), parts[0], true);
-            int minutes = minutesFrom24HourTime(parts[1]);
+            var parts = dateString.Split(' ');
+            var day = (DayOfWeek) Enum.Parse(typeof (DayOfWeek), parts[0], true);
+            var minutes = minutesFrom24HourTime(parts[1]);
 
-            DateTime date = DateTime.Today.AddMinutes(minutes);
+            var date = DateTime.Today.AddMinutes(minutes);
             while (date.DayOfWeek != day)
             {
                 date = date.AddDays(1);
@@ -54,15 +54,15 @@ namespace FubuCore.Conversion
 
         private static bool isDayOfWeek(string text)
         {
-            string[] days = Enum.GetNames(typeof(DayOfWeek));
+            var days = Enum.GetNames(typeof (DayOfWeek));
             return days.FirstOrDefault(x => text.ToLower().StartsWith(x.ToLower())) != null;
         }
 
 
         private static int minutesFrom24HourTime(string time)
         {
-            string[] parts = time.Split(':');
-            return 60 * int.Parse(parts[0]) + int.Parse(parts[1]);
+            var parts = time.Split(':');
+            return 60*int.Parse(parts[0]) + int.Parse(parts[1]);
         }
     }
 }

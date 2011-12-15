@@ -1,6 +1,5 @@
 using System;
 using FubuCore.Reflection.Expressions;
-using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
@@ -10,14 +9,16 @@ namespace FubuCore.Conversion
         {
             if (type.IsArray) return false;
 
-            var constructorInfo = type.GetConstructor(new Type[]{typeof (string)});
+            var constructorInfo = type.GetConstructor(new[]{typeof (string)});
             return constructorInfo != null;
         }
 
         public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
-            return typeof(FuncBuilder<>).CloseAndBuildAs<IConverterStrategy>(type);
+            return typeof (FuncBuilder<>).CloseAndBuildAs<IConverterStrategy>(type);
         }
+
+        #region Nested type: FuncBuilder
 
         public class FuncBuilder<T> : IConverterStrategy
         {
@@ -35,6 +36,6 @@ namespace FubuCore.Conversion
             }
         }
 
-        
+        #endregion
     }
 }

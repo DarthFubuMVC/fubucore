@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace FubuCore.Conversion
@@ -16,14 +15,14 @@ namespace FubuCore.Conversion
 
         public static TimeSpan GetTimeSpan(string timeString)
         {
-            Match match = Regex.Match(timeString, TIMESPAN_PATTERN, RegexOptions.IgnorePatternWhitespace);
+            var match = Regex.Match(timeString, TIMESPAN_PATTERN, RegexOptions.IgnorePatternWhitespace);
             if (!match.Success)
             {
                 return TimeSpan.Parse(timeString);
             }
 
-            double number = double.Parse(match.Groups["quantity"].Value);
-            string units = match.Groups["units"].Value.ToLower();
+            var number = double.Parse(match.Groups["quantity"].Value);
+            var units = match.Groups["units"].Value.ToLower();
             switch (units)
             {
                 case "s":

@@ -1,5 +1,4 @@
 using System;
-using FubuCore.Util;
 
 namespace FubuCore.Conversion
 {
@@ -15,6 +14,8 @@ namespace FubuCore.Conversion
             return new EnumConversionStrategy(type);
         }
 
+        #region Nested type: EnumConversionStrategy
+
         public class EnumConversionStrategy : IConverterStrategy
         {
             private readonly Type _enumType;
@@ -29,5 +30,7 @@ namespace FubuCore.Conversion
                 return Enum.Parse(_enumType, request.Text, true);
             }
         }
+
+        #endregion
     }
 }

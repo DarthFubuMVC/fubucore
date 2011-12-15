@@ -115,7 +115,15 @@
     <Compile Include="Configuration\SubstitutedRequestData.cs" />
     <Compile Include="Configuration\XmlSettingsParser.cs" />
     <Compile Include="Conversion\ArrayConverterFamily.cs" />
+    <Compile Include="Conversion\ConversionRequest.cs" />
+    <Compile Include="Conversion\ConverterLibrary.cs" />
+    <Compile Include="Conversion\ConverterStrategyExtensions.cs" />
     <Compile Include="Conversion\DateTimeConverter.cs" />
+    <Compile Include="Conversion\IConversionRequest.cs" />
+    <Compile Include="Conversion\IConverterStrategy.cs" />
+    <Compile Include="Conversion\IObjectConverter.cs" />
+    <Compile Include="Conversion\LambdaConverterStrategy.cs" />
+    <Compile Include="Conversion\StatelessConverter.cs" />
     <Compile Include="Conversion\TimeSpanConverter.cs" />
     <Compile Include="Conversion\EnumConverterFamily.cs" />
     <Compile Include="Conversion\IObjectConverterFamily.cs" />

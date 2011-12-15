@@ -1,5 +1,3 @@
-using System;
-
 namespace FubuCore.Conversion
 {
     public class StringConverterStrategy : StatelessConverter<string>
