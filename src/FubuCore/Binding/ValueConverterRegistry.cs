@@ -35,11 +35,6 @@ namespace FubuCore.Binding
 
         private void addPolicies()
         {
-            // TODO -- move these declarations to FubuMVC
-            Add<PassthroughConverter<HttpPostedFileBase>>();
-            Add<PassthroughConverter<HttpFileCollectionWrapper>>();
-            Add<PassthroughConverter<HttpCookie>>();
-
             Add<ExpandEnvironmentVariablesFamily>();
             Add<ResolveConnectionStringFamily>();
 
