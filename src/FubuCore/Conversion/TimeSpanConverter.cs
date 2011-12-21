@@ -1,5 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace FubuCore.Conversion
 {
@@ -46,12 +47,20 @@ namespace FubuCore.Conversion
                 case "days":
                     return TimeSpan.FromDays(number);
 
-                case "0":
-                    if (timeString.Length == 4 && !timeString.Contains(":"))
-                    {
-                        return TimeSpan.ParseExact(timeString, "hhmm", null);
-                    }
-                    break;
+            }
+
+            if (timeString.Length == 4 && !timeString.Contains(":"))
+            {
+                return TimeSpan.ParseExact(timeString, "hhmm", null);
+            }
+
+            if (timeString.Length == 5 && timeString.Contains(":"))
+            {
+                var parts = timeString.Split(':');
+                int hours = int.Parse(parts.ElementAt(0));
+                int minutes = int.Parse(parts.ElementAt(1));
+
+                return new TimeSpan(hours, minutes, 0);
             }
 
             throw new ApplicationException("Time periods must be expressed in seconds, minutes, hours, or days.");
