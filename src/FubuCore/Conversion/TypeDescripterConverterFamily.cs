@@ -42,6 +42,11 @@ namespace FubuCore.Conversion
             {
                 return _converter.ConvertFromString(request.Text);
             }
+			
+			public Type Type 
+			{
+				get { return _type; }
+			}
         }
 
         #endregion
