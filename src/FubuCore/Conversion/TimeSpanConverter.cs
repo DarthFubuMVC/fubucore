@@ -51,7 +51,10 @@ namespace FubuCore.Conversion
 
             if (timeString.Length == 4 && !timeString.Contains(":"))
             {
-                return TimeSpan.ParseExact(timeString, "hhmm", null);
+				int hours = int.Parse(timeString.Substring(0, 2));
+				int minutes = int.Parse(timeString.Substring(2, 2));
+				
+				return new TimeSpan(hours, minutes, 0);
             }
 
             if (timeString.Length == 5 && timeString.Contains(":"))
