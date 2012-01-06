@@ -59,6 +59,11 @@ namespace FubuCore.Binding
         public void PopulateProperty(Type type, PropertyInfo property, IBindingContext context)
         {
             var propertyBinder = _propertyBinders.BinderFor(property);
+            PopulatePropertyWithBinder(property, context, propertyBinder);
+        }
+
+        public static void PopulatePropertyWithBinder(PropertyInfo property, IBindingContext context, IPropertyBinder propertyBinder)
+        {
             context.Logger.ChosePropertyBinder(property, propertyBinder);
             propertyBinder.Bind(property, context);
         }

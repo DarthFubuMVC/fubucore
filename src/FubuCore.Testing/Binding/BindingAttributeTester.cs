@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -29,18 +30,11 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void use_binding_attribute()
         {
-            var context = new BindingContext(new InMemoryRequestData(), null, new NulloBindingLogger());
-
-            var binder = new AttributePropertyBinder();
-            var target = new FakeTarget();
-
-            var property1 = ReflectionHelper.GetProperty<FakeTarget>(x => x.Color1);
-            var property2 = ReflectionHelper.GetProperty<FakeTarget>(x => x.Color2);
-            context.ForObject(target, () =>
+            var target = BindingScenario<FakeTarget>.For(x =>
             {
-                binder.Bind(property1, context);
-                binder.Bind(property2, context);
-            });
+                x.BindPropertyWith<AttributePropertyBinder>(o => o.Color1);
+                x.BindPropertyWith<AttributePropertyBinder>(o => o.Color2);
+            }).Model;
 
             target.Color1.ShouldEqual("red");
             target.Color2.ShouldEqual("green");

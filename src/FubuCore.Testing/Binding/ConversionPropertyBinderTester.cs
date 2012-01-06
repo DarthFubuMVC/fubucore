@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuTestingSupport;
@@ -84,15 +85,10 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void set_a_property_correctly_against_a_binding_context()
         {
-            var address = new Address();
-            context.WithData("Address1", "2035 Ozark");
-            context.StartObject(address);
-
-            var property = ReflectionHelper.GetProperty<Address>(x => x.Address1);
-
-            propertyBinder.Bind(property, context);
-
-            address.Address1.ShouldEqual("2035 Ozark");
+            BindingScenario<Address>.For(x =>
+            {
+                x.Data(o => o.Address1, "2035 Ozark");
+            }).Model.Address1.ShouldEqual("2035 Ozark");
         }
 
         [Test]
