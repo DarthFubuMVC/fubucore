@@ -206,5 +206,33 @@ e
             "something".ToHash().ShouldEqual("something".ToHash());
             "else".ToHash().ShouldNotEqual("something".ToHash());
         }
+
+
+        [Test]
+        public void to_enum()
+        {
+            var x = "Machine".ToEnum<EnvironmentVariableTarget>();
+            x.ShouldEqual(EnvironmentVariableTarget.Machine);
+        }
+
+        [Test]
+        public void to_enum_should_ignore_case()
+        {
+            var x = "machine".ToEnum<EnvironmentVariableTarget>();
+            x.ShouldEqual(EnvironmentVariableTarget.Machine);
+        }
+
+        [Test]
+        public void to_enum_should_throw_if_not_enum()
+        {
+            Assert.Throws<ArgumentException>(() =>
+                                                 {
+                                                     "a".ToEnum<NotAnEnum>();
+                                                 });
+        }
+        public struct NotAnEnum
+        {
+             
+        }
     }
 }

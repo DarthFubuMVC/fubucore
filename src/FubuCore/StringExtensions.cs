@@ -269,5 +269,13 @@ namespace FubuCore
         {
             return MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(text)).Select(b => b.ToString("x2")).Join("");
         }
+
+
+        public static TEnum ToEnum<TEnum>(this string text) where TEnum : struct
+        {
+            var enumType = typeof (TEnum);
+            if(!enumType.IsEnum) throw new ArgumentException("{0} is not an Enum".ToFormat(enumType.Name));
+            return (TEnum) Enum.Parse(enumType, text, true);
+        }
     }
 }
