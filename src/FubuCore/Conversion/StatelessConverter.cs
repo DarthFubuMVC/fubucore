@@ -27,4 +27,20 @@ namespace FubuCore.Conversion
 
         protected abstract TReturnType convert(string text);
     }
+
+    public abstract class StatelessConverter<TReturnType, TService> : StatelessConverter
+    {
+        public override sealed bool Matches(Type type, ConverterLibrary converter)
+        {
+            return type == typeof(TReturnType);
+        }
+
+        public override sealed object Convert(IConversionRequest request)
+        {
+            var service = request.Get<TService>();
+            return convert(service, request.Text);
+        }
+
+        protected abstract TReturnType convert(TService service, string text);
+    }
 }

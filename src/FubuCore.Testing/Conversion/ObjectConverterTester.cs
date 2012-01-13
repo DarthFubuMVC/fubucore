@@ -577,6 +577,29 @@ namespace FubuCore.Testing.Conversion
         }
     }
 
+    [TestFixture]
+    public class ObjectConverter_with_an_injected_converter_family_Tester_and_Service_stateless
+    {
+        private ObjectConverter finder;
+
+        [SetUp]
+        public void SetUp()
+        {
+            var locator = new StubServiceLocator();
+            locator.Services[typeof(WidgetFinderService)] = new WidgetFinderService();
+
+            var library = new ConverterLibrary(new IObjectConverterFamily[] { new WidgetFinderStrategy2() });
+
+            finder = new ObjectConverter(locator, library);
+        }
+
+        [Test]
+        public void can_register_and_use_a_service_for_the_conversion()
+        {
+            finder.FromString<Widget>("red").ShouldBeOfType<Widget>().Color.ShouldEqual("red");
+        }
+    }
+
     public class WidgetFinderStrategy : StatelessConverter
     {
         public override bool Matches(Type type, ConverterLibrary converter)
@@ -588,6 +611,14 @@ namespace FubuCore.Testing.Conversion
         public override object Convert(IConversionRequest request)
         {
             return request.Get<WidgetFinderService>().Build(request.Text);
+        }
+    }
+
+    public class WidgetFinderStrategy2 : StatelessConverter<Widget, WidgetFinderService>
+    {
+        protected override Widget convert(WidgetFinderService service, string text)
+        {
+            return service.Build(text);
         }
     }
 
