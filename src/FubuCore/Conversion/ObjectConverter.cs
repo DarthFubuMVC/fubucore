@@ -11,7 +11,7 @@ namespace FubuCore.Conversion
 
 
         public ObjectConverter()
-            : this(type => { throw new NotSupportedException(); }, new ConverterLibrary(new IObjectConverterFamily[0]))
+            : this(type => { throw new NotSupportedException("You must regsiter an IServiceLocator to resolve dependencies."); }, new ConverterLibrary(new IObjectConverterFamily[0]))
         {
         }
 

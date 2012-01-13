@@ -8,7 +8,7 @@ namespace FubuCore.Conversion
         private readonly string _text;
 
         public ConversionRequest(string text)
-            : this(text, type => { throw new NotSupportedException(); })
+            : this(text, type => { throw new NotSupportedException("You have not registered a finder"); })
         {
             _text = text;
         }
