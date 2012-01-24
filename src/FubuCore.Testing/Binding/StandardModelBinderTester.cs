@@ -49,6 +49,7 @@ namespace FubuCore.Testing.Binding
             binder = (StandardModelBinder) StandardModelBinder.Basic();
             
             context = new InMemoryBindingContext();
+            context.RegisterService<IObjectResolver>(ObjectResolver.Basic());
 
             result = null;
         }
@@ -87,6 +88,34 @@ namespace FubuCore.Testing.Binding
             public DateTime BirthDate { get; set; }
             public Guid Id { get; set; }
             public bool X_Requested_With { get; set; }
+        }
+
+        private class Duck
+        {
+            public int WingSpan { get; set; }
+            public Turkey Turducken { get; set; }
+        }
+
+        [Test]
+        public void Multiple_levels_of_bound_objects()
+        {
+            context["WingSpan"] = "7";
+            context["TurduckenName"] = "Bob";
+
+            var duckResult = new BindResult
+            {
+                Value = binder.Bind(typeof(Duck), context),
+                Problems = context.Problems
+            };
+
+            duckResult.AssertNoProblems(typeof(Duck));
+            duckResult.AssertNoProblems(typeof(Turkey));
+
+            var duck = duckResult.Value.As<Duck>();
+
+            duck.WingSpan.ShouldEqual(7);
+            duck.Turducken.Name.ShouldEqual("Bob");
+
         }
 
 
