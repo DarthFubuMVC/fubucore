@@ -37,7 +37,7 @@ namespace FubuCore.Conversion
             public object Convert(IConversionRequest request)
             {
                 var stringValue = request.Text;
-                if (stringValue.ToUpper() == StringConverterStrategy.EMPTY)
+                if (stringValue.ToUpper() == StringConverterStrategy.EMPTY || stringValue.Trim().IsEmpty())
                 {
                     return Array.CreateInstance(_innerType, 0);
                 }

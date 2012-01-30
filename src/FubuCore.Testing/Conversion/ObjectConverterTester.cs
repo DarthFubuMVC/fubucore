@@ -197,6 +197,12 @@ namespace FubuCore.Testing.Conversion
         }
 
         [Test]
+        public void empty_string_as_an_array_is_zero_length_array()
+        {
+            finder.FromString<int[]>(string.Empty).Length.ShouldEqual(0);
+        }
+
+        [Test]
         public void get_enumeration_value()
         {
             finder.FromString<DayOfWeek>(DayOfWeek.Monday.ToString())
