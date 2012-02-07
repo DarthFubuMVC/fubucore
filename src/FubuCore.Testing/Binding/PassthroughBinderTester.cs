@@ -33,6 +33,13 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
+        public void matches_by_object_property_type_negative()
+        {
+            var binder = new PassthroughConverter<HttpPostedFileBase>();
+            binder.Matches(property(x => x.File3)).ShouldBeFalse();
+        }
+
+        [Test]
         public void build_passes_through()
         {
             var binder = new PassthroughConverter<HttpPostedFileBase>();
@@ -53,5 +60,6 @@ namespace FubuCore.Testing.Binding
     {
         public HttpPostedFileBase File { get; set; }
         public string File2 { get; set; }
+        public object File3 { get; set; }
     }
 }

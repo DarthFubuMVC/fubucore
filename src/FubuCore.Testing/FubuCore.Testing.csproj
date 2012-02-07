@@ -83,6 +83,7 @@
     <Compile Include="Binding\ModelBinderCacheTester.cs" />
     <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
     <Compile Include="Binding\ObjectResolverTester.cs" />
+    <Compile Include="Binding\ObjectTypeFamilyTester.cs" />
     <Compile Include="Binding\PassthroughBinderTester.cs" />
     <Compile Include="Binding\PropertyBinderCacheTester.cs" />
     <Compile Include="Binding\PropertyBinderTester.cs" />
