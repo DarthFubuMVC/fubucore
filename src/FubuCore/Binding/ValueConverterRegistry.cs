@@ -40,6 +40,7 @@ namespace FubuCore.Binding
 
             Add<BooleanFamily>();
             Add<NumericTypeFamily>();
+            Add<ObjectTypeFamily>();
         }
 
         public void Add<T>() where T : IConverterFamily, new()

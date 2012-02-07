@@ -7,7 +7,7 @@ namespace FubuCore.Binding
     {
         public override bool Matches(PropertyInfo property)
         {
-            return property.PropertyType.IsAssignableFrom(typeof (T));
+            return property.PropertyType.IsAssignableFrom(typeof(T)) && property.PropertyType != typeof(object);
         }
 
         public override object Convert(IPropertyContext context)
