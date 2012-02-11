@@ -25,6 +25,11 @@ namespace FubuCore.Binding
             _values = line.Split(new string[] { _concatenator }, StringSplitOptions.None);
         }
 
+        protected override string source
+        {
+            get { return "Flat file input"; }
+        }
+
         protected override object fetch(string key)
         {
             return _values[_indices[key]];

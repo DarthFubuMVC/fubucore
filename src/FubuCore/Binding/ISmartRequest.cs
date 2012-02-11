@@ -36,7 +36,7 @@ namespace FubuCore.Binding
 
         public bool Value(Type type, string key, Action<object> continuation)
         {
-            return _request.Value(key, continuation);
+            return _request.Value(key, value => continuation(value.RawValue));
         }
 
         public T Value<T>(string key)
@@ -46,7 +46,7 @@ namespace FubuCore.Binding
 
         public bool Value<T>(string key, Action<T> callback)
         {
-            return _request.Value(key, o => callback((T) o));
+            return _request.Value(key, o => callback((T) o.RawValue));
         }
 
     }

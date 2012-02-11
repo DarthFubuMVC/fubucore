@@ -5,6 +5,7 @@ using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
 using Rhino.Mocks;
+using Is = Rhino.Mocks.Constraints.Is;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -71,7 +72,7 @@ namespace FubuCore.Testing.Configuration
 
             theSubstitutedData.Value("Key", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("*setting-value*"));
+            action.AssertWasCalled(x => x.Invoke(new RequestSource { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
         }
     }
 }

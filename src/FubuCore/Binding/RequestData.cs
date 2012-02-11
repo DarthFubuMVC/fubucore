@@ -16,12 +16,12 @@ namespace FubuCore.Binding
         {
             object output = null;
 
-            Value(key, val => output = val);
+            Value(key, val => output = val.RawValue);
 
             return output;
         }
 
-        public bool Value(string key, Action<object> callback)
+        public bool Value(string key, Action<RequestSource> callback)
         {
             var found = false;
 
@@ -29,7 +29,11 @@ namespace FubuCore.Binding
             {
                 found = true;
                 record(key, s, o);
-                callback(o);
+                callback(new RequestSource{
+                    RawKey = key,
+                    RawValue = o,
+                    Source = s
+                });
             });
 
             return found;
@@ -46,6 +50,7 @@ namespace FubuCore.Binding
             return new RequestData(dict);
         }
 
+        [MarkedForTermination("Think this can go away with the RequestValue thingie")]
         protected virtual void record(string key, string source, object @object)
         {
         }

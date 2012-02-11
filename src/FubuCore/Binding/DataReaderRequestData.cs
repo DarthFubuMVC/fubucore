@@ -30,6 +30,11 @@ namespace FubuCore.Binding
 
         #region IRequestData Members
 
+        protected override string source
+        {
+            get { return "IDataReader"; }
+        }
+
         protected override object fetch(string key)
         {
             var rawValue = _reader[_aliases[key]];

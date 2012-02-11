@@ -21,7 +21,14 @@ namespace FubuCore.Testing.Binding
             RequestData data = RequestData.ForDictionary(dictionary);
             data.ShouldNotBeNull();
             data.Value("UserAgent", callback.Action);
-            callback.AssertWasCalled(c=>c.Action(_expectedValue));
+
+
+
+            callback.AssertWasCalled(c=>c.Action(new RequestSource{
+                RawKey = "UserAgent",
+                RawValue = _expectedValue,
+                Source = "Other"
+            }));
         }
 
         [Test]

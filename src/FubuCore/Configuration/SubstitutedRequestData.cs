@@ -27,12 +27,12 @@ namespace FubuCore.Configuration
             return parsedValue;
         }
 
-        public bool Value(string key, Action<object> callback)
+        public bool Value(string key, Action<RequestSource> callback)
         {
             return _inner.Value(key, o =>
             {
-                var substitutedValue = TemplateParser.Parse(o.ToString(), _substitutions);
-                callback(substitutedValue);
+                o.RawValue = TemplateParser.Parse(o.RawValue.ToString(), _substitutions);
+                callback(o);
             });
         }
 

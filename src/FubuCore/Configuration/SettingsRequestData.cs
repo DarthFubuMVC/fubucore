@@ -27,14 +27,14 @@ namespace FubuCore.Configuration
 
         public object Value(string key)
         {
-            object returnValue = null;
+            RequestSource returnValue = null;
 
             Value(key, o => returnValue = o);
 
-            return (returnValue ?? string.Empty).ToString();
+            return (returnValue.RawValue ?? string.Empty).ToString();
         }
 
-        public bool Value(string key, Action<object> callback)
+        public bool Value(string key, Action<RequestSource> callback)
         {
             return _steps.Any(x => x.Value(key, callback));
         }
@@ -70,12 +70,16 @@ namespace FubuCore.Configuration
                 return _settingData.Any(x => x.AllKeys.Any(k => k.StartsWith(key)));
             }
 
-            public bool Value(string key, Action<object> callback)
+            public bool Value(string key, Action<RequestSource> callback)
             {
                 var data = _settingData.FirstOrDefault(x => x.Has(key));
                 if (data == null) return false;
 
-                callback(data.Get(key));
+                callback(new RequestSource{
+                    RawValue = data.Get(key),
+                    RawKey = key,
+                    Source = data.ToString() // SettingsData should now show you the provenance and category in here
+                });
 
                 return true;
             }

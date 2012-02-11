@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using FubuCore.Configuration;
+using FubuTestingSupport;
 using NUnit.Framework;
 using SpecificationExtensions = FubuTestingSupport.SpecificationExtensions;
 
@@ -27,15 +28,15 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void unresolved_report()
         {
-            SpecificationExtensions.ShouldEqual(SettingsProvider.For(theSettings1, theSettings2).CreateDiagnosticReport()
-                                                                     .Single(x => x.Key == "Snack").Value, "{Beer} and Peanuts");
+            SettingsProvider.For(theSettings1, theSettings2).CreateDiagnosticReport()
+                                                                     .Single(x => x.Key == "Snack").Value.ShouldEqual("{Beer} and Peanuts");
         }
 
         [Test]
         public void resolved_report()
         {
-            SpecificationExtensions.ShouldEqual(SettingsProvider.For(theSettings1, theSettings2).CreateResolvedDiagnosticReport()
-                                                                     .Single(x => x.Key == "Snack").Value, "FreeState Wheat and Peanuts");
+            SettingsProvider.For(theSettings1, theSettings2).CreateResolvedDiagnosticReport()
+                                                                     .Single(x => x.Key == "Snack").Value.ShouldEqual("FreeState Wheat and Peanuts");
         }
     }
 }

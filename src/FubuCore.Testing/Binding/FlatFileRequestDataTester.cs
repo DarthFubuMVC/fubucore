@@ -33,7 +33,7 @@ namespace FubuCore.Testing.Binding
         {
             string value = null;
             request.ReadLine("1|2|3|4");
-            request.Value("a", o => value = (string) o);
+            request.Value("a", o => value = (string) o.RawValue);
 
             value.ShouldEqual("1");
         }
@@ -44,7 +44,7 @@ namespace FubuCore.Testing.Binding
             request.Alias("a", "aaa");
             string value = null;
             request.ReadLine("1|2|3|4");
-            request.Value("aaa", o => value = (string)o);
+            request.Value("aaa", o => value = (string)o.RawValue);
 
             value.ShouldEqual("1");
         }

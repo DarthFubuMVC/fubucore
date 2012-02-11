@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore.Util;
 
@@ -35,6 +36,11 @@ namespace FubuCore.Binding
         public override IEnumerable<string> GetKeys()
         {
             return _values.GetAllKeys();
+        }
+
+        protected override string source
+        {
+            get { return "in memory"; }
         }
     }
 }

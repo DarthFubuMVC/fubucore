@@ -19,7 +19,7 @@ namespace FubuCore.Binding
             return _inner.Value(_prefix + key);
         }
 
-        public bool Value(string key, Action<object> callback)
+        public bool Value(string key, Action<RequestSource> callback)
         {
             return _inner.Value(_prefix + key, callback);
         }

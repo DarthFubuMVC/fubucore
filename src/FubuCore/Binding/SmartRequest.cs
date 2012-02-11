@@ -22,7 +22,7 @@ namespace FubuCore.Binding
             {
                 _data.Value(key, o =>
                 {
-                    returnValue = convertValue(o, type);
+                    returnValue = convertValue(o.RawValue, type);
                 });
             }
 
@@ -35,7 +35,7 @@ namespace FubuCore.Binding
             {
                 return _data.Value(key, o =>
                 {
-                    var value = convertValue(o, type);
+                    var value = convertValue(o.RawValue, type);
                     continuation(value);
                 });
             }
@@ -61,7 +61,7 @@ namespace FubuCore.Binding
         {
             return _data.Value(key, raw =>
             {
-                var value = (T)convertValue(raw, typeof (T));
+                var value = (T)convertValue(raw.RawValue, typeof (T));
                 callback(value);
             });
         }

@@ -30,5 +30,10 @@ namespace FubuCore.Configuration
         {
             return ConfigurationManager.AppSettings.AllKeys;
         }
+
+        protected override string source
+        {
+            get { return "AppSettings"; }
+        }
     }
 }

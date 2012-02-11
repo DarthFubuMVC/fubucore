@@ -117,5 +117,10 @@ namespace FubuCore.Configuration
                 data.Read(text);
             });
         }
+
+        public override string ToString()
+        {
+            return string.Format("Settings Data, category {0}, provenance: {1}", Category, Provenance ?? "unknown");
+        }
     }
 }

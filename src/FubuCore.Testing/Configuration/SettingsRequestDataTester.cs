@@ -81,7 +81,7 @@ namespace FubuCore.Testing.Configuration
 
             var action = MockRepository.GenerateMock<Action<object>>();
 
-            request.Value("key2", action).ShouldBeTrue();
+            request.Value("key2", source => action(source.RawValue)).ShouldBeTrue();
 
             action.AssertWasCalled(x => x.Invoke("val2"));
         }

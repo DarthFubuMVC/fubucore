@@ -181,7 +181,7 @@ namespace FubuCore.Binding
                 string name = naming(Property.Name);
                 return _requestData.Value(name, o =>
                 {
-                    PropertyValue = o;
+                    PropertyValue = o.RawValue;
                     action(this);
                 });
             });
