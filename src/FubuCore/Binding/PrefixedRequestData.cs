@@ -33,5 +33,10 @@ namespace FubuCore.Binding
         {
             return _inner.GetKeys();
         }
+
+        public IRequestData GetSubRequest(string prefixOrChild)
+        {
+            return new PrefixedRequestData(_inner, _prefix + prefixOrChild);
+        }
     }
 }

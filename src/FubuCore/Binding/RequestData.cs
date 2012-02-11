@@ -54,5 +54,10 @@ namespace FubuCore.Binding
         {
             return _dictionary.GetAllKeys();
         }
+
+        public IRequestData GetSubRequest(string prefixOrChild)
+        {
+            return new PrefixedRequestData(this, prefixOrChild);
+        }
     }
 }

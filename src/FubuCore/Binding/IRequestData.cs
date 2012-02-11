@@ -10,6 +10,8 @@ namespace FubuCore.Binding
         bool Value(string key, Action<object> callback);
         bool HasAnyValuePrefixedWith(string key);
         IEnumerable<string> GetKeys();
+
+        IRequestData GetSubRequest(string prefixOrChild);
     }
 
     public abstract class RequestDataBase : IRequestData
@@ -49,5 +51,10 @@ namespace FubuCore.Binding
         }
 
         public abstract IEnumerable<string> GetKeys();
+
+        public IRequestData GetSubRequest(string prefixOrChild)
+        {
+            return new PrefixedRequestData(this, prefixOrChild);
+        }
     }
 }

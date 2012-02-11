@@ -208,9 +208,10 @@ namespace FubuCore.Binding
             return prefixWith(prefix, _propertyStack.Reverse());
         }
 
+        
         private BindingContext prefixWith(string prefix, IEnumerable<PropertyInfo> properties)
         {
-            var prefixedData = new PrefixedRequestData(_requestData, prefix);
+            var prefixedData = _requestData.GetSubRequest(prefix);
             var child = new BindingContext(prefixedData, _locator, Logger);
             
                 

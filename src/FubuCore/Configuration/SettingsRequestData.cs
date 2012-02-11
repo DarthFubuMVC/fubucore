@@ -115,5 +115,10 @@ namespace FubuCore.Configuration
         {
             return _steps.SelectMany(s => s.AllKeys);
         }
+
+        public IRequestData GetSubRequest(string prefixOrChild)
+        {
+            return new PrefixedRequestData(this, prefixOrChild);
+        }
     }
 }

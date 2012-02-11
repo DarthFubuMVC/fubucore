@@ -45,5 +45,11 @@ namespace FubuCore.Configuration
         {
             return _inner.GetKeys();
         }
+
+        public IRequestData GetSubRequest(string prefixOrChild)
+        {
+            var prefixedInner = _inner.GetSubRequest(prefixOrChild);
+            return new SubstitutedRequestData(prefixedInner, _substitutions);
+        }
     }
 }
