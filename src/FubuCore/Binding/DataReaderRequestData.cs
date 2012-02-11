@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace FubuCore.Binding
 {
-    public class DataReaderRequestData : IRequestData
+    public class DataReaderRequestData : RequestDataBase
     {
         private readonly Cache<string, string> _aliases = new Cache<string, string>(key => key);
         private readonly Dictionary<string, string> _columns;
@@ -30,29 +30,15 @@ namespace FubuCore.Binding
 
         #region IRequestData Members
 
-        public object Value(string key)
+        protected override object fetch(string key)
         {
-            return _reader[_aliases[key]];
+            var rawValue = _reader[_aliases[key]];
+            return rawValue == DBNull.Value ? null : rawValue.ToString();
         }
 
-        public bool Value(string key, Action<object> callback)
+        protected override bool hasValue(string key)
         {
-            var column = _aliases[key];
-            if (_columns.ContainsKey(column))
-            {
-                var rawValue = _reader[column];
-                callback(rawValue == DBNull.Value ? null : rawValue.ToString());
-
-
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool HasAnyValuePrefixedWith(string key)
-        {
-            throw new NotSupportedException();
+            return _columns.ContainsKey(key) || _aliases.Has(key);
         }
 
         #endregion
@@ -62,7 +48,7 @@ namespace FubuCore.Binding
             _aliases[name] = alias;
         }
 
-        public IEnumerable<string> GetKeys()
+        public override IEnumerable<string> GetKeys()
         {
             return _columns.Keys.Union(_aliases.GetAllKeys());
         }

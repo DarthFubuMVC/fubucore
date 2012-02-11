@@ -4,7 +4,7 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class FlatFileRequestData : IRequestData
+    public class FlatFileRequestData : RequestDataBase
     {
         private readonly string _concatenator;
         private readonly Cache<string, int> _indices = new Cache<string, int>();
@@ -25,26 +25,14 @@ namespace FubuCore.Binding
             _values = line.Split(new string[] { _concatenator }, StringSplitOptions.None);
         }
 
-        public object Value(string key)
+        protected override object fetch(string key)
         {
             return _values[_indices[key]];
         }
 
-        public bool Value(string key, Action<object> callback)
+        protected override bool hasValue(string key)
         {
-            bool found = false;
-            _indices.WithValue(key, index =>
-            {
-                callback(_values[index]);
-                found = true;
-            });
-
-            return found;
-        }
-
-        public bool HasAnyValuePrefixedWith(string key)
-        {
-            throw new NotSupportedException();
+            return _indices.Has(key);
         }
 
         public void Alias(string header, string alias)
@@ -52,7 +40,7 @@ namespace FubuCore.Binding
             _indices.WithValue(header, i => _indices[alias] = i);
         }
 
-        public IEnumerable<string> GetKeys()
+        public override IEnumerable<string> GetKeys()
         {
             return _indices.GetAllKeys();
         }

@@ -8,27 +8,11 @@ using FubuCore.Reflection;
 
 namespace FubuCore.Configuration
 {
-    public class AppSettingsRequestData : IRequestData
+    public class AppSettingsRequestData : RequestDataBase
     {
-        public object Value(string key)
+        protected override object fetch(string key)
         {
             return ConfigurationManager.AppSettings[key];
-        }
-
-        public bool Value(string key, Action<object> callback)
-        {
-            if (ConfigurationManager.AppSettings.AllKeys.Contains(key))
-            {
-                callback(Value(key));
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool HasAnyValuePrefixedWith(string key)
-        {
-            return ConfigurationManager.AppSettings.AllKeys.Any(x => x.StartsWith(key));
         }
 
         public static string KeyFor<T>(Expression<Func<T, object>> property)
@@ -42,7 +26,7 @@ namespace FubuCore.Configuration
             return (ConfigurationManager.AppSettings.AllKeys.Contains(key)) ? ConfigurationManager.AppSettings[key] : string.Empty;
         }
 
-        public IEnumerable<string> GetKeys()
+        public override IEnumerable<string> GetKeys()
         {
             return ConfigurationManager.AppSettings.AllKeys;
         }

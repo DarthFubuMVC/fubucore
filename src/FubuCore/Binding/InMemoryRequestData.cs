@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class InMemoryRequestData : IRequestData
+    public class InMemoryRequestData : RequestDataBase
     {
         private readonly Cache<string, object> _values = new Cache<string, object>();
 
@@ -18,24 +16,23 @@ namespace FubuCore.Binding
             _values = new Cache<string, object>(values);
         }
 
-        public object this[string key] { get { return _values[key]; } set { _values[key] = value; } }
-
-        public object Value(string key)
+        public object this[string key]
         {
-            return _values.Has(key) ? _values[key] : null;
+            get { return _values[key]; }
+            set { _values[key] = value; }
         }
 
-        public bool Value(string key, Action<object> callback)
+        protected override object fetch(string key)
         {
-            return _values.WithValue(key, callback);
+            return _values[key];
         }
 
-        public bool HasAnyValuePrefixedWith(string key)
+        protected override bool hasValue(string key)
         {
-            return _values.GetAllKeys().Any(x => x.StartsWith(key));
+            return _values.Has(key);
         }
 
-        public IEnumerable<string> GetKeys()
+        public override IEnumerable<string> GetKeys()
         {
             return _values.GetAllKeys();
         }

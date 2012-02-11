@@ -31,5 +31,41 @@ namespace FubuCore.Testing.Binding
             _calledUpon.AssertWasCalled(c=>c.Action());
             _data.Value("non_existing_key").ShouldBeNull();
         }
+
+        [Test]
+        public void find_value()
+        {
+            _data["a"] = 2;
+            _data["a1"] = 2;
+            _data["a3"] = 2;
+
+            _data.Value("b").ShouldBeNull();
+            
+            
+        }
+
+        [Test]
+        public void all_keys()
+        {
+            _data["a"] = 2;
+            _data["a1"] = 2;
+            _data["a3"] = 2;
+
+            _data.GetKeys().ShouldHaveTheSameElementsAs("a", "a1", "a3");
+        }
+
+        [Test]
+        public void has_prefixed_key()
+        {
+            _data["pre1"] = 1;
+            _data["pre3"] = 1;
+            _data["pre-ab"] = 1;
+            _data["pre4"] = 1;
+
+            _data.HasAnyValuePrefixedWith("pre").ShouldBeTrue();
+
+        
+            _data.HasAnyValuePrefixedWith("else").ShouldBeFalse();
+        }
     }
 }
