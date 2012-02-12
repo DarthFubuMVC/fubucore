@@ -55,13 +55,13 @@ namespace FubuCore.Testing.Binding
     [TestFixture]
     public class ConversionPropertyBinderTester : PropertyBinderTester
     {
-        private ValueConverterRegistry theConverterRegistry;
+        private BindingRegistry theConverterRegistry;
 
         [SetUp]
         public void SetUp()
         {
             context = new InMemoryBindingContext();
-            theConverterRegistry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
+            theConverterRegistry = new BindingRegistry();
             propertyBinder = new ConversionPropertyBinder(theConverterRegistry);
         }
 

@@ -148,7 +148,6 @@
     <Compile Include="Reflection\Expressions\OrOperation.cs" />
     <Compile Include="Reflection\TypeDescriptorCache.cs" />
     <Compile Include="Binding\ValueConverter.cs" />
-    <Compile Include="Binding\ValueConverterRegistry.cs" />
     <Compile Include="BooleanExtensions.cs" />
     <Compile Include="CommandLine\Argument.cs" />
     <Compile Include="CommandLine\BooleanFlag.cs" />

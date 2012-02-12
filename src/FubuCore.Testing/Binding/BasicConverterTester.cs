@@ -20,10 +20,9 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            theLibrary = new ConverterLibrary();
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], theLibrary);
+            _registry = new BindingRegistry();
             _property = typeof (PropertyHolder).GetProperty("Property");
-            _basicConverterFamily = _registry.Families.SingleOrDefault(cf =>
+            _basicConverterFamily = _registry.AllConverterFamilies().SingleOrDefault(cf =>
                                                                        cf.Matches(_property)) as BasicConverterFamily;
             _basicConverterFamily.ShouldNotBeNull();
 
@@ -35,12 +34,11 @@ namespace FubuCore.Testing.Binding
 
         #endregion
 
-        private ValueConverterRegistry _registry;
+        private BindingRegistry _registry;
         private BasicConverterFamily _basicConverterFamily;
         private PropertyInfo _property;
         private IPropertyContext _context;
         private string _propertyValue;
-        private ConverterLibrary theLibrary;
 
         private class PropertyHolder
         {
@@ -78,9 +76,9 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
+            _registry = new BindingRegistry();
             _property = typeof (PropertyHolder).GetProperty("Property");
-            _numericTypeFamily = _registry.Families.FirstOrDefault(cf =>
+            _numericTypeFamily = _registry.AllConverterFamilies().FirstOrDefault(cf =>
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
@@ -92,7 +90,7 @@ namespace FubuCore.Testing.Binding
 
         #endregion
 
-        private ValueConverterRegistry _registry;
+        private BindingRegistry _registry;
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
         private IPropertyContext _context;
@@ -130,9 +128,9 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            _registry = new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary());
+            _registry = new BindingRegistry();
             _property = typeof (PropertyHolder).GetProperty("Property");
-            _numericTypeFamily = _registry.Families.FirstOrDefault(cf =>
+            _numericTypeFamily = _registry.AllConverterFamilies().FirstOrDefault(cf =>
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
@@ -144,7 +142,7 @@ namespace FubuCore.Testing.Binding
 
         #endregion
 
-        private ValueConverterRegistry _registry;
+        private BindingRegistry _registry;
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
         private IPropertyContext _context;
