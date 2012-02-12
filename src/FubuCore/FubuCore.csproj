@@ -51,6 +51,7 @@
     <Compile Include="Binding\AttributePropertyBinder.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingContext.cs" />
+    <Compile Include="Binding\BindingRegistry.cs" />
     <Compile Include="Binding\BindResult.cs" />
     <Compile Include="Binding\BindResultAssertionException.cs" />
     <Compile Include="Binding\BooleanFamily.cs" />
@@ -78,7 +79,6 @@
     <Compile Include="Binding\IRequestData.cs" />
     <Compile Include="Binding\ISmartRequest.cs" />
     <Compile Include="Binding\IValueConverterRegistry.cs" />
-    <Compile Include="Binding\ModelBinderCache.cs" />
     <Compile Include="Binding\ModelBindingAttributes.cs" />
     <Compile Include="Binding\NestedObjectPropertyBinder.cs" />
     <Compile Include="Binding\NumericTypeFamily.cs" />

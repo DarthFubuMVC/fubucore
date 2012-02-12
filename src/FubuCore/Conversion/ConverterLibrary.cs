@@ -36,7 +36,8 @@ namespace FubuCore.Conversion
             _families.Add(new StringConstructorConverterFamily());
             _families.Add(new TypeDescripterConverterFamily());
         }
-
+// TODO -- may need to do a seal() kind of thing that throws an exception after you call this.
+        // or clear the caches, one of the two
         /// <summary>
         /// Register a conversion strategy for a single type by a Func
         /// </summary>
