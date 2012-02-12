@@ -6,6 +6,7 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
+    [MarkedForTermination("Replacing w/ the BindingRegistry")]
     public class PropertyBinderCache : IPropertyBinderCache
     {
         private readonly IList<IPropertyBinder> _binders = new List<IPropertyBinder>();
