@@ -1,7 +1,7 @@
 using System.IO;
 using System.Text;
 using FubuCore.Util;
-using Microsoft.Practices.ServiceLocation;
+
 
 namespace FubuCore.Binding
 {

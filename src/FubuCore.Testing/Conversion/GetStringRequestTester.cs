@@ -1,6 +1,6 @@
 using FubuCore.Reflection;
 using FubuCore.Testing.Reflection.Expressions;
-using Microsoft.Practices.ServiceLocation;
+
 using NUnit.Framework;
 using Rhino.Mocks;
 using FubuTestingSupport;

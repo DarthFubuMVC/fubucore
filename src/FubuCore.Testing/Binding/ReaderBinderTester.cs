@@ -17,7 +17,7 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            binder = new ReaderBinder(StandardModelBinder.Basic(), new StubServiceLocator());
+            binder = new ReaderBinder(StandardModelBinder.Basic(), new InMemoryServiceLocator());
         }
 
         #endregion

@@ -1,6 +1,6 @@
 using System;
 using FubuCore.Binding;
-using Microsoft.Practices.ServiceLocation;
+
 
 namespace FubuCore.Configuration
 {

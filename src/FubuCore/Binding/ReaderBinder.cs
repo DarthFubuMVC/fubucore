@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using FubuCore.Util;
-using Microsoft.Practices.ServiceLocation;
 
 namespace FubuCore.Binding
 {

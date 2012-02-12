@@ -60,7 +60,7 @@ namespace FubuCore.Testing.Conversion
 
             theLibrary = new ConverterLibrary();
 
-            finder = new ObjectConverter(new StubServiceLocator(), theLibrary);
+            finder = new ObjectConverter(new InMemoryServiceLocator(), theLibrary);
 			
 			// Determines which time zone id to use for the time_zone_info test, since 
 			// the value can differ based on platform the test is running on
@@ -546,8 +546,8 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void can_register_and_use_a_service_for_the_conversion()
         {
-            var locator = new StubServiceLocator();
-            locator.Services[typeof(WidgetFinderService)] = new WidgetFinderService();
+            var locator = new InMemoryServiceLocator();
+            locator.Add<WidgetFinderService>(new WidgetFinderService());
 
             var library = new ConverterLibrary();
 
@@ -568,8 +568,8 @@ namespace FubuCore.Testing.Conversion
         [SetUp]
         public void SetUp()
         {
-            var locator = new StubServiceLocator();
-            locator.Services[typeof (WidgetFinderService)] = new WidgetFinderService();
+            var locator = new InMemoryServiceLocator();
+            locator.Add<WidgetFinderService>(new WidgetFinderService());
 
             var library = new ConverterLibrary(new IObjectConverterFamily[]{new WidgetFinderStrategy()});
 
@@ -591,8 +591,8 @@ namespace FubuCore.Testing.Conversion
         [SetUp]
         public void SetUp()
         {
-            var locator = new StubServiceLocator();
-            locator.Services[typeof(WidgetFinderService)] = new WidgetFinderService();
+            var locator = new InMemoryServiceLocator();
+            locator.Add<WidgetFinderService>(new WidgetFinderService());
 
             var library = new ConverterLibrary(new IObjectConverterFamily[] { new WidgetFinderStrategy2() });
 

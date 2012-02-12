@@ -22,7 +22,7 @@ namespace FubuCore.Testing.Binding
         {
             theData = new InMemoryRequestData();
             theLibrary = new ConverterLibrary();
-            objectConverter = new ObjectConverter(new StubServiceLocator(), theLibrary);
+            objectConverter = new ObjectConverter(new InMemoryServiceLocator(), theLibrary);
             theRequest = new SmartRequest(theData, objectConverter);
         }
 

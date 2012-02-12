@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore.Reflection;
-using Microsoft.Practices.ServiceLocation;
+
 using System.Linq;
 
 namespace FubuCore.Binding.InMemory

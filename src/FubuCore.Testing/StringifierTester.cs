@@ -1,7 +1,6 @@
 using System;
-using FubuCore.Reflection;
 using System.Reflection;
-using FubuCore.Testing.Binding;
+using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -10,15 +9,19 @@ namespace FubuCore.Testing
     [TestFixture]
     public class StringifierTester
     {
+        #region Setup/Teardown
+
         [SetUp]
         public void SetUp()
         {
             stringifier = new Stringifier();
-            locator = new StubServiceLocator();
+            locator = new InMemoryServiceLocator();
         }
 
+        #endregion
+
         private Stringifier stringifier;
-        private StubServiceLocator locator;
+        private InMemoryServiceLocator locator;
 
         public interface Something
         {
@@ -27,12 +30,18 @@ namespace FubuCore.Testing
 
         public class RedSomething : Something
         {
-            public string Description { get { return "Red"; } }
+            public string Description
+            {
+                get { return "Red"; }
+            }
         }
 
         public class BlueSomething : Something
         {
-            public string Description { get { return "Blue"; } }
+            public string Description
+            {
+                get { return "Blue"; }
+            }
         }
 
         public class FakeSite
@@ -41,40 +50,6 @@ namespace FubuCore.Testing
             public Address Billing { get; set; }
 
             public string[] Names { get; set; }
-        }
-
-        [Test]
-        public void get_string_array_out_of_the_box()
-        {
-            var array = new string[]{"a", "b", "c"};
-            stringifier.GetString(array).ShouldEqual("a, b, c");
-        }
-
-        [Test]
-        public void get_int_array_out_of_the_box()
-        {
-            var array = new int[]{1, 2, 4, 8};
-            stringifier.GetString(array).ShouldEqual("1, 2, 4, 8");
-        }
-
-        [Test]
-        public void get_date_value_out_of_the_box()
-        {
-            DateTime date = DateTime.Today;
-            stringifier.GetString(date).ShouldEqual(date.ToString());
-        }
-
-        [Test]
-        public void get_int_values_out_of_the_box()
-        {
-            stringifier.GetString(123).ShouldEqual(123);
-        }
-
-        [Test]
-        public void get_string_values_out_of_the_box()
-        {
-            stringifier.GetString(null).ShouldBeEmpty();
-            stringifier.GetString("a").ShouldEqual("a");
         }
 
         private void configure(Action<DisplayConversionRegistry> configure)
@@ -86,17 +61,37 @@ namespace FubuCore.Testing
         }
 
         [Test]
-        public void register_a_string_conversion_for_a_class()
+        public void get_date_value_out_of_the_box()
         {
-            configure(x => x.IfIsType<Address>().ConvertBy(a => "{0}, {1}".ToFormat(a.Address1, a.City)));
+            var date = DateTime.Today;
+            stringifier.GetString(date).ShouldEqual(date.ToString());
+        }
 
-            var address = new Address
-            {
-                Address1 = "2050 Ozark",
-                City = "Joplin"
-            };
+        [Test]
+        public void get_int_array_out_of_the_box()
+        {
+            var array = new[]{1, 2, 4, 8};
+            stringifier.GetString(array).ShouldEqual("1, 2, 4, 8");
+        }
 
-            stringifier.GetString(address).ShouldEqual("2050 Ozark, Joplin");
+        [Test]
+        public void get_int_values_out_of_the_box()
+        {
+            stringifier.GetString(123).ShouldEqual(123);
+        }
+
+        [Test]
+        public void get_string_array_out_of_the_box()
+        {
+            var array = new[]{"a", "b", "c"};
+            stringifier.GetString(array).ShouldEqual("a, b, c");
+        }
+
+        [Test]
+        public void get_string_values_out_of_the_box()
+        {
+            stringifier.GetString(null).ShouldBeEmpty();
+            stringifier.GetString("a").ShouldEqual("a");
         }
 
         [Test]
@@ -105,22 +100,24 @@ namespace FubuCore.Testing
             configure(x =>
             {
                 //specific override formatting for Address objects named Shipping
-                x.IfPropertyMatches<Address>(prop => prop.Name == "Shipping").ConvertBy(a => "{1}-{0}".ToFormat(a.Address1, a.City));
+                x.IfPropertyMatches<Address>(prop => prop.Name == "Shipping").ConvertBy(
+                    a => "{1}-{0}".ToFormat(a.Address1, a.City));
 
                 //default formatting for Address objects
                 x.IfIsType<Address>().ConvertBy(a => "{0}, {1}".ToFormat(a.Address1, a.City));
             });
 
-            var address = new Address
-            {
+            var address = new Address{
                 Address1 = "2050 Ozark",
                 City = "Joplin"
             };
 
             const string expectedDefaultFormatting = "2050 Ozark, Joplin";
             const string expectedOverrideFormatting = "Joplin-2050 Ozark";
-            var billingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Billing), address, locator);
-            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address, locator);
+            var billingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Billing), address,
+                                                      locator);
+            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address,
+                                                       locator);
             stringifier.GetString(billingRequest).ShouldEqual(expectedDefaultFormatting);
             stringifier.GetString(shippingRequest).ShouldEqual(expectedOverrideFormatting);
         }
@@ -139,16 +136,15 @@ namespace FubuCore.Testing
                         passedProperty = req.Property;
                         return "{1}-{0}".ToFormat(value.Address1, value.City);
                     });
-                
+
                 //default formatting for Address objects
                 x.IfIsType<Address>().ConvertBy(a => "{0}, {1}".ToFormat(a.Address1, a.City));
-
-
             });
 
             var address = new Address();
 
-            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address, locator);
+            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address,
+                                                       locator);
 
             stringifier.GetString(shippingRequest);
 
@@ -169,20 +165,32 @@ namespace FubuCore.Testing
                     passedRawValue = req.RawValue;
                     return "{1}-{0}".ToFormat(value.Address1, value.City);
                 });
-                
+
                 //default formatting for Address objects
                 x.IfIsType<Address>().ConvertBy(a => "{0}, {1}".ToFormat(a.Address1, a.City));
-
-
             });
 
             var address = new Address();
 
-            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address, locator);
+            var shippingRequest = new GetStringRequest(ReflectionHelper.GetAccessor<FakeSite>(s => s.Shipping), address,
+                                                       locator);
 
             stringifier.GetString(shippingRequest);
 
             passedRawValue.ShouldBeTheSameAs(address);
+        }
+
+        [Test]
+        public void register_a_string_conversion_for_a_class()
+        {
+            configure(x => x.IfIsType<Address>().ConvertBy(a => "{0}, {1}".ToFormat(a.Address1, a.City)));
+
+            var address = new Address{
+                Address1 = "2050 Ozark",
+                City = "Joplin"
+            };
+
+            stringifier.GetString(address).ShouldEqual("2050 Ozark, Joplin");
         }
 
 
@@ -200,26 +208,9 @@ namespace FubuCore.Testing
         {
             configure(x => x.IfIsType<DateTime>().ConvertBy(d => d.ToShortDateString()));
 
-       
-            DateTime date = DateTime.Today;
+
+            var date = DateTime.Today;
             stringifier.GetString(date).ShouldEqual(date.ToShortDateString());
-        }
-
-        [Test]
-        public void string_conversion_functions_work_for_nullable_types()
-        {
-            configure(x => x.IfIsType<DateTime>().ConvertBy(d => d.ToShortDateString()));
-
-            DateTime date = DateTime.Today;
-            stringifier.GetString(date).ShouldEqual(date.ToShortDateString());
-        }
-
-        [Test]
-        public void string_conversion_functions_work_for_nullable_types_that_are_null()
-        {
-            configure(x => x.IfIsType<DateTime>().ConvertBy(d => d.ToShortDateString()));
-
-            stringifier.GetString(DateTime.Parse("17-JAN-2007")).ShouldEqual(DateTime.Parse("17-JAN-2007").ToShortDateString());
         }
 
         [Test]
@@ -236,17 +227,32 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void string_conversion_functions_work_for_nullable_types()
+        {
+            configure(x => x.IfIsType<DateTime>().ConvertBy(d => d.ToShortDateString()));
+
+            var date = DateTime.Today;
+            stringifier.GetString(date).ShouldEqual(date.ToShortDateString());
+        }
+
+        [Test]
+        public void string_conversion_functions_work_for_nullable_types_that_are_null()
+        {
+            configure(x => x.IfIsType<DateTime>().ConvertBy(d => d.ToShortDateString()));
+
+            stringifier.GetString(DateTime.Parse("17-JAN-2007")).ShouldEqual(
+                DateTime.Parse("17-JAN-2007").ToShortDateString());
+        }
+
+        [Test]
         public void stringifier_can_use_a_service_to_get_at_a_display()
         {
-            locator.Services[typeof (IWidgetDisplayer)] = new WidgetDisplayer();
+            locator.Add<IWidgetDisplayer>(new WidgetDisplayer());
 
-            configure(x =>
-            {
-                x.IfCanBeCastToType<Widget>().ConvertBy((r, w) => r.Get<IWidgetDisplayer>().ToDisplay(w));
-            });
+            configure(
+                x => { x.IfCanBeCastToType<Widget>().ConvertBy((r, w) => r.Get<IWidgetDisplayer>().ToDisplay(w)); });
 
-            var widget = new Widget
-            {
+            var widget = new Widget{
                 Color = "Red"
             };
 
@@ -310,6 +316,4 @@ namespace FubuCore.Testing
 
         public Guid Guid { get; set; }
     }
-
-
 }

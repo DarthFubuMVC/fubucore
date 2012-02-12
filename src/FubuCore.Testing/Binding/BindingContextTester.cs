@@ -1,11 +1,9 @@
 using System;
 using System.Linq;
 using FubuCore.Binding;
-using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuCore.Util;
-using Microsoft.Practices.ServiceLocation;
 using NUnit.Framework;
 using FubuTestingSupport;
 using Rhino.Mocks;
