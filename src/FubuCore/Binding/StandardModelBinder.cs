@@ -35,16 +35,6 @@ namespace FubuCore.Binding
             context.ForObject(instance, () => populate(type, context));
         }
 
-        public static IModelBinder Basic()
-        {
-            return
-                new StandardModelBinder(
-                    new PropertyBinderCache(new IPropertyBinder[0], new ValueConverterRegistry(new IConverterFamily[0], new ConverterLibrary()),
-                                            new DefaultCollectionTypeProvider()),
-                    new TypeDescriptorCache());
-        }
-
-
         // Only exists for easier testing
         public void Populate(object target, IBindingContext context)
         {

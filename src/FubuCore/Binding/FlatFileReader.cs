@@ -7,12 +7,12 @@ namespace FubuCore.Binding
 {
     public class FlatFileReader<T>
     {
-        private readonly IModelBinder _binder;
+        private readonly IObjectResolver _resolver;
         private readonly IServiceLocator _services;
 
-        public FlatFileReader(IModelBinder binder, IServiceLocator services)
+        public FlatFileReader(IObjectResolver resolver, IServiceLocator services)
         {
-            _binder = binder;
+            _resolver = resolver;
             _services = services;
         }
 
@@ -47,7 +47,7 @@ namespace FubuCore.Binding
             data.ReadLine(line);
                     
             var target = request.Finder(data);
-            _binder.Bind(typeof (T), target, context);
+            _resolver.BindModel(target, context);
 
             request.Callback(target);
         }

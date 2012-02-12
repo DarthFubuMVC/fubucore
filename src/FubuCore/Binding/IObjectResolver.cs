@@ -14,5 +14,7 @@ namespace FubuCore.Binding
         /// <param name="context"></param>
         /// <param name="onResult"></param>
         void TryBindModel(Type type, IBindingContext context, Action<BindResult> continuation);
+
+        BindResult BindModel<T>(T model, IBindingContext context);
     }
 }

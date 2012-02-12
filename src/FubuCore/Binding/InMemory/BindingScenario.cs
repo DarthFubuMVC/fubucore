@@ -85,7 +85,8 @@ namespace FubuCore.Binding.InMemory
                 {
                     if (!_actions.Any())
                     {
-                        return new Action<IBindingContext>[]{context => StandardModelBinder.Basic().Bind(typeof (T), Model, context)};
+                        return new Action<IBindingContext>[]{context => ObjectResolver.Basic().BindModel(Model, context)};
+;
                     }
                     
                     

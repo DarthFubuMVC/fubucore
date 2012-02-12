@@ -23,21 +23,40 @@ namespace FubuCore.Binding
             return BindModel(type, context);
         }
 
+        public virtual BindResult BindModel<T>(T model, IBindingContext context)
+        {
+            var binder = findBinder(context, typeof(T));
+            return executeModelBinder(typeof (T), context, () =>
+            {
+                binder.Bind(typeof (T), model, context);
+                return new BindResult{
+                    Problems = context.Problems,
+                    Value = model
+                };
+            });
+        }
+
         // Leave this virtual
         public virtual BindResult BindModel(Type type, IBindingContext context)
+        {
+            var binder = findBinder(context, type);
+            return executeModelBinder(type, context, () => binder.Bind(type, context));
+        }
+
+        private IModelBinder findBinder(IBindingContext context, Type type)
         {
             var binder = _binders.BinderFor(type);
 
             if (binder == null)
             {
                 throw new FubuException(2200,
-                    "Could not determine an IModelBinder for input type {0}. No model binders matched on this type. The standard model binder requires a parameterless constructor for the model type. Alternatively, you could implement your own IModelBinder which can process this model type.",
-                    type.AssemblyQualifiedName);
+                                        "Could not determine an IModelBinder for input type {0}. No model binders matched on this type. The standard model binder requires a parameterless constructor for the model type. Alternatively, you could implement your own IModelBinder which can process this model type.",
+                                        type.AssemblyQualifiedName);
             }
 
             context.Logger.ChoseModelBinder(type, binder);
 
-            return executeModelBinder(type, binder, context);
+            return binder;
         }
 
         public void TryBindModel(Type type, IBindingContext context, Action<BindResult> continuation)
@@ -46,17 +65,17 @@ namespace FubuCore.Binding
 
             if (binder != null)
             {
-                var result = executeModelBinder(type, binder, context);
+                var result = executeModelBinder(type, context, () => binder.Bind(type, context));
                 continuation(result);
             }
         }
 
-        private static BindResult executeModelBinder(Type type, IModelBinder binder, IBindingContext context)
+        private static BindResult executeModelBinder(Type type, IBindingContext context, Func<object> source)
         {
             try
             {
                 return new BindResult{
-                    Value = binder.Bind(type, context),
+                    Value = source(),
                     Problems = context.Problems
                 };
             }

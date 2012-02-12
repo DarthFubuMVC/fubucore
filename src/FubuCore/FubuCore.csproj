@@ -86,7 +86,6 @@
     <Compile Include="Binding\ObjectTypeFamily.cs" />
     <Compile Include="Binding\PassthroughConverter.cs" />
     <Compile Include="Binding\PrefixedRequestData.cs" />
-    <Compile Include="Binding\PropertyBinderCache.cs" />
     <Compile Include="Binding\ReaderBinder.cs" />
     <Compile Include="Binding\RequestData.cs" />
     <Compile Include="Binding\ResolveConnectionStringFamily.cs" />

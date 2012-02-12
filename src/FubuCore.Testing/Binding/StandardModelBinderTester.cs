@@ -46,7 +46,7 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            binder = (StandardModelBinder) StandardModelBinder.Basic();
+            binder = new StandardModelBinder(new BindingRegistry(), new TypeDescriptorCache());
             
             context = new InMemoryBindingContext();
             context.RegisterService<IObjectResolver>(ObjectResolver.Basic());

@@ -11,8 +11,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void has_the_attribute_property_binder_by_default()
         {
-            new PropertyBinderCache(new IPropertyBinder[0], null, null).Binders.Any(x => x is AttributePropertyBinder)
-                .ShouldBeTrue();
+            new BindingRegistry().AllPropertyBinders().OfType<AttributePropertyBinder>().Count().ShouldEqual(1);
         }
     }
 }

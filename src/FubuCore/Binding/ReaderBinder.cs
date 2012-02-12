@@ -20,10 +20,10 @@ namespace FubuCore.Binding
     public class ReaderBinder
     {
         private readonly Cache<string, string> _aliases = new Cache<string, string>(key => key);
-        private readonly IModelBinder _binder;
+        private readonly IObjectResolver _binder;
         private readonly IServiceLocator _services;
 
-        public ReaderBinder(IModelBinder binder, IServiceLocator services)
+        public ReaderBinder(IObjectResolver binder, IServiceLocator services)
         {
             _binder = binder;
             _services = services;
@@ -60,7 +60,7 @@ namespace FubuCore.Binding
             while (reader.Read())
             {
                 T target = input.Finder(reader);
-                _binder.Bind(typeof (T), target, context);
+                _binder.BindModel(target, context);
 
                 input.Callback(target);
             }
