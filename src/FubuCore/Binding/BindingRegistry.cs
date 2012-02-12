@@ -17,7 +17,7 @@ namespace FubuCore.Binding
         private Lazy<IEnumerable<IPropertyBinder>> _defaultPropertyBinders;
         private readonly IList<IPropertyBinder> _propertyBinders = new List<IPropertyBinder>();
 
-        private readonly IEnumerable<IConverterFamily> _families;
+        private readonly IList<IConverterFamily> _families = new List<IConverterFamily>();
         private readonly List<IConverterFamily> _defaultFamilies = new List<IConverterFamily>{
                 new ExpandEnvironmentVariablesFamily(),
                 new ResolveConnectionStringFamily(),
@@ -35,7 +35,7 @@ namespace FubuCore.Binding
             configureModelBinders(binders);
             configurePropertyBinders(propertyBinders);
 
-            _families = converterFamilies;
+            _families.AddRange(converterFamilies);
 
             Converters = converters;
             _defaultFamilies.Add(new BasicConverterFamily(Converters));
@@ -71,9 +71,19 @@ namespace FubuCore.Binding
             return new StandardModelBinder(this, new TypeDescriptorCache());
         }
 
-        public void AddModelBinder(IModelBinder binder)
+        public void Add(IModelBinder binder)
         {
             _binders.Add(binder);
+        }
+
+        public void Add(IPropertyBinder binder)
+        {
+            _propertyBinders.Add(binder);
+        }
+
+        public void Add(IConverterFamily family)
+        {
+            _families.Add(family);
         }
 
         public IEnumerable<IModelBinder> AllModelBinders()
