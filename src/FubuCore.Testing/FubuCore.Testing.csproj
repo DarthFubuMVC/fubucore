@@ -85,6 +85,7 @@
     <Compile Include="Binding\ObjectResolverTester.cs" />
     <Compile Include="Binding\ObjectTypeFamilyTester.cs" />
     <Compile Include="Binding\PassthroughBinderTester.cs" />
+    <Compile Include="Binding\PrefixedRequestDataTester.cs" />
     <Compile Include="Binding\PropertyBinderCacheTester.cs" />
     <Compile Include="Binding\PropertyBinderTester.cs" />
     <Compile Include="Binding\ReaderBinderTester.cs" />
