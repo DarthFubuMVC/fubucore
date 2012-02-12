@@ -27,7 +27,7 @@ namespace FubuCore.Testing.Binding
         public void return_a_null_converter()
         {
             var property = ReflectionHelper.GetProperty<TargetHolder>(x => x.Target);
-            new BindingRegistry().FindConverter(property).ShouldBeNull();
+            new BindingRegistry().As<IValueConverterRegistry>().FindConverter(property).ShouldBeNull();
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace FubuCore.Testing.Binding
             var value = new InMemoryBindingContext().WithPropertyValue("99");
             value.ForProperty(nullIntProp, c =>
             {
-                reg.FindConverter(nullIntProp).Convert(c).ShouldEqual(99);
+                reg.As<IValueConverterRegistry>().FindConverter(nullIntProp).Convert(c).ShouldEqual(99);
             });
 
             
@@ -53,7 +53,7 @@ namespace FubuCore.Testing.Binding
             var value = new InMemoryBindingContext().WithPropertyValue(null);
             value.ForProperty(nullIntProp, c =>
             {
-                reg.FindConverter(nullIntProp).Convert(c).ShouldEqual(null);
+                reg.As<IValueConverterRegistry>().FindConverter(nullIntProp).Convert(c).ShouldEqual(null);
             });
 
             

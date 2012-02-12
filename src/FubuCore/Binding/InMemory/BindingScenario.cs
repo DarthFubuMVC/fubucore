@@ -1,21 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq.Expressions;
-using System.Reflection;
-using FubuCore.Reflection;
-
 using System.Linq;
+using System.Linq.Expressions;
+using FubuCore.Reflection;
 
 namespace FubuCore.Binding.InMemory
 {
-    public class BindingScenario<T> : IBindingLogger where T : class, new()
+    public class BindingScenario<T> where T : class, new()
     {
         private readonly StringWriter _writer = new StringWriter();
 
         private BindingScenario(ScenarioDefinition definition)
         {
-            var context = new BindingContext(definition.RequestData, definition.Services, this);
+            var context = new BindingContext(definition.RequestData, definition.Services, new NulloBindingLogger());
 
             context.ForObject(definition.Model, () => definition.Actions.Each(x => x(context)));
 
@@ -32,21 +30,6 @@ namespace FubuCore.Binding.InMemory
             get { return _writer.GetStringBuilder().ToString(); }
         }
 
-        void IBindingLogger.ChoseModelBinder(Type modelType, IModelBinder binder)
-        {
-            _writer.WriteLine("Chose model binder {0} for type {1}", binder, modelType.FullName);
-        }
-
-        void IBindingLogger.ChosePropertyBinder(PropertyInfo property, IPropertyBinder binder)
-        {
-            _writer.WriteLine("  Chose property binder {0} for {1}", binder, property.Name);
-        }
-
-        void IBindingLogger.ChoseValueConverter(PropertyInfo property, ValueConverter converter)
-        {
-            _writer.WriteLine("    Chose {0} to convert {1}", converter, property.Name);
-        }
-
         public static BindingScenario<T> For(Action<ScenarioDefinition> configuration)
         {
             var definition = new ScenarioDefinition();
@@ -59,9 +42,10 @@ namespace FubuCore.Binding.InMemory
 
         public class ScenarioDefinition
         {
-            private readonly InMemoryRequestData _data = new InMemoryRequestData();
-            private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private readonly IList<Action<IBindingContext>> _actions = new List<Action<IBindingContext>>();
+            private readonly InMemoryRequestData _data = new InMemoryRequestData();
+            private readonly BindingRegistry _registry = new BindingRegistry();
+            private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private IServiceLocator _customServices;
 
             public ScenarioDefinition()
@@ -85,16 +69,25 @@ namespace FubuCore.Binding.InMemory
                 {
                     if (!_actions.Any())
                     {
-                        return new Action<IBindingContext>[]{context => ObjectResolver.Basic().BindModel(Model, context)};
-;
+                        return new Action<IBindingContext>[]{
+                            context =>
+                            new ObjectResolver(Services, Registry, new NulloBindingLogger()).BindModel(Model,
+                                                                                                       context)
+                        };
+                        ;
                     }
-                    
-                    
+
+
                     return _actions;
                 }
             }
 
             public T Model { get; set; }
+
+            public BindingRegistry Registry
+            {
+                get { return _registry; }
+            }
 
             public void ServicesFrom(IServiceLocator services)
             {
@@ -133,11 +126,10 @@ namespace FubuCore.Binding.InMemory
                 where TBinder : IPropertyBinder, new()
             {
                 BindPropertyWith(new TBinder(), property, rawValue);
-
-
             }
 
-            public void BindPropertyWith(IPropertyBinder binder, Expression<Func<T, object>> property, string rawValue = null)
+            public void BindPropertyWith(IPropertyBinder binder, Expression<Func<T, object>> property,
+                                         string rawValue = null)
             {
                 if (rawValue != null) Data(property, rawValue);
                 var prop = property.ToAccessor().InnerProperty;

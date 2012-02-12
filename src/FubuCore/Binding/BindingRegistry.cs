@@ -114,18 +114,18 @@ namespace FubuCore.Binding
 
         public ConverterLibrary Converters { private set; get; }
 
-        public IModelBinder BinderFor(Type modelType)
+        IModelBinder IModelBinderCache.BinderFor(Type modelType)
         {
             return _modelBinderCache[modelType];
         }
 
-        public ValueConverter FindConverter(PropertyInfo property)
+        ValueConverter IValueConverterRegistry.FindConverter(PropertyInfo property)
         {
             var family = AllConverterFamilies().FirstOrDefault(x => x.Matches(property));
             return family == null ? null : family.Build(this, property);
         }
 
-        public IPropertyBinder BinderFor(PropertyInfo property)
+        IPropertyBinder IPropertyBinderCache.BinderFor(PropertyInfo property)
         {
             return _propertyBinderCache[property];
         }
