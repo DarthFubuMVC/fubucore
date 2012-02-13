@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using FubuCore.Reflection;
+using FubuCore.Util;
 
 namespace FubuCore.Binding.InMemory
 {
@@ -100,6 +101,19 @@ namespace FubuCore.Binding.InMemory
                     throw new ArgumentOutOfRangeException("Cannot set services if using a pre-built IServiceLocator");
 
                 _services.Add(service);
+            }
+
+            /// <summary>
+            /// Allows you to force load key/value pairs in the format:
+            /// prop1=val1
+            /// ChildProp1=val
+            ///      Prop2=val
+            ///      Prop3=val      
+            /// </summary>
+            /// <param name="text"></param>
+            public void Data(string text)
+            {
+                _data.ReadData(text);
             }
 
             public void Data(string name, object value)

@@ -42,5 +42,10 @@ namespace FubuCore.Binding
         {
             get { return "in memory"; }
         }
+
+        public void ReadData(string text)
+        {
+            new StringPropertyReader(text).ReadProperties((key, value) => _values[key] = value);
+        }
     }
 }
