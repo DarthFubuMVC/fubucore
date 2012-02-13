@@ -225,6 +225,7 @@
     <Compile Include="Util\CompositeFilter.cs" />
     <Compile Include="Util\CompositePredicate.cs" />
     <Compile Include="Util\Indexer.cs" />
+    <Compile Include="Util\StringPropertyReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -161,6 +161,7 @@
     <Compile Include="Util\CacheTester.cs" />
     <Compile Include="Util\CompositePredicateTester.cs" />
     <Compile Include="Util\IndexerTester.cs" />
+    <Compile Include="Util\StringPropertyReaderTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuCore\FubuCore.csproj">
