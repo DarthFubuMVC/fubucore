@@ -136,6 +136,8 @@
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
     <Compile Include="Descriptions\Description.cs" />
+    <Compile Include="Descriptions\IHasDescription.cs" />
+    <Compile Include="Descriptions\TitleAttribute.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />
     <Compile Include="FileSystemExtensions.cs" />
