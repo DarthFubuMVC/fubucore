@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel;
 using System.Configuration;
 using System.Reflection;
 using FubuCore;
@@ -6,6 +7,7 @@ using FubuCore.Reflection;
 
 namespace FubuCore.Binding
 {
+    [Description("Converts text by ConfigurationManager.ConnectionStrings[text] ")]
     public class ResolveConnectionStringFamily : StatelessConverter
     {
         public override bool Matches(PropertyInfo property)

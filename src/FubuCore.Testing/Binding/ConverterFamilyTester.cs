@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Binding
             PropertyInfo intProp = ReflectionHelper.GetProperty<ConverterTarget>(c => c.Integer);
             PropertyInfo boolProp = ReflectionHelper.GetProperty<ConverterTarget>(c => c.Boolean);
 
-            var family = new ConverterFamily(p => p.PropertyType == typeof (int), (r, t) => null);
+            var family = new ConverterFamily(p => p.PropertyType == typeof (int), (r, t) => null, "something");
             family.Matches(intProp).ShouldBeTrue();
             family.Matches(boolProp).ShouldBeFalse();
         }
@@ -31,7 +31,7 @@ namespace FubuCore.Testing.Binding
         {
             ValueConverter converter = new LambdaValueConverter(x => 1);
 
-            var family = new ConverterFamily(null, (r, t) => converter);
+            var family = new ConverterFamily(null, (r, t) => converter, "something");
             family.Build(null, null).ShouldBeTheSameAs(converter);
         }
     }

@@ -31,12 +31,6 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void must_be_some_sort_of_description_on_every_iconverterstrategy()
         {
-            var converter = new ConverterLibrary();
-            Debug.WriteLine(converter.WhatDoIHave());
-            Debug.WriteLine("");
-            Debug.WriteLine("");
-            Debug.WriteLine("");
-
             var types = typeof(IConverterStrategy).Assembly.GetExportedTypes()
                 .Where(x => x.IsConcreteTypeOf<IConverterStrategy>())
                 .Where(x => !Description.HasExplicitDescription(x));

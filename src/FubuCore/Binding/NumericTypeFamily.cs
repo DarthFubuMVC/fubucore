@@ -6,6 +6,7 @@ using System.Threading;
 
 namespace FubuCore.Binding
 {
+    [Description("Culture/localization/separator friendly conversion to number types")]
     public class NumericTypeFamily : StatelessConverter
     {
         public override bool Matches(PropertyInfo property)

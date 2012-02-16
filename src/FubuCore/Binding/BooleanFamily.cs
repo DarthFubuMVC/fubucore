@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace FubuCore.Binding
 {
+    [Description("Converts to booean values, HTML checkbox friendly conversion")]
     public class BooleanFamily : StatelessConverter
     {
         private static TypeConverter _converter = TypeDescriptor.GetConverter(typeof(bool));

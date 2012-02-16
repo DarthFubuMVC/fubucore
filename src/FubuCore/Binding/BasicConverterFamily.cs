@@ -1,9 +1,11 @@
 using System;
+using System.ComponentModel;
 using System.Reflection;
 using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
+    [Description("Delegates to IObjectConverter for the conversion")]
     public class BasicConverterFamily : IConverterFamily
     {
         private readonly ConverterLibrary _library;

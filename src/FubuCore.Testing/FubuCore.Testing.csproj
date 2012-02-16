@@ -72,6 +72,7 @@
     <Compile Include="Binding\ConversionPropertyBinderTester.cs" />
     <Compile Include="Binding\ConverterFamilyTester.cs" />
     <Compile Include="Binding\ConvertProblemTester.cs" />
+    <Compile Include="Binding\descriptors_on_all_binding_support_classes.cs" />
     <Compile Include="Binding\ExpandEnvironmentVariablesFamilyTester.cs" />
     <Compile Include="Binding\FlatFileRequestDataTester.cs" />
     <Compile Include="Binding\InMemoryBindingContext.cs" />

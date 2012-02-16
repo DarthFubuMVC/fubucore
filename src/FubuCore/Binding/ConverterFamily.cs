@@ -1,17 +1,20 @@
 using System;
 using System.Reflection;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Binding
 {
-    public class ConverterFamily : IConverterFamily
+    public class ConverterFamily : IConverterFamily, HasDescription
     {
         private readonly Func<IValueConverterRegistry, PropertyInfo, ValueConverter> _builder;
+        private readonly string _description;
         private readonly Predicate<PropertyInfo> _matches;
 
-        public ConverterFamily(Predicate<PropertyInfo> matches, Func<IValueConverterRegistry, PropertyInfo, ValueConverter> builder)
+        public ConverterFamily(Predicate<PropertyInfo> matches, Func<IValueConverterRegistry, PropertyInfo, ValueConverter> builder, string description)
         {
             _matches = matches;
             _builder = builder;
+            _description = description;
         }
 
         public bool Matches(PropertyInfo property)
@@ -22,6 +25,14 @@ namespace FubuCore.Binding
         public ValueConverter Build(IValueConverterRegistry registry, PropertyInfo property)
         {
             return _builder(registry, property);
+        }
+
+        public Description GetDescription()
+        {
+            return new Description{
+                Title = GetType().Name,
+                ShortDescription = _description
+            };
         }
     }
 }
