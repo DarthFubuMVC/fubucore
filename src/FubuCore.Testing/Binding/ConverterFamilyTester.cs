@@ -29,7 +29,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void use_the_builder_func_from_the_constructor_to_build_the_string_converter()
         {
-            ValueConverter converter = new LambdaValueConverter(x => 1);
+            ValueConverter converter = new LambdaValueConverter(x => 1, "do something here?");
 
             var family = new ConverterFamily(null, (r, t) => converter, "something");
             family.Build(null, null).ShouldBeTheSameAs(converter);

@@ -23,5 +23,17 @@ namespace FubuCore.Testing.Binding
 
             types.Any().ShouldBeFalse();
         }
+
+        [Test]
+        public void must_be_a_description_on_all_ValueConverters()
+        {
+            var types = typeof(ValueConverter).Assembly.GetExportedTypes()
+                .Where(x => x.IsConcreteTypeOf<ValueConverter>())
+                .Where(x => !Description.HasExplicitDescription(x));
+
+            types.Each(x => Debug.WriteLine(x.Name));
+
+            types.Any().ShouldBeFalse();
+        }
     }
 }

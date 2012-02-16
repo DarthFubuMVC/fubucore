@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 using FubuCore.Conversion;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Binding
 {
@@ -33,7 +34,7 @@ namespace FubuCore.Binding
         }
     }
 
-    public class BasicValueConverter : ValueConverter
+    public class BasicValueConverter : ValueConverter, HasDescription
     {
         private readonly IDefaultMaker _defaulter;
         private readonly Type _propertyType;
@@ -76,5 +77,13 @@ namespace FubuCore.Binding
         }
 
         #endregion
+
+        public Description GetDescription()
+        {
+            return new Description{
+                Title = "IObjectConverter",
+                ShortDescription = "IObjectConverter.FromString(text, typeof({0}))".ToFormat(_propertyType.FullName)
+            };
+        }
     }
 }
