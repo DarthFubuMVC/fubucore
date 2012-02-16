@@ -9,7 +9,7 @@ namespace FubuCore.Descriptions
     {
         public Description()
         {
-            Children = new List<Description>();
+            BulletLists = new List<BulletList>();
         }
 
         public Type TargetType { get; set; }
@@ -18,20 +18,22 @@ namespace FubuCore.Descriptions
         public string LongDescription { get; set; }
 
 
-        public IList<Description> Children { get; private set; }
+        public IList<BulletList> BulletLists { get; private set; }
     
     
         public static Description GetDescription(object target)
         {
-            var described = target as HasDescription;
-            if (described != null)
-            {
-                return described.GetDescription();
-            }
-
+            Description description = null;
             var type = target.GetType();
 
-            return GetDescriptionByType(target, type);
+            var described = target as HasDescription;
+            description = described != null 
+                ? described.GetDescription() 
+                : GetDescriptionByType(target, type);
+
+            description.TargetType = target.GetType();
+
+            return description;
         }
 
         public static Description GetDescriptionByType(object target, Type type)
@@ -57,5 +59,44 @@ namespace FubuCore.Descriptions
         {
             return string.Format("{0}: {1}", Title, ShortDescription);
         }
+
+        public void AcceptVisitor(IDescriptionVisitor visitor)
+        {
+            visitor.Start(this);
+
+            BulletLists.Each(x => x.AcceptVisitor(visitor));
+
+
+            visitor.End();
+        }
+    }
+
+    public class BulletList
+    {
+        public BulletList()
+        {
+            Children = new List<Description>();
+        }
+
+        public IList<Description> Children { get; private set; }
+        public string Name { get; set; }
+        public bool IsOrderDependent { get; set; }
+
+        public void AcceptVisitor(IDescriptionVisitor visitor)
+        {
+            visitor.StartList(this);
+
+            Children.Each(x => x.AcceptVisitor(visitor));
+
+            visitor.EndList();
+        }
+    }
+
+    public interface IDescriptionVisitor
+    {
+        void Start(Description description);
+        void StartList(BulletList list);
+        void EndList();
+        void End();
     }
 }
