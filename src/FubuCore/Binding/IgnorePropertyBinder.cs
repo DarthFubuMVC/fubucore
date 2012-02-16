@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Reflection;
 
 namespace FubuCore.Binding
 {
+    [Description("Ignores any property that it applies to")]
     public class IgnorePropertyBinder : IPropertyBinder
     {
         private readonly Func<PropertyInfo, bool> _filter;

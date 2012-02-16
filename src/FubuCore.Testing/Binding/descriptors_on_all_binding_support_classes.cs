@@ -35,5 +35,29 @@ namespace FubuCore.Testing.Binding
 
             types.Any().ShouldBeFalse();
         }
+
+        [Test]
+        public void must_be_a_description_on_all_property_binders()
+        {
+            var types = typeof(IPropertyBinder).Assembly.GetExportedTypes()
+                .Where(x => x.IsConcreteTypeOf<IPropertyBinder>())
+                .Where(x => !Description.HasExplicitDescription(x));
+
+            types.Each(x => Debug.WriteLine(x.Name));
+
+            types.Any().ShouldBeFalse();
+        }
+
+        [Test]
+        public void must_be_a_description_on_all_model_binders()
+        {
+            var types = typeof(IModelBinder).Assembly.GetExportedTypes()
+                .Where(x => x.IsConcreteTypeOf<IModelBinder>())
+                .Where(x => !Description.HasExplicitDescription(x));
+
+            types.Each(x => Debug.WriteLine(x.Name));
+
+            types.Any().ShouldBeFalse();
+        }
     }
 }

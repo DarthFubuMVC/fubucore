@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
+    [Description("Binds a collection or list property")]
     public class CollectionPropertyBinder : IPropertyBinder
     {
         private readonly Cache<Type,MethodInfo> _addMethods = new Cache<Type, MethodInfo>();
