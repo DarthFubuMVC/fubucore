@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 
 namespace FubuCore.Conversion
 {
+    [Description("Converts to Nullable<T> values by using the conversion strategy for T.  Accepts NULL as well")]
     public class NullableConverterFamily : IObjectConverterFamily
     {
         public bool Matches(Type type, ConverterLibrary converter)

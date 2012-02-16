@@ -1,5 +1,10 @@
+using System;
+using System.ComponentModel;
+using FubuCore.Descriptions;
+
 namespace FubuCore.Conversion
 {
+    [Description("Preprocesses 'NULL' or 'EMPTY' as string values during conversion")]
     public class StringConverterStrategy : StatelessConverter<string>
     {
         public const string EMPTY = "EMPTY";
@@ -20,5 +25,6 @@ namespace FubuCore.Conversion
 
             return stringValue;
         }
+
     }
 }

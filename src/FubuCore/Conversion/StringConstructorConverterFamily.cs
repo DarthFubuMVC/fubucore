@@ -1,8 +1,11 @@
 using System;
+using System.ComponentModel;
+using FubuCore.Descriptions;
 using FubuCore.Reflection.Expressions;
 
 namespace FubuCore.Conversion
 {
+    [Description("Converts to type T by calling new T(string) if that constructor signature exists")]
     public class StringConstructorConverterFamily : IObjectConverterFamily
     {
         public bool Matches(Type type, ConverterLibrary converter)

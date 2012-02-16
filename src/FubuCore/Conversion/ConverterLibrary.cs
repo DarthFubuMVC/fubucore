@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using FubuCore.Descriptions;
 using FubuCore.Util;
 
 namespace FubuCore.Conversion
@@ -96,6 +98,26 @@ namespace FubuCore.Conversion
         public IConverterStrategy StrategyFor(Type type)
         {
             return _froms[type];
+        }
+
+        public string WhatDoIHave()
+        {
+            // TODO -- make this better
+            var report = new TextReportWriter(2);
+            report.AddDivider('=');
+            report.AddContent("All converter families");
+            report.AddDivider('=');
+            var i = 1;
+            _families.Select(x => Description.GetDescription(x)).Each(desc =>
+            {
+                report.AddText(i.ToString().PadLeft(3) + ".) " + desc.Title, desc.ShortDescription);
+                i++;
+            });
+
+            var writer = new StringWriter();
+            report.Write(writer);
+
+            return writer.ToString();
         }
     }
 }

@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 
 namespace FubuCore.Conversion
 {
+    [Description("Builds an array of a type from a comma delimited string, applying the conversion against each value for the element type")]
     public class ArrayConverterFamily : IObjectConverterFamily
     {
         public bool Matches(Type type, ConverterLibrary converter)

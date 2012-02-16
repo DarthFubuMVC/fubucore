@@ -136,7 +136,7 @@
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
     <Compile Include="Descriptions\Description.cs" />
-    <Compile Include="Descriptions\IHasDescription.cs" />
+    <Compile Include="Descriptions\HasDescription.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />
@@ -229,6 +229,7 @@
     <Compile Include="Util\CompositePredicate.cs" />
     <Compile Include="Util\Indexer.cs" />
     <Compile Include="Util\StringPropertyReader.cs" />
+    <Compile Include="Util\TextWriting.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

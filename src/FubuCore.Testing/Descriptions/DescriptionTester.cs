@@ -52,7 +52,7 @@ namespace FubuCore.Testing.Descriptions
 
     public class SimpleTarget{}
 
-    public class MakesOwnDescription : IHasDescription
+    public class MakesOwnDescription : HasDescription
     {
         public Description GetDescription()
         {

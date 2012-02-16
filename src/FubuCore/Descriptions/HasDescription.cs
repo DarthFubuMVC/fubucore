@@ -1,6 +1,6 @@
 namespace FubuCore.Descriptions
 {
-    public interface IHasDescription
+    public interface HasDescription
     {
         Description GetDescription();
     }

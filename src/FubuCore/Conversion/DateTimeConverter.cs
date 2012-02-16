@@ -1,8 +1,10 @@
 using System;
+using System.ComponentModel;
 using System.Linq;
 
 namespace FubuCore.Conversion
 {
+    [Description("Converts strings to DateTime values")]
     public class DateTimeConverter : StatelessConverter<DateTime>
     {
         public const string TODAY = "TODAY";

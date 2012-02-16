@@ -23,7 +23,7 @@ namespace FubuCore.Descriptions
     
         public static Description GetDescription(object target)
         {
-            var described = target as IHasDescription;
+            var described = target as HasDescription;
             if (described != null)
             {
                 return described.GetDescription();
@@ -38,6 +38,17 @@ namespace FubuCore.Descriptions
             description.ShortDescription = description.ShortDescription ?? target.ToString();
 
             return description;
+        }
+
+        public static bool HasExplicitDescription(Type type)
+        {
+            return type.CanBeCastTo<HasDescription>() || type.HasAttribute<DescriptionAttribute>() ||
+                   type.HasAttribute<TitleAttribute>();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("{0}: {1}", Title, ShortDescription);
         }
     }
 }

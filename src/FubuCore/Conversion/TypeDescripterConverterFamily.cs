@@ -1,11 +1,13 @@
 using System;
 using System.ComponentModel;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
     /// <summary>
     ///   Uses the built in TypeDescriptor in .Net to convert objects from strings
     /// </summary>
+    [Description("Converts from a string to a type using the built in System.ComponentModel.TypeDescriptor class")]
     public class TypeDescripterConverterFamily : IObjectConverterFamily
     {
         public bool Matches(Type type, ConverterLibrary converter)

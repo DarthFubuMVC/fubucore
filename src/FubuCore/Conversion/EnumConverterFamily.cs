@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel;
 
 namespace FubuCore.Conversion
 {
+    [Description("Uses Enum.Parse() to handle conversion to enumeration types")]
     public class EnumConverterFamily : IObjectConverterFamily
     {
         public bool Matches(Type type, ConverterLibrary converter)

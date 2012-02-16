@@ -1,9 +1,12 @@
 using System;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Linq;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
+    [Description("Convert strings into TimeSpan structures")]
     public class TimeSpanConverter : StatelessConverter<TimeSpan>
     {
         private const string TIMESPAN_PATTERN =
@@ -73,5 +76,6 @@ namespace FubuCore.Conversion
         {
             return GetTimeSpan(text);
         }
+
     }
 }
