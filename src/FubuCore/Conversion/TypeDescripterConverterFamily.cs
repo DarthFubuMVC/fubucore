@@ -29,7 +29,7 @@ namespace FubuCore.Conversion
 
         #region Nested type: TypeDescriptorConversionStrategy
 
-        public class TypeDescriptorConversionStrategy : IConverterStrategy
+        public class TypeDescriptorConversionStrategy : IConverterStrategy, HasDescription
         {
             private readonly TypeConverter _converter;
             private Type _type; // Captured for diagnostics
@@ -49,6 +49,15 @@ namespace FubuCore.Conversion
 			{
 				get { return _type; }
 			}
+
+
+            public Description GetDescription()
+            {
+                return new Description{
+                    Title = "TypeDescriptor",
+                    ShortDescription = "TypeDescripter conversion for " + _type.FullName
+                };
+            }
         }
 
         #endregion

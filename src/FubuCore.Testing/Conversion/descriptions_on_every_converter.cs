@@ -17,12 +17,6 @@ namespace FubuCore.Testing.Conversion
         [Test]
         public void must_be_some_sort_of_description_on_every_iconverter_family()
         {
-            var converter = new ConverterLibrary();
-            Debug.WriteLine(converter.WhatDoIHave());
-            Debug.WriteLine("");
-            Debug.WriteLine("");
-            Debug.WriteLine("");
-
             var types = typeof (IObjectConverterFamily).Assembly.GetExportedTypes()
                 .Where(x => x.IsConcreteTypeOf<IObjectConverterFamily>())
                 .Where(x => !Description.HasExplicitDescription(x));
@@ -32,6 +26,24 @@ namespace FubuCore.Testing.Conversion
             types.Any().ShouldBeFalse();
         
             
+        }
+
+        [Test]
+        public void must_be_some_sort_of_description_on_every_iconverterstrategy()
+        {
+            var converter = new ConverterLibrary();
+            Debug.WriteLine(converter.WhatDoIHave());
+            Debug.WriteLine("");
+            Debug.WriteLine("");
+            Debug.WriteLine("");
+
+            var types = typeof(IConverterStrategy).Assembly.GetExportedTypes()
+                .Where(x => x.IsConcreteTypeOf<IConverterStrategy>())
+                .Where(x => !Description.HasExplicitDescription(x));
+
+            types.Each(x => Debug.WriteLine(x.Name));
+
+            types.Any().ShouldBeFalse();
         }
     }
 }

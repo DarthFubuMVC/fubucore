@@ -1,4 +1,5 @@
 using System;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
@@ -10,6 +11,11 @@ namespace FubuCore.Conversion
         public IConverterStrategy CreateConverter(Type type, Func<Type, IConverterStrategy> converterSource)
         {
             return this;
+        }
+
+        public virtual Description GetDescription()
+        {
+            return Description.GetDescriptionByType(this, this.GetType());
         }
     }
 

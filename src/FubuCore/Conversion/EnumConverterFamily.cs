@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
@@ -18,13 +19,21 @@ namespace FubuCore.Conversion
 
         #region Nested type: EnumConversionStrategy
 
-        public class EnumConversionStrategy : IConverterStrategy
+        public class EnumConversionStrategy : IConverterStrategy, HasDescription
         {
             private readonly Type _enumType;
 
             public EnumConversionStrategy(Type enumType)
             {
                 _enumType = enumType;
+            }
+
+            public Description GetDescription()
+            {
+                return new Description{
+                    Title = "Enum.Parse",
+                    ShortDescription = "Enum.Parse(typeof(" + _enumType.FullName + "), text)"
+                };
             }
 
             public object Convert(IConversionRequest request)

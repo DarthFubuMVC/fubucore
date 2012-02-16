@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using FubuCore.Descriptions;
 using FubuCore.Util;
+using FubuCore.Util.TextWriting;
 
 namespace FubuCore.Conversion
 {
@@ -45,9 +46,9 @@ namespace FubuCore.Conversion
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="finder"></param>
-        public void RegisterConverter<T>(Func<string, T> finder)
+        public void RegisterConverter<T>(Func<string, T> finder, string description = null)
         {
-            _froms[typeof (T)] = new LambdaConverterStrategy<T>(finder);
+            _froms[typeof (T)] = new LambdaConverterStrategy<T>(finder, description);
         }
 
 
@@ -58,9 +59,9 @@ namespace FubuCore.Conversion
         /// <typeparam name="TReturnType"></typeparam>
         /// <typeparam name="TService"></typeparam>
         /// <param name="converter"></param>
-        public void RegisterConverter<TReturnType, TService>(Func<TService, string, TReturnType> converter)
+        public void RegisterConverter<TReturnType, TService>(Func<TService, string, TReturnType> converter, string description = null)
         {
-            _froms[typeof (TReturnType)] = new LambdaConverterStrategy<TReturnType, TService>(converter);
+            _froms[typeof (TReturnType)] = new LambdaConverterStrategy<TReturnType, TService>(converter, description);
         }
 
 
@@ -102,20 +103,45 @@ namespace FubuCore.Conversion
 
         public string WhatDoIHave()
         {
-            // TODO -- make this better
-            var report = new TextReportWriter(2);
-            report.AddDivider('=');
-            report.AddContent("All converter families");
-            report.AddDivider('=');
+            var writer = new StringWriter();
+
+            var familyReport = new TextReportWriter(2);
+            familyReport.AddDivider('=');
+            familyReport.AddContent("All converter families");
+            familyReport.AddDivider('=');
             var i = 1;
             _families.Select(x => Description.GetDescription(x)).Each(desc =>
             {
-                report.AddText(i.ToString().PadLeft(3) + ".) " + desc.Title, desc.ShortDescription);
+                familyReport.AddText(i.ToString().PadLeft(3) + ".) " + desc.Title, desc.ShortDescription);
                 i++;
             });
+            familyReport.Write(writer);
+            familyReport.AddDivider('=');
 
-            var writer = new StringWriter();
-            report.Write(writer);
+            familyReport.Write(writer);
+            writer.WriteLine();
+
+
+            var conversionReport = new TextReportWriter(3);
+            conversionReport.AddDivider('=');
+            conversionReport.AddContent("All converter strategies encountered");
+            conversionReport.AddDivider('=');
+
+            if (_froms.Count == 0)
+            {
+                writer.WriteLine("None.");
+            }
+
+            Action<Type, IConverterStrategy> addDescription = (type, strategy) =>
+            {
+                var desc = Description.GetDescription(strategy);
+                conversionReport.AddText(type.Name, desc.Title, desc.ShortDescription);
+            };
+
+            _froms.Each(addDescription);
+
+
+            conversionReport.Write(writer);
 
             return writer.ToString();
         }

@@ -229,7 +229,12 @@
     <Compile Include="Util\CompositePredicate.cs" />
     <Compile Include="Util\Indexer.cs" />
     <Compile Include="Util\StringPropertyReader.cs" />
-    <Compile Include="Util\TextWriting.cs" />
+    <Compile Include="Util\TextWriting\CharacterWidth.cs" />
+    <Compile Include="Util\TextWriting\DividerLine.cs" />
+    <Compile Include="Util\TextWriting\Line.cs" />
+    <Compile Include="Util\TextWriting\PlainLine.cs" />
+    <Compile Include="Util\TextWriting\TextLine.cs" />
+    <Compile Include="Util\TextWriting\TextReportWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

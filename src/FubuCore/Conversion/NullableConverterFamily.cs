@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
@@ -36,6 +37,14 @@ namespace FubuCore.Conversion
             if (stringValue == string.Empty && _type != typeof (string)) return null;
 
             return _inner.Convert(request);
+        }
+
+        public Description GetDescription()
+        {
+            return new Description{
+                Title = "Nullable",
+                ShortDescription = "Nullable<{0}>".ToFormat(_type.FullName)
+            };
         }
     }
 }

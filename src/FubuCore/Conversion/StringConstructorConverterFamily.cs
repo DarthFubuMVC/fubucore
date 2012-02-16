@@ -37,6 +37,14 @@ namespace FubuCore.Conversion
             {
                 return _func(request.Text);
             }
+
+            public Description GetDescription()
+            {
+                return new Description(){
+                    Title = "ctor",
+                    ShortDescription = "new {0}(string)".ToFormat(typeof(T).FullName)
+                };
+            }
         }
 
         #endregion

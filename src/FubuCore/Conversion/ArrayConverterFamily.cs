@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
@@ -54,6 +55,14 @@ namespace FubuCore.Conversion
                 }
 
                 return array;
+            }
+
+            public Description GetDescription()
+            {
+                return new Description{
+                    Title = "Array",
+                    ShortDescription = _innerType.FullName + "[]"
+                };
             }
         }
 

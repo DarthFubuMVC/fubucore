@@ -29,8 +29,15 @@ namespace FubuCore.Descriptions
                 return described.GetDescription();
             }
 
-            var description = new Description();
             var type = target.GetType();
+
+            return GetDescriptionByType(target, type);
+        }
+
+        public static Description GetDescriptionByType(object target, Type type)
+        {
+            var description = new Description();
+            
             type.ForAttribute<DescriptionAttribute>(x => description.ShortDescription = x.Description);
             type.ForAttribute<TitleAttribute>(x => description.Title = x.Title);
 
