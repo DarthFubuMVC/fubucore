@@ -39,12 +39,10 @@ namespace FubuCore.Conversion
             return _inner.Convert(request);
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description{
-                Title = "Nullable",
-                ShortDescription = "Nullable<{0}>".ToFormat(_type.FullName)
-            };
+            description.Title = "Nullable";
+            description.ShortDescription = "Nullable<{0}>".ToFormat(_type.FullName);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace FubuCore.Conversion
 
         #region Nested type: EnumConversionStrategy
 
-        public class EnumConversionStrategy : IConverterStrategy, HasDescription
+        public class EnumConversionStrategy : IConverterStrategy, DescribesItself
         {
             private readonly Type _enumType;
 
@@ -28,12 +28,10 @@ namespace FubuCore.Conversion
                 _enumType = enumType;
             }
 
-            public Description GetDescription()
+            public void Describe(Description description)
             {
-                return new Description{
-                    Title = "Enum.Parse",
-                    ShortDescription = "Enum.Parse(typeof(" + _enumType.FullName + "), text)"
-                };
+                description.Title = "Enum.Parse";
+                description.ShortDescription = "Enum.Parse(typeof(" + _enumType.FullName + "), text)";
             }
 
             public object Convert(IConversionRequest request)

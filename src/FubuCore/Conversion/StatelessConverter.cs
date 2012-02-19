@@ -13,9 +13,9 @@ namespace FubuCore.Conversion
             return this;
         }
 
-        public virtual Description GetDescription()
+        public virtual void Describe(Description description)
         {
-            return Description.GetDescriptionByType(this, this.GetType());
+            // no-op;
         }
     }
 

@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Conversion;
+using FubuCore.Descriptions;
 using FubuCore.Reflection;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class BindingRegistry : IModelBinderCache, IValueConverterRegistry, IPropertyBinderCache
+    public class BindingRegistry : IModelBinderCache, IValueConverterRegistry, IPropertyBinderCache, DescribesItself
     {
         private readonly IList<IModelBinder> _binders = new List<IModelBinder>();
         private readonly Cache<Type, IModelBinder> _modelBinderCache = new Cache<Type, IModelBinder>();
@@ -138,6 +139,19 @@ namespace FubuCore.Binding
         IPropertyBinder IPropertyBinderCache.BinderFor(PropertyInfo property)
         {
             return _propertyBinderCache[property];
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "Model Binding Graph";
+            addModelBindersDescription(description);
+        }
+
+        private void addModelBindersDescription(Description description)
+        {
+            var list = description.AddList("ModelBinders", AllModelBinders());
+            list.Label = "Model Binders (IModelBinder)";
+            list.IsOrderDependent = true;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace FubuCore.Conversion
     /// Acts as an improved version of the System.ComponentModel.TypeDescriptor class
     /// to store and access strategies for converting a string into a certain Type
     /// </summary>
-    public class ConverterLibrary
+    public class ConverterLibrary : DescribesItself
     {
         private readonly IList<IObjectConverterFamily> _families = new List<IObjectConverterFamily>();
         private readonly Cache<Type, IConverterStrategy> _froms;
@@ -39,7 +39,9 @@ namespace FubuCore.Conversion
             _families.Add(new StringConstructorConverterFamily());
             _families.Add(new TypeDescripterConverterFamily());
         }
-// TODO -- may need to do a seal() kind of thing that throws an exception after you call this.
+        
+        
+        // TODO -- may need to do a seal() kind of thing that throws an exception after you call this.
         // or clear the caches, one of the two
         /// <summary>
         /// Register a conversion strategy for a single type by a Func
@@ -110,7 +112,7 @@ namespace FubuCore.Conversion
             familyReport.AddContent("All converter families");
             familyReport.AddDivider('=');
             var i = 1;
-            _families.Select(x => Description.GetDescription(x)).Each(desc =>
+            _families.Select(x => Description.For(x)).Each(desc =>
             {
                 familyReport.AddText(i.ToString().PadLeft(3) + ".) " + desc.Title, desc.ShortDescription);
                 i++;
@@ -134,7 +136,7 @@ namespace FubuCore.Conversion
 
             Action<Type, IConverterStrategy> addDescription = (type, strategy) =>
             {
-                var desc = Description.GetDescription(strategy);
+                var desc = Description.For(strategy);
                 conversionReport.AddText(type.Name, desc.Title, desc.ShortDescription);
             };
 
@@ -144,6 +146,22 @@ namespace FubuCore.Conversion
             conversionReport.Write(writer);
 
             return writer.ToString();
+        }
+
+        public IEnumerable<IObjectConverterFamily> AllConverterFamilies
+        {
+            get
+            {
+                return _families;
+            }
+        }
+
+        public void Describe(Description description)
+        {
+            description.ShortDescription = "Library of all object conversion policies";
+            var list = description.AddList(typeof (IObjectConverterFamily).Name, _families);
+            list.IsOrderDependent = true;
+            list.Label = "All registered " + typeof(IObjectConverterFamily).Name + "'s";
         }
     }
 }

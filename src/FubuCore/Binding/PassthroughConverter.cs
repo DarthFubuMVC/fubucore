@@ -4,7 +4,7 @@ using FubuCore.Descriptions;
 
 namespace FubuCore.Binding
 {
-    public class PassthroughConverter<T> : StatelessConverter, HasDescription
+    public class PassthroughConverter<T> : StatelessConverter, DescribesItself
     {
         public override bool Matches(PropertyInfo property)
         {
@@ -16,12 +16,10 @@ namespace FubuCore.Binding
             return context.PropertyValue;
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description{
-                Title = "Pass thru",
-                ShortDescription = "Pass through conversion of " + typeof(T).FullName
-            };
+            description.Title = "Pass thru";
+            description.ShortDescription = "Pass through conversion of " + typeof (T).FullName;
         }
     }
 }

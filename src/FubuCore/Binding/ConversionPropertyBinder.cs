@@ -1,18 +1,21 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
+using FubuCore.Descriptions;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
     [Description("Attempts to bind a property by finding a value matching the property name and converting the raw value to the property type")]
-    public class ConversionPropertyBinder : IPropertyBinder
+    public class ConversionPropertyBinder : IPropertyBinder, DescribesItself
     {
         private readonly Cache<PropertyInfo, ValueConverter> _cache = new Cache<PropertyInfo, ValueConverter>();
+        private IValueConverterRegistry _converters;
 
         public ConversionPropertyBinder(IValueConverterRegistry converters)
         {
             _cache.OnMissing = prop => converters.FindConverter(prop);
+            _converters = converters;
         }
 
         public bool Matches(PropertyInfo property)
@@ -38,6 +41,13 @@ namespace FubuCore.Binding
         public ValueConverter FindConverter(PropertyInfo property)
         {
             return _cache[property];
+        }
+
+        public void Describe(Description description)
+        {
+            var list = description.AddList("ConversionFamilies", _converters.AllConverterFamilies());
+            list.IsOrderDependent = true;
+            list.Label = "Conversion Families";
         }
     }
 }

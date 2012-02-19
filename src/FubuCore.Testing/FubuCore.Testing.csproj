@@ -66,6 +66,7 @@
     <Compile Include="Binding\BasicValueConverterTester.cs" />
     <Compile Include="Binding\BindingAttributeTester.cs" />
     <Compile Include="Binding\BindingContextTester.cs" />
+    <Compile Include="Binding\BindingRegistry_Description_Tester.cs" />
     <Compile Include="Binding\BindingResultTester.cs" />
     <Compile Include="Binding\BooleanFamilyTester.cs" />
     <Compile Include="Binding\CollectionPropertyBinderTester.cs" />

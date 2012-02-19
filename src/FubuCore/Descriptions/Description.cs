@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore.Reflection;
@@ -19,39 +20,45 @@ namespace FubuCore.Descriptions
 
 
         public IList<BulletList> BulletLists { get; private set; }
-    
-    
-        public static Description GetDescription(object target)
+
+        public BulletList AddList(string name, IEnumerable objects)
         {
-            Description description = null;
-            var type = target.GetType();
+            var list = new BulletList{
+                Name = name
+            };
+            
+            BulletLists.Add(list);
 
-            var described = target as HasDescription;
-            description = described != null 
-                ? described.GetDescription() 
-                : GetDescriptionByType(target, type);
+            objects.Each(x =>
+            {
+                var desc = Description.For(x);
+                list.Children.Add(desc);
+            });
 
-            description.TargetType = target.GetType();
-
-            return description;
+            return list;
         }
 
-        public static Description GetDescriptionByType(object target, Type type)
+        public static Description For(object target)
         {
-            var description = new Description();
-            
+            var type = target.GetType();
+
+            var description = new Description{
+                TargetType = target.GetType(),
+                Title = type.Name,
+                ShortDescription = target.ToString()
+            };
+
             type.ForAttribute<DescriptionAttribute>(x => description.ShortDescription = x.Description);
             type.ForAttribute<TitleAttribute>(x => description.Title = x.Title);
 
-            description.Title = description.Title ?? type.Name;
-            description.ShortDescription = description.ShortDescription ?? target.ToString();
+            (target as DescribesItself).CallIfNotNull(x => x.Describe(description));
 
             return description;
         }
 
         public static bool HasExplicitDescription(Type type)
         {
-            return type.CanBeCastTo<HasDescription>() || type.HasAttribute<DescriptionAttribute>() ||
+            return type.CanBeCastTo<DescribesItself>() || type.HasAttribute<DescriptionAttribute>() ||
                    type.HasAttribute<TitleAttribute>();
         }
 
@@ -69,34 +76,5 @@ namespace FubuCore.Descriptions
 
             visitor.End();
         }
-    }
-
-    public class BulletList
-    {
-        public BulletList()
-        {
-            Children = new List<Description>();
-        }
-
-        public IList<Description> Children { get; private set; }
-        public string Name { get; set; }
-        public bool IsOrderDependent { get; set; }
-
-        public void AcceptVisitor(IDescriptionVisitor visitor)
-        {
-            visitor.StartList(this);
-
-            Children.Each(x => x.AcceptVisitor(visitor));
-
-            visitor.EndList();
-        }
-    }
-
-    public interface IDescriptionVisitor
-    {
-        void Start(Description description);
-        void StartList(BulletList list);
-        void EndList();
-        void End();
     }
 }

@@ -2,12 +2,13 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using FubuCore.Descriptions;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding
 {
     [Description("The standard model binding using no-arg constructors, property binding policies, and value conversion policies")]
-    public class StandardModelBinder : IModelBinder
+    public class StandardModelBinder : IModelBinder, DescribesItself
     {
         private readonly IPropertyBinderCache _propertyBinders;
         private readonly ITypeDescriptorCache _typeCache;
@@ -58,6 +59,13 @@ namespace FubuCore.Binding
         {
             context.Logger.ChosePropertyBinder(property, propertyBinder);
             propertyBinder.Bind(property, context);
+        }
+
+        public void Describe(Description description)
+        {
+            var list = description.AddList("Property Binders", _propertyBinders.AllPropertyBinders());
+            list.Label = "Property Binders";
+            list.IsOrderDependent = true;
         }
     }
 }

@@ -38,12 +38,10 @@ namespace FubuCore.Conversion
                 return _func(request.Text);
             }
 
-            public Description GetDescription()
+            public void Describe(Description description)
             {
-                return new Description(){
-                    Title = "ctor",
-                    ShortDescription = "new {0}(string)".ToFormat(typeof(T).FullName)
-                };
+                description.Title = "ctor";
+                description.ShortDescription = "new {0}(string)".ToFormat(typeof (T).FullName);
             }
         }
 

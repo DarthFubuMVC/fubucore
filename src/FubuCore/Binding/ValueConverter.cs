@@ -8,7 +8,7 @@ namespace FubuCore.Binding
         object Convert(IPropertyContext context);
     }
 
-    public class LambdaValueConverter : ValueConverter, HasDescription
+    public class LambdaValueConverter : ValueConverter, DescribesItself
     {
         private readonly Func<IPropertyContext, object> _converter;
         private readonly string _description;
@@ -24,12 +24,10 @@ namespace FubuCore.Binding
             return _converter(context);
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description(){
-                Title = "Lambda",
-                ShortDescription = _description
-            };
+            description.Title = "Lambda";
+            description.ShortDescription = _description;
         }
     }
 }

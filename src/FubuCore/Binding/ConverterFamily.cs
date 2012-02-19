@@ -4,7 +4,7 @@ using FubuCore.Descriptions;
 
 namespace FubuCore.Binding
 {
-    public class ConverterFamily : IConverterFamily, HasDescription
+    public class ConverterFamily : IConverterFamily, DescribesItself
     {
         private readonly Func<IValueConverterRegistry, PropertyInfo, ValueConverter> _builder;
         private readonly string _description;
@@ -27,12 +27,9 @@ namespace FubuCore.Binding
             return _builder(registry, property);
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description{
-                Title = GetType().Name,
-                ShortDescription = _description
-            };
+            description.ShortDescription = _description;
         }
     }
 }

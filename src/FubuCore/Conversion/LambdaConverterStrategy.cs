@@ -19,12 +19,10 @@ namespace FubuCore.Conversion
             return _finder(request.Text);
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description{
-                Title = "Lambda",
-                ShortDescription = _description
-            };
+            description.Title = "Lambda";
+            description.ShortDescription = _description;
         }
     }
 
@@ -45,12 +43,10 @@ namespace FubuCore.Conversion
             return _finder(request.Get<TService>(), request.Text);
         }
 
-        public Description GetDescription()
+        public void Describe(Description description)
         {
-            return new Description{
-                Title = "Lambda:" + typeof(TService).Name,
-                ShortDescription = _description
-            };
+            description.Title = "Lambda:" + typeof (TService).Name;
+            description.ShortDescription = _description;
         }
     }
 }

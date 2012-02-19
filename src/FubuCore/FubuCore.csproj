@@ -135,8 +135,10 @@
     <Compile Include="DependencyAnalysis\DirectedGraph.cs" />
     <Compile Include="DependencyAnalysis\Edge.cs" />
     <Compile Include="DependencyAnalysis\Node.cs" />
+    <Compile Include="Descriptions\BulletList.cs" />
     <Compile Include="Descriptions\Description.cs" />
-    <Compile Include="Descriptions\HasDescription.cs" />
+    <Compile Include="Descriptions\DescribesItself.cs" />
+    <Compile Include="Descriptions\IDescriptionVisitor.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />

@@ -3,11 +3,12 @@ using System.ComponentModel;
 using System.Reflection;
 using FubuCore.Conversion;
 using FubuCore.Descriptions;
+using System.Collections.Generic;
 
 namespace FubuCore.Binding
 {
     [Description("Delegates to IObjectConverter for the conversion")]
-    public class BasicConverterFamily : IConverterFamily
+    public class BasicConverterFamily : IConverterFamily, DescribesItself
     {
         private readonly ConverterLibrary _library;
 
@@ -32,9 +33,15 @@ namespace FubuCore.Binding
             var strategy = _library.StrategyFor(propertyType);
             return new BasicValueConverter(strategy, propertyType);
         }
+
+        public void Describe(Description description)
+        {
+            var libraryDesc = Description.For(_library);
+            description.BulletLists.AddRange(libraryDesc.BulletLists);
+        }
     }
 
-    public class BasicValueConverter : ValueConverter, HasDescription
+    public class BasicValueConverter : ValueConverter, DescribesItself
     {
         private readonly IDefaultMaker _defaulter;
         private readonly Type _propertyType;
@@ -45,6 +52,13 @@ namespace FubuCore.Binding
             _strategy = strategy;
             _propertyType = propertyType;
             _defaulter = typeof (DefaultMaker<>).CloseAndBuildAs<IDefaultMaker>(propertyType);
+        }
+
+        public void Describe(Description description)
+        {
+            description.Title = "Using IObjectConverter";
+            description.ShortDescription =
+                "IObjectConverter.FromString(text, typeof({0}))".ToFormat(_propertyType.FullName);
         }
 
         public object Convert(IPropertyContext context)
@@ -77,13 +91,5 @@ namespace FubuCore.Binding
         }
 
         #endregion
-
-        public Description GetDescription()
-        {
-            return new Description{
-                Title = "IObjectConverter",
-                ShortDescription = "IObjectConverter.FromString(text, typeof({0}))".ToFormat(_propertyType.FullName)
-            };
-        }
     }
 }

@@ -57,12 +57,10 @@ namespace FubuCore.Conversion
                 return array;
             }
 
-            public Description GetDescription()
+            public void Describe(Description description)
             {
-                return new Description{
-                    Title = "Array",
-                    ShortDescription = _innerType.FullName + "[]"
-                };
+                description.Title = "Array";
+                description.ShortDescription = _innerType.FullName + "[]";
             }
         }
 
