@@ -1,28 +1,30 @@
+using System;
 using System.IO;
 
 namespace FubuCore.Util.TextWriting
 {
-    internal class PlainLine : Line
+    public class PlainLine : Line
     {
-        public PlainLine(string contents)
+        private readonly string _text;
+
+        public PlainLine(string text)
         {
-            Contents = contents;
+            _text = text;
         }
 
-        public string Contents { get; set; }
-
-        #region Line Members
-
-        public void OverwriteCounts(CharacterWidth[] widths)
+        public void WriteToConsole()
         {
-            // no-op
+            Write(Console.Out);
         }
 
-        public void Write(TextWriter writer, CharacterWidth[] widths)
+        public void Write(TextWriter writer)
         {
-            writer.WriteLine(Contents);
+            writer.WriteLine(_text);
         }
 
-        #endregion
+        public int Width
+        {
+            get { return _text.Length; }
+        }
     }
 }

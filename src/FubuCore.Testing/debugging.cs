@@ -17,6 +17,17 @@ namespace FubuCore.Testing
             Debug.WriteLine(ctor);
         }
 
+        [Test]
+        public void understanding_writeline()
+        {
+            Console.WriteLine("***********************************");
+            Console.WriteLine();
+            Console.Write("a");
+            Console.Write("a");
+            Console.Write("a");
+            Console.WriteLine("***********************************");
+        }
+
 
     }
 

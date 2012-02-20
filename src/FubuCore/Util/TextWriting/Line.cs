@@ -2,9 +2,10 @@ using System.IO;
 
 namespace FubuCore.Util.TextWriting
 {
-    internal interface Line
+    public interface Line
     {
-        void OverwriteCounts(CharacterWidth[] widths);
-        void Write(TextWriter writer, CharacterWidth[] widths);
+        void WriteToConsole();
+        void Write(TextWriter writer);
+        int Width { get; }
     }
 }

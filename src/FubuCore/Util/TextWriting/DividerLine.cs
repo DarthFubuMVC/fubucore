@@ -1,31 +1,30 @@
+using System;
 using System.IO;
 
 namespace FubuCore.Util.TextWriting
 {
-    internal class DividerLine : Line
+    public class DividerLine : Line
     {
         private readonly char _character;
 
-        internal DividerLine(char character)
+        public DividerLine(char character)
         {
             _character = character;
         }
 
-        #region Line Members
-
-        public void OverwriteCounts(CharacterWidth[] widths)
+        public void WriteToConsole()
         {
-            // no-op
+            Write(Console.Out);
         }
 
-        public void Write(TextWriter writer, CharacterWidth[] widths)
+        public void Write(TextWriter writer)
         {
-            foreach (CharacterWidth width in widths)
-            {
-                writer.Write(string.Empty.PadRight(width.Width, _character));
-            }
+            writer.WriteLine(string.Empty.PadRight(Width, _character));
         }
 
-        #endregion
+        public int Width
+        {
+            get; set;
+        }
     }
 }

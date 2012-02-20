@@ -103,50 +103,6 @@ namespace FubuCore.Conversion
             return _froms[type];
         }
 
-        public string WhatDoIHave()
-        {
-            var writer = new StringWriter();
-
-            var familyReport = new TextReportWriter(2);
-            familyReport.AddDivider('=');
-            familyReport.AddContent("All converter families");
-            familyReport.AddDivider('=');
-            var i = 1;
-            _families.Select(x => Description.For(x)).Each(desc =>
-            {
-                familyReport.AddText(i.ToString().PadLeft(3) + ".) " + desc.Title, desc.ShortDescription);
-                i++;
-            });
-            familyReport.Write(writer);
-            familyReport.AddDivider('=');
-
-            familyReport.Write(writer);
-            writer.WriteLine();
-
-
-            var conversionReport = new TextReportWriter(3);
-            conversionReport.AddDivider('=');
-            conversionReport.AddContent("All converter strategies encountered");
-            conversionReport.AddDivider('=');
-
-            if (_froms.Count == 0)
-            {
-                writer.WriteLine("None.");
-            }
-
-            Action<Type, IConverterStrategy> addDescription = (type, strategy) =>
-            {
-                var desc = Description.For(strategy);
-                conversionReport.AddText(type.Name, desc.Title, desc.ShortDescription);
-            };
-
-            _froms.Each(addDescription);
-
-
-            conversionReport.Write(writer);
-
-            return writer.ToString();
-        }
 
         public IEnumerable<IObjectConverterFamily> AllConverterFamilies
         {

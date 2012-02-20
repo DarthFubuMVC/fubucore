@@ -166,6 +166,12 @@
     <Compile Include="Util\CompositePredicateTester.cs" />
     <Compile Include="Util\IndexerTester.cs" />
     <Compile Include="Util\StringPropertyReaderTester.cs" />
+    <Compile Include="Util\TextWriting\ColumnLineTester.cs" />
+    <Compile Include="Util\TextWriting\ColumnSetTester.cs" />
+    <Compile Include="Util\TextWriting\ColumnTester.cs" />
+    <Compile Include="Util\TextWriting\DividerLineTester.cs" />
+    <Compile Include="Util\TextWriting\PlainLineTester.cs" />
+    <Compile Include="Util\TextWriting\TextReportTester.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuCore\FubuCore.csproj">
