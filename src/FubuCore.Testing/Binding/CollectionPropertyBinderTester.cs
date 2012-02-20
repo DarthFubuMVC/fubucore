@@ -18,7 +18,7 @@ namespace FubuCore.Testing.Binding
             context.RegisterService<ISmartRequest>(new InMemorySmartRequest());
             context.RegisterService<IRequestData>(new InMemoryRequestData());
             
-            propertyBinder = new CollectionPropertyBinder(new DefaultCollectionTypeProvider());
+            propertyBinder = new CollectionPropertyBinder();
         }
 
         [Test]

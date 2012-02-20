@@ -7,60 +7,50 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
+    public interface IEnumerableBuilder
+    {
+        void FillValues(PropertyInfo property, IBindingContext context);
+    }
+
+    public class EnumerableBuilder<T> : IEnumerableBuilder
+    {
+        public void FillValues(PropertyInfo property, IBindingContext context)
+        {
+            var collection = property.GetValue(context.Object, null) as ICollection<T>;
+            if (collection == null)
+            {
+                collection = new List<T>();
+                property.SetValue(context.Object, collection, null);
+            }
+
+            context.RequestData.GetEnumerableRequests(property.Name).Each(request =>
+            {
+                // TODO -- got to add the BindResult to context to store it later
+                var @object = context.BindObject(request, typeof (T));
+                collection.Add((T) @object.Value);
+            });
+        }
+    }
+
+
     [Description("Binds a collection or list property")]
     public class CollectionPropertyBinder : IPropertyBinder
     {
-        private readonly Cache<Type,MethodInfo> _addMethods = new Cache<Type, MethodInfo>();
-        private readonly ICollectionTypeProvider _collectionTypeProvider;
-
-        public CollectionPropertyBinder(ICollectionTypeProvider collectionTypeProvider)
-        {
-            _collectionTypeProvider = collectionTypeProvider;
-            _addMethods.OnMissing = type => type.GetMethod("Add");
-        }
-
         public bool Matches(PropertyInfo property)
         {
-            var type = property.PropertyType;
-            return type.IsGenericType && type.GetInterfaces().Any(
-                x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof (ICollection<>));
+            var propertyType = property.PropertyType;
+            if (propertyType == typeof(string)) return false;
+
+            return propertyType.Closes(typeof (IEnumerable<>));
         }
 
         public void Bind(PropertyInfo property, IBindingContext context)
         {
             var type = property.PropertyType;
-            var itemType = type.GetGenericArguments()[0];
-            if (type.IsInterface)
-            {
-                type = _collectionTypeProvider.GetCollectionType(type, itemType);
-            }
+            var elementType = type.FindInterfaceThatCloses(typeof (IEnumerable<>)).GetGenericArguments().Single();
 
-            var currentCollection = property.GetValue(context.Object, null);
-            object collection = currentCollection ?? Activator.CreateInstance(type);
-            var collectionType = collection.GetType();
-
-            Func<object, bool> addToCollection = obj =>
-                {
-                    if (obj != null)
-                    {
-                        var addMethod = _addMethods[collectionType];
-                        addMethod.Invoke(collection, new[] {obj});
-                        return true;
-                    }
-                    return false;
-                };
-
-            var formatString = property.Name + "[{0}]";
-
-            int index = 0;
-            string prefix;
-            do
-            {
-                prefix = formatString.ToFormat(index);
-                index++;
-            } while (addToCollection(context.BindObject(prefix, itemType)));
-
-            property.SetValue(context.Object, collection, null);
+            var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(elementType);
+            builder.FillValues(property, context);
         }
     }
 }

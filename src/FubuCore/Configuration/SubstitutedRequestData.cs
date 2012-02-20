@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FubuCore.Binding;
+using System.Linq;
 
 namespace FubuCore.Configuration
 {
@@ -27,7 +28,7 @@ namespace FubuCore.Configuration
             return parsedValue;
         }
 
-        public bool Value(string key, Action<RequestSource> callback)
+        public bool Value(string key, Action<BindingValue> callback)
         {
             return _inner.Value(key, o =>
             {
@@ -50,6 +51,11 @@ namespace FubuCore.Configuration
         {
             var prefixedInner = _inner.GetSubRequest(prefixOrChild);
             return new SubstitutedRequestData(prefixedInner, _substitutions);
+        }
+
+        public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
+        {
+            return _inner.GetEnumerableRequests(prefixOrChild).Select(x => new SubstitutedRequestData(x, _substitutions));
         }
     }
 }

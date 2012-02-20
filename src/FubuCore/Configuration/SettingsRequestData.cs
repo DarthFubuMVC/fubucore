@@ -27,14 +27,14 @@ namespace FubuCore.Configuration
 
         public object Value(string key)
         {
-            RequestSource returnValue = null;
+            BindingValue returnValue = null;
 
             Value(key, o => returnValue = o);
 
             return (returnValue.RawValue ?? string.Empty).ToString();
         }
 
-        public bool Value(string key, Action<RequestSource> callback)
+        public bool Value(string key, Action<BindingValue> callback)
         {
             return _steps.Any(x => x.Value(key, callback));
         }
@@ -70,12 +70,12 @@ namespace FubuCore.Configuration
                 return _settingData.Any(x => x.AllKeys.Any(k => k.StartsWith(key)));
             }
 
-            public bool Value(string key, Action<RequestSource> callback)
+            public bool Value(string key, Action<BindingValue> callback)
             {
                 var data = _settingData.FirstOrDefault(x => x.Has(key));
                 if (data == null) return false;
 
-                callback(new RequestSource{
+                callback(new BindingValue{
                     RawValue = data.Get(key),
                     RawKey = key,
                     Source = data.ToString() // SettingsData should now show you the provenance and category in here
@@ -123,6 +123,11 @@ namespace FubuCore.Configuration
         public IRequestData GetSubRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(this, prefixOrChild);
+        }
+
+        public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
+        {
+            throw new NotImplementedException();
         }
     }
 }

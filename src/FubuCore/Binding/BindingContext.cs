@@ -44,6 +44,14 @@ namespace FubuCore.Binding
             _request = new Lazy<ISmartRequest>(() => new SmartRequest(_requestData, _locator.GetInstance<IObjectConverter>()));
         }
 
+        /// <summary>
+        /// The underlying data for this binding context
+        /// </summary>
+        public IRequestData RequestData
+        {
+            get { return _requestData; }
+        }
+
         public IBindingLogger Logger
         {
             get { return _logger; }
@@ -52,6 +60,11 @@ namespace FubuCore.Binding
         public void SetPropertyValue(object value)
         {
             Property.SetValue(Object, value, null);
+        }
+
+        public object GetPropertyValue()
+        {
+            return Property.GetValue(Object, null);
         }
 
         public IList<ConvertProblem> Problems
@@ -182,10 +195,13 @@ namespace FubuCore.Binding
                 return _requestData.Value(name, o =>
                 {
                     PropertyValue = o.RawValue;
+
                     action(this);
                 });
             });
         }
+
+
 
         public object Object
         {
@@ -251,6 +267,12 @@ namespace FubuCore.Binding
                 return bindResult.Value;
             }
             return null;
+        }
+
+        public BindResult BindObject(IRequestData data, Type type)
+        {
+            var resolver = Service<IObjectResolver>();
+            return resolver.BindModel(type, data);
         }
 
         public void BindChild(PropertyInfo property, Type childType, string prefix)

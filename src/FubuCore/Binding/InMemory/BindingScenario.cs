@@ -52,6 +52,9 @@ namespace FubuCore.Binding.InMemory
             public ScenarioDefinition()
             {
                 Model = new T();
+
+                // TODO -- like for all the binding log messages to come thru
+                _services.Add<IObjectResolver>(new ObjectResolver(_services, _registry, new NulloBindingLogger()));
             }
 
             protected internal InMemoryRequestData RequestData

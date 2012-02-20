@@ -66,7 +66,7 @@ namespace FubuCore.Testing.Binding
             data.Value("UserAgent", callback.Action);
 
 
-            callback.AssertWasCalled(c => c.Action(new RequestSource{
+            callback.AssertWasCalled(c => c.Action(new BindingValue{
                 RawKey = "UserAgent",
                 RawValue = _expectedValue,
                 Source = "Other"

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace FubuCore.Binding
@@ -19,7 +19,7 @@ namespace FubuCore.Binding
             return _inner.Value(_prefix + key);
         }
 
-        public bool Value(string key, Action<RequestSource> callback)
+        public bool Value(string key, Action<BindingValue> callback)
         {
             return _inner.Value(_prefix + key, callback);
         }
@@ -37,6 +37,11 @@ namespace FubuCore.Binding
         public IRequestData GetSubRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(_inner, _prefix + prefixOrChild);
+        }
+
+        public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
+        {
+            return _inner.GetEnumerableRequests(_prefix + prefixOrChild);
         }
     }
 }

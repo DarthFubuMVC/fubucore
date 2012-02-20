@@ -52,6 +52,7 @@
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingContext.cs" />
     <Compile Include="Binding\BindingRegistry.cs" />
+    <Compile Include="Binding\BindingValue.cs" />
     <Compile Include="Binding\BindResult.cs" />
     <Compile Include="Binding\BindResultAssertionException.cs" />
     <Compile Include="Binding\BooleanFamily.cs" />
@@ -60,13 +61,12 @@
     <Compile Include="Binding\ConverterFamily.cs" />
     <Compile Include="Binding\ConvertProblem.cs" />
     <Compile Include="Binding\DataReaderRequestData.cs" />
-    <Compile Include="Binding\DefaultCollectionTypeProvider.cs" />
+    <Compile Include="Binding\EnumerateFlatRequestData.cs" />
     <Compile Include="Binding\ExpandEnvironmentVariablesFamily.cs" />
     <Compile Include="Binding\FlatFileReader.cs" />
     <Compile Include="Binding\FlatFileRequest.cs" />
     <Compile Include="Binding\FlatFileRequestData.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
-    <Compile Include="Binding\ICollectionTypeProvider.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
     <Compile Include="Binding\IgnorePropertyBinder.cs" />
     <Compile Include="Binding\IModelBinder.cs" />
@@ -88,6 +88,7 @@
     <Compile Include="Binding\PrefixedRequestData.cs" />
     <Compile Include="Binding\ReaderBinder.cs" />
     <Compile Include="Binding\RequestData.cs" />
+    <Compile Include="Binding\RequestDataBase.cs" />
     <Compile Include="Binding\ResolveConnectionStringFamily.cs" />
     <Compile Include="Binding\ServiceArguments.cs" />
     <Compile Include="Binding\SmartRequest.cs" />

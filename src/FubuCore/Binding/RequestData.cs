@@ -21,15 +21,14 @@ namespace FubuCore.Binding
             return output;
         }
 
-        public bool Value(string key, Action<RequestSource> callback)
+        public bool Value(string key, Action<BindingValue> callback)
         {
             var found = false;
 
             _dictionary.Value(key, (s, o) =>
             {
                 found = true;
-                record(key, s, o);
-                callback(new RequestSource{
+                callback(new BindingValue{
                     RawKey = key,
                     RawValue = o,
                     Source = s
@@ -50,11 +49,6 @@ namespace FubuCore.Binding
             return new RequestData(dict);
         }
 
-        [MarkedForTermination("Think this can go away with the RequestValue thingie")]
-        protected virtual void record(string key, string source, object @object)
-        {
-        }
-
         public IEnumerable<string> GetKeys()
         {
             return _dictionary.GetAllKeys();
@@ -63,6 +57,11 @@ namespace FubuCore.Binding
         public IRequestData GetSubRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(this, prefixOrChild);
+        }
+
+        public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
+        {
+            return EnumerateFlatRequestData.For(this, prefixOrChild);
         }
     }
 

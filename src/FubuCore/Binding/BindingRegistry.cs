@@ -62,7 +62,7 @@ namespace FubuCore.Binding
         private IEnumerable<IPropertyBinder> buildDefaultPropertyBinders()
         {
             yield return new AttributePropertyBinder();
-            yield return new CollectionPropertyBinder(new DefaultCollectionTypeProvider());
+            yield return new CollectionPropertyBinder();
             yield return new ConversionPropertyBinder(this);
             yield return new NestedObjectPropertyBinder();
         }

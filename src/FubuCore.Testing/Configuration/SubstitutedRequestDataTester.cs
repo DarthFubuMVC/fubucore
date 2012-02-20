@@ -72,7 +72,7 @@ namespace FubuCore.Testing.Configuration
 
             theSubstitutedData.Value("Key", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new RequestSource { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
+            action.AssertWasCalled(x => x.Invoke(new BindingValue { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
         }
     }
 }

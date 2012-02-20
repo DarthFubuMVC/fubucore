@@ -52,6 +52,7 @@ namespace FubuCore.Binding
         /// </summary>
         /// <param name="prefix"></param>
         /// <returns></returns>
+        [MarkedForTermination]
         IBindingContext PrefixWith(string prefix);
 
 
@@ -95,12 +96,30 @@ namespace FubuCore.Binding
         /// <param name="prefix"></param>
         /// <param name="childType"></param>
         /// <returns></returns>
+        [MarkedForTermination]
         object BindObject(string prefix, Type childType);
+
+
+        /// <summary>
+        /// Binds an object of the requested type to the IRequestData
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        BindResult BindObject(IRequestData data, Type type);
+
+
+
 
         /// <summary>
         /// The current object being bound
         /// </summary>
         object Object { get; }
+
+        /// <summary>
+        /// The underlying data for this binding context
+        /// </summary>
+        IRequestData RequestData { get; }
 
         /// <summary>
         /// Service locator method to the IoC container for the current request
@@ -206,12 +225,23 @@ namespace FubuCore.Binding
         /// </summary>
         IBindingLogger Logger { get; }
 
+        /// <summary>
+        /// The underlying data for this binding context
+        /// </summary>
+        IRequestData RequestData { get; }
+
 
         /// <summary>
         /// Shortcut to call PropertyInfo.SetValue(Object, value, null)
         /// </summary>
         /// <param name="value"></param>
         void SetPropertyValue(object value);
+        
+        /// <summary>
+        /// Gets the current value of the property on the object
+        /// </summary>
+        /// <returns></returns>
+        object GetPropertyValue();
     }
 
 }
