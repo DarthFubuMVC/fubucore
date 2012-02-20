@@ -42,7 +42,7 @@ namespace FubuCore.Binding
         {
             public void FillValues(PropertyInfo property, IBindingContext context)
             {
-                var requests = context.RequestData.GetEnumerableRequests(property.Name).ToList();
+                var requests = context.GetEnumerableRequests(property.Name).ToList();
                 var data = new T[requests.Count];
 
                 for (int i = 0; i < requests.Count; i++)

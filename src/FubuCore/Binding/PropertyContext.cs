@@ -57,15 +57,6 @@ namespace FubuCore.Binding
             return _services.GetInstance(typeToFind);
         }
 
-        public void WithValue(Action<object> continuation)
-        {
-            RequestData.Value(Property.Name, value =>
-            {
-                // TODO -- log the BindingValue here
-                continuation(value.RawValue);
-            });
-        }
-
         T IPropertyContext.ValueAs<T>()
         {
             return _parent.Data.ValueAs<T>(_property.Name);
@@ -81,9 +72,9 @@ namespace FubuCore.Binding
             get { return _parent.Logger; }
         }
 
-        public IRequestData RequestData
+        public IContextValues Data
         {
-            get { return _parent.RequestData; }
+            get { return _parent.Data; }
         }
 
         public void SetPropertyValue(object value)

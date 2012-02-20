@@ -49,17 +49,19 @@ namespace FubuCore.Binding
             });
         }
 
-        /// <summary>
-        ///   The underlying data for this binding context
-        /// </summary>
-        public IRequestData RequestData
-        {
-            get { return _requestData; }
-        }
-
         public IBindingLogger Logger
         {
             get { return _logger; }
+        }
+
+        public IEnumerable<IRequestData> GetEnumerableRequests(string name)
+        {
+            return _requestData.GetEnumerableRequests(name);
+        }
+
+        public IRequestData GetSubRequest(string name)
+        {
+            return _requestData.GetSubRequest(name);
         }
 
 
@@ -88,7 +90,7 @@ namespace FubuCore.Binding
             catch (Exception ex)
             {
                 BindingValue value = null;
-                RequestData.Value(property.Name, o => value = o);
+                _requestData.Value(property.Name, o => value = o);
                 LogProblem(ex, value, property);
             }
         }
@@ -137,16 +139,6 @@ namespace FubuCore.Binding
             _objectStack.Pop();
         }
 
-
-        [MarkedForTermination("Still think this can die")]
-        private BindingContext prefixWith(string prefix)
-        {
-            var prefixedData = _requestData.GetSubRequest(prefix);
-            var child = new BindingContext(prefixedData, _locator, Logger);
-
-            return child;
-        }
-
         public void LogProblem(Exception ex, BindingValue value = null, PropertyInfo property = null)
         {
             LogProblem(ex.ToString(), value, property);
@@ -162,20 +154,6 @@ namespace FubuCore.Binding
             };
 
             _problems.Add(problem);
-        }
-
-        public object BindObject(string prefixOrChild, Type childType)
-        {
-            var context = prefixWith(prefixOrChild);
-
-            //need to determine if the item is in there or not since we will be greedy
-            //and try to get as many items for our list as possible
-            if (_requestData.HasAnyValuePrefixedWith(prefixOrChild))
-            {
-                var bindResult = _resolver.Value.BindModel(childType, context);
-                return bindResult.Value;
-            }
-            return null;
         }
     }
 }

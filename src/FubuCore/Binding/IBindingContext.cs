@@ -50,15 +50,13 @@ namespace FubuCore.Binding
         /// <returns></returns>
         void BindObject(IRequestData data, Type type, Action<object> continuation);
 
+        IEnumerable<IRequestData> GetEnumerableRequests(string name);
+        IRequestData GetSubRequest(string name);
+
         /// <summary>
         /// The current object being bound
         /// </summary>
         object Object { get; }
-
-        /// <summary>
-        /// The underlying data for this binding context
-        /// </summary>
-        IRequestData RequestData { get; }
 
         /// <summary>
         /// Service locator method to the IoC container for the current request

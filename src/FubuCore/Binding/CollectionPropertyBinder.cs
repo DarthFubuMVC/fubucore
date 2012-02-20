@@ -42,7 +42,7 @@ namespace FubuCore.Binding
                     property.SetValue(context.Object, collection, null);
                 }
 
-                context.RequestData.GetEnumerableRequests(property.Name).Each(request =>
+                context.GetEnumerableRequests(property.Name).Each(request =>
                 {
                     // TODO -- got to add the BindResult to context to store it later
                     context.BindObject(request, typeof(T), @object =>

@@ -63,12 +63,6 @@ namespace FubuCore.Binding
         IBindingLogger Logger { get; }
 
         /// <summary>
-        /// The underlying data for this binding context
-        /// </summary>
-        IRequestData RequestData { get; }
-
-
-        /// <summary>
         /// Shortcut to call PropertyInfo.SetValue(Object, value, null)
         /// </summary>
         /// <param name="value"></param>
@@ -80,12 +74,9 @@ namespace FubuCore.Binding
         /// <returns></returns>
         object GetPropertyValue();
 
-
         /// <summary>
-        /// Executes the continuation with the raw value matching the property if it exists
-        /// in the request data.  Short hand for RequestData.Value(Property.Name, o => {})
+        /// Shortcut to get converted data from the raw request by name
         /// </summary>
-        /// <param name="continuation"></param>
-        void WithValue(Action<object> continuation);
+        IContextValues Data { get; }
     }
 }
