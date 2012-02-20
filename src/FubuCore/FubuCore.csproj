@@ -48,6 +48,7 @@
     <Compile Include="Attributes.cs" />
     <Compile Include="BasicExtensions.cs" />
     <Compile Include="Binding\AggregateDictionary.cs" />
+    <Compile Include="Binding\ArrayPropertyBinder.cs" />
     <Compile Include="Binding\AttributePropertyBinder.cs" />
     <Compile Include="Binding\BindingAttribute.cs" />
     <Compile Include="Binding\BindingContext.cs" />
