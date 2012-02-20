@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore.Reflection;
+using System.Linq;
 
 namespace FubuCore.Descriptions
 {
@@ -75,6 +76,11 @@ namespace FubuCore.Descriptions
 
 
             visitor.End();
+        }
+
+        public bool IsMultiLevel()
+        {
+            return BulletLists.Any();
         }
     }
 }

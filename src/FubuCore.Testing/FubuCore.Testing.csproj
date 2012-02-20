@@ -122,6 +122,7 @@
     <Compile Include="DependencyAnalysis\Bottle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraphTester.cs" />
     <Compile Include="Descriptions\DescriptionTester.cs" />
+    <Compile Include="Descriptions\DescriptionTextWriterSmokeTester.cs" />
     <Compile Include="DictionaryExtensionsTester.cs" />
     <Compile Include="FileChangePollingWatcherTester.cs" />
     <Compile Include="FileHashingExtensionsTester.cs" />

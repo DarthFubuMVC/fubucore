@@ -138,6 +138,7 @@
     <Compile Include="Descriptions\BulletList.cs" />
     <Compile Include="Descriptions\Description.cs" />
     <Compile Include="Descriptions\DescribesItself.cs" />
+    <Compile Include="Descriptions\DescriptionTextWriter.cs" />
     <Compile Include="Descriptions\IDescriptionVisitor.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />

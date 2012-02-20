@@ -48,7 +48,7 @@ namespace FubuCore.Util.TextWriting
             return string.Format("Justification: {0}, RightPadding: {1}, LeftPadding: {2}", _justification, RightPadding, LeftPadding);
         }
 
-        public void WatchData(string contents)
+        public virtual void WatchData(string contents)
         {
             if (contents.Length > _maxWidth)
             {
@@ -71,7 +71,7 @@ namespace FubuCore.Util.TextWriting
             writer.Write(GetText(text));
         }
 
-        public string GetText(string text)
+        public virtual string GetText(string text)
         {
             var answer = string.Empty;
             answer += string.Empty.PadRight(LeftPadding);
