@@ -17,11 +17,15 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            if (context.PropertyValue is bool) return context.PropertyValue;
+            var rawValue = context.RawValueFromRequest.RawValue;
 
-            return context.PropertyValue.ToString().Contains(context.Property.Name)
-            || context.PropertyValue.ToString().EqualsIgnoreCase(CheckboxOn)
-            || (bool)_converter.ConvertFrom(context.PropertyValue);
+            if (rawValue is bool) return rawValue;
+
+            var valueString = rawValue.ToString();
+
+            return valueString.Contains(context.Property.Name)
+            || valueString.EqualsIgnoreCase(CheckboxOn)
+            || (bool)_converter.ConvertFrom(rawValue);
         }
     }
 }

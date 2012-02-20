@@ -55,14 +55,10 @@ namespace FubuCore.Testing.Binding
     [TestFixture]
     public class ConversionPropertyBinderTester : PropertyBinderTester
     {
-        private BindingRegistry theConverterRegistry;
-
         [SetUp]
         public void SetUp()
         {
-            context = new InMemoryBindingContext();
-            theConverterRegistry = new BindingRegistry();
-            propertyBinder = new ConversionPropertyBinder(theConverterRegistry);
+            propertyBinder = new ConversionPropertyBinder(new BindingRegistry());
         }
 
         [Test]
@@ -92,18 +88,19 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
-        public void seting_a_property_should_log_a_value_converter()
+        public void setting_a_property_should_log_a_value_converter()
         {
-            var address = new Address();
-            context.WithData("Address1", "2035 Ozark");
-            context.StartObject(address);
+            var scenario = BindingScenario<Address>.For(x =>
+            {
+                x.Data("Address1", "2035 Ozark");
+            });
 
-            var property = ReflectionHelper.GetProperty<Address>(x => x.Address1);
-
-            propertyBinder.Bind(property, context);
-
+            var property = typeof(Address).GetProperty("Address1");
             var converter = propertyBinder.As<ConversionPropertyBinder>().FindConverter(property);
-            context.Logger.AssertWasCalled(x => x.ChoseValueConverter(property, converter));
+
+            
+            scenario.Logger.FindPropertyBinder(property).ShouldBeOfType<ConversionPropertyBinder>();
+            scenario.Logger.FindValueConverter(property).ShouldEqual(converter);
         }
     }
 

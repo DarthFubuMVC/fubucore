@@ -31,8 +31,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_throw_bind_result_assertion_exception_on_problems()
         {
-            var problem = new ConvertProblem{Properties = new List<PropertyInfo> {
-                  typeof(PropertyHolder).GetProperty("SomeProperty") }, Value = "some value"};
+            var problem = new ConvertProblem { Property = typeof(PropertyHolder).GetProperty("SomeProperty"), Value = new BindingValue() { RawValue = "some value" } };
             result.Problems.Add(problem);
 
             var ex = typeof (BindResultAssertionException).ShouldBeThrownBy(
@@ -40,7 +39,7 @@ namespace FubuCore.Testing.Binding
             
             ex.ShouldNotBeNull();
             ex.Message.ShouldEqual("Failure while trying to bind object of type '{0}'".ToFormat(ex.Type) +
-                "Property: {0}, Value: '{1}', Exception:{2}{3}{2}".ToFormat(problem.PropertyName()
+                "Property: {0}, Value: '{1}', Exception:{2}{3}{2}".ToFormat(problem.Property.Name
                 , problem.Value, Environment.NewLine, problem.ExceptionText));
             ex.Type.ShouldEqual(typeof (string));
             ex.Problems.ShouldContain(problem);
@@ -49,8 +48,8 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void exception_should_serialize_properly()
         {
-            var firstProblem = new ConvertProblem { Properties = new[]{ReflectionHelper.GetProperty<DateTime>(d => d.Month)} };
-            var secondProblem = new ConvertProblem { Properties = new[] { ReflectionHelper.GetProperty<DateTime>(d => d.Day) } };
+            var firstProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Month) };
+            var secondProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Day)  };
             var originalException = new BindResultAssertionException(typeof(string), new[] { firstProblem, secondProblem });
             
             var deserializedException = originalException.ShouldTransferViaSerialization();

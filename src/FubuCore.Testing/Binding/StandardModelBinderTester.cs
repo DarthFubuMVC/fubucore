@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuCore.Testing.Reflection.Expressions;
 using FubuTestingSupport;
@@ -46,38 +47,21 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            binder = new StandardModelBinder(new BindingRegistry(), new TypeDescriptorCache());
-            
-            context = new InMemoryBindingContext();
-            context.RegisterService<IObjectResolver>(ObjectResolver.Basic());
-
-            result = null;
+            theScenario = null;
         }
 
         #endregion
 
-        private InMemoryBindingContext context;
-        private StandardModelBinder binder;
-        private BindResult result;
+        private BindingScenario<Turkey> theScenario;
 
-        private BindResult theResult
+        private void usingData(Action<BindingScenario<Turkey>.ScenarioDefinition> configuration)
         {
-            get
-            {
-                if (result == null)
-                {
-                    result = new BindResult
-                    {
-                        Value = binder.Bind(typeof (Turkey), context),
-                        Problems = context.Problems
-                    };
-                }
-
-                return result;
-            }
+            theScenario = BindingScenario<Turkey>.For(configuration);
         }
 
-        private Turkey theResultingObject { get { return theResult.Value.As<Turkey>(); } }
+
+
+        private Turkey theResultingObject { get { return theScenario.Model; } }
 
         private class Turkey
         {
@@ -99,23 +83,15 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void Multiple_levels_of_bound_objects()
         {
-            context["WingSpan"] = "7";
-            context["TurduckenName"] = "Bob";
-
-            var duckResult = new BindResult
+            var scenario = BindingScenario<Duck>.For(x =>
             {
-                Value = binder.Bind(typeof(Duck), context),
-                Problems = context.Problems
-            };
+                x.Data("WingSpan", "7");
+                x.Data("TurduckenName", "Bob");
+            });
 
-            duckResult.AssertNoProblems(typeof(Duck));
-            duckResult.AssertNoProblems(typeof(Turkey));
-
-            var duck = duckResult.Value.As<Duck>();
-
-            duck.WingSpan.ShouldEqual(7);
-            duck.Turducken.Name.ShouldEqual("Bob");
-
+            scenario.Problems.Any().ShouldBeFalse();
+            scenario.Model.WingSpan.ShouldEqual(7);
+            scenario.Model.Turducken.Name.ShouldEqual("Bob");
         }
 
 
@@ -124,12 +100,11 @@ namespace FubuCore.Testing.Binding
             Checkbox_handling__if_the_property_type_is_boolean_and_the_value_does_not_equal_the_name_and_isnt_a_recognizeable_boolean_a_problem_should_be_attached
             ()
         {
-            context["Alive"] = "BOGUS";
-            theResult.Problems.Count.ShouldEqual(1);
+            usingData(x => x.Data(o => o.Alive, "BOGUS"));
 
-            ConvertProblem problem = theResult.Problems.First();
+            ConvertProblem problem = theScenario.Problems.Single();
 
-            problem.PropertyName().ShouldEqual("Alive");
+            problem.Property.Name.ShouldEqual("Alive");
         }
 
         [Test]
@@ -137,7 +112,7 @@ namespace FubuCore.Testing.Binding
             Checkbox_handling__if_the_property_type_is_boolean_and_the_value_equals_the_name_then_set_the_property_to_true
             ()
         {
-            context["Alive"] = "Alive";
+            usingData(x => x.Data(o => o.Alive, "Alive"));
 
             theResultingObject.Alive.ShouldBeTrue();
         }
@@ -145,9 +120,15 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void create_and_populate_should_convert_between_types()
         {
-            context["Age"] = "12";
-            context["Alive"] = "True";
-            context["BirthDate"] = "01-JUN-2008";
+            usingData(x =>
+            {
+                x.Data(@"
+Age=12
+Alive=True
+BirthDate=01-JUN-2008
+");
+            });
+
 
             theResultingObject.Age.ShouldEqual(12);
             theResultingObject.Alive.ShouldBeTrue();
@@ -170,45 +151,49 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void create_and_populate_should_not_throw_exception_during_type_conversion_and_return_a_meaningful_error()
         {
-            context["Age"] = "abc";
-            theResultingObject.Age.ShouldEqual(default(int));
-            theResult.Problems.Count.ShouldEqual(1);
+            usingData(x =>
+            {
+                x.Data("Age", "abc");
+            });
 
-            ConvertProblem problem = theResult.Problems.First();
+            theResultingObject.Age.ShouldEqual(default(int));
+
+            var problem = theScenario.Problems.Single();
+
             problem.ExceptionText.ShouldContain("FormatException");
             problem.Item.ShouldBeTheSameAs(theResultingObject);
-            problem.PropertyName().ShouldEqual("Age");
-            problem.Value.ShouldEqual("abc");
+            problem.Property.Name.ShouldEqual("Age");
+            problem.Value.RawValue.ShouldEqual("abc");
         }
 
         [Test]
         public void does_not_match_class_without_no_arg_ctor()
         {
-            binder.Matches(typeof (ClassWithoutNoArgCtor)).ShouldBeFalse();
+            new StandardModelBinder(new BindingRegistry(), new TypeDescriptorCache()).Matches(typeof (ClassWithoutNoArgCtor)).ShouldBeFalse();
         }
 
         [Test]
         public void matches_class_with_no_arg_ctor()
         {
-            binder.Matches(typeof (ClassWithNoArgCtor)).ShouldBeTrue();
+            new StandardModelBinder(new BindingRegistry(), new TypeDescriptorCache()).Matches(typeof(ClassWithNoArgCtor)).ShouldBeTrue();
         }
 
         [Test]
         public void no_errors_on_clean_transfer_of_valid_properties_to_object()
         {
-            context["Name"] = "Boris";
-            context["Age"] = "2";
-
-            theResult.AssertNoProblems(typeof (Turkey));
-            theResult.Problems.Count.ShouldEqual(0);
+            usingData(x => x.Data(@"
+Name=Boris
+Age=2
+"));
+            theScenario.Problems.Any().ShouldBeFalse();
         }
 
         [Test]
         public void populate_extra_values_in_dictionary_are_ignored()
         {
-            context["xyzzy"] = "foo";
+            usingData(x => x.Data("xyzzy", "foo"));
 
-            theResult.Problems.Count.ShouldEqual(0);
+            theScenario.Problems.Count.ShouldEqual(0);
 
             theResultingObject.Name.ShouldBeNull();
             theResultingObject.Age.ShouldEqual(0);
@@ -217,23 +202,24 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void populate_should_not_change_property_values_not_found_in_the_dictionary()
         {
-            var item = new Turkey
+            usingData(x =>
             {
-                Name = "Smith"
-            };
-            context["Age"] = 9;
+                x.Data("Age", 9);
+                x.Model.Name = "Smith";
+            });
 
-            binder.Populate(item, context);
-
-            item.Name.ShouldEqual("Smith");
-            item.Age.ShouldEqual(9);
+            theResultingObject.Name.ShouldEqual("Smith");
+            theResultingObject.Age.ShouldEqual(9);
         }
 
         [Test]
         public void populate_should_set_all_property_values_present_in_dictionary()
         {
-            context["Name"] = "Boris";
-            context["Age"] = "2";
+            usingData(x =>
+            {
+                x.Data("Name", "Boris");
+                x.Data("Age", "2");
+            });
 
             theResultingObject.Name.ShouldEqual("Boris");
             theResultingObject.Age.ShouldEqual(2);
@@ -256,7 +242,8 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void Read_a_boolean_type_that_is_false()
         {
-            context["Alive"] = "";
+            usingData(x => x.Data("Alive", ""));
+
 
             theResultingObject.Alive.ShouldBeFalse();
         }
@@ -264,39 +251,41 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void Read_a_boolean_type_that_is_true()
         {
-            context["Alive"] = "true";
+            usingData(x => x.Data("Alive", "true"));
             theResultingObject.Alive.ShouldBeTrue();
         }
 
         [Test]
         public void Read_a_Nullable_value_type()
         {
-            context["NullableInt"] = "8";
+            usingData(x => x.Data("NullableInt", "8"));
+            
+            
             theResultingObject.NullableInt.ShouldEqual(8);
         }
 
         [Test]
         public void Read_a_Nullable_value_type_empty_string_as_null()
         {
-            context["NullableInt"] = string.Empty;
+            usingData(x => x.Data("NullableInt", string.Empty));
             theResultingObject.NullableInt.ShouldBeNull();
 
-            theResult.Problems.Count.ShouldEqual(0);
+            theScenario.Problems.Count.ShouldEqual(0);
         }
 
         [Test]
         public void should_convert_from_string_to_guid()
         {
             Guid guid = Guid.NewGuid();
-            context["Id"] = guid.ToString();
-
+            usingData(x => x.Data("Id", guid.ToString()));
+            
             theResultingObject.Id.ShouldEqual(guid);
         }
 
         [Test]
         public void should_use_alternate_underscore_naming_if_primary_fails()
         {
-            context["X-Requested-With"] = "True";
+            usingData(x => x.Data("X-Requested-With", "True"));
 
             theResultingObject.X_Requested_With.ShouldBeTrue();
         }

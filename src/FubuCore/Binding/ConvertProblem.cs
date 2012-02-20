@@ -9,9 +9,9 @@ namespace FubuCore.Binding
     public class ConvertProblem
     {
         public object Item { get; set; }
-        public object Value { get; set; }
+        public BindingValue Value { get; set; }
         public string ExceptionText { get; set; }
-        public IEnumerable<PropertyInfo> Properties { get; set; }
+        public PropertyInfo Property { get; set; }
 
         public override string ToString()
         {
@@ -25,15 +25,10 @@ Exception:
 "
                     .ToFormat(
                     ((Item != null) ? Item.GetType().FullName : "(null)"),
-                    PropertyName(),
-                    Properties.Last().PropertyType,
+                    Property.Name,
+                    Property.PropertyType,
                     Value,
                     ExceptionText);
-        }
-
-        public string PropertyName()
-        {
-            return Properties.Select(x => x.Name).Join(".");
         }
     }
 }

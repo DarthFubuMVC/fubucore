@@ -18,22 +18,31 @@ namespace FubuCore.Binding
         {
             Type propertyType = context.Property.PropertyType;
 
-            var converter = TypeDescriptor.GetConverter(propertyType);
+            
 
-            if (context.PropertyValue != null)
+            
+
+            if (context.RawValueFromRequest != null)
             {
-                if (context.PropertyValue.GetType() == propertyType)
+                var rawValue = context.RawValueFromRequest.RawValue;
+
+                if (rawValue.GetType() == propertyType)
                 {
-                    return context.PropertyValue;
+                    return rawValue;
                 }
-                if (context.PropertyValue.ToString().IsValidNumber())
+
+                var converter = TypeDescriptor.GetConverter(propertyType);
+
+                if (rawValue.ToString().IsValidNumber())
                 {
-                    var valueToConvert = removeNumericGroupSeparator(context.PropertyValue.ToString());
+                    var valueToConvert = removeNumericGroupSeparator(rawValue.ToString());
                     return converter.ConvertFrom(valueToConvert);
                 }
+
+                return converter.ConvertFrom(rawValue);
             }
 
-            return converter.ConvertFrom(context.PropertyValue);
+            return 0;
         }
 
         private static string removeNumericGroupSeparator(string value)

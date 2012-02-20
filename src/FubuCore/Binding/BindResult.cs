@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FubuCore.Binding;
 
 namespace FubuCore.Binding
 {
@@ -21,6 +20,11 @@ namespace FubuCore.Binding
             {
                 throw new BindResultAssertionException(type, Problems);
             }
+        }
+
+        public void Merge(BindResult result)
+        {
+            Problems.AddRange(result.Problems);
         }
     }
 }

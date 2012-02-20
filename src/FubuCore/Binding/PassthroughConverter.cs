@@ -13,7 +13,7 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            return context.PropertyValue;
+            return context.RawValueFromRequest;
         }
 
         public void Describe(Description description)

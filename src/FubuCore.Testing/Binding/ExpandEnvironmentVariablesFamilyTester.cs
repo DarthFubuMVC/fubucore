@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -38,19 +39,13 @@ namespace FubuCore.Testing.Binding
         public void expand_environment_variables_for_settings_marked_for_expansion()
         {
             string expandedVariable = Environment.GetEnvironmentVariable("SystemRoot");
-            var context = new InMemoryBindingContext();
-            context[expandProp.Name] = "%SystemRoot%\\foo";
 
-            bool wasCalled = false;
-            ValueConverter converter = _family.Build(null, expandProp);
-            context.ForProperty(expandProp, x =>
+            var scenario = BindingScenario<TestSettings>.For(x =>
             {
-                wasCalled = true;
-
-                converter.Convert(context).ShouldEqual(expandedVariable + @"\foo");
+                x.Data(o => o.DefaultPath, "%SystemRoot%\\foo");
             });
 
-            wasCalled.ShouldBeTrue();
+            scenario.Model.DefaultPath.ShouldEqual(expandedVariable + @"\foo");
         }
 
         [Test]

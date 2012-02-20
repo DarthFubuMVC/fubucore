@@ -16,5 +16,6 @@ namespace FubuCore.Binding
         void TryBindModel(Type type, IBindingContext context, Action<BindResult> continuation);
 
         BindResult BindModel<T>(T model, IBindingContext context);
+        void TryBindModel(Type type, IRequestData data, Action<BindResult> continuation);
     }
 }

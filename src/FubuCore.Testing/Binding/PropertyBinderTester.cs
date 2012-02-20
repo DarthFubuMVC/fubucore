@@ -9,7 +9,6 @@ namespace FubuCore.Testing.Binding
 {
     public abstract class PropertyBinderTester
     {
-        protected InMemoryBindingContext context;
         protected IPropertyBinder propertyBinder;
 
         protected bool matches(Expression<Func<AddressViewModel, object>> expression)

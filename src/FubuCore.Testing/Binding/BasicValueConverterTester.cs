@@ -13,7 +13,7 @@ namespace FubuCore.Testing.Binding
         public void create_default_of_values()
         {
             var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Stub(x => x.PropertyValue).Return(null);
+            context.Stub(x => x.RawValueFromRequest).Return(null);
 
             new BasicValueConverter(null, typeof (string)).Convert(context)
                 .ShouldBeNull();

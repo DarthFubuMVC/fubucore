@@ -44,7 +44,7 @@ namespace FubuCore.Testing.Binding
         {
             var binder = new PassthroughConverter<HttpPostedFileBase>();
             var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Expect(c => c.PropertyValue).Return(new object());
+            context.Expect(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = new object() });
             ValueConverter converter = binder.Build(MockRepository.GenerateStub<IValueConverterRegistry>(), property(x => x.File));
             converter.Convert(context);
             context.VerifyAllExpectations();

@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Web;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuTestingSupport;
@@ -33,30 +34,19 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_convert_nonnull_values_for_nullable_types()
         {
-            PropertyInfo nullIntProp = ReflectionHelper.GetProperty<Target>(x => x.NullInt);
-            var reg = new BindingRegistry();
-            var value = new InMemoryBindingContext().WithPropertyValue("99");
-            value.ForProperty(nullIntProp, c =>
+            BindingScenario<Target>.Build(x =>
             {
-                reg.As<IValueConverterRegistry>().FindConverter(nullIntProp).Convert(c).ShouldEqual(99);
-            });
-
-            
+                x.Data(o => o.NullInt, 99);
+            }).NullInt.ShouldEqual(99);
         }
 
         [Test]
         public void should_convert_null_values_for_nullable_types()
         {
-            PropertyInfo nullIntProp = ReflectionHelper.GetProperty<Target>(x => x.NullInt);
-            var reg = new BindingRegistry();
-
-            var value = new InMemoryBindingContext().WithPropertyValue(null);
-            value.ForProperty(nullIntProp, c =>
+            BindingScenario<Target>.Build(x =>
             {
-                reg.As<IValueConverterRegistry>().FindConverter(nullIntProp).Convert(c).ShouldEqual(null);
-            });
-
-            
+                
+            }).NullInt.ShouldBeNull();
         }
 
 

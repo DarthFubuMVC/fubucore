@@ -63,11 +63,11 @@ namespace FubuCore.Binding
 
         public object Convert(IPropertyContext context)
         {
-            if (context.PropertyValue == null) return _defaulter.Default();
+            if (context.RawValueFromRequest == null) return _defaulter.Default();
 
 
-            return context.PropertyValue.GetType().CanBeCastTo(_propertyType)
-                       ? context.PropertyValue
+            return context.RawValueFromRequest.GetType().CanBeCastTo(_propertyType)
+                       ? context.RawValueFromRequest
                        : _strategy.Convert(context);
         }
 
@@ -91,5 +91,28 @@ namespace FubuCore.Binding
         }
 
         #endregion
+
+        public bool Equals(BasicValueConverter other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other._propertyType, _propertyType) && Equals(other._strategy, _strategy);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (BasicValueConverter)) return false;
+            return Equals((BasicValueConverter) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_propertyType != null ? _propertyType.GetHashCode() : 0)*397) ^ (_strategy != null ? _strategy.GetHashCode() : 0);
+            }
+        }
     }
 }

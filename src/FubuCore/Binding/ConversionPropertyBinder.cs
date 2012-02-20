@@ -28,13 +28,17 @@ namespace FubuCore.Binding
         {
             context.ForProperty(property, x =>
             {
-                var converter = _cache[property];
+                var data = x.RawValueFromRequest;
+                if (data != null)
+                {
+                    var converter = _cache[property];
 
-                context.Logger.ChoseValueConverter(property, converter);
+                    context.Logger.ChoseValueConverter(property, converter);
 
-                var value = converter.Convert(x);
-                    
-                x.SetPropertyValue(value);
+                    var value = converter.Convert(x);
+
+                    x.SetPropertyValue(value);
+                }
             });
         }
 

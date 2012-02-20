@@ -58,6 +58,7 @@
     <Compile Include="Binding\BindResultAssertionException.cs" />
     <Compile Include="Binding\BooleanFamily.cs" />
     <Compile Include="Binding\CollectionPropertyBinder.cs" />
+    <Compile Include="Binding\ContextValues.cs" />
     <Compile Include="Binding\ConversionPropertyBinder.cs" />
     <Compile Include="Binding\ConverterFamily.cs" />
     <Compile Include="Binding\ConvertProblem.cs" />
@@ -68,6 +69,8 @@
     <Compile Include="Binding\FlatFileRequest.cs" />
     <Compile Include="Binding\FlatFileRequestData.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
+    <Compile Include="Binding\IBindingLogger.cs" />
+    <Compile Include="Binding\IContextValues.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
     <Compile Include="Binding\IgnorePropertyBinder.cs" />
     <Compile Include="Binding\IModelBinder.cs" />
@@ -77,16 +80,19 @@
     <Compile Include="Binding\IObjectResolver.cs" />
     <Compile Include="Binding\IPropertyBinder.cs" />
     <Compile Include="Binding\IPropertyBinderCache.cs" />
+    <Compile Include="Binding\IPropertyContext.cs" />
     <Compile Include="Binding\IRequestData.cs" />
     <Compile Include="Binding\ISmartRequest.cs" />
     <Compile Include="Binding\IValueConverterRegistry.cs" />
     <Compile Include="Binding\ModelBindingAttributes.cs" />
     <Compile Include="Binding\NestedObjectPropertyBinder.cs" />
+    <Compile Include="Binding\NulloBindingLogger.cs" />
     <Compile Include="Binding\NumericTypeFamily.cs" />
     <Compile Include="Binding\ObjectResolver.cs" />
     <Compile Include="Binding\ObjectTypeFamily.cs" />
     <Compile Include="Binding\PassthroughConverter.cs" />
     <Compile Include="Binding\PrefixedRequestData.cs" />
+    <Compile Include="Binding\PropertyContext.cs" />
     <Compile Include="Binding\ReaderBinder.cs" />
     <Compile Include="Binding\RequestData.cs" />
     <Compile Include="Binding\RequestDataBase.cs" />

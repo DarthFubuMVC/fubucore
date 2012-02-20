@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuCore.Testing.Conversion;
@@ -12,61 +13,6 @@ using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
-    [TestFixture]
-    public class BasicConverterTester
-    {
-        #region Setup/Teardown
-
-        [SetUp]
-        public void SetUp()
-        {
-            _registry = new BindingRegistry();
-            _property = typeof (PropertyHolder).GetProperty("Property");
-            _basicConverterFamily = _registry.AllConverterFamilies().SingleOrDefault(cf =>
-                                                                       cf.Matches(_property)) as BasicConverterFamily;
-            _basicConverterFamily.ShouldNotBeNull();
-
-            _context = MockRepository.GenerateMock<IPropertyContext>();
-            _context.Stub(x => x.Property).Return(_property);
-            _propertyValue = "some value";
-            _context.Expect(c => c.PropertyValue).Return(_propertyValue).Repeat.Times(3);
-        }
-
-        #endregion
-
-        private BindingRegistry _registry;
-        private BasicConverterFamily _basicConverterFamily;
-        private PropertyInfo _property;
-        private IPropertyContext _context;
-        private string _propertyValue;
-
-        private class PropertyHolder
-        {
-            public string Property { get; set; }
-            public PropertyHolder Parent { get; set; }
-        }
-
-        [Test]
-        public void should_build()
-        {
-            var converter = _basicConverterFamily.Build(_registry, _property);
-            converter.Convert(_context).ShouldEqual(_propertyValue);
-            _context.VerifyAllExpectations();
-        }
-
-        [Test]
-        public void should_match_property()
-        {
-            _basicConverterFamily.Matches(_property).ShouldBeTrue();
-        }
-
-        [Test]
-        public void should_not_match_on_exception()
-        {
-            var parent = ReflectionHelper.GetProperty<PropertyHolder>(x => x.Parent);
-            _basicConverterFamily.Matches(parent).ShouldBeFalse();
-        }
-    }
 
     [TestFixture]
     public class USCultureNumericFamilyTester
@@ -84,8 +30,8 @@ namespace FubuCore.Testing.Binding
 
             _context = MockRepository.GenerateMock<IPropertyContext>();
             _context.Stub(x => x.Property).Return(_property);
-            _propertyValue = "1,000.001";
-            _context.Expect(c => c.PropertyValue).Return(_propertyValue).Repeat.Times(4);
+            _propertyValue = new BindingValue { RawValue = "1,000.001" };
+            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
         }
 
         #endregion
@@ -94,7 +40,7 @@ namespace FubuCore.Testing.Binding
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
         private IPropertyContext _context;
-        private string _propertyValue;
+        private BindingValue _propertyValue;
 
         private class PropertyHolder
         {
@@ -106,9 +52,8 @@ namespace FubuCore.Testing.Binding
         {
             using (new ScopedCulture(CultureInfo.CreateSpecificCulture("en-us")))
             {
-                var converter = _numericTypeFamily.Build(_registry, _property);
-                converter.Convert(_context).ShouldEqual(1000.001m);
-                _context.VerifyAllExpectations();
+                BindingScenario<PropertyHolder>.Build(x => x.Data("Property", "1,000.001"))
+                    .Property.ShouldEqual(1000.001m);
             }
         }
 
@@ -136,8 +81,8 @@ namespace FubuCore.Testing.Binding
 
             _context = MockRepository.GenerateMock<IPropertyContext>();
             _context.Stub(x => x.Property).Return(_property);
-            _propertyValue = "1.000,001";
-            _context.Expect(c => c.PropertyValue).Return(_propertyValue).Repeat.Times(4);
+            _propertyValue = new BindingValue { RawValue = "1.000,001" };
+            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
         }
 
         #endregion
@@ -146,7 +91,7 @@ namespace FubuCore.Testing.Binding
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
         private IPropertyContext _context;
-        private string _propertyValue;
+        private BindingValue _propertyValue;
 
         private class PropertyHolder
         {
@@ -158,9 +103,10 @@ namespace FubuCore.Testing.Binding
         {
             using (new ScopedCulture(CultureInfo.CreateSpecificCulture("de-DE")))
             {
-                var converter = _numericTypeFamily.Build(_registry, _property);
-                converter.Convert(_context).ShouldEqual(1000.001m);
-                _context.VerifyAllExpectations();
+                BindingScenario<PropertyHolder>.Build(x =>
+                {
+                    x.Data("Property", "1.000,001");
+                }).Property.ShouldEqual(1000.001m);
             }
         }
 

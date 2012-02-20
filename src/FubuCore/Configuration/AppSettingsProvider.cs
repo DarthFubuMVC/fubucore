@@ -24,16 +24,18 @@ namespace FubuCore.Configuration
             return (T) value;
         }
 
+        // TODO -- this is gross.  Get some UT's against this pronto
         public object SettingsFor(Type settingsType)
         {
-            IBindingContext context = new BindingContext(new AppSettingsRequestData(), _locator, new NulloBindingLogger())
-                .PrefixWith(settingsType.Name + ".");
+            throw new NotImplementedException("NWO");
+            //IBindingContext context = new BindingContext(new AppSettingsRequestData(), _locator, new NulloBindingLogger())
+            //    .PrefixWith(settingsType.Name + ".");
 
-            BindResult result = _resolver.BindModel(settingsType, context);
+            //BindResult result = _resolver.BindModel(settingsType, context);
 
-            result.AssertNoProblems(settingsType);
+            //result.AssertNoProblems(settingsType);
 
-            return result.Value;
+            //return result.Value;
         }
 
 

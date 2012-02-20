@@ -40,7 +40,7 @@ namespace FubuCore.Binding
                 _problems.Each(p =>
                 {
                     builder.AppendFormat("Property: {0}, Value: '{1}', Exception:{2}{3}{2}",
-                                         p.PropertyName(), p.Value, Environment.NewLine, p.ExceptionText);
+                                         p.Property.Name, p.Value, Environment.NewLine, p.ExceptionText);
                 });
 
                 return builder.ToString();

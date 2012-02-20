@@ -3,33 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Conversion;
-using FubuMVC.Core;
-
 
 namespace FubuCore.Binding
 {
-    public class BindingContext : IBindingContext, IPropertyContext
+    public class BindingContext : IBindingContext
     {
         private static readonly List<Func<string, string>> _namingStrategies;
         private readonly IServiceLocator _locator;
         private readonly IBindingLogger _logger;
-        private readonly IRequestData _requestData;
+        private readonly Stack<object> _objectStack = new Stack<object>();
         private readonly IList<ConvertProblem> _problems = new List<ConvertProblem>();
-        private readonly Lazy<ISmartRequest> _request;
+        private readonly IRequestData _requestData;
+        private readonly Lazy<IObjectResolver> _resolver;
+        private readonly Lazy<IContextValues> _values;
 
-        public static void AddNamingStrategy(Func<string, string> strategy)
-        {
-            _namingStrategies.Add(strategy);
-        }
 
         static BindingContext()
         {
-            _namingStrategies = new List<Func<string, string>>
-            {
+            _namingStrategies = new List<Func<string, string>>{
                 p => p,
                 p => p.Replace("_", "-"),
-                p => "[{0}]".ToFormat(p)  // This was necessary 
-
+                p => "[{0}]".ToFormat(p) // This was necessary 
             };
         }
 
@@ -40,12 +34,23 @@ namespace FubuCore.Binding
             _requestData = requestData;
             _locator = locator;
             _logger = logger;
+            _resolver = new Lazy<IObjectResolver>(() =>
+            {
+                if (_locator == null) return ObjectResolver.Basic();
 
-            _request = new Lazy<ISmartRequest>(() => new SmartRequest(_requestData, _locator.GetInstance<IObjectConverter>()));
+                return _locator.GetInstance<IObjectResolver>();
+            });
+
+            _values = new Lazy<IContextValues>(() =>
+            {
+                var converter = _locator == null ? new ObjectConverter() : _locator.GetInstance<IObjectConverter>();
+                var request = new SmartRequest(_requestData, converter);
+                return new ContextValues(request, _namingStrategies, _requestData);
+            });
         }
 
         /// <summary>
-        /// The underlying data for this binding context
+        ///   The underlying data for this binding context
         /// </summary>
         public IRequestData RequestData
         {
@@ -57,19 +62,10 @@ namespace FubuCore.Binding
             get { return _logger; }
         }
 
-        public void SetPropertyValue(object value)
-        {
-            Property.SetValue(Object, value, null);
-        }
-
-        public object GetPropertyValue()
-        {
-            return Property.GetValue(Object, null);
-        }
 
         public IList<ConvertProblem> Problems
         {
-            get { return _problems; } 
+            get { return _problems; }
         }
 
         public T Service<T>()
@@ -77,106 +73,23 @@ namespace FubuCore.Binding
             return _locator.GetInstance<T>();
         }
 
-        public object Service(Type typeToFind)
+        public IContextValues Data
         {
-            return _locator.GetInstance(typeToFind);
+            get { return _values.Value; }
         }
-
-        public object ValueAs(Type type, string name)
-        {
-            foreach (var naming in _namingStrategies)
-            {
-                var actualName = naming(name);
-                var rawValue = _request.Value.Value(type, actualName);
-                if (rawValue != null)
-                {
-                    return rawValue;
-                }
-            }
-
-            return null;
-        }
-
-        public bool ValueAs(Type type, string name, Action<object> continuation)
-        {
-            return _namingStrategies.Any(naming =>
-            {
-                string n = naming(name);
-                return _request.Value.Value(type, n, continuation);
-            });
-        }
-
-        T IPropertyContext.ValueAs<T>()
-        {
-            T value = default(T);
-
-            _namingStrategies.Any(naming =>
-            {
-                string name = naming(Property.Name);
-                return _request.Value.Value<T>(name, x => value = x);
-            });
-
-            return value;
-        }
-
-        bool IPropertyContext.ValueAs<T>(Action<T> continuation)
-        {
-            return _namingStrategies.Any(naming =>
-            {
-                string n = naming(Property.Name);
-                return _request.Value.Value<T>(n, continuation);
-            });
-        }
-
-        T IBindingContext.ValueAs<T>(string name)
-        {
-            T value = default(T);
-
-            _namingStrategies.Any(naming =>
-            {
-                string n = naming(name);
-                return _request.Value.Value<T>(n, x => value = x);
-            });
-
-            return value;
-        }
-
-        bool IBindingContext.ValueAs<T>(string name, Action<T> continuation)
-        {
-            return _namingStrategies.Any(naming =>
-            {
-                var n = naming(name);
-                return _request.Value.Value(n, continuation);
-            });
-        }
-
-        public object PropertyValue { get; protected set; }
-        
-        private readonly Stack<PropertyInfo> _propertyStack = new Stack<PropertyInfo>();
-        public PropertyInfo Property
-        {
-            get { return _propertyStack.Peek(); }
-        }
-
-        private readonly Stack<object> _objectStack = new Stack<object>();
-
-
 
         public void ForProperty(PropertyInfo property, Action<IPropertyContext> action)
         {
-            _propertyStack.Push(property);
-
             try
             {
-                findPropertyValueInRequestData(action);
+                var propertyContext = new PropertyContext(this, _locator, property);
+                action(propertyContext);
             }
             catch (Exception ex)
             {
-                LogProblem(ex);
-            }
-            finally
-            {
-                _propertyStack.Pop();
+                BindingValue value = null;
+                RequestData.Value(property.Name, o => value = o);
+                LogProblem(ex, value, property);
             }
         }
 
@@ -187,25 +100,31 @@ namespace FubuCore.Binding
             FinishObject();
         }
 
-        private void findPropertyValueInRequestData(Action<IPropertyContext> action)
-        {
-            _namingStrategies.Any(naming =>
-            {
-                string name = naming(Property.Name);
-                return _requestData.Value(name, o =>
-                {
-                    PropertyValue = o.RawValue;
-
-                    action(this);
-                });
-            });
-        }
-
-
 
         public object Object
         {
-            get { return _objectStack.Any() ? _objectStack.Peek() : null; } 
+            get { return _objectStack.Any() ? _objectStack.Peek() : null; }
+        }
+
+        public void BindObject(IRequestData data, Type type, Action<object> continuation)
+        {
+            _resolver.Value.TryBindModel(type, data, result =>
+            {
+                // TODO -- log the value
+                _problems.AddRange(result.Problems);
+
+                continuation(result.Value);
+            });
+        }
+
+        public static void AddNamingStrategy(Func<string, string> strategy)
+        {
+            _namingStrategies.Add(strategy);
+        }
+
+        public object Service(Type typeToFind)
+        {
+            return _locator.GetInstance(typeToFind);
         }
 
         public void StartObject(object @object)
@@ -219,125 +138,44 @@ namespace FubuCore.Binding
         }
 
 
-        public IBindingContext PrefixWith(string prefix)
-        {
-            return prefixWith(prefix, _propertyStack.Reverse());
-        }
-
-        
-        private BindingContext prefixWith(string prefix, IEnumerable<PropertyInfo> properties)
+        [MarkedForTermination("Still think this can die")]
+        private BindingContext prefixWith(string prefix)
         {
             var prefixedData = _requestData.GetSubRequest(prefix);
             var child = new BindingContext(prefixedData, _locator, Logger);
-            
-                
-            properties.Each(p => child._propertyStack.Push(p));
+
             return child;
         }
 
-        public void LogProblem(Exception ex)
+        public void LogProblem(Exception ex, BindingValue value = null, PropertyInfo property = null)
         {
-            LogProblem(ex.ToString());
+            LogProblem(ex.ToString(), value, property);
         }
 
-        public void LogProblem(string exceptionText)
+        public void LogProblem(string exceptionText, BindingValue value = null, PropertyInfo property = null)
         {
-            var problem = new ConvertProblem()
-            {
+            var problem = new ConvertProblem{
                 ExceptionText = exceptionText,
                 Item = Object,
-                Properties = _propertyStack.ToArray().Reverse(),
-                Value = PropertyValue
+                Property = property,
+                Value = value
             };
 
             _problems.Add(problem);
         }
 
-        public object BindObject(string prefix, Type childType)
+        public object BindObject(string prefixOrChild, Type childType)
         {
-            var resolver = Service<IObjectResolver>();
-            var context = prefixWith(prefix, _propertyStack.ToArray().Reverse());
+            var context = prefixWith(prefixOrChild);
 
             //need to determine if the item is in there or not since we will be greedy
             //and try to get as many items for our list as possible
-
-            if (_requestData.HasAnyValuePrefixedWith(prefix))
+            if (_requestData.HasAnyValuePrefixedWith(prefixOrChild))
             {
-                var bindResult = resolver.BindModel(childType, context);
+                var bindResult = _resolver.Value.BindModel(childType, context);
                 return bindResult.Value;
             }
             return null;
-        }
-
-        public BindResult BindObject(IRequestData data, Type type)
-        {
-            var resolver = Service<IObjectResolver>();
-            return resolver.BindModel(type, data);
-        }
-
-        public void BindChild(PropertyInfo property, Type childType, string prefix)
-        {
-            var target = Object;
-            if (_propertyStack.Any(p => p.PropertyType == childType))
-            {
-                _propertyStack.Push(property);
-                throw new FubuException(2202, "Infinite recursion detected while binding child properties: {0} would try to resolve {1} again.", string.Join("=>", _propertyStack.Reverse().Select(p => "{1}.{0}".ToFormat(p.Name, p.ReflectedType.Name)).ToArray()), childType.Name);
-            }
-            _propertyStack.Push(property);
-
-            var resolver = _locator == null ? ObjectResolver.Basic() : Service<IObjectResolver>();
-            var context = prefixWith(prefix, _propertyStack.Reverse());
-
-            try
-            {
-                resolver.TryBindModel(childType, context, result =>
-                {
-                    property.SetValue(target, result.Value, null);
-                });
-                
-            }
-            catch (Exception e)
-            {
-                LogProblem(e);
-            }
-
-            _problems.AddRange(context._problems);
-
-            _propertyStack.Pop();
-        }
-
-        public void BindChild(PropertyInfo property)
-        {
-            if (!tryBindChild(property, property.Name + "."))
-            {
-                tryBindChild(property, property.Name);
-            }
-        }
-
-        private bool tryBindChild(PropertyInfo property, string prefix)
-        {
-            if (_requestData.HasAnyValuePrefixedWith(prefix))
-            {
-                BindChild(property, property.PropertyType, prefix);
-                return true;
-            }
-
-            return false;
-        }
-
-        T IConversionRequest.Get<T>()
-        {
-            return _locator.GetInstance<T>();
-        }
-
-        string IConversionRequest.Text
-        {
-            get { return PropertyValue as string; }
-        }
-
-        IConversionRequest IConversionRequest.AnotherRequest(string text)
-        {
-            return new ConversionRequest(text, type => _locator.GetInstance(type));
         }
     }
 }

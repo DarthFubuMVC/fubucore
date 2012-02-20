@@ -1,5 +1,7 @@
+using System;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -18,15 +20,10 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void can_accept_the_property_name_and_treat_it_as_true()
         {
-            PropertyInfo property = ReflectionHelper.GetProperty<DummyClass>(c => c.Hungry);
-            var context = new InMemoryBindingContext();
-            context["Hungry"] = "Hungry";
-
-            ValueConverter converter = new BooleanFamily().Build(null, property);
-            context.ForProperty(property, x =>
+            BindingScenario<DummyClass>.For(x =>
             {
-                converter.Convert(context).As<bool>().ShouldBeTrue();
-            });
+                x.Data(o => o.Hungry, "Hungry");
+            }).Model.Hungry.ShouldBeTrue();
         }
 
         [Test]
@@ -47,19 +44,11 @@ namespace FubuCore.Testing.Binding
     {
         private bool WithValue(string value)
         {
-            PropertyInfo property = ReflectionHelper.GetProperty<BooleanFamilyTester.DummyClass>(c => c.Hungry);
-            var context = new InMemoryBindingContext();
-            context["Hungry"] = value;
-
-            var convertedValue = false;
-
-            ValueConverter converter = new BooleanFamily().Build(null, property);
-            context.ForProperty(property, x =>
+            return BindingScenario<BooleanTarget>.For(x =>
             {
-                convertedValue = converter.Convert(context).As<bool>();
-            });
+                x.Data(o => o.IsTrue, value);
 
-            return convertedValue;
+            }).Model.IsTrue;
         }
 
         [Test]
@@ -89,6 +78,11 @@ namespace FubuCore.Testing.Binding
         public void treats_empty_string_as_false()
         {
             WithValue("").ShouldBeFalse();
+        }
+
+        public class BooleanTarget
+        {
+            public bool IsTrue { get; set; }
         }
     }
 }

@@ -74,7 +74,9 @@ namespace FubuCore.Testing.Binding
             var result = resolver.BindModel(typeof(UpdateSiteRequest), data);
             var problem = result.Problems.Single();
 
-            problem.PropertyName().ShouldEqual("Site.Address.Order");
+
+
+            problem.Property.Name.ShouldEqual("Order");
         }
 
         public class UpdateSiteRequest

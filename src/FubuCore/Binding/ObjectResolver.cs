@@ -36,6 +36,8 @@ namespace FubuCore.Binding
             });
         }
 
+
+
         // Leave this virtual
         public virtual BindResult BindModel(Type type, IBindingContext context)
         {
@@ -68,6 +70,12 @@ namespace FubuCore.Binding
                 var result = executeModelBinder(type, context, () => binder.Bind(type, context));
                 continuation(result);
             }
+        }
+
+        public void TryBindModel(Type type, IRequestData data, Action<BindResult> continuation)
+        {
+            var context = new BindingContext(data, _services, _logger);
+            TryBindModel(type, context, continuation);
         }
 
         private static BindResult executeModelBinder(Type type, IBindingContext context, Func<object> source)

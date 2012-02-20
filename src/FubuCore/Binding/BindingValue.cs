@@ -1,5 +1,8 @@
+using System;
+
 namespace FubuCore.Binding
 {
+    [Serializable]
     public class BindingValue
     {
         public string RawKey { get; set; }

@@ -79,7 +79,6 @@
     <Compile Include="Binding\EnumerateFlatRequestDataTester.cs" />
     <Compile Include="Binding\ExpandEnvironmentVariablesFamilyTester.cs" />
     <Compile Include="Binding\FlatFileRequestDataTester.cs" />
-    <Compile Include="Binding\InMemoryBindingContext.cs" />
     <Compile Include="Binding\InMemoryRequestDataTester.cs" />
     <Compile Include="Binding\InMemory\InMemoryServiceLocatorTester.cs" />
     <Compile Include="Binding\ModelBinderCacheTester.cs" />

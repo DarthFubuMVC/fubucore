@@ -3,24 +3,89 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using FubuCore.Reflection;
 using FubuCore.Util;
+using FubuCore;
 
 namespace FubuCore.Binding.InMemory
 {
+
+    public class RecordingBindingLogger : IBindingLogger
+    {
+        public readonly Cache<Type, IModelBinder> ModelBinders = new Cache<Type, IModelBinder>();
+        public readonly Cache<PropertyInfo, IPropertyBinder> PropertyBinders = new Cache<PropertyInfo, IPropertyBinder>();
+        public readonly Cache<PropertyInfo, ValueConverter> ValueConverters = new Cache<PropertyInfo, ValueConverter>();
+
+        public void ChoseModelBinder(Type modelType, IModelBinder binder)
+        {
+            ModelBinders[modelType] = binder;
+        }
+
+        public void ChosePropertyBinder(PropertyInfo property, IPropertyBinder binder)
+        {
+            PropertyBinders[property] = binder;
+        }
+
+        public void ChoseValueConverter(PropertyInfo property, ValueConverter converter)
+        {
+            ValueConverters[property] = converter;
+        }
+
+
+        public IPropertyBinder FindPropertyBinder(PropertyInfo property)
+        {
+            IPropertyBinder answer = null;
+
+            Action<PropertyInfo, IPropertyBinder> find = (prop, binder) =>
+            {
+                if (prop.PropertyMatches(property))
+                {
+                    answer = binder;
+                };
+            };
+
+            PropertyBinders.Each(find);
+
+
+            return answer;
+        }
+
+        public ValueConverter FindValueConverter(PropertyInfo property)
+        {
+            ValueConverter answer = null;
+
+            Action<PropertyInfo, ValueConverter> find = (prop, converter) =>
+            {
+                if (prop.PropertyMatches(property))
+                {
+                    answer = converter;
+                }
+            };
+
+            ValueConverters.Each(find);
+
+
+            return answer;
+        }
+    }
+
     public class BindingScenario<T> where T : class, new()
     {
         private readonly StringWriter _writer = new StringWriter();
 
         private BindingScenario(ScenarioDefinition definition)
         {
-            var context = new BindingContext(definition.RequestData, definition.Services, new NulloBindingLogger());
+            var context = new BindingContext(definition.RequestData, definition.Services, definition.Logger);
 
             context.ForObject(definition.Model, () => definition.Actions.Each(x => x(context)));
 
             Model = definition.Model;
             Problems = context.Problems;
+            Logger = definition.Logger;
         }
+
+        public RecordingBindingLogger Logger { get; private set;}
 
         public IList<ConvertProblem> Problems { get; private set; }
 
@@ -39,6 +104,11 @@ namespace FubuCore.Binding.InMemory
             return new BindingScenario<T>(definition);
         }
 
+        public static T Build(Action<ScenarioDefinition> configuration)
+        {
+            return For(configuration).Model;
+        }
+
         #region Nested type: ScenarioDefinition
 
         public class ScenarioDefinition
@@ -48,13 +118,19 @@ namespace FubuCore.Binding.InMemory
             private readonly BindingRegistry _registry = new BindingRegistry();
             private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private IServiceLocator _customServices;
+            private RecordingBindingLogger _logger = new RecordingBindingLogger();
 
             public ScenarioDefinition()
             {
                 Model = new T();
 
                 // TODO -- like for all the binding log messages to come thru
-                _services.Add<IObjectResolver>(new ObjectResolver(_services, _registry, new NulloBindingLogger()));
+                _services.Add<IObjectResolver>(new ObjectResolver(_services, _registry, _logger));
+            }
+
+            protected internal RecordingBindingLogger Logger
+            {
+                get { return _logger; }
             }
 
             protected internal InMemoryRequestData RequestData

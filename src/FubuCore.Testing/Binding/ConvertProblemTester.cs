@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using FubuCore.Binding;
 using FubuTestingSupport;
@@ -14,8 +15,8 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            _problem = new ConvertProblem{Item="some item", Value="some value", ExceptionText="exception message"};
-            _problem.Properties = new List<PropertyInfo> {typeof (PropertyHolder).GetProperty("SomeProperty")};
+            _problem = new ConvertProblem { Item = "some item", Value = new BindingValue() { RawValue = "some value" }, ExceptionText = "exception message" };
+            _problem.Property = typeof (PropertyHolder).GetProperty("SomeProperty");
         }
 
         [Test]
@@ -24,7 +25,7 @@ namespace FubuCore.Testing.Binding
             _problem.ToString().ShouldEqual(@"Item type:       {0}
 Property:        {1}
 Property Type:   {2}
-Attempted Value: {3}
+Attempted Value: RawKey: , Source: , RawValue: {3}
 Exception:
 {4} 
 ".ToFormat("System.String", "SomeProperty", "System.String", "some value", "exception message"));

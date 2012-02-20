@@ -47,8 +47,11 @@ namespace FubuCore.Binding
 
                 for (int i = 0; i < requests.Count; i++)
                 {
-                    var requestData = (IRequestData) requests[i];
-                    data[i] = (T) context.BindObject(requestData, typeof (T)).Value;
+                    var requestData = requests[i];
+                    context.BindObject(requestData, typeof (T), o =>
+                    {
+                        data[i] = (T) o;
+                    });
                 }
 
                 property.SetValue(context.Object, data, null);

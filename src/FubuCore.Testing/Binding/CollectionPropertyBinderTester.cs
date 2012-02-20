@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
+using System.Linq;
 
 namespace FubuCore.Testing.Binding
 {
@@ -12,12 +14,6 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void Setup()
         {
-            context = new InMemoryBindingContext();
-            var objectResolver = ObjectResolver.Basic();
-            context.RegisterService<IObjectResolver>(objectResolver);
-            context.RegisterService<ISmartRequest>(new InMemorySmartRequest());
-            context.RegisterService<IRequestData>(new InMemoryRequestData());
-            
             propertyBinder = new CollectionPropertyBinder();
         }
 
@@ -40,37 +36,18 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
-        public void set_a_property_correctly_against_a_binding_context()
-        {
-            var model = new AddressViewModel();
-            context.WithData("Localities[0]ZipCode", "84115");
-            context.StartObject(model);
-
-            var property = ReflectionHelper.GetProperty<AddressViewModel>(x => x.Localities);
-            propertyBinder.Bind(property, context);
-
-            model.Localities[0].ZipCode.ShouldEqual("84115");
-        }
-
-        [Test]
         public void existing_collection_is_not_discarded()
         {
-            var model = new AddressViewModel
+            var originalList = new List<LocalityViewModel> { new LocalityViewModel { ZipCode = "previously_set_zipcode" } };
+
+            var model = BindingScenario<AddressViewModel>.Build(x =>
             {
-                Localities = new List<LocalityViewModel>
-                {
-                    new LocalityViewModel {ZipCode = "previously_set_zipcode"}
-                }
-            };
+                x.Model.Localities = originalList;
 
-            context.WithData("Localities[0]ZipCode", "84115");
-            context.StartObject(model);
+                x.Data("Localities[0]ZipCode", "84115");
+            });
 
-            var property = ReflectionHelper.GetProperty<AddressViewModel>(x => x.Localities);
-            propertyBinder.Bind(property, context);
-
-            model.Localities[0].ZipCode.ShouldEqual("previously_set_zipcode");
-            model.Localities[1].ZipCode.ShouldEqual("84115");
+            model.Localities.Select(x => x.ZipCode).ShouldHaveTheSameElementsAs("previously_set_zipcode", "84115");
         }
     }
 }

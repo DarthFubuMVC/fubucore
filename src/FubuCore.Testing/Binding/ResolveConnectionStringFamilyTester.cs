@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -50,19 +51,19 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void return_the_original_value_if_the_connection_string_doesnt_exist()
         {
-            var value = new InMemoryBindingContext().WithPropertyValue("foo");
-
-            object result = family.Build(null, expandProp).Convert(value);
-            result.ShouldEqual("foo");
+            BindingScenario<TestSettings>.Build(x =>
+            {
+                x.Data(o => o.DefaultPath, "foo");
+            }).DefaultPath.ShouldEqual("foo");
         }
 
         [Test]
         public void return_the_value_from_the_connectionStrings_section()
         {
-            var context = new InMemoryBindingContext().WithPropertyValue(connectionStringKey);
-
-            object result = family.Build(null, expandProp).Convert(context);
-            result.ShouldEqual(actualConnectionString);
+            BindingScenario<TestSettings>.Build(x =>
+            {
+                x.Data(o => o.DefaultPath, connectionStringKey);
+            }).DefaultPath.ShouldEqual(actualConnectionString);
         }
 
         [Test]

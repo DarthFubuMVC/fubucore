@@ -16,7 +16,8 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            var strVal = context.PropertyValue as String;
+            var bindingValue = context.RawValueFromRequest;
+            var strVal = bindingValue.RawValue as string;
 
             return strVal.IsNotEmpty()
                        ? Environment.ExpandEnvironmentVariables(strVal)

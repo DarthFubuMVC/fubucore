@@ -26,5 +26,22 @@ namespace FubuCore.Conversion
             return stringValue;
         }
 
+        public bool Equals(StringConverterStrategy other)
+        {
+            return !ReferenceEquals(null, other);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (StringConverterStrategy)) return false;
+            return Equals((StringConverterStrategy) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
     }
 }

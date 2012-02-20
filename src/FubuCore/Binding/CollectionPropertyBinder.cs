@@ -45,8 +45,11 @@ namespace FubuCore.Binding
                 context.RequestData.GetEnumerableRequests(property.Name).Each(request =>
                 {
                     // TODO -- got to add the BindResult to context to store it later
-                    var @object = context.BindObject(request, typeof(T));
-                    collection.Add((T)@object.Value);
+                    context.BindObject(request, typeof(T), @object =>
+                    {
+                        collection.Add((T)@object);
+                    });
+                    
                 });
             }
         }

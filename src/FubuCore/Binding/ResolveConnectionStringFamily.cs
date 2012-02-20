@@ -27,7 +27,7 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            var stringValue = context.PropertyValue as String;
+            var stringValue = context.RawValueFromRequest.RawValue as String;
 
             return stringValue.IsNotEmpty()
                        ? getConnectionString(stringValue)

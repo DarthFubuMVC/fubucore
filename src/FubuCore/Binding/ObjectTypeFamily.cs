@@ -13,7 +13,8 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            return context.PropertyValue;
+            if (context.RawValueFromRequest == null) return null;
+            return context.RawValueFromRequest.RawValue;
         }
     }
 }
