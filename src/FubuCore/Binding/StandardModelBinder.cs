@@ -58,7 +58,10 @@ namespace FubuCore.Binding
                                                       IPropertyBinder propertyBinder)
         {
             context.Logger.ChosePropertyBinder(property, propertyBinder);
-            propertyBinder.Bind(property, context);
+            context.ForProperty(property, propertyContext =>
+            {
+                propertyBinder.Bind(property, context);
+            });
         }
 
         public void Describe(Description description)
