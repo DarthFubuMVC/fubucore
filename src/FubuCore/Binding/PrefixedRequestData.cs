@@ -29,11 +29,6 @@ namespace FubuCore.Binding
             return _inner.HasAnyValuePrefixedWith(_prefix + key);
         }
 
-        public IEnumerable<string> GetKeys()
-        {
-            return _inner.GetKeys();
-        }
-
         public IRequestData GetSubRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(_inner, _prefix + prefixOrChild);

@@ -8,11 +8,18 @@ using FubuCore.Reflection;
 
 namespace FubuCore.Configuration
 {
-    public class AppSettingsRequestData : RequestDataBase
+    public class AppSettingsRequestData : InMemoryRequestData
     {
-        protected override object fetch(string key)
+        public AppSettingsRequestData(Type settingsType)
         {
-            return ConfigurationManager.AppSettings[key];
+            var values = new AppSettingsKeyValues();
+            var prefix = settingsType.Name + ".";
+            values.GetKeys().Where(x => x.StartsWith(prefix)).Each(key =>
+            {
+                var propKey = key.Split('.').Skip(1).Join("");
+
+                this[propKey] = values.Get(key);
+            });
         }
 
         public static string KeyFor<T>(Expression<Func<T, object>> property)
@@ -26,14 +33,5 @@ namespace FubuCore.Configuration
             return (ConfigurationManager.AppSettings.AllKeys.Contains(key)) ? ConfigurationManager.AppSettings[key] : string.Empty;
         }
 
-        public override IEnumerable<string> GetKeys()
-        {
-            return ConfigurationManager.AppSettings.AllKeys;
-        }
-
-        protected override string source
-        {
-            get { return "AppSettings"; }
-        }
     }
 }

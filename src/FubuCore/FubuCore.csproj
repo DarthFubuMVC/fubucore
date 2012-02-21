@@ -113,6 +113,7 @@
     <Compile Include="CommandLine\EnumerableArgument.cs" />
     <Compile Include="CommandLine\HelpCommand.cs" />
     <Compile Include="CommandLine\HelpInput.cs" />
+    <Compile Include="Configuration\AppSettingsKeyValues.cs" />
     <Compile Include="Configuration\AppSettingsSettingSource.cs" />
     <Compile Include="Configuration\SettingAttribute.cs" />
     <Compile Include="Configuration\SettingDataSource.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Descriptions\DescriptionTextWriter.cs" />
     <Compile Include="Descriptions\IDescriptionVisitor.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
+    <Compile Include="Util\DictionaryKeyValues.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />
     <Compile Include="FileSystemExtensions.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="GetStringRequest.cs" />
     <Compile Include="IFileSystem.cs" />
     <Compile Include="IFlatFileWriter.cs" />
+    <Compile Include="Util\IKeyValues.cs" />
     <Compile Include="IServiceLocator.cs" />
     <Compile Include="ReaderWriterLockExtensions.cs" />
     <Compile Include="Reflection\Expressions\ExpressionClasses.cs" />

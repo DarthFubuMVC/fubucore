@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FubuCore.Binding;
 using System.Linq;
+using FubuCore.Util;
 
 namespace FubuCore.Configuration
 {
@@ -40,11 +41,6 @@ namespace FubuCore.Configuration
         public bool HasAnyValuePrefixedWith(string key)
         {
             return _inner.HasAnyValuePrefixedWith(key);
-        }
-
-        public IEnumerable<string> GetKeys()
-        {
-            return _inner.GetKeys();
         }
 
         public IRequestData GetSubRequest(string prefixOrChild)

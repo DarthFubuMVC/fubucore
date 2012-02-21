@@ -172,6 +172,9 @@ NestedTargets[1]TargetEyeColor=Hazel
 ");
             }).Report;
 
+
+            report.WriteToConsole(true);
+
             var elements = report.For<DeepClass1>(x => x.NestedTargets).Elements;
             elements.Count.ShouldEqual(2);
 

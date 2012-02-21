@@ -2,35 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using FubuCore.Util;
 
 namespace FubuCore
 {
-    public interface IKeyValues
-    {
-        bool ContainsKey(string key);
-        string Get(string key);
-    }
-
-    public class DictionaryKeyValues : IKeyValues
-    {
-        private readonly IDictionary<string, string> _dictionary;
-
-        public DictionaryKeyValues(IDictionary<string, string> dictionary)
-        {
-            _dictionary = dictionary;
-        }
-
-        public bool ContainsKey(string key)
-        {
-            return _dictionary.ContainsKey(key);
-        }
-
-        public string Get(string key)
-        {
-            return _dictionary[key];
-        }
-    }
-
     public static class TemplateParser
     {
         private static readonly string TemplateGroup;

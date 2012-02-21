@@ -8,7 +8,6 @@ namespace FubuCore.Binding
         object Value(string key);
         bool Value(string key, Action<BindingValue> callback);
         bool HasAnyValuePrefixedWith(string key);
-        IEnumerable<string> GetKeys();
 
         IRequestData GetSubRequest(string prefixOrChild);
         IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild);

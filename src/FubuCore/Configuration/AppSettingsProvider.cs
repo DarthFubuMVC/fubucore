@@ -6,13 +6,11 @@ namespace FubuCore.Configuration
 {
     public class AppSettingsProvider : ISettingsProvider
     {
-        private readonly IServiceLocator _locator;
         private readonly IObjectResolver _resolver;
 
-        public AppSettingsProvider(IObjectResolver resolver, IServiceLocator locator)
+        public AppSettingsProvider(IObjectResolver resolver)
         {
             _resolver = resolver;
-            _locator = locator;
         }
 
         public T SettingsFor<T>() where T : class, new()
@@ -24,18 +22,13 @@ namespace FubuCore.Configuration
             return (T) value;
         }
 
-        // TODO -- this is gross.  Get some UT's against this pronto
         public object SettingsFor(Type settingsType)
         {
-            throw new NotImplementedException("NWO");
-            //IBindingContext context = new BindingContext(new AppSettingsRequestData(), _locator, new NulloBindingLogger())
-            //    .PrefixWith(settingsType.Name + ".");
+            var result = _resolver.BindModel(settingsType, new AppSettingsRequestData(settingsType));
 
-            //BindResult result = _resolver.BindModel(settingsType, context);
+            result.AssertNoProblems(settingsType);
 
-            //result.AssertNoProblems(settingsType);
-
-            //return result.Value;
+            return result.Value;
         }
 
 
