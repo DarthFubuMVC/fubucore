@@ -48,6 +48,10 @@ namespace FubuCore.Binding
                 for (int i = 0; i < requests.Count; i++)
                 {
                     var requestData = requests[i];
+
+
+                    context.Logger.PushElement(typeof(T));
+
                     context.BindObject(requestData, typeof (T), o =>
                     {
                         data[i] = (T) o;

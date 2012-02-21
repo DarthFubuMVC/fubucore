@@ -1,4 +1,5 @@
 using FubuCore.Binding;
+using FubuCore.Binding.InMemory;
 using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -19,7 +20,7 @@ namespace FubuCore.Testing.Binding
 
             ClassUnderTest.BindModel(typeof (Something), data);
 
-            MockFor<IBindingLogger>().AssertWasCalled(x => x.ChoseModelBinder(typeof(Something), theModelBinder));
+            MockFor<IBindingLogger>().AssertWasCalled(x => x.Chose(typeof(Something), theModelBinder));
         }
 
 

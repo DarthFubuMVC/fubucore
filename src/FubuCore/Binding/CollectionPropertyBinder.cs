@@ -44,6 +44,8 @@ namespace FubuCore.Binding
 
                 context.GetEnumerableRequests(property.Name).Each(request =>
                 {
+                    context.Logger.PushElement(typeof(T));
+
                     // TODO -- got to add the BindResult to context to store it later
                     context.BindObject(request, typeof(T), @object =>
                     {

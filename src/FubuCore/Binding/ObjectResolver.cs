@@ -1,4 +1,5 @@
 using System;
+using FubuCore.Binding.InMemory;
 using FubuMVC.Core;
 
 
@@ -25,8 +26,8 @@ namespace FubuCore.Binding
 
         public virtual BindResult BindModel<T>(T model, IBindingContext context)
         {
-            var binder = findBinder(context, typeof(T));
-            return executeModelBinder(typeof (T), context, () =>
+            var binder = findBinder(typeof(T));
+            return executeModelBinder(typeof (T), context, binder, () =>
             {
                 binder.Bind(typeof (T), model, context);
                 return new BindResult{
@@ -41,11 +42,11 @@ namespace FubuCore.Binding
         // Leave this virtual
         public virtual BindResult BindModel(Type type, IBindingContext context)
         {
-            var binder = findBinder(context, type);
-            return executeModelBinder(type, context, () => binder.Bind(type, context));
+            var binder = findBinder(type);
+            return executeModelBinder(type, context, binder, () => binder.Bind(type, context));
         }
 
-        private IModelBinder findBinder(IBindingContext context, Type type)
+        private IModelBinder findBinder(Type type)
         {
             var binder = _binders.BinderFor(type);
 
@@ -56,7 +57,6 @@ namespace FubuCore.Binding
                                         type.AssemblyQualifiedName);
             }
 
-            context.Logger.ChoseModelBinder(type, binder);
 
             return binder;
         }
@@ -67,7 +67,7 @@ namespace FubuCore.Binding
 
             if (binder != null)
             {
-                var result = executeModelBinder(type, context, () => binder.Bind(type, context));
+                var result = executeModelBinder(type, context, binder, () => binder.Bind(type, context));
                 continuation(result);
             }
         }
@@ -78,12 +78,17 @@ namespace FubuCore.Binding
             TryBindModel(type, context, continuation);
         }
 
-        private static BindResult executeModelBinder(Type type, IBindingContext context, Func<object> source)
+        private static BindResult executeModelBinder(Type type, IBindingContext context, IModelBinder binder, Func<object> source)
         {
             try
             {
+                context.Logger.Chose(type, binder);
+
+                var value = source();
+                context.Logger.FinishedModel();
+
                 return new BindResult{
-                    Value = source(),
+                    Value = value,
                     Problems = context.Problems
                 };
             }

@@ -34,7 +34,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_log_the_property_binder_chosen()
         {
-            MockFor<IBindingLogger>().AssertWasCalled(x => x.ChosePropertyBinder(theProperty, thePropertyBinder));
+            MockFor<IBindingLogger>().AssertWasCalled(x => x.Chose(theProperty, thePropertyBinder));
         }
     }
 

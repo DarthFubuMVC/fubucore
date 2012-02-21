@@ -69,7 +69,8 @@
     <Compile Include="Binding\FlatFileRequest.cs" />
     <Compile Include="Binding\FlatFileRequestData.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
-    <Compile Include="Binding\IBindingLogger.cs" />
+    <Compile Include="Binding\InMemory\BindingReport.cs" />
+    <Compile Include="Binding\InMemory\IBindingLogger.cs" />
     <Compile Include="Binding\IContextValues.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
     <Compile Include="Binding\IgnorePropertyBinder.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Binding\IModelBinderCache.cs" />
     <Compile Include="Binding\InMemoryRequestData.cs" />
     <Compile Include="Binding\InMemory\BindingScenario.cs" />
+    <Compile Include="Binding\InMemory\RecordingBindingLogger.cs" />
     <Compile Include="Binding\IObjectResolver.cs" />
     <Compile Include="Binding\IPropertyBinder.cs" />
     <Compile Include="Binding\IPropertyBinderCache.cs" />
@@ -86,7 +88,7 @@
     <Compile Include="Binding\IValueConverterRegistry.cs" />
     <Compile Include="Binding\ModelBindingAttributes.cs" />
     <Compile Include="Binding\NestedObjectPropertyBinder.cs" />
-    <Compile Include="Binding\NulloBindingLogger.cs" />
+    <Compile Include="Binding\InMemory\NulloBindingLogger.cs" />
     <Compile Include="Binding\NumericTypeFamily.cs" />
     <Compile Include="Binding\ObjectResolver.cs" />
     <Compile Include="Binding\ObjectTypeFamily.cs" />
@@ -252,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Binding\Logging\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

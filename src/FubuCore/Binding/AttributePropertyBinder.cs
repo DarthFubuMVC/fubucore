@@ -14,7 +14,10 @@ namespace FubuCore.Binding
 
         public void Bind(PropertyInfo property, IBindingContext context)
         {
-            property.ForAttribute<BindingAttribute>(att => att.Bind(property, context));
+            property.ForAttribute<BindingAttribute>(att =>
+            {
+                att.Bind(property, context);
+            });
         }
     }
 }

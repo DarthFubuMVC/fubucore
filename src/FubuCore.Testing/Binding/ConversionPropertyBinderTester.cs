@@ -98,9 +98,9 @@ namespace FubuCore.Testing.Binding
             var property = typeof(Address).GetProperty("Address1");
             var converter = propertyBinder.As<ConversionPropertyBinder>().FindConverter(property);
 
-            
-            scenario.Logger.FindPropertyBinder(property).ShouldBeOfType<ConversionPropertyBinder>();
-            scenario.Logger.FindValueConverter(property).ShouldEqual(converter);
+            var propertyReport = scenario.Report.For(property);
+            propertyReport.Binder.ShouldBeOfType<ConversionPropertyBinder>();
+            propertyReport.Converter.ShouldEqual(converter);
         }
     }
 

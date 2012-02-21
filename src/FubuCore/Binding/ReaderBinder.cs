@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using FubuCore.Binding.InMemory;
 using FubuCore.Util;
 
 namespace FubuCore.Binding

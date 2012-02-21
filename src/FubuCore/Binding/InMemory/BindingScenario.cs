@@ -1,78 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using FubuCore.Reflection;
-using FubuCore.Util;
-using FubuCore;
 
 namespace FubuCore.Binding.InMemory
 {
-
-    public class RecordingBindingLogger : IBindingLogger
-    {
-        public readonly Cache<Type, IModelBinder> ModelBinders = new Cache<Type, IModelBinder>();
-        public readonly Cache<PropertyInfo, IPropertyBinder> PropertyBinders = new Cache<PropertyInfo, IPropertyBinder>();
-        public readonly Cache<PropertyInfo, ValueConverter> ValueConverters = new Cache<PropertyInfo, ValueConverter>();
-
-        public void ChoseModelBinder(Type modelType, IModelBinder binder)
-        {
-            ModelBinders[modelType] = binder;
-        }
-
-        public void ChosePropertyBinder(PropertyInfo property, IPropertyBinder binder)
-        {
-            PropertyBinders[property] = binder;
-        }
-
-        public void ChoseValueConverter(PropertyInfo property, ValueConverter converter)
-        {
-            ValueConverters[property] = converter;
-        }
-
-
-        public IPropertyBinder FindPropertyBinder(PropertyInfo property)
-        {
-            IPropertyBinder answer = null;
-
-            Action<PropertyInfo, IPropertyBinder> find = (prop, binder) =>
-            {
-                if (prop.PropertyMatches(property))
-                {
-                    answer = binder;
-                };
-            };
-
-            PropertyBinders.Each(find);
-
-
-            return answer;
-        }
-
-        public ValueConverter FindValueConverter(PropertyInfo property)
-        {
-            ValueConverter answer = null;
-
-            Action<PropertyInfo, ValueConverter> find = (prop, converter) =>
-            {
-                if (prop.PropertyMatches(property))
-                {
-                    answer = converter;
-                }
-            };
-
-            ValueConverters.Each(find);
-
-
-            return answer;
-        }
-    }
-
     public class BindingScenario<T> where T : class, new()
     {
         private readonly StringWriter _writer = new StringWriter();
+        public InMemoryBindingHistory History{ get; private set;}
 
         private BindingScenario(ScenarioDefinition definition)
         {
@@ -82,10 +21,16 @@ namespace FubuCore.Binding.InMemory
 
             Model = definition.Model;
             Problems = context.Problems;
-            Logger = definition.Logger;
+
+            History = definition.History;
+
+            if (definition.History.AllReports.Count() == 1)
+            {
+                Report = definition.History.AllReports.Single();
+            }
         }
 
-        public RecordingBindingLogger Logger { get; private set;}
+        public BindingReport Report { get; private set; }
 
         public IList<ConvertProblem> Problems { get; private set; }
 
@@ -118,14 +63,21 @@ namespace FubuCore.Binding.InMemory
             private readonly BindingRegistry _registry = new BindingRegistry();
             private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private IServiceLocator _customServices;
-            private RecordingBindingLogger _logger = new RecordingBindingLogger();
+            private readonly InMemoryBindingHistory _history = new InMemoryBindingHistory();
+            private readonly RecordingBindingLogger _logger;
 
             public ScenarioDefinition()
             {
                 Model = new T();
 
-                // TODO -- like for all the binding log messages to come thru
+                _logger = new RecordingBindingLogger(_history);
+
                 _services.Add<IObjectResolver>(new ObjectResolver(_services, _registry, _logger));
+            }
+
+            protected internal InMemoryBindingHistory History
+            {
+                get { return _history; }
             }
 
             protected internal RecordingBindingLogger Logger
@@ -205,14 +157,20 @@ namespace FubuCore.Binding.InMemory
                 _data[property.ToAccessor().Name] = rawValue;
             }
 
+            // TODO -- UT this
             public void BindWith(IModelBinder binder)
             {
-                _actions.Add(context => binder.Bind(typeof (T), Model, context));
+                _actions.Add(context =>
+                {
+                    Logger.Chose(typeof(T), binder);
+                    binder.Bind(typeof (T), Model, context);
+                    Logger.FinishedModel();
+                });
             }
 
             public void BindWith<TBinder>() where TBinder : IModelBinder, new()
             {
-                _actions.Add(context => new TBinder().Bind(typeof (T), Model, context));
+                BindWith(new TBinder());
             }
 
             public void BindPropertyWith<TBinder>(Expression<Func<T, object>> property, string rawValue = null)
@@ -226,7 +184,31 @@ namespace FubuCore.Binding.InMemory
             {
                 if (rawValue != null) Data(property, rawValue);
                 var prop = property.ToAccessor().InnerProperty;
-                _actions.Add(context => StandardModelBinder.PopulatePropertyWithBinder(prop, context, binder));
+                _actions.Add(context =>
+                {
+                    Logger.Chose(typeof(T), new PropertyModelBinderStandin());
+                    StandardModelBinder.PopulatePropertyWithBinder(prop, context, binder);
+                    Logger.FinishedModel();
+                });
+            }
+        }
+        
+        [Description("Strictly a fake for the binding scenario")]
+        public class PropertyModelBinderStandin : IModelBinder
+        {
+            public bool Matches(Type type)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Bind(Type type, object instance, IBindingContext context)
+            {
+                throw new NotImplementedException();
+            }
+
+            public object Bind(Type type, IBindingContext context)
+            {
+                throw new NotImplementedException();
             }
         }
 
