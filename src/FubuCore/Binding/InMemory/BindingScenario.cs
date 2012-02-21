@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using FubuCore.Binding.Logging;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding.InMemory

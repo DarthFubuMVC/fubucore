@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore.Reflection;
 
-namespace FubuCore.Binding.InMemory
+namespace FubuCore.Binding.Logging
 {
     public class BindingReport
     {
@@ -17,6 +17,45 @@ namespace FubuCore.Binding.InMemory
         {
             _modelType = modelType;
             _binder = binder;
+        }
+
+        public void WriteToConsole(bool showValues)
+        {
+            var writer = new BindingReportTextWriter(this, showValues);
+            writer.Report.WriteToConsole();
+        }
+
+        public IEnumerable<PropertyBindingReport> OrderedProperties()
+        {
+            foreach (var prop in _properties
+                .Where(x => x.Nested == null && !x.Elements.Any())
+                .OrderBy(x => x.Property.Name))
+            {
+                yield return prop;
+            }
+
+            foreach (var prop in _properties
+                .Where(x => x.Nested != null)
+                .OrderBy(x => x.Property.Name))
+            {
+                yield return prop;
+            }
+
+            foreach (var prop in _properties
+                .Where(x => x.Elements.Any())
+                .OrderBy(x => x.Property.Name))
+            {
+                yield return prop;
+            }
+        }
+
+        public virtual void AcceptVisitor(IBindingReportVisitor visitor)
+        {
+            visitor.Report(this);
+
+            OrderedProperties().ToList().Each(prop => prop.AcceptVisitor(visitor));
+
+            visitor.EndReport();
         }
 
         public Type ModelType

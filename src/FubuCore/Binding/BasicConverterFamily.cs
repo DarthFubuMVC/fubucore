@@ -56,7 +56,7 @@ namespace FubuCore.Binding
 
         public void Describe(Description description)
         {
-            description.Title = "Using IObjectConverter";
+            description.Title = "IObjectConverter:" + _propertyType.Name;
             description.ShortDescription =
                 "IObjectConverter.FromString(text, typeof({0}))".ToFormat(_propertyType.FullName);
         }

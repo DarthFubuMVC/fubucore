@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace FubuCore.Binding.InMemory
+namespace FubuCore.Binding.Logging
 {
     public class PropertyBindingReport
     {
@@ -71,6 +71,20 @@ namespace FubuCore.Binding.InMemory
         public IList<ElementBinding> Elements
         {
             get { return _elements; }
+        }
+
+        public void AcceptVisitor(IBindingReportVisitor visitor)
+        {
+            visitor.Property(this);
+
+            if (Nested != null)
+            {
+                Nested.AcceptVisitor(visitor);
+            }
+
+            Elements.Each(elem => elem.AcceptVisitor(visitor));
+
+            visitor.EndProperty();
         }
     }
 }

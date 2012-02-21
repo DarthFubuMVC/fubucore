@@ -1,6 +1,8 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 
-namespace FubuCore.Binding.InMemory
+namespace FubuCore.Binding.Logging
 {
     public class ElementBinding : BindingReport
     {
@@ -14,6 +16,15 @@ namespace FubuCore.Binding.InMemory
         public int Index
         {
             get { return _index; }
+        }
+
+        public override void AcceptVisitor(IBindingReportVisitor visitor)
+        {
+            visitor.Element(this);
+
+            OrderedProperties().ToList().Each(prop => prop.AcceptVisitor(visitor));
+
+            visitor.EndElement();
         }
     }
 }

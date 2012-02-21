@@ -76,6 +76,8 @@ TargetEyeColor=Blue
 ");
             }).Report;
 
+            
+
             var nestedPropReport = report.LastProperty;
             nestedPropReport.Nested.ShouldNotBeNull();
 
@@ -102,6 +104,9 @@ Targets[1]EyeColor=Hazel
 
 ");
             }).Report;
+
+
+            report.WriteToConsole(true);
 
             var array = report.For<ClassWithTargetArray>(x => x.Targets);
             array.Elements.ShouldHaveCount(2);

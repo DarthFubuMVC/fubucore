@@ -69,8 +69,9 @@
     <Compile Include="Binding\FlatFileRequest.cs" />
     <Compile Include="Binding\FlatFileRequestData.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
-    <Compile Include="Binding\InMemory\BindingReport.cs" />
-    <Compile Include="Binding\InMemory\ElementBinding.cs" />
+    <Compile Include="Binding\Logging\BindingReport.cs" />
+    <Compile Include="Binding\Logging\BindingReportTextWriter.cs" />
+    <Compile Include="Binding\Logging\ElementBinding.cs" />
     <Compile Include="Binding\InMemory\IBindingLogger.cs" />
     <Compile Include="Binding\IContextValues.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
@@ -79,7 +80,8 @@
     <Compile Include="Binding\IModelBinderCache.cs" />
     <Compile Include="Binding\InMemoryRequestData.cs" />
     <Compile Include="Binding\InMemory\BindingScenario.cs" />
-    <Compile Include="Binding\InMemory\PropertyBindingReport.cs" />
+    <Compile Include="Binding\Logging\IBindingReportVisitor.cs" />
+    <Compile Include="Binding\Logging\PropertyBindingReport.cs" />
     <Compile Include="Binding\InMemory\RecordingBindingLogger.cs" />
     <Compile Include="Binding\IObjectResolver.cs" />
     <Compile Include="Binding\IPropertyBinder.cs" />
@@ -257,9 +259,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Binding\Logging\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
