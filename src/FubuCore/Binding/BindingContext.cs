@@ -45,8 +45,7 @@ namespace FubuCore.Binding
             _values = new Lazy<IContextValues>(() =>
             {
                 var converter = _locator == null ? new ObjectConverter() : _locator.GetInstance<IObjectConverter>();
-                var request = new SmartRequest(_requestData, converter);
-                return new ContextValues(request, _namingStrategies, _requestData);
+                return new ContextValues(converter, _namingStrategies, _requestData, _logger);
             });
         }
 

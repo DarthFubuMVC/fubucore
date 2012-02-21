@@ -10,12 +10,15 @@ namespace FubuCore.Binding
         private readonly IBindingContext _parent;
         private readonly IServiceLocator _services;
         private readonly PropertyInfo _property;
+        private Lazy<BindingValue> _value;
 
         public PropertyContext(IBindingContext parent, IServiceLocator services, PropertyInfo property)
         {
             _parent = parent;
             _services = services;
             _property = property;
+
+            _value = new Lazy<BindingValue>(() => _parent.Data.RawValue(Property.Name));
         }
 
         string IConversionRequest.Text
@@ -35,7 +38,7 @@ namespace FubuCore.Binding
 
         public BindingValue RawValueFromRequest
         {
-            get { return _parent.Data.RawValue(Property.Name); }
+            get { return _value.Value; }
         }
 
         public PropertyInfo Property

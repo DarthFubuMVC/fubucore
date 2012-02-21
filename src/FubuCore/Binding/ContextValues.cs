@@ -1,67 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Binding.InMemory;
+using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
     public class ContextValues : IContextValues
     {
-        public ContextValues(ISmartRequest request, List<Func<string, string>> namingStrategies, IRequestData rawData)
+        public ContextValues(IObjectConverter converter, List<Func<string, string>> namingStrategies, IRequestData rawData, IBindingLogger logger)
         {
-            _request = request;
+            _converter = converter;
             _namingStrategies = namingStrategies;
             _rawData = rawData;
+            _logger = logger;
         }
 
-        private readonly ISmartRequest _request;
+        private readonly IObjectConverter _converter;
         private readonly List<Func<string, string>> _namingStrategies;
         private readonly IRequestData _rawData;
-
-        public object ValueAs(Type type, string name)
-        {
-            foreach (var naming in _namingStrategies)
-            {
-                var actualName = naming(name);
-                var rawValue = _request.Value(type, actualName);
-                if (rawValue != null)
-                {
-                    return rawValue;
-                }
-            }
-
-            return null;
-        }
-
-        public bool ValueAs(Type type, string name, Action<object> continuation)
-        {
-            return _namingStrategies.Any(naming =>
-            {
-                string n = naming(name);
-                return _request.Value(type, n, continuation);
-            });
-        }
-
-
+        private readonly IBindingLogger _logger;
 
         public T ValueAs<T>(string name)
         {
-            T value = default(T);
+            var bindingValue = RawValue(name);
+            if (bindingValue == null || bindingValue.RawValue == null) return default(T);
 
-            _namingStrategies.Any(naming =>
-            {
-                string n = naming(name);
-                return _request.Value<T>(n, x => value = x);
-            });
-
-            return value;
+            return _converter.FromString<T>(bindingValue.RawValue.ToString());
         }
 
         public bool ValueAs<T>(string name, Action<T> continuation)
         {
-            return _namingStrategies.Any(naming =>
+            return RawValue(name, value =>
             {
-                var n = naming(name);
-                return _request.Value(n, continuation);
+                if (value.RawValue != null)
+                {
+                    var convertedValue = _converter.FromString<T>(value.RawValue.ToString());
+                    continuation(convertedValue);
+                }
             });
         }
 
@@ -74,18 +50,25 @@ namespace FubuCore.Binding
                 return _rawData.Value(n, x => value = x);
             });
 
+            if (value != null)
+            {
+                _logger.UsedValue(value);
+            }
+
             return value;
         }
 
         public bool RawValue(string name, Action<BindingValue> continuation)
         {
-            _namingStrategies.Any(naming =>
+            return _namingStrategies.Any(naming =>
             {
                 string n = naming(name);
-                return _rawData.Value(n, continuation);
+                return _rawData.Value(n, value =>
+                {
+                    _logger.UsedValue(value);
+                    continuation(value);
+                });
             });
-
-            return false;
         }
     }
 }

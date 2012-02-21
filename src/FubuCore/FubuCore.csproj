@@ -70,6 +70,7 @@
     <Compile Include="Binding\FlatFileRequestData.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
     <Compile Include="Binding\InMemory\BindingReport.cs" />
+    <Compile Include="Binding\InMemory\ElementBinding.cs" />
     <Compile Include="Binding\InMemory\IBindingLogger.cs" />
     <Compile Include="Binding\IContextValues.cs" />
     <Compile Include="Binding\IConverterFamily.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Binding\IModelBinderCache.cs" />
     <Compile Include="Binding\InMemoryRequestData.cs" />
     <Compile Include="Binding\InMemory\BindingScenario.cs" />
+    <Compile Include="Binding\InMemory\PropertyBindingReport.cs" />
     <Compile Include="Binding\InMemory\RecordingBindingLogger.cs" />
     <Compile Include="Binding\IObjectResolver.cs" />
     <Compile Include="Binding\IPropertyBinder.cs" />
