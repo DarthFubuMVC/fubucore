@@ -47,6 +47,15 @@ namespace FubuCore.Testing.Configuration
         }
 
         [Test]
+        public void ignore_and_collapse_double_curlies()
+        {
+            theDictionary.Add("setting", "setting-value");
+            theInnerData["Key"] = "*{{setting}}*";
+
+            theSubstitutedData.Value("Key").ShouldEqual("*{setting}*");
+        }
+
+        [Test]
         public void do_nothing_for_value_that_does_not_exist_CPS_style()
         {
             theSubstitutedData.Value("Key", o => Assert.Fail("shouldn't be here")).ShouldBeFalse();

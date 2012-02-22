@@ -39,7 +39,7 @@ namespace FubuCore
         static TemplateParser()
         {
             TemplateGroup = "Template";
-            TemplateExpression = new Regex(@"\{(?<" + TemplateGroup + @">[A-Za-z0-9_-]+)\}", RegexOptions.Compiled);
+            TemplateExpression = new Regex(@"\{(?!\{)(?<" + TemplateGroup + @">[A-Za-z0-9_-]+)\}(?!\})", RegexOptions.Compiled);
         }
 
         public static string Parse(string template, IDictionary<string, string> substitutions)
@@ -69,7 +69,14 @@ namespace FubuCore
             {
                 template = parse(template, values);
             }
+
+            template = nowFlattenDoubleCurlies(template);
             return template;
+        }
+
+        private static string nowFlattenDoubleCurlies(string template)
+        {
+            return template.Replace("{{", "{").Replace("}}", "}");
         }
 
         static string parse(string template, IKeyValues values)
