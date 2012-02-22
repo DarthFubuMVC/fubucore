@@ -24,12 +24,12 @@ namespace FubuCore.Binding
             return _inner.Value(_prefix + key, callback);
         }
 
-        public bool HasAnyValuePrefixedWith(string key)
+        public bool HasChildRequest(string key)
         {
-            return _inner.HasAnyValuePrefixedWith(_prefix + key);
+            return _inner.HasChildRequest(_prefix + key);
         }
 
-        public IRequestData GetSubRequest(string prefixOrChild)
+        public IRequestData GetChildRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(_inner, _prefix + prefixOrChild);
         }

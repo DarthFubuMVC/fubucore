@@ -8,9 +8,9 @@ namespace FubuCore.Binding
         {
             var indexer = new Indexer(prefix);
 
-            while (data.HasAnyValuePrefixedWith(indexer.Prefix))
+            while (data.HasChildRequest(indexer.Prefix))
             {
-                yield return data.GetSubRequest(indexer.Prefix);
+                yield return data.GetChildRequest(indexer.Prefix);
                 indexer.Increment();
             }
         }

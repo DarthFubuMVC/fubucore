@@ -70,5 +70,12 @@ namespace FubuCore.Binding
         /// Shortcut to get converted data from the raw request by name
         /// </summary>
         IContextValues Data { get; }
+
+        /// <summary>
+        /// Tests whether or not the underlying data has a child request
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        bool HasChildRequest(string name);
     }
 }

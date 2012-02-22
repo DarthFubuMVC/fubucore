@@ -38,14 +38,14 @@ namespace FubuCore.Configuration
             });
         }
 
-        public bool HasAnyValuePrefixedWith(string key)
+        public bool HasChildRequest(string key)
         {
-            return _inner.HasAnyValuePrefixedWith(key);
+            return _inner.HasChildRequest(key);
         }
 
-        public IRequestData GetSubRequest(string prefixOrChild)
+        public IRequestData GetChildRequest(string prefixOrChild)
         {
-            var prefixedInner = _inner.GetSubRequest(prefixOrChild);
+            var prefixedInner = _inner.GetChildRequest(prefixOrChild);
             return new SubstitutedRequestData(prefixedInner, _substitutions);
         }
 

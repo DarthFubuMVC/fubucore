@@ -111,10 +111,10 @@ namespace FubuCore.Testing.Configuration
 
             var request = SettingsRequestData.For(core1, core2, core3);
 
-            request.HasAnyValuePrefixedWith("One").ShouldBeTrue();
-            request.HasAnyValuePrefixedWith("Two").ShouldBeTrue();
-            request.HasAnyValuePrefixedWith("Three").ShouldBeTrue();
-            request.HasAnyValuePrefixedWith("NotInTheRequestDataAnywhere").ShouldBeFalse();
+            request.HasChildRequest("One").ShouldBeTrue();
+            request.HasChildRequest("Two").ShouldBeTrue();
+            request.HasChildRequest("Three").ShouldBeTrue();
+            request.HasChildRequest("NotInTheRequestDataAnywhere").ShouldBeFalse();
         }
     }
 }

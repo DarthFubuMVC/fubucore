@@ -15,6 +15,11 @@ namespace FubuCore.Binding
 
         public void Bind(PropertyInfo property, IBindingContext context)
         {
+            if (!context.HasChildRequest(property.Name))
+            {
+                return;
+            }
+
             var childRequest = context.GetSubRequest(property.Name);
             context.BindObject(childRequest, property.PropertyType, o =>
             {

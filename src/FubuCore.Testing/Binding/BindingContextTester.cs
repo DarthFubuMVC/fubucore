@@ -11,9 +11,6 @@ using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
-
-    // TODO -- convert all of these to the new BindingScenario test formats!
-
     [TestFixture]
     public class BindingContextTester
     {

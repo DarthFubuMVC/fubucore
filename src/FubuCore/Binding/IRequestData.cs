@@ -7,9 +7,9 @@ namespace FubuCore.Binding
     {
         object Value(string key);
         bool Value(string key, Action<BindingValue> callback);
-        bool HasAnyValuePrefixedWith(string key);
+        bool HasChildRequest(string key);
 
-        IRequestData GetSubRequest(string prefixOrChild);
+        IRequestData GetChildRequest(string prefixOrChild);
         IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild);
     }
 }

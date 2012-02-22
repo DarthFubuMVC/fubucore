@@ -42,7 +42,7 @@ namespace FubuCore.Configuration
 
         
 
-        public bool HasAnyValuePrefixedWith(string key)
+        public bool HasChildRequest(string key)
         {
             return _steps.Any(x => x.HasAnyValuePrefixedWith(key));
         }
@@ -121,7 +121,7 @@ namespace FubuCore.Configuration
             return _steps.SelectMany(s => s.AllKeys);
         }
 
-        public IRequestData GetSubRequest(string prefixOrChild)
+        public IRequestData GetChildRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(this, prefixOrChild);
         }

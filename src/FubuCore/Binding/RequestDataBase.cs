@@ -44,14 +44,14 @@ namespace FubuCore.Binding
             return _allKeys.Value.Contains(key);
         }
 
-        public virtual bool HasAnyValuePrefixedWith(string key)
+        public virtual bool HasChildRequest(string key)
         {
             return _allKeys.Value.Any(x => x.StartsWith(key));
         }
 
         public abstract IEnumerable<string> GetKeys();
 
-        public IRequestData GetSubRequest(string prefixOrChild)
+        public IRequestData GetChildRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(this, prefixOrChild);
         }

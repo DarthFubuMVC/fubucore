@@ -61,7 +61,7 @@ namespace FubuCore.Binding
 
         public IRequestData GetSubRequest(string name)
         {
-            return _requestData.GetSubRequest(name);
+            return _requestData.GetChildRequest(name);
         }
 
 
@@ -78,6 +78,11 @@ namespace FubuCore.Binding
         public IContextValues Data
         {
             get { return _values.Value; }
+        }
+
+        public bool HasChildRequest(string name)
+        {
+            return _requestData.HasChildRequest(name);
         }
 
         public void ForProperty(PropertyInfo property, Action<IPropertyContext> action)

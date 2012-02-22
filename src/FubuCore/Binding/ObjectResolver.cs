@@ -1,6 +1,5 @@
 using System;
 using FubuCore.Binding.InMemory;
-using FubuMVC.Core;
 
 
 namespace FubuCore.Binding

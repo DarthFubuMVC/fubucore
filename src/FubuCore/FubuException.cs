@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.Serialization;
-using FubuCore;
 
-namespace FubuMVC.Core
+namespace FubuCore
 {
     [Serializable]
     public class FubuException : Exception
@@ -48,7 +47,7 @@ namespace FubuMVC.Core
         {
         }
 
-        public override string Message { get { return "FubuMVC Error {0}:  \n{1}".ToFormat(_errorCode, _message); } }
+        public override string Message { get { return "FubuCore Error {0}:  \n{1}".ToFormat(_errorCode, _message); } }
         
         public int ErrorCode { get { return _errorCode; } }
     }

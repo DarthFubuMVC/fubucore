@@ -62,6 +62,17 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
+        public void does_not_place_a_value_if_the_inner_request_data_cannot_fill_the_child_request()
+        {
+            data["Order"] = "3";
+            data["UserName"] = "Max";
+            data["SiteName"] = "site 1";
+
+            var request = resolve<UpdateSiteRequest>();
+            request.Site.Address.ShouldBeNull();
+        }
+
+        [Test]
         public void get_3_deep_errors()
         {
             data["Order"] = "3";

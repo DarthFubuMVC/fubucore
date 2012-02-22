@@ -62,10 +62,10 @@ namespace FubuCore.Testing.Binding
             _data["pre-ab"] = 1;
             _data["pre4"] = 1;
 
-            _data.HasAnyValuePrefixedWith("pre").ShouldBeTrue();
+            _data.HasChildRequest("pre").ShouldBeTrue();
 
         
-            _data.HasAnyValuePrefixedWith("else").ShouldBeFalse();
+            _data.HasChildRequest("else").ShouldBeFalse();
         }
     }
 }

@@ -31,7 +31,7 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void get_subrequest()
         {
-            theData.GetSubRequest("Nested").Value("Flag3").ShouldEqual("f3");
+            theData.GetChildRequest("Nested").Value("Flag3").ShouldEqual("f3");
         }
 
         [Test]

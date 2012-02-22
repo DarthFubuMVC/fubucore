@@ -38,7 +38,7 @@ namespace FubuCore.Binding
             return found;
         }
 
-        public bool HasAnyValuePrefixedWith(string key)
+        public bool HasChildRequest(string key)
         {
             return _dictionary.HasAnyValuePrefixedWith(key);
         }
@@ -54,7 +54,7 @@ namespace FubuCore.Binding
             return _dictionary.GetAllKeys();
         }
 
-        public IRequestData GetSubRequest(string prefixOrChild)
+        public IRequestData GetChildRequest(string prefixOrChild)
         {
             return new PrefixedRequestData(this, prefixOrChild);
         }

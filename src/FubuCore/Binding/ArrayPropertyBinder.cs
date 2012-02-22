@@ -49,9 +49,9 @@ namespace FubuCore.Binding
                 {
                     var requestData = requests[i];
 
-
                     context.Logger.PushElement(typeof(T));
 
+                    // TODO -- got to add the BindResult to context to store it later
                     context.BindObject(requestData, typeof (T), o =>
                     {
                         data[i] = (T) o;

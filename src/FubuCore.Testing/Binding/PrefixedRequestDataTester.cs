@@ -50,8 +50,8 @@ namespace FubuCore.Testing.Binding
         {
             inner["SiteAddress[0]Name"] = "Jeremy";
 
-            prefixed.HasAnyValuePrefixedWith("Address[0]").ShouldBeTrue();
-            prefixed.HasAnyValuePrefixedWith("Address[1]").ShouldBeFalse();
+            prefixed.HasChildRequest("Address[0]").ShouldBeTrue();
+            prefixed.HasChildRequest("Address[1]").ShouldBeFalse();
         }
     }
 }
