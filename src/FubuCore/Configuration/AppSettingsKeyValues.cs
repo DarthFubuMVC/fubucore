@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Configuration;
 using System.Linq;
 using FubuCore.Util;
@@ -7,29 +9,40 @@ namespace FubuCore.Configuration
 {
     public class AppSettingsKeyValues : IKeyValues
     {
+        private readonly NameValueCollection _settings = ConfigurationManager.AppSettings;
+
         public bool ContainsKey(string key)
         {
-            if (!ConfigurationManager.AppSettings.HasKeys())
+            if (!_settings.HasKeys())
             {
                 return false;
             }
 
-            return ConfigurationManager.AppSettings.AllKeys.Contains(key);
+            return _settings.AllKeys.Contains(key);
         }
 
         public string Get(string key)
         {
-            return ConfigurationManager.AppSettings[key];
+            return _settings[key];
         }
 
         public IEnumerable<string> GetKeys()
         {
-            if (!ConfigurationManager.AppSettings.HasKeys())
+            if (!_settings.HasKeys())
             {
                 return Enumerable.Empty<string>();
             }
 
-            return ConfigurationManager.AppSettings.AllKeys;
+            return _settings.AllKeys;
+        }
+
+        public bool ForValue(string key, Action<string, string> callback)
+        {
+            if (!ContainsKey(key)) return false;
+
+            callback(key, Get(key));
+
+            return true;
         }
     }
 }

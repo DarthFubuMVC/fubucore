@@ -1,6 +1,8 @@
+using System;
 using FubuCore.Binding.Values;
 using NUnit.Framework;
 using FubuTestingSupport;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -49,6 +51,56 @@ namespace FubuCore.Testing.Binding.Values
             theValues["OneKey6"] = "a";
 
             thePrefixedValues.GetKeys().ShouldHaveTheSameElementsAs("Key4", "Key5", "Key6");
+        }
+
+        [Test]
+        public void value_miss()
+        {
+            var action = MockRepository.GenerateMock<Action<string, string>>();
+
+            theValues["Key1"] = "a";
+            theValues["Key2"] = "a";
+            theValues["Key3"] = "a";
+
+            thePrefixedValues.ForValue("Key1", action).ShouldBeFalse();
+
+            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+        }
+
+        [Test]
+        public void value_hit()
+        {
+            theValues["Key1"] = "a";
+            theValues["Key2"] = "a";
+            theValues["Key3"] = "a";
+            theValues["OneKey4"] = "a4";
+            theValues["OneKey5"] = "a";
+            theValues["OneKey6"] = "a";
+
+            var action = MockRepository.GenerateMock<Action<string, string>>();
+
+            thePrefixedValues.ForValue("Key4", action).ShouldBeTrue();
+
+            action.AssertWasCalled(x => x.Invoke("OneKey4", "a4"));
+        }
+
+        [Test]
+        public void value_hit_grandchild()
+        {
+            theValues["Key1"] = "a";
+            theValues["Key2"] = "a";
+            theValues["Key3"] = "a";
+            theValues["OneKey4"] = "a4";
+            theValues["OneTwoKey11"] = "1211";
+            theValues["OneKey5"] = "a";
+            theValues["OneKey6"] = "a";
+
+            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var grandchild = new PrefixedKeyValues("Two", thePrefixedValues);
+
+            grandchild.ForValue("Key11", action).ShouldBeTrue();
+
+            action.AssertWasCalled(x => x.Invoke("OneTwoKey11", "1211"));
         }
     }
 }

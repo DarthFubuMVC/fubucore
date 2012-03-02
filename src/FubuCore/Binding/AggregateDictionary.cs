@@ -4,6 +4,7 @@ using System.Linq;
 
 namespace FubuCore.Binding
 {
+    [MarkedForTermination]
     public class AggregateDictionary
     {
         private readonly IList<Locator> _locators = new List<Locator>();
@@ -63,6 +64,7 @@ namespace FubuCore.Binding
         }
     }
 
+    [MarkedForTermination]
     public class Locator
     {
         public Func<IEnumerable<string>> AllKeys { get; set; }

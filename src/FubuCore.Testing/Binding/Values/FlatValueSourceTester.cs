@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using FubuCore.Binding;
 using FubuCore.Binding.Values;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -98,6 +100,22 @@ namespace FubuCore.Testing.Binding.Values
             report.AssertWasCalled(x => x.Value("c", "3"));
             report.AssertWasCalled(x => x.Value("d", "4"));
             report.AssertWasCalled(x => x.Value("e", "5"));
+        }
+
+        [Test]
+        public void value_hit()
+        {
+            theDictionary.Add("a", "1");
+
+            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+
+            theValues.Value("a", action).ShouldBeTrue();
+
+            action.AssertWasCalled(x => x.Invoke(new BindingValue{
+                RawKey = "a",
+                RawValue = "1",
+                Source = theValues.Name
+            }));
         }
     }
 

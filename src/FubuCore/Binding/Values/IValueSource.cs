@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FubuCore.Binding.Values
@@ -14,5 +15,7 @@ namespace FubuCore.Binding.Values
         IEnumerable<IValueSource> GetChildren(string key);
 
         void WriteReport(IValueReport report);
+
+        bool Value(string key, Action<BindingValue> callback);
     }
 }

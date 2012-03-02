@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace FubuCore.Util
@@ -7,5 +8,7 @@ namespace FubuCore.Util
         bool ContainsKey(string key);
         string Get(string key);
         IEnumerable<string> GetKeys();
+
+        bool ForValue(string key, Action<string, string> callback);
     }
 }

@@ -173,6 +173,7 @@
     <Compile Include="UrlContextTester.cs" />
     <Compile Include="Util\CacheTester.cs" />
     <Compile Include="Util\CompositePredicateTester.cs" />
+    <Compile Include="Util\DictionaryKeyValuesTester.cs" />
     <Compile Include="Util\IndexerTester.cs" />
     <Compile Include="Util\StringPropertyReaderTester.cs" />
     <Compile Include="Util\TextWriting\ColumnLineTester.cs" />

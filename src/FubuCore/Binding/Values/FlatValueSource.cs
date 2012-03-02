@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
@@ -61,6 +62,17 @@ namespace FubuCore.Binding.Values
             _values.GetKeys().ToList().Each(x => report.Value(x, _values.Get(x)));
         }
 
+        public bool Value(string key, Action<BindingValue> callback)
+        {
+            return _values.ForValue(key, (rawKey, value) =>
+            {
+                callback(new BindingValue{
+                    RawKey = rawKey,
+                    RawValue = value,
+                    Source = Name
+                });
+            });
+        }
 
 
         public class Indexer

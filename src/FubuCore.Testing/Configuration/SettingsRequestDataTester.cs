@@ -10,6 +10,33 @@ namespace FubuCore.Testing.Configuration
     public class SettingsRequestDataTester
     {
         [Test]
+        public void ForValue_miss()
+        {
+            var core1 = new SettingsData(SettingCategory.core).With("key1", "core1");
+
+            var requestData = new SettingsRequestData(new SettingsData[]{core1});
+
+            var action = MockRepository.GenerateMock<Action<string, string>>();
+            requestData.ForValue("key2", action).ShouldBeFalse();
+
+            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+        }
+
+        [Test]
+        public void ForValue_hit()
+        {
+            var core1 = new SettingsData(SettingCategory.core).With("key1", "core1");
+
+            var requestData = new SettingsRequestData(new SettingsData[] { core1 });
+
+            var action = MockRepository.GenerateMock<Action<string, string>>();
+            requestData.ForValue("key1", action).ShouldBeTrue();
+
+            action.AssertWasCalled(x => x.Invoke("key1", "core1"));
+        }
+
+
+        [Test]
         public void contains_key_negative()
         {
             var core1 = new SettingsData(SettingCategory.core).With("key1", "core1");

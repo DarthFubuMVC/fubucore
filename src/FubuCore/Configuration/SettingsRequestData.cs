@@ -6,6 +6,7 @@ using FubuCore.Util;
 
 namespace FubuCore.Configuration
 {
+    
     public class SettingsRequestData : IRequestData, IKeyValues
     {
         private readonly SettingsStep _profileStep;
@@ -119,6 +120,12 @@ namespace FubuCore.Configuration
         public IEnumerable<string> GetKeys()
         {
             return _steps.SelectMany(s => s.AllKeys);
+        }
+
+        // TODO -- this won't stay like this
+        public bool ForValue(string key, Action<string, string> callback)
+        {
+            return Value(key, v => callback(v.RawKey, v.RawValue as string));
         }
 
         public IRequestData GetChildRequest(string prefixOrChild)

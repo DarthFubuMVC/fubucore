@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Util;
@@ -29,6 +30,11 @@ namespace FubuCore.Binding.Values
         {
             var prefixChars = _prefix.ToCharArray();
             return _inner.GetKeys().Where(x => x.StartsWith(_prefix)).Select(x => x.TrimStart(prefixChars));
+        }
+
+        public bool ForValue(string key, Action<string, string> callback)
+        {
+            return _inner.ForValue(_prefix + key, callback);
         }
     }
 }

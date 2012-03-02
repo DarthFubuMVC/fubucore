@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FubuCore.Util;
 
@@ -27,6 +28,15 @@ namespace FubuCore.Binding.Values
         public IEnumerable<string> GetKeys()
         {
             return _values.GetAllKeys();
+        }
+
+        public bool ForValue(string key, Action<string, string> callback)
+        {
+            if (!ContainsKey(key)) return false;
+
+            callback(key, Get(key));
+
+            return true;
         }
     }
 }
