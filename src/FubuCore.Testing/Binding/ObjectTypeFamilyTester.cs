@@ -36,8 +36,8 @@ namespace FubuCore.Testing.Binding
         {
             BindingScenario<MyModel>.Build(x =>
             {
-                x.Data(o => o.ObjectProperty, 123);
-            }).ObjectProperty.ShouldEqual(123);
+                x.Data(o => o.ObjectProperty, "123");
+            }).ObjectProperty.ShouldEqual("123");
         }
 
 

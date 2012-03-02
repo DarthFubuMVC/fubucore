@@ -40,7 +40,7 @@ namespace FubuCore.Binding
 
         public IRequestData GetChildRequest(string prefixOrChild)
         {
-            var sources = _sources.Where(x => x.Has(prefixOrChild)).Select(x => x.GetChild(prefixOrChild));
+            var sources = _sources.Where(x => x.HasChild(prefixOrChild)).Select(x => x.GetChild(prefixOrChild));
             return new NewRequestData(sources);
         }
 
@@ -52,7 +52,7 @@ namespace FubuCore.Binding
                 var childrenSources = valueSource.GetChildren(prefixOrChild);
                 if (childrenSources.Any())
                 {
-                    return childrenSources.Select(x => new NewRequestData(x));
+                    return childrenSources.Select(x => new NewRequestData(x)).ToList();
                 }
             }
 

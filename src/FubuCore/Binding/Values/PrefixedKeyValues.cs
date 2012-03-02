@@ -28,8 +28,8 @@ namespace FubuCore.Binding.Values
 
         public IEnumerable<string> GetKeys()
         {
-            var prefixChars = _prefix.ToCharArray();
-            return _inner.GetKeys().Where(x => x.StartsWith(_prefix)).Select(x => x.TrimStart(prefixChars));
+            var matchingKeys = _inner.GetKeys().Where(x => x.StartsWith(_prefix));
+            return matchingKeys.Select(x => x.Substring(_prefix.Length));
         }
 
         public bool ForValue(string key, Action<string, string> callback)

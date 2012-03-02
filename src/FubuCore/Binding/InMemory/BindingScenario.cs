@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using FubuCore.Binding.Logging;
+using FubuCore.Binding.Values;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding.InMemory
@@ -60,7 +61,7 @@ namespace FubuCore.Binding.InMemory
         public class ScenarioDefinition
         {
             private readonly IList<Action<IBindingContext>> _actions = new List<Action<IBindingContext>>();
-            private readonly InMemoryRequestData _data = new InMemoryRequestData();
+            private readonly KeyValues _data = new KeyValues();
             private readonly BindingRegistry _registry = new BindingRegistry();
             private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private IServiceLocator _customServices;
@@ -86,9 +87,9 @@ namespace FubuCore.Binding.InMemory
                 get { return _logger; }
             }
 
-            protected internal InMemoryRequestData RequestData
+            protected internal IRequestData RequestData
             {
-                get { return _data; }
+                get { return new NewRequestData(new FlatValueSource(_data)); }
             }
 
             protected internal IServiceLocator Services
@@ -150,12 +151,12 @@ namespace FubuCore.Binding.InMemory
 
             public void Data(string name, object value)
             {
-                _data[name] = value;
+                _data[name] = value.ToString();
             }
 
             public void Data(Expression<Func<T, object>> property, object rawValue)
             {
-                _data[property.ToAccessor().Name] = rawValue;
+                _data[property.ToAccessor().Name] = rawValue.ToString();
             }
 
             // TODO -- UT this

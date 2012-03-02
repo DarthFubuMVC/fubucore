@@ -44,7 +44,7 @@ EyeColor=Blue
             var value = propReport.Values.Single();
             value.RawKey.ShouldEqual("Age");
             value.RawValue.ShouldEqual("38");
-            value.Source.ShouldEqual("in memory");
+            value.Source.ShouldEqual("Anonymous");
         }
 
         [Test]
@@ -85,7 +85,7 @@ TargetEyeColor=Blue
             var value = age.Values.Single();
             value.RawKey.ShouldEqual("TargetAge");
             value.RawValue.ShouldEqual("38");
-            value.Source.ShouldEqual("in memory");
+            value.Source.ShouldEqual("Anonymous");
         }
 
         [Test]

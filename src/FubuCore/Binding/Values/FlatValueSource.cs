@@ -38,7 +38,8 @@ namespace FubuCore.Binding.Values
 
         public bool HasChild(string key)
         {
-            return _values.GetKeys().Any(x => x.StartsWith(key));
+            var enumerable = _values.GetKeys();
+            return enumerable.Any(x => x.StartsWith(key));
         }
 
         public IValueSource GetChild(string key)
