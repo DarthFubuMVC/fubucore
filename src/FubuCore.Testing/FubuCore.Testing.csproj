@@ -96,6 +96,8 @@
     <Compile Include="Binding\ServiceArgumentsTester.cs" />
     <Compile Include="Binding\SmartRequestTester.cs" />
     <Compile Include="Binding\StandardModelBinderTester.cs" />
+    <Compile Include="Binding\Values\FlatValueSourceTester.cs" />
+    <Compile Include="Binding\Values\PrefixedKeyValuesTester.cs" />
     <Compile Include="Configuration\AppSettingsKeyValuesTester.cs" />
     <Compile Include="Configuration\AppSettingsProviderIntegratedTester.cs" />
     <Compile Include="Configuration\AppSettingsRequestDataIntegratedTester.cs" />

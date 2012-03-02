@@ -108,6 +108,11 @@
     <Compile Include="Binding\StandardModelBinder.cs" />
     <Compile Include="Binding\StatelessConverter.cs" />
     <Compile Include="Binding\BasicConverterFamily.cs" />
+    <Compile Include="Binding\Values\FlatValueSource.cs" />
+    <Compile Include="Binding\Values\IValueReport.cs" />
+    <Compile Include="Binding\Values\IValueSource.cs" />
+    <Compile Include="Binding\Values\KeyValues.cs" />
+    <Compile Include="Binding\Values\PrefixedKeyValues.cs" />
     <Compile Include="CommandLine\CommandFailureException.cs" />
     <Compile Include="CommandLine\ConsoleWriter.cs" />
     <Compile Include="CommandLine\EnumerableArgument.cs" />
