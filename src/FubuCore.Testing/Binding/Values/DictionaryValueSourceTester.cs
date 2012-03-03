@@ -72,8 +72,17 @@ namespace FubuCore.Testing.Binding.Values
 
             var childValueSource = theSource.GetChild("child");
             childValueSource.Get("abc").ShouldEqual(123);
+        }
 
-            childValueSource.Name.ShouldEqual(theSource.Name);
+        [Test]
+        public void get_child_name()
+        {
+            var child = new Dictionary<string, object>();
+            theDictionary.Add("child", child);
+
+            var childValueSource = theSource.GetChild("child");
+
+            childValueSource.Name.ShouldEqual(theSource.Name + ".child");
         }
 
         [Test]
@@ -104,8 +113,31 @@ namespace FubuCore.Testing.Binding.Values
             children.ElementAt(1).Get("a").ShouldEqual(1);
             children.ElementAt(2).Get("a").ShouldEqual(2);
 
-            children.Each(x => x.Name.ShouldEqual(theSource.Name));
         
+        }
+
+        [Test]
+        public void get_children_when_there_are_children_name()
+        {
+            var list = new List<IDictionary<string, object>>(){
+                new Dictionary<string, object>(),
+                new Dictionary<string, object>(),
+                new Dictionary<string, object>()
+            };
+
+            list[0].Add("a", 0);
+            list[1].Add("a", 1);
+            list[2].Add("a", 2);
+
+            theDictionary.Add("list", list);
+
+            var children = theSource.GetChildren("list");
+            children.Count().ShouldEqual(3);
+
+            children.ElementAt(0).Name.ShouldEqual("a name.list[0]");
+            children.ElementAt(1).Name.ShouldEqual("a name.list[1]");
+            children.ElementAt(2).Name.ShouldEqual("a name.list[2]");
+
         }
 
         [Test]

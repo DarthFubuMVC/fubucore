@@ -40,7 +40,7 @@ namespace FubuCore.Binding.Values
         public IValueSource GetChild(string key)
         {
             var childDict = _dictionary.Child(key);
-            return new DictionaryValueSource(childDict, Name);
+            return new DictionaryValueSource(childDict, Name + "." + key);
         }
 
         public IEnumerable<IValueSource> GetChildren(string key)
@@ -53,7 +53,14 @@ namespace FubuCore.Binding.Values
                 return Enumerable.Empty<IValueSource>();
             }
 
-            return enumerable.Select(x => new DictionaryValueSource(x, _name));
+            var i = 0;
+            return enumerable.Select(x =>
+            {
+                var name = "{0}.{1}[{2}]".ToFormat(_name, key, i);
+
+                i++;
+                return new DictionaryValueSource(x, name);
+            }).ToList();
         }
 
         public void WriteReport(IValueReport report)
