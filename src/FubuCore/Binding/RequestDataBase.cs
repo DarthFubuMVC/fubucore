@@ -15,7 +15,7 @@ namespace FubuCore.Binding
 
         public object Value(string key)
         {
-            return hasValue(key) ? fetch(key) : null;
+            return Has(key) ? Get(key) : null;
         }
 
         protected abstract string source
@@ -25,11 +25,11 @@ namespace FubuCore.Binding
 
         public virtual bool Value(string key, Action<BindingValue> callback)
         {
-            if (hasValue(key))
+            if (Has(key))
             {
                 callback(new BindingValue{
                     RawKey = key,
-                    RawValue = fetch(key),
+                    RawValue = Get(key),
                     Source = source
                 });
                 return true;
@@ -38,8 +38,8 @@ namespace FubuCore.Binding
             return false;
         }
 
-        protected abstract object fetch(string key);
-        protected virtual bool hasValue(string key)
+        protected abstract object Get(string key);
+        protected virtual bool Has(string key)
         {
             return _allKeys.Value.Contains(key);
         }

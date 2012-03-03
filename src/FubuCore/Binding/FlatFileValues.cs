@@ -4,13 +4,13 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class FlatFileRequestData : RequestDataBase
+    public class FlatFileValues : IKeyValues
     {
         private readonly string _concatenator;
         private readonly Cache<string, int> _indices = new Cache<string, int>();
         private string[] _values;
 
-        public FlatFileRequestData(string concatenator, string headerLine)
+        public FlatFileValues(string concatenator, string headerLine)
         {
             _concatenator = concatenator;
             var headers = headerLine.Split(new string[] { _concatenator }, StringSplitOptions.None);
@@ -25,17 +25,12 @@ namespace FubuCore.Binding
             _values = line.Split(new string[] { _concatenator }, StringSplitOptions.None);
         }
 
-        protected override string source
-        {
-            get { return "Flat file input"; }
-        }
-
-        protected override object fetch(string key)
+        public string Get(string key)
         {
             return _values[_indices[key]];
         }
 
-        protected override bool hasValue(string key)
+        public bool Has(string key)
         {
             return _indices.Has(key);
         }
@@ -45,9 +40,18 @@ namespace FubuCore.Binding
             _indices.WithValue(header, i => _indices[alias] = i);
         }
 
-        public override IEnumerable<string> GetKeys()
+        public IEnumerable<string> GetKeys()
         {
             return _indices.GetAllKeys();
+        }
+
+        public bool ForValue(string key, Action<string, string> callback)
+        {
+            if (!Has(key)) return false;
+
+            callback(key, Get(key));
+
+            return true;
         }
     }
 }

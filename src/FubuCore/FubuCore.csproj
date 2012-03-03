@@ -67,7 +67,7 @@
     <Compile Include="Binding\ExpandEnvironmentVariablesFamily.cs" />
     <Compile Include="Binding\FlatFileReader.cs" />
     <Compile Include="Binding\FlatFileRequest.cs" />
-    <Compile Include="Binding\FlatFileRequestData.cs" />
+    <Compile Include="Binding\FlatFileValues.cs" />
     <Compile Include="Binding\IBindingContext.cs" />
     <Compile Include="Binding\Logging\BindingReport.cs" />
     <Compile Include="Binding\Logging\BindingReportTextWriter.cs" />

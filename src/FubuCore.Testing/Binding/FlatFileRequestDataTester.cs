@@ -10,22 +10,22 @@ namespace FubuCore.Testing.Binding
     [TestFixture]
     public class FlatFileRequestDataTester
     {
-        private FlatFileRequestData request;
+        private FlatFileValues request;
 
         [SetUp]
         public void SetUp()
         {
-            request = new FlatFileRequestData("|", "a|b|c|d");
+            request = new FlatFileValues("|", "a|b|c|d");
         }
 
         [Test]
         public void read_without_aliases()
         {
             request.ReadLine("1|2|3|4");
-            request.Value("a").ShouldEqual("1");
-            request.Value("b").ShouldEqual("2");
-            request.Value("c").ShouldEqual("3");
-            request.Value("d").ShouldEqual("4");
+            request.Get("a").ShouldEqual("1");
+            request.Get("b").ShouldEqual("2");
+            request.Get("c").ShouldEqual("3");
+            request.Get("d").ShouldEqual("4");
         }
 
         [Test]
@@ -33,7 +33,7 @@ namespace FubuCore.Testing.Binding
         {
             string value = null;
             request.ReadLine("1|2|3|4");
-            request.Value("a", o => value = (string) o.RawValue);
+            request.ForValue("a", (key,o) => value = o);
 
             value.ShouldEqual("1");
         }
@@ -44,7 +44,7 @@ namespace FubuCore.Testing.Binding
             request.Alias("a", "aaa");
             string value = null;
             request.ReadLine("1|2|3|4");
-            request.Value("aaa", o => value = (string)o.RawValue);
+            request.ForValue("aaa", (key, o) => value = (string)o);
 
             value.ShouldEqual("1");
         }

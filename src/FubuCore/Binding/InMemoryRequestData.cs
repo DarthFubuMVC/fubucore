@@ -23,12 +23,12 @@ namespace FubuCore.Binding
             set { _values[key] = value; }
         }
 
-        protected override object fetch(string key)
+        protected override object Get(string key)
         {
             return _values[key];
         }
 
-        protected override bool hasValue(string key)
+        protected override bool Has(string key)
         {
             return _values.Has(key);
         }

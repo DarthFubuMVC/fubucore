@@ -5,6 +5,7 @@ using FubuCore.Binding.Values;
 
 namespace FubuCore.Binding
 {
+    // TODO -- go look at all of the usages of this thing and clean stuff up
     public class NewRequestData : IRequestData
     {
         private readonly IList<IValueSource> _sources = new List<IValueSource>();

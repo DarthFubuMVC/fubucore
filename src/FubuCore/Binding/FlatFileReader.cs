@@ -1,6 +1,7 @@
 using System.IO;
 using System.Text;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Values;
 using FubuCore.Util;
 
 
@@ -31,10 +32,10 @@ namespace FubuCore.Binding
 
         private void processData(FlatFileRequest<T> request, StreamReader reader, string headers)
         {
-            var data = new FlatFileRequestData(request.Concatenator, headers);
+            var data = new FlatFileValues(request.Concatenator, headers);
             _aliases.Each((header, alias) => data.Alias(header, alias));
 
-            var context = new BindingContext(data, _services, new NulloBindingLogger());
+            var context = new BindingContext(new NewRequestData(new FlatValueSource(data)), _services, new NulloBindingLogger());
 
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -43,11 +44,11 @@ namespace FubuCore.Binding
             }
         }
 
-        private void readTargetFromLine(FlatFileRequest<T> request, FlatFileRequestData data, string line, BindingContext context)
+        private void readTargetFromLine(FlatFileRequest<T> request, FlatFileValues data, string line, BindingContext context)
         {
             data.ReadLine(line);
-                    
-            var target = request.Finder(data);
+
+            var target = request.Finder(new NewRequestData(new FlatValueSource(data)));
             _resolver.BindModel(target, context);
 
             request.Callback(target);
