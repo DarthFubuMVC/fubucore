@@ -62,7 +62,7 @@ namespace FubuCore.Testing.Binding.Values
         }
 
         [Test]
-        public void get_child()
+        public void get_child_when_it_already_exists()
         {
             var child = new Dictionary<string, object>();
             theDictionary.Add("a", "something");
@@ -72,6 +72,18 @@ namespace FubuCore.Testing.Binding.Values
 
             var childValueSource = theSource.GetChild("child");
             childValueSource.Get("abc").ShouldEqual(123);
+        }
+
+        [Test]
+        public void get_child_when_it_does_not_exist()
+        {
+            var childValueSource = theSource.GetChild("child");
+
+            childValueSource.ShouldNotBeNull().ShouldBeOfType<DictionaryValueSource>()
+                .Name.ShouldEqual("a name.child");
+
+            // It's idempotent on the add
+            theSource.GetChild("child").ShouldEqual(childValueSource);
         }
 
         [Test]

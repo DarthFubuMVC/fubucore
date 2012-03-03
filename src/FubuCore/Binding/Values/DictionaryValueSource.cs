@@ -37,8 +37,16 @@ namespace FubuCore.Binding.Values
                        : false;
         }
 
+
+
         public IValueSource GetChild(string key)
         {
+            if (!HasChild(key))
+            {
+                var dict = new Dictionary<string, object>();
+                _dictionary.Add(key, dict);
+            }
+
             var childDict = _dictionary.Child(key);
             return new DictionaryValueSource(childDict, Name + "." + key);
         }
@@ -79,6 +87,29 @@ namespace FubuCore.Binding.Values
             });
 
             return true;
+        }
+
+        public bool Equals(DictionaryValueSource other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other._dictionary, _dictionary) && Equals(other._name, _name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != typeof (DictionaryValueSource)) return false;
+            return Equals((DictionaryValueSource) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return ((_dictionary != null ? _dictionary.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
+            }
         }
     }
 }
