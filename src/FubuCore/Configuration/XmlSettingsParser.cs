@@ -51,7 +51,7 @@ namespace FubuCore.Configuration
             var root = document.WithRoot("Settings");
             root.SetAttribute("category", data.Category.ToString());
 
-            data.AllKeys.Each(key =>
+            data.GetKeys().Each(key =>
             {
                 root.AddElement("add").WithAtt("key", key).WithAtt("value", data[key]);
             });

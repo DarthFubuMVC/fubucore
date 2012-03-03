@@ -16,9 +16,9 @@ namespace FubuCore.Binding.Values
             _inner = inner;
         }
 
-        public bool ContainsKey(string key)
+        public bool Has(string key)
         {
-            return _inner.ContainsKey(_prefix + key);
+            return _inner.Has(_prefix + key);
         }
 
         public string Get(string key)

@@ -11,7 +11,7 @@ namespace FubuCore.Configuration
     {
         private readonly NameValueCollection _settings = ConfigurationManager.AppSettings;
 
-        public bool ContainsKey(string key)
+        public bool Has(string key)
         {
             if (!_settings.HasKeys())
             {
@@ -38,7 +38,7 @@ namespace FubuCore.Configuration
 
         public bool ForValue(string key, Action<string, string> callback)
         {
-            if (!ContainsKey(key)) return false;
+            if (!Has(key)) return false;
 
             callback(key, Get(key));
 

@@ -24,11 +24,11 @@ namespace FubuCore.Testing.Binding.Values
         {
             theValues["Key1"] = "a";
 
-            thePrefixedValues.ContainsKey("Key1").ShouldBeFalse();
+            thePrefixedValues.Has("Key1").ShouldBeFalse();
 
             theValues["OneKey1"] = "b";
 
-            thePrefixedValues.ContainsKey("Key1").ShouldBeTrue();
+            thePrefixedValues.Has("Key1").ShouldBeTrue();
         }
 
         [Test]

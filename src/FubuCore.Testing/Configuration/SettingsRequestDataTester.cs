@@ -45,7 +45,7 @@ namespace FubuCore.Testing.Configuration
 
             var request = SettingsRequestData.For(core1, environment);
 
-            request.ContainsKey("notKey").ShouldBeFalse();
+            request.Has("notKey").ShouldBeFalse();
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace FubuCore.Testing.Configuration
 
             var request = SettingsRequestData.For(core1, environment);  
 
-            request.ContainsKey("key1").ShouldBeTrue();
+            request.Has("key1").ShouldBeTrue();
         }
 
         

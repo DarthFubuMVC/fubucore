@@ -28,7 +28,7 @@ namespace FubuCore.Binding.Values
 
         public bool Has(string key)
         {
-            return _values.ContainsKey(key);
+            return _values.Has(key);
         }
 
         public object Get(string key)

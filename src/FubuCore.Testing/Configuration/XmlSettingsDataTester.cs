@@ -80,9 +80,9 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void all_keys()
         {
-            theSettings.AllKeys.ShouldContain("WebsiteSettings.PublicMobileUrlBase");
-            theSettings.AllKeys.ShouldContain("WebsiteSettings.PublicUrlBase");
-            theSettings.AllKeys.ShouldContain("PollingServiceSettings.FrequencyInSeconds");
+            theSettings.GetKeys().ShouldContain("WebsiteSettings.PublicMobileUrlBase");
+            theSettings.GetKeys().ShouldContain("WebsiteSettings.PublicUrlBase");
+            theSettings.GetKeys().ShouldContain("PollingServiceSettings.FrequencyInSeconds");
         }
 
         [Test]

@@ -64,12 +64,12 @@ namespace FubuCore.Configuration
 
             public IEnumerable<string> AllKeys
             {
-                get { return _settingData.SelectMany(data => data.AllKeys); }
+                get { return _settingData.SelectMany(data => data.GetKeys()); }
             }
 
             public bool HasAnyValuePrefixedWith(string key)
             {
-                return _settingData.Any(x => x.AllKeys.Any(k => k.StartsWith(key)));
+                return _settingData.Any(x => x.GetKeys().Any(k => k.StartsWith(key)));
             }
 
             public bool Value(string key, Action<BindingValue> callback)
@@ -107,7 +107,7 @@ namespace FubuCore.Configuration
             return _steps.FirstValue(x => x.DiagnosticValueOf(key));
         }
 
-        public bool ContainsKey(string key)
+        public bool Has(string key)
         {
             return Value(key, o => { });
         }

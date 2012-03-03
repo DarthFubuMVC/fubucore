@@ -20,12 +20,12 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void contains_key()
         {
-            theValues.ContainsKey("AppSettings.Nested.Flag3").ShouldBeTrue();
-            theValues.ContainsKey("a").ShouldBeTrue();
-            theValues.ContainsKey("AppSettings.Nested.Files[1].Location").ShouldBeTrue();
+            theValues.Has("AppSettings.Nested.Flag3").ShouldBeTrue();
+            theValues.Has("a").ShouldBeTrue();
+            theValues.Has("AppSettings.Nested.Files[1].Location").ShouldBeTrue();
             
 
-            theValues.ContainsKey("not a real value").ShouldBeFalse();
+            theValues.Has("not a real value").ShouldBeFalse();
         }
 
         [Test]

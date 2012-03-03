@@ -30,9 +30,9 @@ namespace FubuCore.Configuration
 
         public SettingCategory Category { get; set; }
 
-        public IEnumerable<string> AllKeys
+        public IEnumerable<string> GetKeys()
         {
-            get { return _values.GetAllKeys(); }
+            return _values.GetAllKeys();
         }
 
         public SettingsData With(string key, string value)
@@ -53,7 +53,7 @@ namespace FubuCore.Configuration
 
         public SettingsData SubsetPrefixedBy(string prefix)
         {
-            var keys = AllKeys.Where(key => key.StartsWith(prefix));
+            var keys = GetKeys().Where(key => key.StartsWith(prefix));
             var subset = new SettingsData(Category){
                 Provenance = Provenance
             };
@@ -73,28 +73,14 @@ namespace FubuCore.Configuration
                 Provenance = Provenance
             };
 
-            AllKeys.Where(keyFilter).Each(key => subset.With(key, _values[key]));
+            GetKeys().Where(keyFilter).Each(key => subset.With(key, _values[key]));
 
             return subset;
         }
 
         public void Read(string text)
         {
-            var parts = text.Split('=');
-            if (parts.Length<=1)
-            {
-                throw new Exception("Invalid settings data text for '{0}'".ToFormat(text));
-            }
-
-            var key = parts[0].Trim();
-            var value = parts.Skip(1).Join("=").Trim();
-
-            if(value.StartsWith("\"") && value.EndsWith("\""))
-            {
-                value = value.Substring(1, value.Length - 2);
-            }
-
-            _values[key] = value;
+            StringPropertyReader.ReadLine(text, (key, value) => _values[key] = value);
         }
 
         public static SettingsData ReadFromFile(SettingCategory category, string file)
@@ -103,19 +89,9 @@ namespace FubuCore.Configuration
                 Provenance = file
             };
 
-            ReadFromFile(file, data);
+            StringPropertyReader.ForFile(file).ReadProperties((key, value) => data._values[key] = value);
 
             return data;
-        }
-
-        public static void ReadFromFile(string file, SettingsData data)
-        {
-            new FileSystem().ReadTextFile(file, text =>
-            {
-                if (text.IsEmpty()) return;
-
-                data.Read(text);
-            });
         }
 
         public override string ToString()

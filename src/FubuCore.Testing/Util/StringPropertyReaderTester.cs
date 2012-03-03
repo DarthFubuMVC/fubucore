@@ -17,7 +17,7 @@ c=3
 abcd=4
 ";
 
-            var props = new StringPropertyReader(text).ReadProperties();
+            var props = StringPropertyReader.ForText(text).ReadProperties();
 
             props["a"].ShouldEqual("1");
             props["b"].ShouldEqual("2");
@@ -35,7 +35,7 @@ first=0
             .third=2
 ";
 
-            var props = new StringPropertyReader(text).ReadProperties();
+            var props = StringPropertyReader.ForText(text).ReadProperties();
 
             props["first"].ShouldEqual("0");
             props["first.second"].ShouldEqual("1");

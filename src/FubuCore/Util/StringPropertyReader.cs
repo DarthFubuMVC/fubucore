@@ -1,21 +1,35 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace FubuCore.Util
 {
     public class StringPropertyReader
     {
-        private readonly string _text;
+        private readonly Action<Action<string>> _reader;
 
-        public StringPropertyReader(string text)
+        private StringPropertyReader(Action<Action<string>> reader)
         {
-            _text = text;
+            _reader = reader;
+        }
+
+        public static StringPropertyReader ForText(string text)
+        {
+            return new StringPropertyReader(text.ReadLines);
+        }
+
+        public static StringPropertyReader ForFile(string file)
+        {
+            var fileSystem = new FileSystem();
+
+            return new StringPropertyReader(callback => fileSystem.ReadTextFile(file, callback));
         }
 
         public void ReadProperties(Action<string, string> callback)
         {
             var lastLine = "";
 
-            _text.ReadLines(line =>
+            _reader.Invoke(line =>
             {
                 if (line.IsEmpty()) return;
 
@@ -29,9 +43,29 @@ namespace FubuCore.Util
 
                 lastLine = line;
 
-                var parts = line.Split('=');
-                callback(parts[0], parts[1]);
+
+                // This code below becomes the SettingsData.Read(text) method
+                ReadLine(line, callback);
             });
+        }
+
+        public static void ReadLine(string text, Action<string, string> callback)
+        {
+            var parts = text.Split('=');
+            if (parts.Length <= 1)
+            {
+                throw new Exception("Invalid settings data text for '{0}'".ToFormat(text));
+            }
+
+            var key = parts[0].Trim();
+            var value = parts.Skip(1).Join("=").Trim();
+
+            if (value.StartsWith("\"") && value.EndsWith("\""))
+            {
+                value = value.Substring(1, value.Length - 2);
+            }
+
+            callback(key, value);
         }
 
         public Cache<string, string> ReadProperties()

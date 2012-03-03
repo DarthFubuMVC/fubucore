@@ -45,7 +45,7 @@ namespace FubuCore.Binding
 
         public void ReadData(string text)
         {
-            new StringPropertyReader(text).ReadProperties((key, value) => _values[key] = value);
+            StringPropertyReader.ForText(text).ReadProperties((key, value) => _values[key] = value);
         }
     }
 }

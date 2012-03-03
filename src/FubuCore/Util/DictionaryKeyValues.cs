@@ -21,7 +21,7 @@ namespace FubuCore.Util
             get { return _dictionary; }
         }
 
-        public bool ContainsKey(string key)
+        public bool Has(string key)
         {
             return _dictionary.ContainsKey(key);
         }
@@ -38,7 +38,7 @@ namespace FubuCore.Util
 
         public bool ForValue(string key, Action<string, string> callback)
         {
-            if (!ContainsKey(key)) return false;
+            if (!Has(key)) return false;
 
             callback(key, Get(key));
 

@@ -64,7 +64,7 @@ namespace FubuCore
             foreach (Match match in matches)
             {
                 var key = match.Groups[TemplateGroup].Value;
-                if ((lastIndex == 0 || match.Index > lastIndex) && values.ContainsKey(key))
+                if ((lastIndex == 0 || match.Index > lastIndex) && values.Has(key))
                 {
                     builder.Append(template.Substring(lastIndex, match.Index - lastIndex));
                     builder.Append(values.Get(key));

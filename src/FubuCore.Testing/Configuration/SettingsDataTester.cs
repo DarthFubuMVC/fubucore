@@ -24,7 +24,7 @@ namespace FubuCore.Testing.Configuration
             data.Provenance.ShouldEqual("settings.txt");
             data.Category.ShouldEqual(SettingCategory.profile);
 
-            data.AllKeys.ShouldHaveTheSameElementsAs("A", "B", "C", "D");
+            data.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C", "D");
 
             data.Get("A").ShouldEqual("1");
         }
@@ -46,7 +46,7 @@ namespace FubuCore.Testing.Configuration
             data.Read("Key=Value1");
             data.Read("A.Key=Value2");
 
-            data.AllKeys.ShouldHaveTheSameElementsAs("Key", "A.Key");
+            data.GetKeys().ShouldHaveTheSameElementsAs("Key", "A.Key");
 
             data.Get("Key").ShouldEqual("Value1");
             data.Get("A.Key").ShouldEqual("Value2");
@@ -58,7 +58,7 @@ namespace FubuCore.Testing.Configuration
             var data = new SettingsData(SettingCategory.core);
             data.Read("DatabaseSettings.ConnectionString=\"Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;\"");
 
-            data.AllKeys.ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
+            data.GetKeys().ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
 
             data.Get("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
         }
@@ -79,15 +79,15 @@ namespace FubuCore.Testing.Configuration
             data.With("Three.C", "23");
 
             var subsetOne = data.SubsetPrefixedBy("One.");
-            subsetOne.AllKeys.ShouldHaveTheSameElementsAs("A", "B", "C");
+            subsetOne.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C");
             subsetOne.Get("A").ShouldEqual("1");
 
             var subsetTwo = data.SubsetPrefixedBy("Two.");
-            subsetTwo.AllKeys.ShouldHaveTheSameElementsAs("A", "B", "C", "D");
+            subsetTwo.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C", "D");
             subsetTwo.Get("A").ShouldEqual("11");
 
             var subsetThree = data.SubsetPrefixedBy("Three.");
-            subsetThree.AllKeys.ShouldHaveTheSameElementsAs("A", "B", "C");
+            subsetThree.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C");
             subsetThree.Get("A").ShouldEqual("21");
         }
 
@@ -124,12 +124,12 @@ namespace FubuCore.Testing.Configuration
             data.With("Three.C", "23");
 
             var subsetA = data.SubsetByKey(key => key.Contains("A"));
-            subsetA.AllKeys.ShouldHaveTheSameElementsAs("One.A", "Two.A", "Three.A");
+            subsetA.GetKeys().ShouldHaveTheSameElementsAs("One.A", "Two.A", "Three.A");
             subsetA.Get("One.A").ShouldEqual("1");
 
 
             var subsetOne = data.SubsetByKey(key => key.StartsWith("One"));
-            subsetOne.AllKeys.ShouldHaveTheSameElementsAs("One.A", "One.B", "One.C");
+            subsetOne.GetKeys().ShouldHaveTheSameElementsAs("One.A", "One.B", "One.C");
 
 
         }

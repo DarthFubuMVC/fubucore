@@ -15,7 +15,7 @@ namespace FubuCore.Binding.Values
         }
 
 
-        public bool ContainsKey(string key)
+        public bool Has(string key)
         {
             return _values.Has(key);
         }
@@ -32,7 +32,7 @@ namespace FubuCore.Binding.Values
 
         public bool ForValue(string key, Action<string, string> callback)
         {
-            if (!ContainsKey(key)) return false;
+            if (!Has(key)) return false;
 
             callback(key, Get(key));
 
@@ -41,7 +41,7 @@ namespace FubuCore.Binding.Values
 
         public void ReadData(string text)
         {
-            new StringPropertyReader(text).ReadProperties((key, value) => _values[key] = value);
+            StringPropertyReader.ForText(text).ReadProperties((key, value) => _values[key] = value);
         }
     }
 }

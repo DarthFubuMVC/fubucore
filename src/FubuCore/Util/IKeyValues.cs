@@ -5,7 +5,7 @@ namespace FubuCore.Util
 {
     public interface IKeyValues
     {
-        bool ContainsKey(string key);
+        bool Has(string key);
         string Get(string key);
         IEnumerable<string> GetKeys();
 
