@@ -62,7 +62,7 @@
     <Compile Include="Binding\ConversionPropertyBinder.cs" />
     <Compile Include="Binding\ConverterFamily.cs" />
     <Compile Include="Binding\ConvertProblem.cs" />
-    <Compile Include="Binding\DataReaderRequestData.cs" />
+    <Compile Include="Binding\DataReaderValues.cs" />
     <Compile Include="Binding\EnumerateFlatRequestData.cs" />
     <Compile Include="Binding\ExpandEnvironmentVariablesFamily.cs" />
     <Compile Include="Binding\FlatFileReader.cs" />

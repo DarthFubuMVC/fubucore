@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Values;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
@@ -55,8 +56,10 @@ namespace FubuCore.Binding
         public void Build<T>(RowProcessingRequest<T> input)
         {
             IDataReader reader = input.Reader;
-            var request = new DataReaderRequestData(reader, _aliases);
-            var context = new BindingContext(request, _services, new NulloBindingLogger());
+
+            // TODO -- awkward!  Let's do some convenience methods here and make this easier
+            var request = new DataReaderValues(reader, _aliases);
+            var context = new BindingContext(new NewRequestData(new FlatValueSource(request)), _services, new NulloBindingLogger());
 
             while (reader.Read())
             {
