@@ -6,7 +6,7 @@ using System.Linq;
 namespace FubuCore.Configuration
 {
 
-
+    [MarkedForTermination("Can kill the while shebang?, maybe just subclass DictionaryValueSource")]
     public class SettingsData
     {
         private readonly Cache<string, string> _values = new Cache<string, string>();
@@ -26,6 +26,7 @@ namespace FubuCore.Configuration
             set { _values[key] = value; }
         }
 
+        [MarkedForTermination("Becomes just 'name' in the diagnostics")]
         public string Provenance { get; set; }
 
         public SettingCategory Category { get; set; }
@@ -51,6 +52,7 @@ namespace FubuCore.Configuration
             return _values[key];
         }
 
+        [MarkedForTermination("Kill!")]
         public SettingsData SubsetPrefixedBy(string prefix)
         {
             var keys = GetKeys().Where(key => key.StartsWith(prefix));
@@ -67,6 +69,7 @@ namespace FubuCore.Configuration
             return subset;
         }
 
+        [MarkedForTermination("Only used to pull substitutions away from other values")]
         public SettingsData SubsetByKey(Func<string, bool> keyFilter)
         {
             var subset = new SettingsData(Category){

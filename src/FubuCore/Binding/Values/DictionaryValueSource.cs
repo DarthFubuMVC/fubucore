@@ -20,6 +20,18 @@ namespace FubuCore.Binding.Values
             get { return _name; }
         }
 
+        public void Set(string key, object value)
+        {
+            if (_dictionary.ContainsKey(key))
+            {
+                _dictionary[key] = value;
+            }
+            else
+            {
+                _dictionary.Add(key, value);
+            }
+        }
+
         public bool Has(string key)
         {
             return _dictionary.ContainsKey(key);

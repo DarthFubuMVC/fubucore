@@ -10,6 +10,32 @@ using Rhino.Mocks;
 namespace FubuCore.Testing.Binding.Values
 {
     [TestFixture]
+    public class DictionaryValueSourceLoaderTester
+    {
+        [Test]
+        public void load_several_levels_of_nested_properties()
+        {
+            var loader = new DictionaryValueSourceLoader("some name");
+
+            loader.Load("A", 1);
+            loader.Load("B", 2);
+            loader.Load("Child.A", 2);
+            loader.Load("Child.B", 3);
+            loader.Load("Child.Nested.A", 4);
+            loader.Load("Child.Nested.B", 5);
+
+            var source = loader.Source;
+            source.Get("A").ShouldEqual(1);
+            source.Get("B").ShouldEqual(2);
+            source.GetChild("Child").Get("A").ShouldEqual(2);
+            source.GetChild("Child").Get("B").ShouldEqual(3);
+            source.GetChild("Child").GetChild("Nested").Get("A").ShouldEqual(4);
+            source.GetChild("Child").GetChild("Nested").Get("B").ShouldEqual(5);
+        }
+    }
+
+
+    [TestFixture]
     public class DictionaryValueSourceTester
     {
         private Dictionary<string, object> theDictionary;
