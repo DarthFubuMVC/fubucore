@@ -109,6 +109,7 @@
     <Compile Include="Binding\StandardModelBinder.cs" />
     <Compile Include="Binding\StatelessConverter.cs" />
     <Compile Include="Binding\BasicConverterFamily.cs" />
+    <Compile Include="Binding\Values\DictionaryValueSource.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />
     <Compile Include="Binding\Values\IValueReport.cs" />
     <Compile Include="Binding\Values\IValueSource.cs" />
