@@ -109,6 +109,8 @@
     <Compile Include="Binding\StandardModelBinder.cs" />
     <Compile Include="Binding\StatelessConverter.cs" />
     <Compile Include="Binding\BasicConverterFamily.cs" />
+    <Compile Include="Binding\Values\DiagnosticValue.cs" />
+    <Compile Include="Binding\Values\DiagnosticValueSource.cs" />
     <Compile Include="Binding\Values\DictionaryPath.cs" />
     <Compile Include="Binding\Values\DictionaryValueSource.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="Binding\Values\IValueSource.cs" />
     <Compile Include="Binding\Values\KeyValues.cs" />
     <Compile Include="Binding\Values\PrefixedKeyValues.cs" />
+    <Compile Include="Binding\Values\ValueDiagnosticReport.cs" />
     <Compile Include="CommandLine\CommandFailureException.cs" />
     <Compile Include="CommandLine\ConsoleWriter.cs" />
     <Compile Include="CommandLine\EnumerableArgument.cs" />

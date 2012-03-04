@@ -1,3 +1,5 @@
+using System;
+
 namespace FubuCore.Binding.Values
 {
     public interface IValueReport
@@ -11,4 +13,6 @@ namespace FubuCore.Binding.Values
 
         void StartChild(string key, int index);
     }
+
+    // Gives you flat values
 }
