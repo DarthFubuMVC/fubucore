@@ -1,15 +1,15 @@
 @SETLOCAL
-@set rakeversion=""
-@FOR /f "tokens=2" %%a in ('rake --version') do @set rakeversion=%%a 
-@IF /I NOT "%rakeversion%" EQU "version " (
-@ENDLOCAL
-@ECHO *** Installing Rake
-@call gem install rake --no-rdoc --no-ri
-)
+
+@call :install rake
+@call :install rubyzip
+@call :install albacore
+
 @ENDLOCAL
 
-@ECHO *** Installing RubyZip
-@call gem install rubyzip --no-rdoc --no-ri
+exit /b
 
-@ECHO *** Installing Albacore (build support tools)
-@call gem install albacore --no-rdoc --no-ri
+:install
+@call gem list -l -i --no-verbose %1 2>&1 > NUL
+IF ERRORLEVEL 1 (@call ECHO *** Installing %1 && gem install %1 --no-rdoc --no-ri) ELSE (@call ECHO *** %1 already installed.)
+
+exit /b
