@@ -97,6 +97,7 @@
     <Compile Include="Binding\SmartRequestTester.cs" />
     <Compile Include="Binding\StandardModelBinderTester.cs" />
     <Compile Include="Binding\Values\DictionaryPathTester.cs" />
+    <Compile Include="Binding\Values\DictionaryValueSourceReportWritingTester.cs" />
     <Compile Include="Binding\Values\DictionaryValueSourceTester.cs" />
     <Compile Include="Binding\Values\FlatValueSourceTester.cs" />
     <Compile Include="Binding\Values\PrefixedKeyValuesTester.cs" />

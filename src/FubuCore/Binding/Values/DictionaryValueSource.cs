@@ -110,7 +110,33 @@ namespace FubuCore.Binding.Values
 
         public void WriteReport(IValueReport report)
         {
-            throw new NotImplementedException();
+            _dictionary.Keys.ToList().Each(key =>
+            {
+                var value = _dictionary[key];
+
+                if (value is IDictionary)
+                {
+                    report.StartChild(key);
+                    var child = GetChild(key);
+                    child.WriteReport(report);
+                    report.EndChild();
+                }
+                else if (value is IEnumerable<IDictionary>)
+                {
+                    var children = GetChildren(key).ToList();
+                    for (int i = 0; i < children.Count; i++)
+                    {
+                        report.StartChild(key, i);
+                        children[i].WriteReport(report);
+                        report.EndChild();
+                    }
+                }
+                else
+                {
+                    report.Value(key, value);
+                }
+
+            });
         }
 
         public bool Value(string key, Action<BindingValue> callback)
