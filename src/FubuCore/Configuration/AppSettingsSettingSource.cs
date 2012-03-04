@@ -18,7 +18,7 @@ namespace FubuCore.Configuration
 
             ConfigurationManager.AppSettings.AllKeys.Each(key =>
             {
-                data[key] = ConfigurationManager.AppSettings[key];
+                data.WriteProperty(key, ConfigurationManager.AppSettings[key]);
             });
 
             yield return data;

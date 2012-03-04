@@ -124,8 +124,8 @@ namespace FubuCore.Testing.Configuration
         public void write_and_read()
         {
             var settings = new SettingsData(SettingCategory.package);
-            settings["a"] = "1";
-            settings["b"] = "2";
+            settings.WriteProperty("a", "1");
+            settings.WriteProperty("b", "2");
         
             XmlSettingsParser.Write(settings, "config.xml");
 
@@ -133,8 +133,8 @@ namespace FubuCore.Testing.Configuration
 
             settings2.Category.ShouldEqual(SettingCategory.package);
 
-            settings2["a"].ShouldEqual("1");
-            settings2["b"].ShouldEqual("2");
+            settings2.ReadProperty("a").ShouldEqual("1");
+            settings2.ReadProperty("b").ShouldEqual("2");
         }
     }
 }

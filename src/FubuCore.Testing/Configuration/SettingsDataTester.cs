@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Configuration
             });
 
             var data = SettingsData.ReadFromFile(SettingCategory.profile, "settings.txt");
-            data.Provenance.ShouldEqual("settings.txt");
+            data.Name.ShouldEqual("settings.txt");
             data.Category.ShouldEqual(SettingCategory.profile);
 
             data.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C", "D");

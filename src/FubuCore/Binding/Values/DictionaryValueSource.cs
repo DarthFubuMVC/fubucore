@@ -196,5 +196,20 @@ namespace FubuCore.Binding.Values
 
             return new DictionaryValueSource(list[index]);
         }
+
+        public IEnumerable<string> GetKeys()
+        {
+            var report = new ValueDiagnosticReport();
+            WriteReport(report);
+
+            return report.AllValues().Select(x => x.Key);
+        }
+
+        public void Read(string text)
+        {
+            StringPropertyReader.ReadLine(text, (key, value) => WriteProperty(key, value));
+        }
     }
+
+
 }

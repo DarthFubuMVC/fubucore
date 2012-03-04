@@ -24,7 +24,7 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void found_all_four_sources_of_data()
         {
-            theData.Select(x => x.Provenance).OrderBy(x => x)
+            theData.Select(x => x.Name).OrderBy(x => x)
                 .ShouldHaveTheSameElementsAs(
                     "Configuration{0}Environment.config".ToFormat(Path.DirectorySeparatorChar), 
                     "Configuration{0}One.config".ToFormat(Path.DirectorySeparatorChar), 
@@ -35,7 +35,7 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void smoke_test_can_read_data()
         {
-            var data = theData.First(x => x.Provenance.Contains("Environment"));
+            var data = theData.First(x => x.Name.Contains("Environment"));
             data.Get("OneSettings.Name").ShouldEqual("Max");
         }
 

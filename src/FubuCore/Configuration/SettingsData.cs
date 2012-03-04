@@ -17,14 +17,18 @@ namespace FubuCore.Configuration
             Category = category;
         }
 
-        public object this[string key]
+        public void WriteProperty(string key, object value)
         {
-            get { return _values[key]; }
-            set { _values[key] = value; }
+            _values[key] = value;
+        }
+
+        public object ReadProperty(string key)
+        {
+            return _values[key];
         }
 
         [MarkedForTermination("Becomes just 'name' in the diagnostics")]
-        public string Provenance { get; set; }
+        public string Name { get; set; }
 
         public SettingCategory Category { get; set; }
 
@@ -35,7 +39,7 @@ namespace FubuCore.Configuration
 
         public SettingsData With(string key, string value)
         {
-            _values[key] = value;
+            WriteProperty(key, value);
             return this;
         }
 
@@ -57,17 +61,17 @@ namespace FubuCore.Configuration
         public static SettingsData ReadFromFile(SettingCategory category, string file)
         {
             var data = new SettingsData(category){
-                Provenance = file
+                Name = file
             };
 
-            StringPropertyReader.ForFile(file).ReadProperties((key, value) => data._values[key] = value);
+            StringPropertyReader.ForFile(file).ReadProperties(data.WriteProperty);
 
             return data;
         }
 
         public override string ToString()
         {
-            return string.Format("Settings Data, category {0}, provenance: {1}", Category, Provenance ?? "unknown");
+            return string.Format("Settings Data, category {0}, provenance: {1}", Category, Name ?? "unknown");
         }
     }
 }

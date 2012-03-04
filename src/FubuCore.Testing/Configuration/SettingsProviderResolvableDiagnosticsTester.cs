@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using FubuCore.Configuration;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -18,11 +18,11 @@ namespace FubuCore.Testing.Configuration
             theSettings1 = new SettingsData()
                 .With("Beer", "FreeState Wheat");
 
-            theSettings1.Provenance = "host";
+            theSettings1.Name = "host";
 
             theSettings2 = new SettingsData()
                 .With("Snack", "{Beer} and Peanuts");
-            theSettings2.Provenance = "other";
+            theSettings2.Name = "other";
         }
 
         [Test]

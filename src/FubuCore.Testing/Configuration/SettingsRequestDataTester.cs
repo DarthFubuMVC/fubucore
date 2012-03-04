@@ -69,7 +69,7 @@ namespace FubuCore.Testing.Configuration
             var environment = new SettingsData(SettingCategory.environment).With("key1", "environment1");
 
             var request = SettingsRequestData.For(core1, environment);
-            request.Value("key1").ShouldEqual(environment["key1"]);
+            request.Value("key1").ShouldEqual(environment.ReadProperty("key1"));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace FubuCore.Testing.Configuration
             var package = new SettingsData(SettingCategory.package).With("key1", "environment1");
 
             var request = SettingsRequestData.For(core1, package);
-            request.Value("key1").ShouldEqual(package["key1"]);
+            request.Value("key1").ShouldEqual(package.ReadProperty("key1"));
         }
 
         [Test]

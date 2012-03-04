@@ -17,7 +17,7 @@ namespace FubuCore.Configuration
                 document.Load(file);
 
                 var data = Parse(document.DocumentElement);
-                data.Provenance = file;
+                data.Name = file;
 
                 return data;
             }
@@ -39,7 +39,7 @@ namespace FubuCore.Configuration
             {
                 var key = elem.GetAttribute("key");
                 var value = elem.GetAttribute("value");
-                data[key] = value;
+                data.WriteProperty(key, value);
             });
 
             return data;
@@ -53,7 +53,7 @@ namespace FubuCore.Configuration
 
             data.GetKeys().Each(key =>
             {
-                root.AddElement("add").WithAtt("key", key).WithAtt("value", data[key].ToString());
+                root.AddElement("add").WithAtt("key", key).WithAtt("value", data.ReadProperty(key).ToString());
             });
 
             document.Save(filename);
