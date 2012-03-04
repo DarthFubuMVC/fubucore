@@ -1,15 +1,12 @@
-using System;
 using System.Collections.Generic;
 using FubuCore.Util;
-using System.Linq;
 
 namespace FubuCore.Configuration
 {
-
     [MarkedForTermination("Can kill the while shebang?, maybe just subclass DictionaryValueSource")]
     public class SettingsData
     {
-        private readonly Cache<string, string> _values = new Cache<string, string>();
+        private readonly Cache<string, object> _values = new Cache<string, object>();
 
         public SettingsData() : this(SettingCategory.core)
         {
@@ -20,7 +17,7 @@ namespace FubuCore.Configuration
             Category = category;
         }
 
-        public string this[string key]
+        public object this[string key]
         {
             get { return _values[key]; }
             set { _values[key] = value; }
@@ -47,38 +44,9 @@ namespace FubuCore.Configuration
             return _values.Has(key);
         }
 
-        public string Get(string key)
+        public object Get(string key)
         {
             return _values[key];
-        }
-
-        [MarkedForTermination("Kill!")]
-        public SettingsData SubsetPrefixedBy(string prefix)
-        {
-            var keys = GetKeys().Where(key => key.StartsWith(prefix));
-            var subset = new SettingsData(Category){
-                Provenance = Provenance
-            };
-
-            keys.Each(rawKey =>
-            {
-                var subsetKey = rawKey.Substring(prefix.Length);
-                subset.With(subsetKey, Get(rawKey));
-            });
-
-            return subset;
-        }
-
-        [MarkedForTermination("Only used to pull substitutions away from other values")]
-        public SettingsData SubsetByKey(Func<string, bool> keyFilter)
-        {
-            var subset = new SettingsData(Category){
-                Provenance = Provenance
-            };
-
-            GetKeys().Where(keyFilter).Each(key => subset.With(key, _values[key]));
-
-            return subset;
         }
 
         public void Read(string text)

@@ -90,7 +90,7 @@ namespace FubuCore.Configuration
             {
                 var setting = _settingData.FirstOrDefault(x => x.Has(key));
                 return setting == null ? null : new SettingDataSource(){
-                    Key = key, Provenance = setting.Provenance, Value = setting.Get(key)
+                    Key = key, Provenance = setting.Provenance, Value = setting.Get(key).ToString()
                 };
             }
         }

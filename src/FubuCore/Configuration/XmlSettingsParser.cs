@@ -53,7 +53,7 @@ namespace FubuCore.Configuration
 
             data.GetKeys().Each(key =>
             {
-                root.AddElement("add").WithAtt("key", key).WithAtt("value", data[key]);
+                root.AddElement("add").WithAtt("key", key).WithAtt("value", data[key].ToString());
             });
 
             document.Save(filename);
