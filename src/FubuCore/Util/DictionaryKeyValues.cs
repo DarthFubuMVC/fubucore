@@ -3,20 +3,21 @@ using System.Collections.Generic;
 
 namespace FubuCore.Util
 {
-    public class DictionaryKeyValues : IKeyValues
+    public class DictionaryKeyValues<T> : IKeyValues<T>
     {
-        private readonly IDictionary<string, string> _dictionary;
+        private readonly IDictionary<string, T> _dictionary;
 
-        public DictionaryKeyValues() : this(new Dictionary<string, string>())
+        public DictionaryKeyValues()
+            : this(new Dictionary<string, T>())
         {
         }
 
-        public DictionaryKeyValues(IDictionary<string, string> dictionary)
+        public DictionaryKeyValues(IDictionary<string, T> dictionary)
         {
             _dictionary = dictionary;
         }
 
-        public IDictionary<string, string> Dictionary
+        public IDictionary<string, T> Dictionary
         {
             get { return _dictionary; }
         }
@@ -26,7 +27,7 @@ namespace FubuCore.Util
             return _dictionary.ContainsKey(key);
         }
 
-        public string Get(string key)
+        public T Get(string key)
         {
             return _dictionary[key];
         }
@@ -36,13 +37,24 @@ namespace FubuCore.Util
             return _dictionary.Keys;
         }
 
-        public bool ForValue(string key, Action<string, string> callback)
+        public bool ForValue(string key, Action<string, T> callback)
         {
             if (!Has(key)) return false;
 
             callback(key, Get(key));
 
             return true;
+        }
+    }
+
+    public class DictionaryKeyValues : DictionaryKeyValues<string>, IKeyValues
+    {
+        public DictionaryKeyValues()
+        {
+        }
+
+        public DictionaryKeyValues(IDictionary<string, string> dictionary) : base(dictionary)
+        {
         }
     }
 }

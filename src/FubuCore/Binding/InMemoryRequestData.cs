@@ -1,57 +1,23 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using FubuCore.Binding.Values;
 using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class InMemoryRequestData : IRequestData
+    public class InMemoryRequestData : NewRequestData
     {
-        private readonly Cache<string, object> _values = new Cache<string, object>();
+        private readonly Cache<string, object> _values;
 
-        public InMemoryRequestData()
-        {
-        }
 
-        public InMemoryRequestData(IDictionary<string, object> values)
+        private InMemoryRequestData(IDictionary<string, object> values)
+            : base(new FlatValueSource<object>(values, "in memory"))
         {
             _values = new Cache<string, object>(values);
         }
 
-        public object Value(string key)
-        {
-            return _values.Has(key) ? _values[key] : null;
-        }
 
-        public bool Value(string key, Action<BindingValue> callback)
+        public InMemoryRequestData() : this(new Dictionary<string, object>())
         {
-            if (_values.Has(key))
-            {
-                callback(new BindingValue
-                {
-                    RawKey = key,
-                    RawValue = _values[key],
-                    Source = "in memory"
-                });
-                return true;
-            }
-
-            return false;
-        }
-
-        public bool HasChildRequest(string key)
-        {
-            return _values.GetAllKeys().Any(x => x.StartsWith(key));
-        }
-
-        public IRequestData GetChildRequest(string prefixOrChild)
-        {
-            return new PrefixedRequestData(this, prefixOrChild);
-        }
-
-        public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
-        {
-            return EnumerateFlatRequestData.For(this, prefixOrChild);
         }
 
         public object this[string key]

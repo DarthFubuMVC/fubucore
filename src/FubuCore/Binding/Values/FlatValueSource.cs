@@ -11,6 +11,11 @@ namespace FubuCore.Binding.Values
         private readonly IKeyValues<T> _values;
 
 
+        public FlatValueSource(IDictionary<string, T> dictionary, string name = "Anonymous") : this(new DictionaryKeyValues<T>(dictionary), name)
+        {
+            
+        }
+
         public FlatValueSource(IKeyValues<T> values, string name = "Anonymous")
         {
             _name = name;
