@@ -102,7 +102,6 @@
     <Compile Include="Binding\PropertyContext.cs" />
     <Compile Include="Binding\ReaderBinder.cs" />
     <Compile Include="Binding\RequestData.cs" />
-    <Compile Include="Binding\RequestDataBase.cs" />
     <Compile Include="Binding\ResolveConnectionStringFamily.cs" />
     <Compile Include="Binding\ServiceArguments.cs" />
     <Compile Include="Binding\SmartRequest.cs" />
