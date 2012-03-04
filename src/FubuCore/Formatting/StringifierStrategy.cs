@@ -1,6 +1,6 @@
 using System;
 
-namespace FubuCore
+namespace FubuCore.Formatting
 {
     public class StringifierStrategy
     {

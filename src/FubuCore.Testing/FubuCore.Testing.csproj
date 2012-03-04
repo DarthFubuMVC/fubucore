@@ -141,9 +141,10 @@
     <Compile Include="FileSetTester.cs" />
     <Compile Include="FileSystemTester.cs" />
     <Compile Include="FlatFileWriterTester.cs" />
+    <Compile Include="Formatting\GetStringRequestTester.cs" />
+    <Compile Include="Formatting\StringifierTester.cs" />
     <Compile Include="FubuExceptionTester.cs" />
     <Compile Include="GenericEnumerableExtensionsTester.cs" />
-    <Compile Include="Conversion\GetStringRequestTester.cs" />
     <Compile Include="NumberExtensionsTester.cs" />
     <Compile Include="Conversion\ObjectConverterTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -168,7 +169,6 @@
     <Compile Include="Reflection\SinglePropertyTester.cs" />
     <Compile Include="Conversion\StringConstructorConverterFamilyTester.cs" />
     <Compile Include="StringExtensionsTester.cs" />
-    <Compile Include="StringifierTester.cs" />
     <Compile Include="TemplateParserTester.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />

@@ -1,11 +1,12 @@
+using FubuCore.Formatting;
 using FubuCore.Reflection;
+using FubuCore.Testing.Conversion;
 using FubuCore.Testing.Reflection.Expressions;
-
+using FubuTestingSupport;
 using NUnit.Framework;
 using Rhino.Mocks;
-using FubuTestingSupport;
 
-namespace FubuCore.Testing.Conversion
+namespace FubuCore.Testing.Formatting
 {
     [TestFixture]
     public class GetStringRequestTester

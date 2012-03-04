@@ -6,9 +6,11 @@ using System.Linq;
 using System.Threading;
 using FubuCore.Conversion;
 using FubuCore.Testing.Binding;
+using FubuCore.Testing.Formatting;
 using FubuCore.Util;
 using FubuTestingSupport;
 using NUnit.Framework;
+using Address = FubuCore.Testing.Formatting.Address;
 
 namespace FubuCore.Testing.Conversion
 {

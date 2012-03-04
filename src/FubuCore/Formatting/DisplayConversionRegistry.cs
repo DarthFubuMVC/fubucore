@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace FubuCore
+namespace FubuCore.Formatting
 {
     public class DisplayConversionRegistry
     {
@@ -53,7 +53,7 @@ namespace FubuCore
 
         public MakeDisplayExpression<T> IfIsType<T>()
         {
-            return makeDisplay<T>(request => request.PropertyType == typeof (T));
+            return makeDisplay<T>(request => request.PropertyType == typeof(T));
         }
 
         public MakeDisplayExpression<T> IfCanBeCastToType<T>()
@@ -71,7 +71,7 @@ namespace FubuCore
             return
                 makeDisplay<T>(
                     request =>
-                    request.Property != null && request.PropertyType == typeof (T) && matches(request.Property));
+                    request.Property != null && request.PropertyType == typeof(T) && matches(request.Property));
         }
 
         #region Nested type: MakeDisplayExpression
@@ -103,17 +103,17 @@ namespace FubuCore
 
             public void ConvertBy(Func<T, string> display)
             {
-                apply(o => display((T) o.RawValue));
+                apply(o => display((T)o.RawValue));
             }
 
             public void ConvertBy(Func<GetStringRequest, T, string> display)
             {
-                apply(o => display(o, (T) o.RawValue));
+                apply(o => display(o, (T)o.RawValue));
             }
 
             public void ConvertWith<TService>(Func<TService, T, string> display)
             {
-                apply(o => display(o.Get<TService>(), (T) o.RawValue));
+                apply(o => display(o.Get<TService>(), (T)o.RawValue));
             }
         }
 

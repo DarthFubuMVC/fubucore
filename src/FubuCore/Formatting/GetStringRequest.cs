@@ -3,7 +3,7 @@ using System.Reflection;
 using FubuCore.Reflection;
 
 
-namespace FubuCore
+namespace FubuCore.Formatting
 {
     public class GetStringRequest
     {
