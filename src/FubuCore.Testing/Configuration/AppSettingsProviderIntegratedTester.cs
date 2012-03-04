@@ -30,6 +30,12 @@ namespace FubuCore.Testing.Configuration
         }
 
         [Test]
+        public void get_value_for()
+        {
+            AppSettingsProvider.GetValueFor<AppSettings>(x => x.Flag1).ShouldEqual("f1");
+        }
+
+        [Test]
         public void can_get_basic_properties()
         {
             theSettings.Flag1.ShouldEqual("f1");

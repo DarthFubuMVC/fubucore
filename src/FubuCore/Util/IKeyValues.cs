@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FubuCore.Util
 {
@@ -10,5 +11,13 @@ namespace FubuCore.Util
         IEnumerable<string> GetKeys();
 
         bool ForValue(string key, Action<string, string> callback);
+    }
+
+    public static class KeyValueExtensions
+    {
+        public static void ReadAll(this IKeyValues values, Action<string, string> callback)
+        {
+            values.GetKeys().ToList().Each(key => callback(key, values.Get(key)));
+        }
     }
 }

@@ -21,11 +21,27 @@ namespace FubuCore.Binding.Values
             _key = parts.Last();
         }
 
-        public DictionaryValueSource GetChild(DictionaryValueSource source)
+        public void Set(DictionaryValueSource top, object value)
+        {
+            GetParentSource(top).Set(Key, value);
+        }
+
+        public DictionaryValueSource GetParentSource(DictionaryValueSource source)
         {
             ParentParts.Each(x =>
             {
-                source = (DictionaryValueSource)source.GetChild(x);
+                if (x.Contains("["))
+                {
+                    var parts = x.TrimEnd(']').Split('[');
+                    var index = int.Parse(parts.Last());
+
+                    source = source.GetChildrenElement(parts.First(), index);
+                }
+                else
+                {
+                    source = (DictionaryValueSource)source.GetChild(x);
+                }
+                
             });
 
             return source;

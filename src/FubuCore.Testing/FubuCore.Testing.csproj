@@ -96,12 +96,12 @@
     <Compile Include="Binding\ServiceArgumentsTester.cs" />
     <Compile Include="Binding\SmartRequestTester.cs" />
     <Compile Include="Binding\StandardModelBinderTester.cs" />
+    <Compile Include="Binding\Values\DictionaryPathTester.cs" />
     <Compile Include="Binding\Values\DictionaryValueSourceTester.cs" />
     <Compile Include="Binding\Values\FlatValueSourceTester.cs" />
     <Compile Include="Binding\Values\PrefixedKeyValuesTester.cs" />
     <Compile Include="Configuration\AppSettingsKeyValuesTester.cs" />
     <Compile Include="Configuration\AppSettingsProviderIntegratedTester.cs" />
-    <Compile Include="Configuration\AppSettingsRequestDataIntegratedTester.cs" />
     <Compile Include="Conversion\descriptions_on_every_converter.cs" />
     <Compile Include="Conversion\TimeSpanConverterTester.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamilyTester.cs" />

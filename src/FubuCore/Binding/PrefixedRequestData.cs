@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace FubuCore.Binding
 {
+    [MarkedForTermination("Goes away soon")]
     public class PrefixedRequestData : IRequestData
     {
         private readonly IRequestData _inner;

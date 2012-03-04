@@ -1,18 +1,43 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Util;
+using IDictionary = System.Collections.Generic.IDictionary<string, object>;
+using Dictionary = System.Collections.Generic.Dictionary<string, object>;
 
 namespace FubuCore.Binding.Values
 {
     public class DictionaryValueSource : IValueSource
     {
-        private readonly IDictionary<string, object> _dictionary;
+        private readonly Cache<DictionaryPath, DictionaryValueSource> _children;
+        private readonly IDictionary _dictionary;
         private readonly string _name;
 
-        public DictionaryValueSource(IDictionary<string, object> dictionary, string name = "Anonymous")
+        public DictionaryValueSource(IDictionary dictionary, string name = "Anonymous")
         {
             _dictionary = dictionary;
             _name = name;
+
+            _children = new Cache<DictionaryPath, DictionaryValueSource>(path => path.GetParentSource(this));
+        }
+
+        public static DictionaryValueSource For(IKeyValues values, string name = "Anonymous")
+        {
+            var source = new DictionaryValueSource(new Dictionary(), name);
+            values.ReadAll(source.WriteProperty);
+
+            return source;
+        }
+
+        /// <summary>
+        /// Write property to the value source
+        /// </summary>
+        /// <param name="property">Dotted path:  AppSettings.Child.Nested.Property1</param>
+        /// <param name="value"></param>
+        public void WriteProperty(string property, object value)
+        {
+            var path = new DictionaryPath(property);
+            _children[path].Set(path.Key, value);
         }
 
         public string Name
@@ -45,7 +70,7 @@ namespace FubuCore.Binding.Values
         public bool HasChild(string key)
         {
             return Has(key)
-                       ? _dictionary[key] is IDictionary<string, object>
+                       ? _dictionary[key] is IDictionary
                        : false;
         }
 
@@ -55,7 +80,7 @@ namespace FubuCore.Binding.Values
         {
             if (!HasChild(key))
             {
-                var dict = new Dictionary<string, object>();
+                var dict = new Dictionary();
                 _dictionary.Add(key, dict);
             }
 
@@ -67,7 +92,7 @@ namespace FubuCore.Binding.Values
         {
             if (!Has(key)) return Enumerable.Empty<IValueSource>();
 
-            var enumerable = _dictionary[key] as IEnumerable<IDictionary<string, object>>;
+            var enumerable = _dictionary[key] as IEnumerable<IDictionary>;
             if (enumerable == null)
             {
                 return Enumerable.Empty<IValueSource>();
@@ -122,6 +147,28 @@ namespace FubuCore.Binding.Values
             {
                 return ((_dictionary != null ? _dictionary.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
             }
+        }
+
+        public DictionaryValueSource GetChildrenElement(string key, int index)
+        {
+            IList<IDictionary> list;
+
+            if (!Has(key) || !(_dictionary[key] is IList<IDictionary>))
+            {
+                list = new List<IDictionary>();
+                _dictionary.Add(key, list);
+            }
+            else
+            {
+                list = _dictionary[key] as IList<IDictionary>;
+            }
+
+            while (index > list.Count - 1)
+            {
+                list.Add(new Dictionary());
+            }
+
+            return new DictionaryValueSource(list[index]);
         }
     }
 }

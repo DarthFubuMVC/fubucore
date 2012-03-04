@@ -15,16 +15,15 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void load_several_levels_of_nested_properties()
         {
-            var loader = new DictionaryValueSourceLoader("some name");
+            var source = new DictionaryValueSource(new Dictionary<string, object>(), "some name");
 
-            loader.Load("A", 1);
-            loader.Load("B", 2);
-            loader.Load("Child.A", 2);
-            loader.Load("Child.B", 3);
-            loader.Load("Child.Nested.A", 4);
-            loader.Load("Child.Nested.B", 5);
+            source.WriteProperty("A", 1);
+            source.WriteProperty("B", 2);
+            source.WriteProperty("Child.A", 2);
+            source.WriteProperty("Child.B", 3);
+            source.WriteProperty("Child.Nested.A", 4);
+            source.WriteProperty("Child.Nested.B", 5);
 
-            var source = loader.Source;
             source.Get("A").ShouldEqual(1);
             source.Get("B").ShouldEqual(2);
             source.GetChild("Child").Get("A").ShouldEqual(2);
@@ -197,6 +196,25 @@ namespace FubuCore.Testing.Binding.Values
                 RawValue = 1,
                 Source = theSource.Name
             }));
+        }
+
+        [Test]
+        public void can_retrieve_a_child_element()
+        {
+            var child2 = theSource.GetChildrenElement("children", 2);
+            var child1 = theSource.GetChildrenElement("children", 1);
+            var child0 = theSource.GetChildrenElement("children", 0);
+
+            child0.Set("a", 0);
+            child1.Set("a", 1);
+            child2.Set("a", 2);
+
+            theSource.GetChildrenElement("children", 2).Set("b", 22);
+
+            theDictionary.Children("children").ElementAt(0)["a"].ShouldEqual(0);
+            theDictionary.Children("children").ElementAt(1)["a"].ShouldEqual(1);
+            theDictionary.Children("children").ElementAt(2)["a"].ShouldEqual(2);
+            theDictionary.Children("children").ElementAt(2)["b"].ShouldEqual(22);
         }
     }
 }
