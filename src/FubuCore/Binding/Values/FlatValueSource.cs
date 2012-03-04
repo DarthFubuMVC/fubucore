@@ -5,17 +5,13 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding.Values
 {
-    public class FlatValueSource : IValueSource
+    public class FlatValueSource<T> : IValueSource
     {
         private readonly string _name;
-        private readonly IKeyValues _values;
+        private readonly IKeyValues<T> _values;
 
-        public FlatValueSource(IDictionary<string, string> dictionary, string name = "Anonymous")
-            : this(new DictionaryKeyValues(dictionary), name)
-        {
-        }
 
-        public FlatValueSource(IKeyValues values, string name = "Anonymous")
+        public FlatValueSource(IKeyValues<T> values, string name = "Anonymous")
         {
             _name = name;
             _values = values;
@@ -44,7 +40,7 @@ namespace FubuCore.Binding.Values
 
         public IValueSource GetChild(string key)
         {
-            return new FlatValueSource(new PrefixedKeyValues(key, _values));
+            return new FlatValueSource<T>(new PrefixedKeyValues<T>(key, _values));
         }
 
         public IEnumerable<IValueSource> GetChildren(string key)
@@ -67,7 +63,8 @@ namespace FubuCore.Binding.Values
         {
             return _values.ForValue(key, (rawKey, value) =>
             {
-                callback(new BindingValue{
+                callback(new BindingValue
+                {
                     RawKey = rawKey,
                     RawValue = value,
                     Source = Name
@@ -103,6 +100,18 @@ namespace FubuCore.Binding.Values
             {
                 get { return _prefix; }
             }
+        }
+    }
+
+
+
+    public class FlatValueSource : FlatValueSource<string>
+    {
+        public FlatValueSource(IDictionary<string, string> dictionary, string name = "Anonymous") : this(new DictionaryKeyValues(dictionary), name){}
+
+        public FlatValueSource(IKeyValues values, string name = "Anonymous")
+            : base(values, name)
+        {
         }
     }
 }

@@ -4,13 +4,18 @@ using System.Linq;
 
 namespace FubuCore.Util
 {
-    public interface IKeyValues
+    public interface IKeyValues<T>
     {
         bool Has(string key);
-        string Get(string key);
+        T Get(string key);
         IEnumerable<string> GetKeys();
 
-        bool ForValue(string key, Action<string, string> callback);
+        bool ForValue(string key, Action<string, T> callback);
+    }
+
+    public interface IKeyValues : IKeyValues<string>
+    {
+
     }
 
     public static class KeyValueExtensions
