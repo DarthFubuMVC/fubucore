@@ -29,11 +29,9 @@ namespace FubuCore.Configuration
                 return SettingsData.Order(allSettings);
             });
 
-            _requestData = new Lazy<SettingsRequestData>(() => { return new SettingsRequestData(_settings.Value); });
+            _requestData = new Lazy<SettingsRequestData>(() => new SettingsRequestData(_settings.Value));
 
-            _substitutedData =
-                new Lazy<SubstitutedRequestData>(
-                    () => { return new SubstitutedRequestData(_requestData.Value, _requestData.Value); });
+            _substitutedData = new Lazy<SubstitutedRequestData>(() => new SubstitutedRequestData(_requestData.Value, _requestData.Value));
         }
 
         public T SettingsFor<T>() where T : class, new()

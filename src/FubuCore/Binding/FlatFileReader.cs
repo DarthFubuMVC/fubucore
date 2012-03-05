@@ -35,7 +35,7 @@ namespace FubuCore.Binding
             var data = new FlatFileValues(request.Concatenator, headers);
             _aliases.Each((header, alias) => data.Alias(header, alias));
 
-            var context = new BindingContext(new NewRequestData(new FlatValueSource(data)), _services, new NulloBindingLogger());
+            var context = new BindingContext(new RequestData(new FlatValueSource(data)), _services, new NulloBindingLogger());
 
             string line;
             while ((line = reader.ReadLine()) != null)
@@ -48,7 +48,7 @@ namespace FubuCore.Binding
         {
             data.ReadLine(line);
 
-            var target = request.Finder(new NewRequestData(new FlatValueSource(data)));
+            var target = request.Finder(new RequestData(new FlatValueSource(data)));
             _resolver.BindModel(target, context);
 
             request.Callback(target);

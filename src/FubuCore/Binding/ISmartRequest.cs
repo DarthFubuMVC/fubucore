@@ -9,8 +9,6 @@ namespace FubuCore.Binding
 
         T Value<T>(string key);
         bool Value<T>(string key, Action<T> callback);
-
-
     }
 
     public class InMemorySmartRequest : ISmartRequest

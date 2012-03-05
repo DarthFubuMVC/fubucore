@@ -3,6 +3,7 @@ using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
+    [MarkedForTermination("Don't think it's necessary, but awaiting approval from the list")]
     public class SmartRequest : ISmartRequest
     {
         private readonly IRequestData _data;
@@ -64,11 +65,6 @@ namespace FubuCore.Binding
                 var value = (T)convertValue(raw.RawValue, typeof (T));
                 callback(value);
             });
-        }
-
-        public virtual ISmartRequest PrefixedWith(string prefix)
-        {
-            return new SmartRequest(new PrefixedRequestData(_data, prefix), _converter);
         }
     }
 }

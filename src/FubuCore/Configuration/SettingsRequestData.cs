@@ -5,7 +5,7 @@ using FubuCore.Util;
 
 namespace FubuCore.Configuration
 {
-    public class SettingsRequestData : NewRequestData, IKeyValues
+    public class SettingsRequestData : RequestData, IKeyValues
     {
         // This has to be sorted before you even get here
         public SettingsRequestData(IEnumerable<SettingsData> settingData) : base(settingData)

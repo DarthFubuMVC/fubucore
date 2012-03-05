@@ -1,15 +1,23 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FubuCore.Binding.Values;
 
 namespace FubuCore.Binding
 {
+    // TODO -- go look at all of the usages of this thing and clean stuff up
     public class RequestData : IRequestData
     {
-        protected AggregateDictionary _dictionary;
+        private readonly IList<IValueSource> _sources = new List<IValueSource>();
 
-        public RequestData(AggregateDictionary dictionary)
+        public RequestData(IValueSource source)
         {
-            _dictionary = dictionary;
+            _sources.Add(source);
+        }
+
+        public RequestData(IEnumerable<IValueSource> sources)
+        {
+            _sources.AddRange(sources);
         }
 
         public object Value(string key)
@@ -23,47 +31,34 @@ namespace FubuCore.Binding
 
         public bool Value(string key, Action<BindingValue> callback)
         {
-            var found = false;
-
-            _dictionary.Value(key, (s, o) =>
-            {
-                found = true;
-                callback(new BindingValue{
-                    RawKey = key,
-                    RawValue = o,
-                    Source = s
-                });
-            });
-
-            return found;
+            return _sources.Any(x => x.Value(key, callback));
         }
 
         public bool HasChildRequest(string key)
         {
-            return _dictionary.HasAnyValuePrefixedWith(key);
-        }
-
-        public static RequestData ForDictionary(IDictionary<string, object> dictionary)
-        {
-            AggregateDictionary dict = new AggregateDictionary().AddDictionary("Other", dictionary);
-            return new RequestData(dict);
-        }
-
-        public IEnumerable<string> GetKeys()
-        {
-            return _dictionary.GetAllKeys();
+            return _sources.Any(x => x.HasChild(key));
         }
 
         public IRequestData GetChildRequest(string prefixOrChild)
         {
-            return new PrefixedRequestData(this, prefixOrChild);
+            var sources = _sources.Where(x => x.HasChild(prefixOrChild)).Select(x => x.GetChild(prefixOrChild));
+            return new RequestData(sources);
         }
 
+        // Living with the limitation that only *ONE* source can ever have 
         public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
         {
-            return EnumerateFlatRequestData.For(this, prefixOrChild);
+            foreach (var valueSource in _sources)
+            {
+                var childrenSources = valueSource.GetChildren(prefixOrChild);
+                if (childrenSources.Any())
+                {
+                    return childrenSources.Select(x => new RequestData(x)).ToList();
+                }
+            }
+
+            return Enumerable.Empty<IRequestData>();
         }
     }
-
 
 }

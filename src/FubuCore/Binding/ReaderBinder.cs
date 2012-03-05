@@ -59,7 +59,7 @@ namespace FubuCore.Binding
 
             // TODO -- awkward!  Let's do some convenience methods here and make this easier
             var request = new DataReaderValues(reader, _aliases);
-            var context = new BindingContext(new NewRequestData(new FlatValueSource(request)), _services, new NulloBindingLogger());
+            var context = new BindingContext(new RequestData(new FlatValueSource(request)), _services, new NulloBindingLogger());
 
             while (reader.Read())
             {

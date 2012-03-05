@@ -61,7 +61,6 @@
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BasicExtensionsTester.cs" />
-    <Compile Include="Binding\AggregateDictionaryTester.cs" />
     <Compile Include="Binding\ArrayPropertyBinderTester.cs" />
     <Compile Include="Binding\BasicConverterTester.cs" />
     <Compile Include="Binding\BasicValueConverterTester.cs" />
@@ -86,12 +85,10 @@
     <Compile Include="Binding\ObjectResolverTester.cs" />
     <Compile Include="Binding\ObjectTypeFamilyTester.cs" />
     <Compile Include="Binding\PassthroughBinderTester.cs" />
-    <Compile Include="Binding\PrefixedRequestDataTester.cs" />
     <Compile Include="Binding\PropertyBinderCacheTester.cs" />
     <Compile Include="Binding\PropertyBinderTester.cs" />
     <Compile Include="Binding\ReaderBinderTester.cs" />
     <Compile Include="Binding\RecordingBindingLogger_acceptance_testing.cs" />
-    <Compile Include="Binding\RequestDataTester.cs" />
     <Compile Include="Binding\ResolveConnectionStringFamilyTester.cs" />
     <Compile Include="Binding\ServiceArgumentsTester.cs" />
     <Compile Include="Binding\SmartRequestTester.cs" />

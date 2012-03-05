@@ -31,7 +31,7 @@ namespace FubuCore.Configuration
 
         public object SettingsFor(Type settingsType)
         {
-            var requestData = new NewRequestData(_values.Value.GetChild(settingsType.Name));
+            var requestData = new RequestData(_values.Value.GetChild(settingsType.Name));
 
             var result = _resolver.BindModel(settingsType, requestData);
 

@@ -4,7 +4,7 @@ using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
-    public class InMemoryRequestData : NewRequestData
+    public class InMemoryRequestData : RequestData
     {
         private readonly Cache<string, object> _values;
 

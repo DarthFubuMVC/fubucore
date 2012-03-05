@@ -89,7 +89,7 @@ namespace FubuCore.Binding.InMemory
 
             protected internal IRequestData RequestData
             {
-                get { return new NewRequestData(new FlatValueSource(_data)); }
+                get { return new RequestData(new FlatValueSource(_data)); }
             }
 
             protected internal IServiceLocator Services
