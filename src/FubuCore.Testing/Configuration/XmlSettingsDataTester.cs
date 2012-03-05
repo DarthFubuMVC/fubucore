@@ -88,13 +88,13 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void get_value()
         {
-            theSettings.Get("WebsiteSettings.DiagnosticsEnabled").ShouldEqual("true");
+            theSettings.ReadProperty("WebsiteSettings.DiagnosticsEnabled").ShouldEqual("true");
         }
 
         [Test]
         public void has_setting_positive()
         {
-            theSettings.Has("WebsiteSettings.DiagnosticsEnabled").ShouldBeTrue();
+            theSettings.GetChild("WebsiteSettings").Has("DiagnosticsEnabled").ShouldBeTrue();
         }
 
         [Test]

@@ -29,9 +29,10 @@ namespace FubuCore.Configuration
 
         public static SettingsData Parse(XmlElement element)
         {
-            var category = (SettingCategory)(element.HasAttribute("category")
-                                               ? Enum.Parse(typeof(SettingCategory), element.GetAttribute("category"))
-                                               : SettingCategory.core);
+            var category = (SettingCategory) (element.HasAttribute("category")
+                                                  ? Enum.Parse(typeof (SettingCategory),
+                                                               element.GetAttribute("category"))
+                                                  : SettingCategory.core);
 
             var data = new SettingsData(category);
 
@@ -51,15 +52,11 @@ namespace FubuCore.Configuration
             var root = document.WithRoot("Settings");
             root.SetAttribute("category", data.Category.ToString());
 
-            data.GetKeys().Each(key =>
-            {
-                root.AddElement("add").WithAtt("key", key).WithAtt("value", data.ReadProperty(key).ToString());
-            });
+            data.GetKeys().Each(
+                key => { root.AddElement("add").WithAtt("key", key).WithAtt("value", data.ReadProperty(key).ToString()); });
 
             document.Save(filename);
         }
-
-
     }
 
     public static class XmlExtensions
@@ -91,7 +88,7 @@ namespace FubuCore.Configuration
 
         public static XmlElement WithRoot(this XmlDocument document, string elementName)
         {
-            XmlElement element = document.CreateElement(elementName);
+            var element = document.CreateElement(elementName);
             document.AppendChild(element);
 
             return element;
@@ -107,7 +104,7 @@ namespace FubuCore.Configuration
 
         public static XmlElement WithFormattedText(this XmlElement element, string text)
         {
-            XmlCDataSection section = element.OwnerDocument.CreateCDataSection(text);
+            var section = element.OwnerDocument.CreateCDataSection(text);
             element.AppendChild(section);
 
             return element;
@@ -115,7 +112,7 @@ namespace FubuCore.Configuration
 
         public static XmlElement AddElement(this XmlNode element, string name)
         {
-            XmlElement child = element.OwnerDocument.CreateElement(name);
+            var child = element.OwnerDocument.CreateElement(name);
             element.AppendChild(child);
 
             return child;
@@ -123,13 +120,13 @@ namespace FubuCore.Configuration
 
         public static void AddComment(this XmlNode element, string text)
         {
-            XmlComment comment = element.OwnerDocument.CreateComment(text);
+            var comment = element.OwnerDocument.CreateComment(text);
             element.AppendChild(comment);
         }
 
         public static XmlElement AddElement(this XmlNode element, string name, Action<XmlElement> action)
         {
-            XmlElement child = element.OwnerDocument.CreateElement(name);
+            var child = element.OwnerDocument.CreateElement(name);
             element.AppendChild(child);
 
             action(child);
@@ -151,10 +148,10 @@ namespace FubuCore.Configuration
 
         public static XmlElement WithAttributes(this XmlElement element, string text)
         {
-            string[] atts = text.Split(',');
+            var atts = text.Split(',');
             foreach (string att in atts)
             {
-                string[] parts = att.Split(':');
+                var parts = att.Split(':');
 
                 element.WithAtt(parts[0].Trim(), parts[1].Trim());
             }
@@ -165,7 +162,7 @@ namespace FubuCore.Configuration
         public static void SetAttributeOnChild(this XmlElement element, string childName, string attName,
                                                string attValue)
         {
-            XmlElement childElement = element[childName];
+            var childElement = element[childName];
             if (childElement == null)
             {
                 childElement = element.AddElement(childName);

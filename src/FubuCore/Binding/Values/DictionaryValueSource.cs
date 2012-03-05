@@ -11,7 +11,7 @@ namespace FubuCore.Binding.Values
     {
         private readonly Cache<DictionaryPath, DictionaryValueSource> _children;
         private readonly IDictionary _dictionary;
-        private readonly string _name;
+        private string _name;
 
         public DictionaryValueSource(IDictionary dictionary, string name = "Anonymous")
         {
@@ -40,9 +40,16 @@ namespace FubuCore.Binding.Values
             _children[path].Set(path.Key, value);
         }
 
+        public object ReadProperty(string key)
+        {
+            var path = new DictionaryPath(key);
+            return path.GetParentSource(this).Get(path.Key);
+        }
+
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
 
         public void Set(string key, object value)

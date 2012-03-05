@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using FubuCore.Binding;
+using FubuCore.Binding.Values;
 
 namespace FubuCore.Configuration
 {
     public class SettingsProvider : ISettingsProvider
     {
+        private readonly Lazy<SettingsRequestData> _requestData;
         private readonly IObjectResolver _resolver;
-        private readonly IEnumerable<ISettingsSource> _sources;
+        private readonly Lazy<IEnumerable<SettingsData>> _settings;
+        private readonly Lazy<SubstitutedRequestData> _substitutedData;
 
         private SettingsProvider(IObjectResolver resolver, IEnumerable<SettingsData> settings)
             : this(resolver, new ISettingsSource[]{new SettingsSource(settings)})
@@ -19,7 +22,18 @@ namespace FubuCore.Configuration
         public SettingsProvider(IObjectResolver resolver, IEnumerable<ISettingsSource> sources)
         {
             _resolver = resolver;
-            _sources = sources;
+
+            _settings = new Lazy<IEnumerable<SettingsData>>(() =>
+            {
+                var allSettings = sources.SelectMany(x => x.FindSettingData());
+                return SettingsData.Order(allSettings);
+            });
+
+            _requestData = new Lazy<SettingsRequestData>(() => { return new SettingsRequestData(_settings.Value); });
+
+            _substitutedData =
+                new Lazy<SubstitutedRequestData>(
+                    () => { return new SubstitutedRequestData(_requestData.Value, _requestData.Value); });
         }
 
         public T SettingsFor<T>() where T : class, new()
@@ -39,33 +53,39 @@ namespace FubuCore.Configuration
 
         public object SettingFor(string key)
         {
-            //TODO: REVIEW
-            var sub = new SubstitutedRequestData(getSettingsData(), getSettingsData());
-            return sub.Value(key);
+            return _substitutedData.Value.Value(key);
         }
 
         protected virtual IRequestData createRequestData(Type settingsType)
         {
-            var settingsData = getSettingsData();
-            var prefixedData = new PrefixedRequestData(settingsData, settingsType.Name + ".");
-            return new SubstitutedRequestData(prefixedData, settingsData);
-        }
-
-        protected SettingsRequestData getSettingsData()
-        {
-            return new SettingsRequestData(_sources.SelectMany(x => x.FindSettingData()));
+            // TODO -- throw if not exists?
+            return _substitutedData.Value.GetChildRequest(settingsType.Name);
         }
 
         public IEnumerable<SettingDataSource> CreateDiagnosticReport()
         {
-            return getSettingsData().CreateDiagnosticReport();
+            var report = new ValueDiagnosticReport();
+
+            // TODO -- watch this, probably duplicated code
+            _settings.Value.Each(x =>
+            {
+                report.StartSource(x);
+                x.WriteReport(report);
+                report.EndSource();
+            });
+
+            return report.AllValues().Select(x => new SettingDataSource{
+                Key = x.Key,
+                Provenance = x.First().Source,
+                Value = x.First().Value
+            });
         }
 
         public IEnumerable<SettingDataSource> CreateResolvedDiagnosticReport()
         {
-            var settingsData = getSettingsData();
+            var settingsData = _requestData.Value;
 
-            return settingsData.CreateDiagnosticReport().Select(s => new SettingDataSource{
+            return CreateDiagnosticReport().Select(s => new SettingDataSource{
                 Key = s.Key,
                 Value = TemplateParser.Parse(s.Value, settingsData),
                 Provenance = s.Provenance

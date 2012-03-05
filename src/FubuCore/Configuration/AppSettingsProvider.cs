@@ -1,11 +1,10 @@
 using System;
 using System.Configuration;
+using System.Linq;
 using System.Linq.Expressions;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
 using FubuCore.Reflection;
-using System.Linq;
-
 
 namespace FubuCore.Configuration
 {
@@ -23,9 +22,9 @@ namespace FubuCore.Configuration
 
         public T SettingsFor<T>() where T : class, new()
         {
-            Type settingsType = typeof (T);
+            var settingsType = typeof (T);
 
-            object value = SettingsFor(settingsType);
+            var value = SettingsFor(settingsType);
 
             return (T) value;
         }
@@ -43,13 +42,15 @@ namespace FubuCore.Configuration
 
         public static string KeyFor<T>(Expression<Func<T, object>> property)
         {
-            return typeof(T).Name + "." + property.ToAccessor().Name;
+            return typeof (T).Name + "." + property.ToAccessor().Name;
         }
 
         public static string GetValueFor<T>(Expression<Func<T, object>> property)
         {
             var key = KeyFor(property);
-            return (ConfigurationManager.AppSettings.AllKeys.Contains(key)) ? ConfigurationManager.AppSettings[key] : string.Empty;
+            return (ConfigurationManager.AppSettings.AllKeys.Contains(key))
+                       ? ConfigurationManager.AppSettings[key]
+                       : string.Empty;
         }
     }
 }

@@ -46,10 +46,10 @@ namespace FubuCore.Testing.Configuration
             data.Read("Key=Value1");
             data.Read("A.Key=Value2");
 
-            data.GetKeys().ShouldHaveTheSameElementsAs("Key", "A.Key");
+            data.GetKeys().ShouldHaveTheSameElementsAs("A.Key", "Key");
 
-            data.Get("Key").ShouldEqual("Value1");
-            data.Get("A.Key").ShouldEqual("Value2");
+            data.ReadProperty("Key").ShouldEqual("Value1");
+            data.ReadProperty("A.Key").ShouldEqual("Value2");
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace FubuCore.Testing.Configuration
 
             data.GetKeys().ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
 
-            data.Get("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
+            data.ReadProperty("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
         }
 
 

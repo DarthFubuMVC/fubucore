@@ -25,7 +25,7 @@ namespace FubuCore.Configuration
         {
             unchecked
             {
-                int result = (Key != null ? Key.GetHashCode() : 0);
+                var result = (Key != null ? Key.GetHashCode() : 0);
                 result = (result*397) ^ (Value != null ? Value.GetHashCode() : 0);
                 result = (result*397) ^ (Provenance != null ? Provenance.GetHashCode() : 0);
                 return result;

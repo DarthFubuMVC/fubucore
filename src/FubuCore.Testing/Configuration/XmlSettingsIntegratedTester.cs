@@ -36,7 +36,7 @@ namespace FubuCore.Testing.Configuration
         public void smoke_test_can_read_data()
         {
             var data = theData.First(x => x.Name.Contains("Environment"));
-            data.Get("OneSettings.Name").ShouldEqual("Max");
+            data.ReadProperty("OneSettings.Name").ShouldEqual("Max");
         }
 
 

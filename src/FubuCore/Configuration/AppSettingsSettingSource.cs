@@ -16,13 +16,10 @@ namespace FubuCore.Configuration
         {
             var data = new SettingsData(_category);
 
-            ConfigurationManager.AppSettings.AllKeys.Each(key =>
-            {
-                data.WriteProperty(key, ConfigurationManager.AppSettings[key]);
-            });
+            ConfigurationManager.AppSettings.AllKeys.Each(
+                key => { data.WriteProperty(key, ConfigurationManager.AppSettings[key]); });
 
             yield return data;
         }
-
     }
 }
