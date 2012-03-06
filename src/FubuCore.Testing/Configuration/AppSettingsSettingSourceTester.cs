@@ -17,9 +17,9 @@ namespace FubuCore.Testing
             var data = source.FindSettingData().Single();
 
             data.Category.ShouldEqual(SettingCategory.profile);
-            data.ReadProperty("a").ShouldEqual("1");
-            data.ReadProperty("b").ShouldEqual("2");
-            data.ReadProperty("c").ShouldEqual("3");
+            data["a"].ShouldEqual("1");
+            data["b"].ShouldEqual("2");
+            data["c"].ShouldEqual("3");
         }
     }
 }

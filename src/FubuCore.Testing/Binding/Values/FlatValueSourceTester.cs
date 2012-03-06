@@ -26,7 +26,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void the_name_property()
         {
-            theValues.Name.ShouldEqual("some name");
+            theValues.Provenance.ShouldEqual("some name");
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace FubuCore.Testing.Binding.Values
             action.AssertWasCalled(x => x.Invoke(new BindingValue{
                 RawKey = "a",
                 RawValue = "1",
-                Source = theValues.Name
+                Source = theValues.Provenance
             }));
         }
     }

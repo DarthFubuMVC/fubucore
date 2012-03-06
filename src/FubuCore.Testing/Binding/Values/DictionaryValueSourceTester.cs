@@ -18,12 +18,12 @@ namespace FubuCore.Testing.Binding.Values
         {
             var source = new SettingsData(new Dictionary<string, object>(), "some name");
 
-            source.WriteProperty("A", 1);
-            source.WriteProperty("B", 2);
-            source.WriteProperty("Child.A", 2);
-            source.WriteProperty("Child.B", 3);
-            source.WriteProperty("Child.Nested.A", 4);
-            source.WriteProperty("Child.Nested.B", 5);
+            source["A"] = 1;
+            source["B"] =  2;
+            source["Child.A"] =  2;
+            source["Child.B"] =  3;
+            source["Child.Nested.A"] =  4;
+            source["Child.Nested.B"] =  5;
 
             source.Get("A").ShouldEqual(1);
             source.Get("B").ShouldEqual(2);
@@ -51,7 +51,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void has_the_name()
         {
-            theSource.Name.ShouldEqual("a name");
+            theSource.Provenance.ShouldEqual("a name");
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace FubuCore.Testing.Binding.Values
             var childValueSource = theSource.As<IValueSource>().GetChild("child");
 
             childValueSource.ShouldNotBeNull().ShouldBeOfType<SettingsData>()
-                .Name.ShouldEqual("a name.child");
+                .Provenance.ShouldEqual("a name.child");
 
             // It's idempotent on the add
             theSource.As<IValueSource>().GetChild("child").ShouldEqual(childValueSource);
@@ -120,7 +120,7 @@ namespace FubuCore.Testing.Binding.Values
 
             var childValueSource = theSource.As<IValueSource>().GetChild("child");
 
-            childValueSource.Name.ShouldEqual(theSource.Name + ".child");
+            childValueSource.Provenance.ShouldEqual(theSource.Provenance + ".child");
         }
 
         [Test]
@@ -172,9 +172,9 @@ namespace FubuCore.Testing.Binding.Values
             var children = theSource.As<IValueSource>().GetChildren("list");
             children.Count().ShouldEqual(3);
 
-            children.ElementAt(0).Name.ShouldEqual("a name.list[0]");
-            children.ElementAt(1).Name.ShouldEqual("a name.list[1]");
-            children.ElementAt(2).Name.ShouldEqual("a name.list[2]");
+            children.ElementAt(0).Provenance.ShouldEqual("a name.list[0]");
+            children.ElementAt(1).Provenance.ShouldEqual("a name.list[1]");
+            children.ElementAt(2).Provenance.ShouldEqual("a name.list[2]");
 
         }
 
@@ -195,7 +195,7 @@ namespace FubuCore.Testing.Binding.Values
             action.AssertWasCalled(x => x.Invoke(new BindingValue(){
                 RawKey = "a",
                 RawValue = 1,
-                Source = theSource.Name
+                Source = theSource.Provenance
             }));
         }
 

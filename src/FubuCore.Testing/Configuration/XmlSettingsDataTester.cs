@@ -81,15 +81,15 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void all_keys()
         {
-            theSettings.GetKeys().ShouldContain("WebsiteSettings.PublicMobileUrlBase");
-            theSettings.GetKeys().ShouldContain("WebsiteSettings.PublicUrlBase");
-            theSettings.GetKeys().ShouldContain("PollingServiceSettings.FrequencyInSeconds");
+            theSettings.AllKeys.ShouldContain("WebsiteSettings.PublicMobileUrlBase");
+            theSettings.AllKeys.ShouldContain("WebsiteSettings.PublicUrlBase");
+            theSettings.AllKeys.ShouldContain("PollingServiceSettings.FrequencyInSeconds");
         }
 
         [Test]
         public void get_value()
         {
-            theSettings.ReadProperty("WebsiteSettings.DiagnosticsEnabled").ShouldEqual("true");
+            theSettings["WebsiteSettings.DiagnosticsEnabled"].ShouldEqual("true");
         }
 
         [Test]
@@ -125,8 +125,8 @@ namespace FubuCore.Testing.Configuration
         public void write_and_read()
         {
             var settings = new SettingsData(SettingCategory.package);
-            settings.WriteProperty("a", "1");
-            settings.WriteProperty("b", "2");
+            settings["a"]= "1";
+            settings["b"] = "2";
         
             XmlSettingsParser.Write(settings, "config.xml");
 
@@ -134,8 +134,8 @@ namespace FubuCore.Testing.Configuration
 
             settings2.Category.ShouldEqual(SettingCategory.package);
 
-            settings2.ReadProperty("a").ShouldEqual("1");
-            settings2.ReadProperty("b").ShouldEqual("2");
+            settings2["a"].ShouldEqual("1");
+            settings2["b"].ShouldEqual("2");
         }
     }
 }

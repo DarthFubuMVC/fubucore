@@ -19,16 +19,16 @@ namespace FubuCore.Testing.Configuration
             theSettings1 = new SettingsData()
                 .With("Beer", "FreeState Wheat")
                 .With("Snack", "Chips");
-            theSettings1.Name = "host";
+            theSettings1.Provenance = "host";
 
             theSettings2 = new SettingsData()
                 .With("Snack", "Peanuts")
                 .With("Friend","Philip");
-            theSettings2.Name = "other";
+            theSettings2.Provenance = "other";
 
             theSettings3 = new SettingsData(SettingCategory.environment)
                 .With("Friend","Chad");
-            theSettings3.Name = "environment";
+            theSettings3.Provenance = "environment";
         }
 
         [Test]
@@ -76,16 +76,16 @@ namespace FubuCore.Testing.Configuration
             var theSettings1 = new SettingsData()
                 .With("Beer", "FreeState Wheat")
                 .With("Snack", "Chips");
-            theSettings1.Name = "host";
+            theSettings1.Provenance = "host";
 
             var theSettings2 = new SettingsData()
                 .With("Snack", "Peanuts")
                 .With("Friend", "Philip");
-            theSettings2.Name = "other";
+            theSettings2.Provenance = "other";
 
             var theSettings3 = new SettingsData(SettingCategory.environment)
                 .With("Friend", "Chad");
-            theSettings3.Name = "environment";
+            theSettings3.Provenance = "environment";
         
             SettingsProvider.For(theSettings1, theSettings2, theSettings3).AssertAllSubstitutionsCanBeResolved();
         }
@@ -96,17 +96,17 @@ namespace FubuCore.Testing.Configuration
             var theSettings1 = new SettingsData()
                 .With("Beer", "{beerType}")
                 .With("Snack", "Chips");
-            theSettings1.Name = "host";
+            theSettings1.Provenance = "host";
 
             var theSettings2 = new SettingsData()
                 .With("Snack", "Peanuts")
                 .With("Friend", "Philip")
                 .With("beerType", "FreeState Wheat");
-            theSettings2.Name = "other";
+            theSettings2.Provenance = "other";
 
             var theSettings3 = new SettingsData(SettingCategory.environment)
                 .With("Friend", "Chad");
-            theSettings3.Name = "environment";
+            theSettings3.Provenance = "environment";
 
             SettingsProvider.For(theSettings1, theSettings2, theSettings3).AssertAllSubstitutionsCanBeResolved();
         }

@@ -41,7 +41,7 @@ namespace FubuCore.Binding.Values
         public void StartSource(IValueSource source)
         {
             _prefixes.Clear();
-            _source = source.Name;
+            _source = source.Provenance;
             _prefix = string.Empty;
         }
 

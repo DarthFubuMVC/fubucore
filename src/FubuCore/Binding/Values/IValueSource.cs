@@ -5,7 +5,7 @@ namespace FubuCore.Binding.Values
 {
     public interface IValueSource
     {
-        string Name { get; }
+        string Provenance { get; }
         bool Has(string key);
         object Get(string key);
 

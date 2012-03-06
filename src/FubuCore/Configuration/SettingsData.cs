@@ -11,7 +11,6 @@ namespace FubuCore.Configuration
     {
         private readonly Cache<DictionaryPath, SettingsData> _children;
         private readonly IDictionary<string, object> _dictionary;
-        private string _name;
 
         public SettingsData() : this(SettingCategory.core)
         {
@@ -26,7 +25,7 @@ namespace FubuCore.Configuration
         {
             Category = SettingCategory.core;
             _dictionary = dictionary;
-            _name = name;
+            Provenance = name;
 
             _children = new Cache<DictionaryPath, SettingsData>(path => path.GetParentSource(this));
         }
@@ -34,33 +33,31 @@ namespace FubuCore.Configuration
         public static SettingsData For(IKeyValues values, string name = "Anonymous")
         {
             var source = new SettingsData(new Dictionary<string, object>(), name);
-            values.ReadAll(source.WriteProperty);
+            values.ReadAll((key, value) => source[key] = value);
 
             return source;
         }
 
         /// <summary>
-        /// Write property to the value source
+        /// Can be used with dotted paths like:  AppSettings.Child.Nested.Property1
         /// </summary>
-        /// <param name="property">Dotted path:  AppSettings.Child.Nested.Property1</param>
-        /// <param name="value"></param>
-        public void WriteProperty(string property, object value)
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public object this[string key]
         {
-            var path = new DictionaryPath(property);
-            _children[path].Set(path.Key, value);
+            get
+            {
+                var path = new DictionaryPath(key);
+                return path.GetParentSource(this).Get(path.Key);
+            } 
+            set
+            {
+                var path = new DictionaryPath(key);
+                _children[path].Set(path.Key, value);
+            }
         }
 
-        public object ReadProperty(string key)
-        {
-            var path = new DictionaryPath(key);
-            return path.GetParentSource(this).Get(path.Key);
-        }
-
-        public string Name
-        {
-            get { return _name; }
-            set { _name = value; }
-        }
+        public string Provenance { get; set; }
 
         public void Set(string key, object value)
         {
@@ -93,7 +90,7 @@ namespace FubuCore.Configuration
             }
 
             var childDict = _dictionary.Child(key);
-            return new SettingsData(childDict, Name + "." + key);
+            return new SettingsData(childDict, Provenance + "." + key);
         }
 
         public bool HasChild(string key)
@@ -121,7 +118,7 @@ namespace FubuCore.Configuration
             var i = 0;
             return enumerable.Select(x =>
             {
-                var name = "{0}.{1}[{2}]".ToFormat(_name, key, i);
+                var name = "{0}.{1}[{2}]".ToFormat(Provenance, key, i);
 
                 i++;
                 return new SettingsData(x, name);
@@ -170,7 +167,7 @@ namespace FubuCore.Configuration
             callback(new BindingValue(){
                 RawKey = key,
                 RawValue = _dictionary[key],
-                Source = _name
+                Source = Provenance
             });
 
             return true;
@@ -180,7 +177,7 @@ namespace FubuCore.Configuration
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other._dictionary, _dictionary) && Equals(other._name, _name);
+            return Equals(other._dictionary, _dictionary) && Equals(other.Provenance, Provenance);
         }
 
         public override bool Equals(object obj)
@@ -195,7 +192,7 @@ namespace FubuCore.Configuration
         {
             unchecked
             {
-                return ((_dictionary != null ? _dictionary.GetHashCode() : 0)*397) ^ (_name != null ? _name.GetHashCode() : 0);
+                return ((_dictionary != null ? _dictionary.GetHashCode() : 0)*397) ^ (Provenance != null ? Provenance.GetHashCode() : 0);
             }
         }
 
@@ -221,17 +218,20 @@ namespace FubuCore.Configuration
             return new SettingsData(list[index]);
         }
 
-        public IEnumerable<string> GetKeys()
+        public IEnumerable<string> AllKeys
         {
-            var report = new ValueDiagnosticReport();
-            WriteReport(report);
+            get
+            {
+                var report = new ValueDiagnosticReport();
+                WriteReport(report);
 
-            return report.AllValues().Select(x => x.Key);
+                return report.AllValues().Select(x => x.Key);
+            }
         }
 
         public void Read(string text)
         {
-            StringPropertyReader.ReadLine(text, (key, value) => WriteProperty(key, value));
+            StringPropertyReader.ReadLine(text, (key, value) => this[key] = value);
         }
 
         public static IEnumerable<SettingsData> Order(IEnumerable<SettingsData> settings)
@@ -251,26 +251,31 @@ namespace FubuCore.Configuration
         {
             var data = new SettingsData(category)
             {
-                Name = file
+                Provenance = file
             };
 
-            StringPropertyReader.ForFile(file).ReadProperties(data.WriteProperty);
+            StringPropertyReader.ForFile(file).ReadProperties((key, value) => data[key] = value);
 
             return data;
+        }
+
+        public static void ReadFromFile(string file, SettingsData data)
+        {
+            StringPropertyReader.ForFile(file).ReadProperties((key, value) => data[key] = value);
         }
 
         public SettingCategory Category { get; set; }
 
         public SettingsData With(string key, string value)
         {
-            WriteProperty(key, value);
+            this[key] = value;
             return this;
         }
 
 
         public override string ToString()
         {
-            return string.Format("ValueSource, category {0}, provenance: {1}", Category, Name ?? "unknown");
+            return string.Format("ValueSource, category {0}, provenance: {1}", Category, Provenance ?? "unknown");
         }
     }
 

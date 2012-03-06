@@ -7,24 +7,24 @@ namespace FubuCore.Binding.Values
 {
     public class FlatValueSource<T> : IValueSource
     {
-        private readonly string _name;
+        private readonly string _provenance;
         private readonly IKeyValues<T> _values;
 
 
-        public FlatValueSource(IDictionary<string, T> dictionary, string name = "Anonymous") : this(new DictionaryKeyValues<T>(dictionary), name)
+        public FlatValueSource(IDictionary<string, T> dictionary, string provenance = "Anonymous") : this(new DictionaryKeyValues<T>(dictionary), provenance)
         {
             
         }
 
-        public FlatValueSource(IKeyValues<T> values, string name = "Anonymous")
+        public FlatValueSource(IKeyValues<T> values, string provenance = "Anonymous")
         {
-            _name = name;
+            _provenance = provenance;
             _values = values;
         }
 
-        public string Name
+        public string Provenance
         {
-            get { return _name; }
+            get { return _provenance; }
         }
 
         public bool Has(string key)
@@ -72,7 +72,7 @@ namespace FubuCore.Binding.Values
                 {
                     RawKey = rawKey,
                     RawValue = value,
-                    Source = Name
+                    Source = Provenance
                 });
             });
         }

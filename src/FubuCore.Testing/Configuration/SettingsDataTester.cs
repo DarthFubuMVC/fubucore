@@ -22,10 +22,10 @@ namespace FubuCore.Testing.Configuration
             });
 
             var data = SettingsData.ReadFromFile(SettingCategory.profile, "settings.txt");
-            data.Name.ShouldEqual("settings.txt");
+            data.Provenance.ShouldEqual("settings.txt");
             data.Category.ShouldEqual(SettingCategory.profile);
 
-            data.GetKeys().ShouldHaveTheSameElementsAs("A", "B", "C", "D");
+            data.AllKeys.ShouldHaveTheSameElementsAs("A", "B", "C", "D");
 
             data.Get("A").ShouldEqual("1");
         }
@@ -47,10 +47,10 @@ namespace FubuCore.Testing.Configuration
             data.Read("Key=Value1");
             data.Read("A.Key=Value2");
 
-            data.GetKeys().ShouldHaveTheSameElementsAs("A.Key", "Key");
+            data.AllKeys.ShouldHaveTheSameElementsAs("A.Key", "Key");
 
-            data.ReadProperty("Key").ShouldEqual("Value1");
-            data.ReadProperty("A.Key").ShouldEqual("Value2");
+            data["Key"].ShouldEqual("Value1");
+            data["A.Key"].ShouldEqual("Value2");
         }
 
         [Test]
@@ -59,9 +59,9 @@ namespace FubuCore.Testing.Configuration
             var data = new SettingsData(SettingCategory.core);
             data.Read("DatabaseSettings.ConnectionString=\"Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;\"");
 
-            data.GetKeys().ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
+            data.AllKeys.ShouldHaveTheSameElementsAs("DatabaseSettings.ConnectionString");
 
-            data.ReadProperty("DatabaseSettings.ConnectionString").ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
+            data["DatabaseSettings.ConnectionString"].ShouldEqual("Data Source=localhost;Initial Catalog=DovetailDAI;User Id=sa;Password=sa;");
         }
 
 

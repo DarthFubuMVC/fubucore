@@ -19,11 +19,11 @@ namespace FubuCore.Testing.Configuration
             theSettings1 = new SettingsData()
                 .With("Beer", "FreeState Wheat");
 
-            theSettings1.Name = "host";
+            theSettings1.Provenance = "host";
 
             theSettings2 = new SettingsData()
                 .With("Snack", "{Beer} and Peanuts");
-            theSettings2.Name = "other";
+            theSettings2.Provenance = "other";
         }
 
         [Test]
