@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FubuCore.Binding.Values;
+using FubuCore.Configuration;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -8,7 +9,7 @@ namespace FubuCore.Testing.Binding.Values
     [TestFixture]
     public class DictionaryValueSourceReportWritingTester
     {
-        private DictionaryValueSource theSource;
+        private SettingsData theSource;
         private IValueReport theReport;
         private MockRepository theMocks;
 
@@ -16,7 +17,7 @@ namespace FubuCore.Testing.Binding.Values
         public void SetUp()
         {
             theMocks = new MockRepository();
-            theSource = new DictionaryValueSource(new Dictionary<string, object>(), "Something");
+            theSource = new SettingsData(new Dictionary<string, object>(), "Something");
             theReport = theMocks.StrictMock<IValueReport>();
         }
 
@@ -35,7 +36,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void nested_child()
         {
-            theSource.GetChild("Child").As<DictionaryValueSource>().Set("A", 1);
+            theSource.Child("Child").As<SettingsData>().Set("A", 1);
 
             using (theMocks.Ordered())
             {

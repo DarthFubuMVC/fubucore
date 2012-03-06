@@ -1,4 +1,5 @@
 using FubuCore.Binding.Values;
+using FubuCore.Configuration;
 using FubuTestingSupport;
 using NUnit.Framework;
 using System.Linq;
@@ -28,12 +29,12 @@ namespace FubuCore.Testing.Binding.Values
         {
             var report = new ValueDiagnosticReport();
 
-            report.StartSource(new DictionaryValueSource(null, "Ralph"));
+            report.StartSource(new SettingsData(null, "Ralph"));
             report.Value("A", 1);
             report.EndSource();
 
 
-            report.StartSource(new DictionaryValueSource(null, "Potsie"));
+            report.StartSource(new SettingsData(null, "Potsie"));
             report.Value("A", 2);
             report.EndSource();
 

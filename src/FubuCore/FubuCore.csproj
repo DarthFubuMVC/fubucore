@@ -108,7 +108,7 @@
     <Compile Include="Binding\Values\DiagnosticValue.cs" />
     <Compile Include="Binding\Values\DiagnosticValueSource.cs" />
     <Compile Include="Binding\Values\DictionaryPath.cs" />
-    <Compile Include="Binding\Values\DictionaryValueSource.cs" />
+    <Compile Include="Configuration\SettingsData.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />
     <Compile Include="Binding\Values\IValueReport.cs" />
     <Compile Include="Binding\Values\IValueSource.cs" />
@@ -127,7 +127,6 @@
     <Compile Include="CommandLine\TwoLineReport.cs" />
     <Compile Include="Configuration\SettingsProvider.cs" />
     <Compile Include="Configuration\FolderAppSettingsXmlSource.cs" />
-    <Compile Include="Configuration\SettingsData.cs" />
     <Compile Include="Configuration\ISettingsSource.cs" />
     <Compile Include="Configuration\SettingCategory.cs" />
     <Compile Include="Configuration\SettingsRequestData.cs" />

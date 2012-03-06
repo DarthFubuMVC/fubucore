@@ -17,7 +17,7 @@ namespace FubuCore.Configuration
         {
             _resolver = resolver;
 
-            _values = new Lazy<IValueSource>(() => DictionaryValueSource.For(new AppSettingsKeyValues()));
+            _values = new Lazy<IValueSource>(() => SettingsData.For(new AppSettingsKeyValues()));
         }
 
         public T SettingsFor<T>() where T : class, new()

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FubuCore.Binding.Values;
 using FubuCore.Configuration;
 using NUnit.Framework;
 using System.Linq;

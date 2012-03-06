@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using FubuCore.Binding.Values;
+using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
@@ -10,13 +11,13 @@ namespace FubuCore.Testing.Binding.Values
     public class DictionaryPathTester
     {
         private Dictionary<string, object> theDictionary;
-        private DictionaryValueSource theSource;
+        private SettingsData theSource;
 
         [SetUp]
         public void SetUp()
         {
             theDictionary = new Dictionary<string, object>();
-            theSource = new DictionaryValueSource(theDictionary);
+            theSource = new SettingsData(theDictionary);
         }
 
         [Test]

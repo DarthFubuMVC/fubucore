@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Xml;
+using FubuCore.Binding.Values;
 using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -7,7 +8,7 @@ using FubuTestingSupport;
 namespace FubuCore.Testing.Configuration
 {
     [TestFixture]
-    public class XmlSettingsDataTester
+    public class XmlValueSourceTester
     {
         private SettingsData theSettings;
 
@@ -94,7 +95,7 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void has_setting_positive()
         {
-            theSettings.GetChild("WebsiteSettings").Has("DiagnosticsEnabled").ShouldBeTrue();
+            theSettings.Child("WebsiteSettings").Has("DiagnosticsEnabled").ShouldBeTrue();
         }
 
         [Test]

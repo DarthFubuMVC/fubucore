@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FubuCore.Configuration;
 
 namespace FubuCore.Binding.Values
 {
@@ -21,12 +22,12 @@ namespace FubuCore.Binding.Values
             _key = parts.Last();
         }
 
-        public void Set(DictionaryValueSource top, object value)
+        public void Set(SettingsData top, object value)
         {
             GetParentSource(top).Set(Key, value);
         }
 
-        public DictionaryValueSource GetParentSource(DictionaryValueSource source)
+        public SettingsData GetParentSource(SettingsData source)
         {
             ParentParts.Each(x =>
             {
@@ -39,7 +40,7 @@ namespace FubuCore.Binding.Values
                 }
                 else
                 {
-                    source = (DictionaryValueSource)source.GetChild(x);
+                    source = source.Child(x);
                 }
                 
             });

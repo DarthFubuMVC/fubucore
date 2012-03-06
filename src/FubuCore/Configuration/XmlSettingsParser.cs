@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using FubuCore.Binding.Values;
 using FubuCore.Util;
 
 namespace FubuCore.Configuration

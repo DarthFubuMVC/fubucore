@@ -44,7 +44,7 @@ namespace FubuCore.Util
                 lastLine = line;
 
 
-                // This code below becomes the SettingsData.Read(text) method
+                // This code below becomes the ValueSource.Read(text) method
                 ReadLine(line, callback);
             });
         }

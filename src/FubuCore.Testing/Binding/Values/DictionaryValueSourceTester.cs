@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
+using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
@@ -10,12 +11,12 @@ using Rhino.Mocks;
 namespace FubuCore.Testing.Binding.Values
 {
     [TestFixture]
-    public class DictionaryValueSourceLoaderTester
+    public class ValueSourceLoaderTester
     {
         [Test]
         public void load_several_levels_of_nested_properties()
         {
-            var source = new DictionaryValueSource(new Dictionary<string, object>(), "some name");
+            var source = new SettingsData(new Dictionary<string, object>(), "some name");
 
             source.WriteProperty("A", 1);
             source.WriteProperty("B", 2);
@@ -26,10 +27,10 @@ namespace FubuCore.Testing.Binding.Values
 
             source.Get("A").ShouldEqual(1);
             source.Get("B").ShouldEqual(2);
-            source.GetChild("Child").Get("A").ShouldEqual(2);
-            source.GetChild("Child").Get("B").ShouldEqual(3);
-            source.GetChild("Child").GetChild("Nested").Get("A").ShouldEqual(4);
-            source.GetChild("Child").GetChild("Nested").Get("B").ShouldEqual(5);
+            source.As<IValueSource>().GetChild("Child").Get("A").ShouldEqual(2);
+            source.As<IValueSource>().GetChild("Child").Get("B").ShouldEqual(3);
+            source.As<IValueSource>().GetChild("Child").GetChild("Nested").Get("A").ShouldEqual(4);
+            source.As<IValueSource>().GetChild("Child").GetChild("Nested").Get("B").ShouldEqual(5);
         }
     }
 
@@ -38,13 +39,13 @@ namespace FubuCore.Testing.Binding.Values
     public class DictionaryValueSourceTester
     {
         private Dictionary<string, object> theDictionary;
-        private DictionaryValueSource theSource;
+        private SettingsData theSource;
 
         [SetUp]
         public void SetUp()
         {
             theDictionary = new Dictionary<string, object>();
-            theSource = new DictionaryValueSource(theDictionary, "a name");
+            theSource = new SettingsData(theDictionary, "a name");
         }
 
         [Test]
@@ -95,20 +96,20 @@ namespace FubuCore.Testing.Binding.Values
 
             child.Add("abc", 123);
 
-            var childValueSource = theSource.GetChild("child");
+            var childValueSource = theSource.As<IValueSource>().GetChild("child");
             childValueSource.Get("abc").ShouldEqual(123);
         }
 
         [Test]
         public void get_child_when_it_does_not_exist()
         {
-            var childValueSource = theSource.GetChild("child");
+            var childValueSource = theSource.As<IValueSource>().GetChild("child");
 
-            childValueSource.ShouldNotBeNull().ShouldBeOfType<DictionaryValueSource>()
+            childValueSource.ShouldNotBeNull().ShouldBeOfType<SettingsData>()
                 .Name.ShouldEqual("a name.child");
 
             // It's idempotent on the add
-            theSource.GetChild("child").ShouldEqual(childValueSource);
+            theSource.As<IValueSource>().GetChild("child").ShouldEqual(childValueSource);
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace FubuCore.Testing.Binding.Values
             var child = new Dictionary<string, object>();
             theDictionary.Add("child", child);
 
-            var childValueSource = theSource.GetChild("child");
+            var childValueSource = theSource.As<IValueSource>().GetChild("child");
 
             childValueSource.Name.ShouldEqual(theSource.Name + ".child");
         }
@@ -125,7 +126,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void get_children_when_there_are_none()
         {
-            theSource.GetChildren("nonexistent").Any().ShouldBeFalse();
+            theSource.As<IValueSource>().GetChildren("nonexistent").Any().ShouldBeFalse();
         }
 
         [Test]
@@ -143,7 +144,7 @@ namespace FubuCore.Testing.Binding.Values
 
             theDictionary.Add("list", list);
 
-            var children = theSource.GetChildren("list");
+            var children = theSource.As<IValueSource>().GetChildren("list");
             children.Count().ShouldEqual(3);
 
             children.ElementAt(0).Get("a").ShouldEqual(0);
@@ -168,7 +169,7 @@ namespace FubuCore.Testing.Binding.Values
 
             theDictionary.Add("list", list);
 
-            var children = theSource.GetChildren("list");
+            var children = theSource.As<IValueSource>().GetChildren("list");
             children.Count().ShouldEqual(3);
 
             children.ElementAt(0).Name.ShouldEqual("a name.list[0]");
@@ -180,7 +181,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_miss()
         {
-            theSource.Value("nonexistent", x => Assert.Fail("Should not call this")).ShouldBeFalse();
+            theSource.As<IValueSource>().Value("nonexistent", x => Assert.Fail("Should not call this")).ShouldBeFalse();
         }
 
         [Test]
@@ -189,7 +190,7 @@ namespace FubuCore.Testing.Binding.Values
             var action = MockRepository.GenerateMock<Action<BindingValue>>();
             theDictionary.Add("a", 1);
 
-            theSource.Value("a", action).ShouldBeTrue();
+            theSource.As<IValueSource>().Value("a", action).ShouldBeTrue();
 
             action.AssertWasCalled(x => x.Invoke(new BindingValue(){
                 RawKey = "a",

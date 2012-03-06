@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using FubuCore.Binding.Values;
 
 namespace FubuCore.Configuration
 {

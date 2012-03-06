@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FubuCore.Binding.Values;
 
 namespace FubuCore.Configuration
 {
