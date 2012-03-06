@@ -89,6 +89,7 @@
     <Compile Include="Binding\PropertyBinderTester.cs" />
     <Compile Include="Binding\ReaderBinderTester.cs" />
     <Compile Include="Binding\RecordingBindingLogger_acceptance_testing.cs" />
+    <Compile Include="Binding\RequestDataTesting.cs" />
     <Compile Include="Binding\ResolveConnectionStringFamilyTester.cs" />
     <Compile Include="Binding\ServiceArgumentsTester.cs" />
     <Compile Include="Binding\SmartRequestTester.cs" />

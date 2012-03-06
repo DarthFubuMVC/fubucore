@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Binding.Values;
+using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
@@ -9,6 +10,26 @@ namespace FubuCore.Binding
     public class RequestData : IRequestData
     {
         private readonly IList<IValueSource> _sources = new List<IValueSource>();
+
+        public RequestData()
+        {
+        }
+
+        public void AddValues(string name, IKeyValues values)
+        {
+            var source = new FlatValueSource(values, name);
+            _sources.Add(source);
+        }
+
+        public void AddValues(IValueSource source)
+        {
+            _sources.Add(source);
+        }
+
+        public IValueSource ValuesFor(string nameOrProvenance)
+        {
+            return _sources.FirstOrDefault(x => x.Provenance == nameOrProvenance);
+        }
 
         public RequestData(IValueSource source)
         {
