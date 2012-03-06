@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FubuCore.Binding;
+using FubuCore.Binding.Values;
 using FubuCore.Util;
 
 namespace FubuCore.Configuration
@@ -52,6 +53,21 @@ namespace FubuCore.Configuration
         public IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild)
         {
             return _inner.GetEnumerableRequests(prefixOrChild).Select(x => new SubstitutedRequestData(x, _substitutions));
+        }
+
+        public void AddValues(string name, IKeyValues values)
+        {
+            _inner.AddValues(name, values);
+        }
+
+        public void AddValues(IValueSource source)
+        {
+            _inner.AddValues(source);
+        }
+
+        public IValueSource ValuesFor(string nameOrProvenance)
+        {
+            return _inner.ValuesFor(nameOrProvenance);
         }
     }
 }

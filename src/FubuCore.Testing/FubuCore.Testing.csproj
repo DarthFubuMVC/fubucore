@@ -98,6 +98,7 @@
     <Compile Include="Binding\Values\DictionaryValueSourceReportWritingTester.cs" />
     <Compile Include="Binding\Values\DictionaryValueSourceTester.cs" />
     <Compile Include="Binding\Values\FlatValueSourceTester.cs" />
+    <Compile Include="Binding\Values\GenericValuesSourceTester.cs" />
     <Compile Include="Binding\Values\NamedKeyValuesTester.cs" />
     <Compile Include="Binding\Values\PrefixedKeyValuesTester.cs" />
     <Compile Include="Binding\Values\ValueDiagnosticReportTester.cs" />

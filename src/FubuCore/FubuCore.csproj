@@ -109,6 +109,7 @@
     <Compile Include="Binding\Values\DiagnosticValueSource.cs" />
     <Compile Include="Binding\Values\DictionaryPath.cs" />
     <Compile Include="Binding\Values\GenericKeyValues.cs" />
+    <Compile Include="Binding\Values\GenericValueSource.cs" />
     <Compile Include="Binding\Values\NamedKeyValues.cs" />
     <Compile Include="Configuration\SettingsData.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />

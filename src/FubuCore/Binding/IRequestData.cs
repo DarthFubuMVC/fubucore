@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using FubuCore.Binding.Values;
+using FubuCore.Util;
 
 namespace FubuCore.Binding
 {
@@ -11,5 +13,8 @@ namespace FubuCore.Binding
 
         IRequestData GetChildRequest(string prefixOrChild);
         IEnumerable<IRequestData> GetEnumerableRequests(string prefixOrChild);
+        void AddValues(string name, IKeyValues values);
+        void AddValues(IValueSource source);
+        IValueSource ValuesFor(string nameOrProvenance);
     }
 }
