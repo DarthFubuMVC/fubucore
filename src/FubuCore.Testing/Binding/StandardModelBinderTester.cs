@@ -25,9 +25,12 @@ namespace FubuCore.Testing.Binding
             MockFor<IBindingContext>().Stub(x => x.Logger).Return(MockFor<IBindingLogger>());
 
             thePropertyBinder = MockFor<IPropertyBinder>();
-            MockFor<IPropertyBinderCache>().Stub(x => x.BinderFor(theProperty))
-                .Return(thePropertyBinder);
 
+            var registry = new BindingRegistry();
+            Services.Inject(registry);
+            registry.Add(thePropertyBinder);
+
+            thePropertyBinder.Stub(x => x.Matches(null)).IgnoreArguments().Return(true);
             ClassUnderTest.PopulateProperty(typeof(Case), theProperty, MockFor<IBindingContext>());
         }
 

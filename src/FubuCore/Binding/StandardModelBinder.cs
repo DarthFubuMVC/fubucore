@@ -13,7 +13,7 @@ namespace FubuCore.Binding
         private readonly IPropertyBinderCache _propertyBinders;
         private readonly ITypeDescriptorCache _typeCache;
 
-        public StandardModelBinder(IPropertyBinderCache propertyBinders, ITypeDescriptorCache typeCache)
+        public StandardModelBinder(BindingRegistry propertyBinders, ITypeDescriptorCache typeCache)
         {
             _propertyBinders = propertyBinders;
             _typeCache = typeCache;

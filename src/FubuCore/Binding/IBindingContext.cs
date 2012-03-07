@@ -51,6 +51,12 @@ namespace FubuCore.Binding
         /// <returns></returns>
         void BindObject(IRequestData data, Type type, Action<object> continuation);
 
+        /// <summary>
+        /// Binds property values to an existing object
+        /// </summary>
+        /// <param name="instance"></param>
+        void BindProperties(object instance);
+
         IEnumerable<IRequestData> GetEnumerableRequests(string name);
         IRequestData GetSubRequest(string name);
 

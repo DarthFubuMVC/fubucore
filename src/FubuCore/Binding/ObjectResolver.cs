@@ -10,7 +10,7 @@ namespace FubuCore.Binding
         private readonly IBindingLogger _logger;
         private readonly IServiceLocator _services;
 
-        public ObjectResolver(IServiceLocator services, IModelBinderCache binders, IBindingLogger logger)
+        public ObjectResolver(IServiceLocator services, BindingRegistry binders, IBindingLogger logger)
         {
             _services = services;
             _binders = binders;
@@ -25,17 +25,22 @@ namespace FubuCore.Binding
 
         public virtual BindResult BindModel<T>(T model, IBindingContext context)
         {
-            var binder = findBinder(typeof(T));
-            return executeModelBinder(typeof (T), context, binder, () =>
+            return BindModel(typeof (T), model, context);
+        }
+
+        public BindResult BindModel(Type type, object model, IBindingContext context)
+        {
+            var binder = findBinder(type);
+            return executeModelBinder(type, context, binder, () =>
             {
-                binder.Bind(typeof (T), model, context);
-                return new BindResult{
+                binder.Bind(type, model, context);
+                return new BindResult
+                {
                     Problems = context.Problems,
                     Value = model
                 };
             });
         }
-
 
 
         // Leave this virtual

@@ -18,10 +18,12 @@ namespace FubuCore.Binding
         [MarkedForTermination]
         void TryBindModel(Type type, IBindingContext context, Action<BindResult> continuation);
 
-        [MarkedForTermination]
         BindResult BindModel<T>(T model, IBindingContext context);
-        
-        
+
+
+        BindResult BindModel(Type type, object model, IBindingContext context);
+
+
         void TryBindModel(Type type, IRequestData data, Action<BindResult> continuation);
     }
 }

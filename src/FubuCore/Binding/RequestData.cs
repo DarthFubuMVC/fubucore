@@ -31,6 +31,16 @@ namespace FubuCore.Binding
             return _sources.FirstOrDefault(x => x.Provenance == nameOrProvenance);
         }
 
+        public void WriteReport(IValueReport report)
+        {
+            _sources.Each(source =>
+            {
+                report.StartSource(source);
+                source.WriteReport(report);
+                report.EndSource();
+            });
+        }
+
         public RequestData(IValueSource source)
         {
             _sources.Add(source);

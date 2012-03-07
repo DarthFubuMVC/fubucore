@@ -16,5 +16,7 @@ namespace FubuCore.Binding
         void AddValues(string name, IKeyValues values);
         void AddValues(IValueSource source);
         IValueSource ValuesFor(string nameOrProvenance);
+
+        void WriteReport(IValueReport report);
     }
 }

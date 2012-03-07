@@ -69,5 +69,10 @@ namespace FubuCore.Configuration
         {
             return _inner.ValuesFor(nameOrProvenance);
         }
+
+        public void WriteReport(IValueReport report)
+        {
+            _inner.WriteReport(report);
+        }
     }
 }

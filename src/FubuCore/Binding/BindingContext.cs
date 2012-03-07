@@ -54,6 +54,7 @@ namespace FubuCore.Binding
             get { return _logger; }
         }
 
+
         public IEnumerable<IRequestData> GetEnumerableRequests(string name)
         {
             return _requestData.GetEnumerableRequests(name);
@@ -122,6 +123,12 @@ namespace FubuCore.Binding
 
                 continuation(result.Value);
             });
+        }
+
+
+        public void BindProperties(object instance)
+        {
+            _resolver.Value.BindModel(instance.GetType(), instance, this);
         }
 
         public static void AddNamingStrategy(Func<string, string> strategy)
