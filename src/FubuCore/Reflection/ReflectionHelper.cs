@@ -156,10 +156,25 @@ namespace FubuCore.Reflection
             {
                 var methodInfo = methodCallExpression.Method;
                 //only supporting constant expressions as means of providing index
-                var firstArgumentExpression = methodCallExpression.Arguments.First() as ConstantExpression;
+                Expression argument = methodCallExpression.Arguments.First();
+                var firstArgumentExpression = argument as ConstantExpression;
+
+
                 if (firstArgumentExpression != null)
                 {
                     var value = firstArgumentExpression.Value;
+                    var methodValueGetter = new MethodValueGetter(methodInfo, value);
+                    list.Add(methodValueGetter);
+                }
+                else if (firstArgumentExpression == null && argument is MemberExpression && argument.As<MemberExpression>().Expression is ConstantExpression)
+                {
+                    var memberExpr = argument.As<MemberExpression>();
+                    var holder = memberExpr.Expression.As<ConstantExpression>().Value;
+
+
+                    object value = null;
+                    (memberExpr.Member as FieldInfo).IfNotNull(x => value = x.GetValue(holder));
+
                     var methodValueGetter = new MethodValueGetter(methodInfo, value);
                     list.Add(methodValueGetter);
                 }

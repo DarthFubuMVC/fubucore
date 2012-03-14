@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore.Reflection;
@@ -41,15 +42,28 @@ namespace FubuCore.Testing.Reflection
 
         public class ChildTarget
         {
+            public ChildTarget()
+            {
+                Grandchildren = new List<GrandChildTarget>();
+            }
+
             public int Age { get; set; }
             public GrandChildTarget GrandChild { get; set; }
             public GrandChildTarget SecondGrandChild { get; set; }
+
+            public IList<GrandChildTarget> Grandchildren { get; set; }
         }
 
         public class GrandChildTarget
         {
             public DateTime BirthDay { get; set; }
             public string Name { get; set; }
+            public DeepTarget Deep { get; set; }
+        }
+
+        public class DeepTarget
+        {
+            public string Color { get; set; }
         }
 
         public class SomeClass
@@ -196,6 +210,50 @@ namespace FubuCore.Testing.Reflection
             };
             _chain.SetValue(target, DateTime.Today.AddDays(4));
         }
+
+
+        [Test]
+        public void get_value_by_indexer_when_the_indexer_is_variable_reference()
+        {
+            var target = new Target{
+                Child = new ChildTarget{
+                    Grandchildren = new List<GrandChildTarget>{
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Red"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Green"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Name = "Third"
+                        },
+                        new GrandChildTarget{
+                            Name = "Fourth"
+                        },
+                    }
+                }
+            };
+
+            var i = 0;
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[i].Deep.Color)
+                .GetValue(target).ShouldEqual("Red");
+
+            i = 2;
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[i].Deep.Color)
+                .GetValue(target).ShouldBeNull();
+
+
+            for (int j = 0; j < target.Child.Grandchildren.Count; j++)
+            {
+                ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[j].Name)
+                    .GetValue(target).ShouldEqual(target.Child.Grandchildren[j].Name);
+            }
+        }
+        
     }
 
 }
