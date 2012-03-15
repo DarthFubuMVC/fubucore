@@ -253,7 +253,67 @@ namespace FubuCore.Testing.Reflection
                     .GetValue(target).ShouldEqual(target.Child.Grandchildren[j].Name);
             }
         }
-        
+
+        public class Index
+        {
+            public int I { get; set; }
+            public Index2Info Index2 { get; set; }
+
+            public class Index2Info
+            {
+                public int J { get; set; }
+            }
+        }
+
+        [Test]
+        public void get_value_by_indexer_when_the_indexer_is_variable_reference_of_a_complex_object()
+        {
+            var target = new Target
+            {
+                Child = new ChildTarget
+                {
+                    Grandchildren = new List<GrandChildTarget>{
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Red"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Green"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Name = "Third"
+                        }
+                    }
+                }
+            };
+
+            var index = new Index();
+            index.I = 0;
+
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[index.I].Deep.Color)
+                .GetValue(target).ShouldEqual("Red");
+
+            index.I = 2;
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[index.I].Deep.Color)
+                .GetValue(target).ShouldBeNull();
+
+            for (index.I = 0; index.I < target.Child.Grandchildren.Count; index.I++)
+            {
+                ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[index.I].Name)
+                    .GetValue(target).ShouldEqual(target.Child.Grandchildren[index.I].Name);
+            }
+
+            index.Index2 = new Index.Index2Info();
+            index.Index2.J = 1;
+
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[index.Index2.J].Deep.Color)
+               .GetValue(target).ShouldEqual("Green");
+
+        }
+
     }
 
 }

@@ -155,34 +155,53 @@ namespace FubuCore.Reflection
             if (methodCallExpression != null)
             {
                 var methodInfo = methodCallExpression.Method;
-                //only supporting constant expressions as means of providing index
                 Expression argument = methodCallExpression.Arguments.First();
-                var firstArgumentExpression = argument as ConstantExpression;
-
-
-                if (firstArgumentExpression != null)
+               
+                object value;
+                if (TryEvaluateExpression(argument, out value))
                 {
-                    var value = firstArgumentExpression.Value;
                     var methodValueGetter = new MethodValueGetter(methodInfo, value);
                     list.Add(methodValueGetter);
                 }
-                else if (firstArgumentExpression == null && argument is MemberExpression && argument.As<MemberExpression>().Expression is ConstantExpression)
-                {
-                    var memberExpr = argument.As<MemberExpression>();
-                    var holder = memberExpr.Expression.As<ConstantExpression>().Value;
-
-
-                    object value = null;
-                    (memberExpr.Member as FieldInfo).IfNotNull(x => value = x.GetValue(holder));
-
-                    var methodValueGetter = new MethodValueGetter(methodInfo, value);
-                    list.Add(methodValueGetter);
-                }
+                
                 if (methodCallExpression.Object != null)
                 {
                     buildValueGetters(methodCallExpression.Object, list);
                 }
             }
+        }
+
+        private static bool TryEvaluateExpression(Expression operation, out object value)
+        {
+            if (operation == null)
+            {   // used for static fields, etc
+                value = null;
+                return true;
+            }
+            switch (operation.NodeType)
+            {
+                case ExpressionType.Constant:
+                    value = ((ConstantExpression)operation).Value;
+                    return true;
+                case ExpressionType.MemberAccess:
+                    MemberExpression me = (MemberExpression)operation;
+                    object target;
+                    if (TryEvaluateExpression(me.Expression, out target))
+                    { // instance target
+                        switch (me.Member.MemberType)
+                        {
+                            case MemberTypes.Field:
+                                value = ((FieldInfo)me.Member).GetValue(target);
+                                return true;
+                            case MemberTypes.Property:
+                                value = ((PropertyInfo)me.Member).GetValue(target, null);
+                                return true;
+                        }
+                    }
+                    break;
+            }
+            value = null;
+            return false;
         }
 
         public static Accessor GetAccessor<TModel, T>(Expression<Func<TModel, T>> expression)
