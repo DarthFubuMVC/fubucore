@@ -76,7 +76,6 @@ desc "Compiles the app"
 task :compile => [:clean, :restore_if_missing, :version] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
   copyOutputFiles "src/FubuCore/bin/#{COMPILE_TARGET}", "Fubu*.{dll,pdb}", props[:stage]  
-  copyOutputFiles "src/FubuLocalization/bin/#{COMPILE_TARGET}", "FubuLocalization*.{dll,pdb}", props[:stage]
   copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "localizer*.{exe,pdb}", props[:stage]   
   copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "Microsoft.Practices.ServiceLocation.dll", props[:stage]   
   copyOutputFiles "src/FubuTestingSupport/bin/#{COMPILE_TARGET}", "FubuTestingSupport*.{dll,pdb}", props[:stage]  
@@ -94,5 +93,5 @@ task :test => [:unit_test]
 desc "Runs unit tests"
 task :unit_test => :compile do
   runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :source => 'src', :platform => 'x86'
-  runner.executeTests ['FubuCore.Testing', 'FubuLocalization.Tests']
+  runner.executeTests ['FubuCore.Testing']
 end
