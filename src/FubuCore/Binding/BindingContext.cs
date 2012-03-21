@@ -44,6 +44,11 @@ namespace FubuCore.Binding
             _request = new Lazy<ISmartRequest>(() => new SmartRequest(_requestData, _locator.GetInstance<IObjectConverter>()));
         }
 
+        public IRequestData RequestData
+        {
+            get { return _requestData; }
+        }
+
         public IBindingLogger Logger
         {
             get { return _logger; }

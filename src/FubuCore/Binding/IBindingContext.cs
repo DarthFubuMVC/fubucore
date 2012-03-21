@@ -35,6 +35,11 @@ namespace FubuCore.Binding
     /// </summary>
     public interface IBindingContext
     {
+        /// <summary>
+        /// Expose the current (possibly prefixed) request data so property binders can use it
+        /// to dig around for values according to their needs
+        /// </summary>
+        IRequestData RequestData { get; }
 
         /// <summary>
         /// Expose logging to the model binding subsystem
