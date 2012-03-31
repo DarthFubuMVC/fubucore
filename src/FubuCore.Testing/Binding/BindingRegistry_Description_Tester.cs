@@ -118,7 +118,6 @@ namespace FubuCore.Testing.Binding
     [TestFixture]
     public class when_describing_the_BasicConverterFamily
     {
-        private BindingRegistry theRegistry;
         private ConverterLibrary theLibrary;
         private Description theDescription;
         private BulletList theFamilyList;
@@ -126,7 +125,6 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void SetUp()
         {
-            theRegistry = new BindingRegistry();
             theLibrary = new ConverterLibrary();
             var basicConverterFamily = new BasicConverterFamily(theLibrary);
 
