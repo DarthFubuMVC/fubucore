@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Util.TextWriting
         
             report.Write(writer);
 
-            writer.ToString().ShouldEqual(@"
+            writer.ToString().ShouldEqualWithLineEndings(@"
 =================
 the title of this
 =================
@@ -41,7 +41,7 @@ the title of this
 
             report.Write(writer);
 
-            writer.ToString().ShouldEqual(@"
+            writer.ToString().ShouldEqualWithLineEndings(@"
 ==============================
 the title of this
 ==============================
@@ -69,7 +69,7 @@ some more stuff that is longer
 
             Debug.WriteLine(writer.ToString());
 
-            writer.ToString().ShouldEqual(@"
+            writer.ToString().ShouldEqualWithLineEndings(@"
 ==================
 This is the header
 ==================
@@ -103,7 +103,7 @@ a3     b3     c3
 
             Debug.WriteLine(writer.ToString());
 
-            writer.ToString().ShouldEqual(@"
+            writer.ToString().ShouldEqualWithLineEndings(@"
 =========================
 This is the header
 =========================

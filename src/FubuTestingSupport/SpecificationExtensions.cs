@@ -90,6 +90,12 @@ namespace FubuTestingSupport
             return expected;
         }
 
+        public static object ShouldEqualWithLineEndings(this string actual, object expected)
+        {
+            Assert.AreEqual((expected != null) ? expected.ToString().Replace("\r", "") : null, actual.Replace("\r", ""));
+            return expected;
+        }
+
         public static void ShouldMatch(this string actual, string pattern)
         {
             Assert.That(actual, Is.StringMatching(pattern));

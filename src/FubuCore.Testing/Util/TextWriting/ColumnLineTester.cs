@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Util.TextWriting
 
             var text = "a*****b*****c\r\n".Replace("*", " ");
 
-            writer.ToString().ShouldEqual(text);
+            writer.ToString().ShouldEqualWithLineEndings(text);
         }
 
         [Test]
