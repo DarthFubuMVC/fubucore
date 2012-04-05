@@ -1,5 +1,6 @@
 using System;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Values;
 
 
 namespace FubuCore.Binding
@@ -80,6 +81,12 @@ namespace FubuCore.Binding
         {
             var context = new BindingContext(data, _services, _logger);
             TryBindModel(type, context, continuation);
+        }
+
+        public BindResult BindModel(Type type, IValueSource values)
+        {
+            var request = new RequestData(values);
+            return BindModel(type, request);
         }
 
         private static BindResult executeModelBinder(Type type, IBindingContext context, IModelBinder binder, Func<object> source)

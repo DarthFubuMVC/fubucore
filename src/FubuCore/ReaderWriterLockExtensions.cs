@@ -30,5 +30,43 @@ namespace FubuCore
                 rwLock.ExitReadLock();
             }
         }
+
+        public static void MaybeWrite(this ReaderWriterLockSlim theLock, Action action)
+        {
+            try
+            {
+                theLock.EnterUpgradeableReadLock();
+                action();
+            }
+            finally
+            {
+                theLock.ExitUpgradeableReadLock();
+            }
+        }
+
+        public static T MaybeWrite<T>(this ReaderWriterLockSlim theLock, Func<T> answer, Func<bool> missingTest,
+                                      Action write)
+        {
+            try
+            {
+                theLock.EnterUpgradeableReadLock();
+                if (missingTest())
+                {
+                    theLock.Write(() =>
+                    {
+                        if (missingTest())
+                        {
+                            write();
+                        }
+                    });
+                }
+
+                return answer();
+            }
+            finally
+            {
+                theLock.ExitUpgradeableReadLock();
+            }
+        }
     }
 }

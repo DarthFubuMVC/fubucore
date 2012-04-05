@@ -8,7 +8,7 @@ namespace FubuCore.Binding.Values
     {
         private readonly string _name;
         private readonly Func<string, object> _source;
-        private Lazy<IEnumerable<string>> _keys;
+        private readonly Lazy<IEnumerable<string>> _keys;
 
         public GenericValueSource(string name, Func<string, object> source, Func<IEnumerable<string>> keys)
         {

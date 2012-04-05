@@ -172,6 +172,7 @@
     <Compile Include="TemplateParserTester.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />
+    <Compile Include="TimeSpanExtensionsTester.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="TypeResolverTester.cs" />
     <Compile Include="UrlContextTester.cs" />

@@ -165,6 +165,7 @@
     <Compile Include="Descriptions\DescriptionTextWriter.cs" />
     <Compile Include="Descriptions\IDescriptionVisitor.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
+    <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="Util\DictionaryKeyValues.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />
