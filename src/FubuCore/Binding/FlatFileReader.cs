@@ -49,7 +49,7 @@ namespace FubuCore.Binding
             data.ReadLine(line);
 
             var target = request.Finder(new RequestData(new FlatValueSource(data)));
-            _resolver.BindModel(target, context);
+            _resolver.BindProperties(target, context);
 
             request.Callback(target);
         }

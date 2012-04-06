@@ -128,7 +128,8 @@ namespace FubuCore.Binding
 
         public void BindProperties(object instance)
         {
-            _resolver.Value.BindModel(instance.GetType(), instance, this);
+            // Start here in the morning.  You have to use StandardModel
+            _resolver.Value.BindProperties(instance.GetType(), instance, this);
         }
 
         public static void AddNamingStrategy(Func<string, string> strategy)

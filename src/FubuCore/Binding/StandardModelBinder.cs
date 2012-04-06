@@ -7,8 +7,13 @@ using FubuCore.Reflection;
 
 namespace FubuCore.Binding
 {
+    public interface IPropertySetter
+    {
+        void BindProperties(Type type, object instance, IBindingContext context);
+    }
+
     [Description("The standard model binding using no-arg constructors, property binding policies, and value conversion policies")]
-    public class StandardModelBinder : IModelBinder, DescribesItself
+    public class StandardModelBinder : IModelBinder, DescribesItself, IPropertySetter
     {
         private readonly IPropertyBinderCache _propertyBinders;
         private readonly ITypeDescriptorCache _typeCache;
@@ -27,12 +32,12 @@ namespace FubuCore.Binding
         public object Bind(Type type, IBindingContext context)
         {
             var instance = Activator.CreateInstance(type);
-            Bind(type, instance, context);
+            BindProperties(type, instance, context);
 
             return instance;
         }
 
-        public void Bind(Type type, object instance, IBindingContext context)
+        public void BindProperties(Type type, object instance, IBindingContext context)
         {
             context.ForObject(instance, () => populate(type, context));
         }

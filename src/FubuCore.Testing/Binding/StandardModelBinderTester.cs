@@ -205,10 +205,16 @@ Age=2
         [Test]
         public void populate_should_not_change_property_values_not_found_in_the_dictionary()
         {
+            var turkey = new Turkey()
+            {
+                Name = "Smith"
+            };
+
             usingData(x =>
             {
+
+                x.Model = turkey;
                 x.Data("Age", 9);
-                x.Model.Name = "Smith";
             });
 
             theResultingObject.Name.ShouldEqual("Smith");

@@ -46,7 +46,6 @@ namespace FubuCore.Testing.Binding
             matchingBinder = MockRepository.GenerateStub<IModelBinder>();
             matchingBinder.Stub(x => x.Matches(_type)).Return(true);
             matchingBinder.Stub(x => x.Bind(_type, null)).IgnoreArguments().Throw(new Exception("fake message"));
-            matchingBinder.Stub(x => x.Bind(_type, null, null)).IgnoreArguments().Throw(new Exception("fake message"));
 
 
 
@@ -109,7 +108,7 @@ namespace FubuCore.Testing.Binding
             return type == typeof (BinderTarget);
         }
 
-        public void Bind(Type type, object instance, IBindingContext context)
+        public void BindProperties(Type type, object instance, IBindingContext context)
         {
             throw new NotImplementedException();
         }

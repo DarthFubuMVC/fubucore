@@ -42,12 +42,15 @@ namespace FubuCore.Testing.Binding
 
             var model = BindingScenario<AddressViewModel>.Build(x =>
             {
-                x.Model.Localities = originalList;
+                x.Model = new AddressViewModel(){
+                    Localities = originalList
+                };
 
                 x.Data("Localities[0]ZipCode", "84115");
             });
 
             model.Localities.Select(x => x.ZipCode).ShouldHaveTheSameElementsAs("previously_set_zipcode", "84115");
         }
+
     }
 }

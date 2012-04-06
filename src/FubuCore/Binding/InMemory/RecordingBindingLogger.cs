@@ -56,12 +56,20 @@ namespace FubuCore.Binding.InMemory
         // This acts as a de facto PushProperty
         public void Chose(PropertyInfo property, IPropertyBinder binder)
         {
-            currentReport.AddProperty(property, binder);
+            // Don't do anything if this has happened in the middle of a set properties operation
+            if (_models.Any())
+            {
+                currentReport.AddProperty(property, binder);
+            }
+            
         }
 
         public void Chose(PropertyInfo property, ValueConverter converter)
         {
-            currentReport.For(property).Chose(converter);
+            if (_models.Any())
+            {
+                currentReport.For(property).Chose(converter);
+            }
         }
 
         public void PushElement(Type elementType)
@@ -81,12 +89,15 @@ namespace FubuCore.Binding.InMemory
 
         public void UsedValue(BindingValue value)
         {
-            currentReport.LastProperty.Used(value);
+            if (_models.Any())
+            {
+                currentReport.LastProperty.Used(value);
+            }
         }
 
         private BindingReport startReport(Type modelType, IModelBinder binder)
         {
-            if (_nextElement != null)
+            if (_nextElement != null && _models.Any())
             {
                 return currentReport.LastProperty.AddElement(_nextElement, binder);
             }

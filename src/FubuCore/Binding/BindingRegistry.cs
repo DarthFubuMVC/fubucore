@@ -73,6 +73,14 @@ namespace FubuCore.Binding
             return new StandardModelBinder(this, new TypeDescriptorCache());
         }
 
+        public IPropertySetter PropertySetter
+        {
+            get
+            {
+                return _standardBinder.Value;
+            }
+        }
+
         public void Add(IModelBinder binder)
         {
             _binders.Add(binder);

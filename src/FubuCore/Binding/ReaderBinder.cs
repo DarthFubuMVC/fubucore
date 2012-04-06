@@ -64,7 +64,7 @@ namespace FubuCore.Binding
             while (reader.Read())
             {
                 T target = input.Finder(reader);
-                _binder.BindModel(target, context);
+                _binder.BindProperties(target, context);
 
                 input.Callback(target);
             }

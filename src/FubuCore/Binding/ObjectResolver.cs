@@ -10,12 +10,14 @@ namespace FubuCore.Binding
         private readonly IModelBinderCache _binders;
         private readonly IBindingLogger _logger;
         private readonly IServiceLocator _services;
+        private readonly IPropertySetter _propertySetter;
 
         public ObjectResolver(IServiceLocator services, BindingRegistry binders, IBindingLogger logger)
         {
             _services = services;
             _binders = binders;
             _logger = logger;
+            _propertySetter = binders.PropertySetter;
         }
 
         public virtual BindResult BindModel(Type type, IRequestData data)
@@ -24,23 +26,14 @@ namespace FubuCore.Binding
             return BindModel(type, context);
         }
 
-        public virtual BindResult BindModel<T>(T model, IBindingContext context)
+        public virtual void BindProperties<T>(T model, IBindingContext context)
         {
-            return BindModel(typeof (T), model, context);
+            BindProperties(typeof (T), model, context);
         }
 
-        public BindResult BindModel(Type type, object model, IBindingContext context)
+        public void BindProperties(Type type, object model, IBindingContext context)
         {
-            var binder = findBinder(type);
-            return executeModelBinder(type, context, binder, () =>
-            {
-                binder.Bind(type, model, context);
-                return new BindResult
-                {
-                    Problems = context.Problems,
-                    Value = model
-                };
-            });
+            _propertySetter.BindProperties(type, model, context);
         }
 
 
@@ -96,7 +89,7 @@ namespace FubuCore.Binding
                 context.Logger.Chose(type, binder);
 
                 var value = source();
-                context.Logger.FinishedModel();
+                
 
                 return new BindResult{
                     Value = value,
@@ -107,6 +100,10 @@ namespace FubuCore.Binding
             {
                 throw new FubuException(2201, e, "Fatal error while binding model of type {0}.  See inner exception",
                                         type.AssemblyQualifiedName);
+            }
+            finally
+            {
+                context.Logger.FinishedModel();
             }
         }
 

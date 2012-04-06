@@ -13,7 +13,6 @@ namespace FubuCore.Binding.InMemory
     public class BindingScenario<T> where T : class, new()
     {
         private readonly StringWriter _writer = new StringWriter();
-        public InMemoryBindingHistory History{ get; private set;}
 
         private BindingScenario(ScenarioDefinition definition)
         {
@@ -31,6 +30,8 @@ namespace FubuCore.Binding.InMemory
                 Report = definition.History.AllReports.Single();
             }
         }
+
+        public InMemoryBindingHistory History { get; private set; }
 
         public BindingReport Report { get; private set; }
 
@@ -56,22 +57,43 @@ namespace FubuCore.Binding.InMemory
             return For(configuration).Model;
         }
 
+        #region Nested type: PropertyModelBinderStandin
+
+        [Description("Strictly a fake for the binding scenario")]
+        public class PropertyModelBinderStandin : IModelBinder
+        {
+            public bool Matches(Type type)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void BindProperties(Type type, object instance, IBindingContext context)
+            {
+                throw new NotImplementedException();
+            }
+
+            public object Bind(Type type, IBindingContext context)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
+
         #region Nested type: ScenarioDefinition
 
         public class ScenarioDefinition
         {
             private readonly IList<Action<IBindingContext>> _actions = new List<Action<IBindingContext>>();
             private readonly KeyValues _data = new KeyValues();
+            private readonly InMemoryBindingHistory _history = new InMemoryBindingHistory();
+            private readonly RecordingBindingLogger _logger;
             private readonly BindingRegistry _registry = new BindingRegistry();
             private readonly InMemoryServiceLocator _services = new InMemoryServiceLocator();
             private IServiceLocator _customServices;
-            private readonly InMemoryBindingHistory _history = new InMemoryBindingHistory();
-            private readonly RecordingBindingLogger _logger;
 
             public ScenarioDefinition()
             {
-                Model = new T();
-
                 _logger = new RecordingBindingLogger(_history);
 
                 _services.Add<IObjectResolver>(new ObjectResolver(_services, _registry, _logger));
@@ -103,12 +125,22 @@ namespace FubuCore.Binding.InMemory
                 {
                     if (!_actions.Any())
                     {
+                        if (Model != null)
+                        {
+                            return new Action<IBindingContext>[]{
+                                context =>
+                                new ObjectResolver(Services, Registry, new NulloBindingLogger()).BindProperties(
+                                    typeof (T), Model, context)
+                            };
+                        }
+
                         return new Action<IBindingContext>[]{
                             context =>
-                            new ObjectResolver(Services, Registry, new NulloBindingLogger()).BindModel(Model,
-                                                                                                       context)
+                            {
+                                var resolver = new ObjectResolver(Services, Registry, _logger);
+                                Model = (T) resolver.BindModel(typeof (T), context).Value;
+                            }
                         };
-                        ;
                     }
 
 
@@ -137,13 +169,13 @@ namespace FubuCore.Binding.InMemory
             }
 
             /// <summary>
-            /// Allows you to force load key/value pairs in the format:
-            /// prop1=val1
-            /// ChildProp1=val
-            ///      Prop2=val
-            ///      Prop3=val      
+            ///   Allows you to force load key/value pairs in the format:
+            ///   prop1=val1
+            ///   ChildProp1=val
+            ///   Prop2=val
+            ///   Prop3=val
             /// </summary>
-            /// <param name="text"></param>
+            /// <param name = "text"></param>
             public void Data(string text)
             {
                 _data.ReadData(text);
@@ -159,22 +191,6 @@ namespace FubuCore.Binding.InMemory
                 _data[property.ToAccessor().Name] = rawValue.ToString();
             }
 
-            // TODO -- UT this
-            public void BindWith(IModelBinder binder)
-            {
-                _actions.Add(context =>
-                {
-                    Logger.Chose(typeof(T), binder);
-                    binder.Bind(typeof (T), Model, context);
-                    Logger.FinishedModel();
-                });
-            }
-
-            public void BindWith<TBinder>() where TBinder : IModelBinder, new()
-            {
-                BindWith(new TBinder());
-            }
-
             public void BindPropertyWith<TBinder>(Expression<Func<T, object>> property, string rawValue = null)
                 where TBinder : IPropertyBinder, new()
             {
@@ -188,29 +204,20 @@ namespace FubuCore.Binding.InMemory
                 var prop = property.ToAccessor().InnerProperty;
                 _actions.Add(context =>
                 {
-                    Logger.Chose(typeof(T), new PropertyModelBinderStandin());
-                    StandardModelBinder.PopulatePropertyWithBinder(prop, context, binder);
-                    Logger.FinishedModel();
+                    if (Model == null)
+                    {
+                        Model = new T();
+                    }
+
+                    context.ForObject(Model, () =>
+                    {
+                        Logger.Chose(typeof(T), new PropertyModelBinderStandin());
+                        StandardModelBinder.PopulatePropertyWithBinder(prop, context, binder);
+                        Logger.FinishedModel();
+                    });
+
+
                 });
-            }
-        }
-        
-        [Description("Strictly a fake for the binding scenario")]
-        public class PropertyModelBinderStandin : IModelBinder
-        {
-            public bool Matches(Type type)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Bind(Type type, object instance, IBindingContext context)
-            {
-                throw new NotImplementedException();
-            }
-
-            public object Bind(Type type, IBindingContext context)
-            {
-                throw new NotImplementedException();
             }
         }
 

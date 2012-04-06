@@ -199,7 +199,7 @@ namespace FubuCore.Testing.Binding
             throw new NotImplementedException();
         }
 
-        public void Bind(Type type, object instance, IBindingContext context)
+        public void BindProperties(Type type, object instance, IBindingContext context)
         {
             throw new NotImplementedException();
         }

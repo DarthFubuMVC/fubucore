@@ -67,14 +67,19 @@ EyeColor=Blue
         [Test]
         public void captures_details_for_a_nested_object()
         {
-            var report = BindingScenario<ClassThatNestsTarget>.For(x =>
+            var scenario = BindingScenario<ClassThatNestsTarget>.For(x =>
             {
                 x.Data(@"
 TargetName=Jeremy
 TargetAge=38
 TargetEyeColor=Blue
 ");
-            }).Report;
+            });
+
+
+            scenario.Model.Target.Name.ShouldEqual("Jeremy");
+
+            var report = scenario.Report;
 
             
 
@@ -85,7 +90,7 @@ TargetEyeColor=Blue
             var value = age.Values.Single();
             value.RawKey.ShouldEqual("TargetAge");
             value.RawValue.ShouldEqual("38");
-            value.Source.ShouldEqual("Anonymous");
+            value.Source.ShouldEqual("Anonymous");  
         }
 
         [Test]
