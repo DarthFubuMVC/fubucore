@@ -91,7 +91,7 @@ namespace FubuCore.Binding.InMemory
         {
             if (_models.Any())
             {
-                currentReport.LastProperty.Used(value);
+                currentReport.Used(value);
             }
         }
 

@@ -94,5 +94,14 @@ namespace FubuCore.Binding.Logging
             var property = expression.ToAccessor().InnerProperty;
             return For(property);
         }
+
+        // TODO -- what if Value() is used outside the context of a property?
+        public void Used(BindingValue value)
+        {
+            if (_properties.Any())
+            {
+                LastProperty.Used(value);
+            }
+        }
     }
 }

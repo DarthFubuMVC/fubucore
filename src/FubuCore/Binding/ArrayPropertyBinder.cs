@@ -43,6 +43,10 @@ namespace FubuCore.Binding
             public void FillValues(PropertyInfo property, IBindingContext context)
             {
                 var requests = context.GetEnumerableRequests(property.Name).ToList();
+
+                // TODO -- need an end to end test on this behavior 
+                if (!requests.Any()) return;
+
                 var data = new T[requests.Count];
 
                 for (int i = 0; i < requests.Count; i++)
