@@ -105,6 +105,7 @@
     <Compile Include="Binding\Values\ValueDiagnosticReportTester.cs" />
     <Compile Include="Configuration\AppSettingsKeyValuesTester.cs" />
     <Compile Include="Configuration\AppSettingsProviderIntegratedTester.cs" />
+    <Compile Include="Configuration\Settings_provider_sources.cs" />
     <Compile Include="Conversion\descriptions_on_every_converter.cs" />
     <Compile Include="Conversion\TimeSpanConverterTester.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamilyTester.cs" />

@@ -25,7 +25,7 @@ namespace FubuCore.Configuration
 
             _settings = new Lazy<IEnumerable<SettingsData>>(() =>
             {
-                var allSettings = sources.SelectMany(x => x.FindSettingData());
+                var allSettings = sources.SelectMany(x => x.FindSettingData()).ToArray();
                 return SettingsData.Order(allSettings);
             });
 
