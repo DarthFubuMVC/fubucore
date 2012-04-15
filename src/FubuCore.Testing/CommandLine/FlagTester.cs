@@ -19,19 +19,19 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void to_usage_description_for_a_simple_non_aliased_field()
         {
-            forProp(x => x.NameFlag).ToUsageDescription().ShouldEqual("[-name <name>]");
+            forProp(x => x.NameFlag).ToUsageDescription().ShouldEqual("[-n, --name <name>]");
         }
 
         [Test]
         public void to_usage_description_for_a_simple_aliased_field()
         {
-            forProp(x => x.AliasFlag).ToUsageDescription().ShouldEqual("[-a <alias>]");
+            forProp(x => x.AliasFlag).ToUsageDescription().ShouldEqual("[-a, --aliased <alias>]");
         }
 
         [Test]
         public void to_usage_description_for_an_enum_field()
         {
-            forProp(x => x.EnumFlag).ToUsageDescription().ShouldEqual("[-enum red|blue|green]");
+            forProp(x => x.EnumFlag).ToUsageDescription().ShouldEqual("[-e, --enum red|blue|green]");
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace FubuCore.Testing.CommandLine
         [ValidUsage("a", "b")]
         public FlagEnum EnumFlag { get; set; }
 
-        [FlagAlias("a")]
+        [FlagAlias("aliased", 'a')]
         public string AliasFlag { get; set;}
     }
 }

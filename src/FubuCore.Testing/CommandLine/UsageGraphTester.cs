@@ -83,14 +83,14 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_the_command_usage_of_the_list_usage()
         {
-            theUsageGraph.FindUsage("list").Usage.ShouldEqual("fubu link <appfolder> [-cleanall] [-notepad]");
+            theUsageGraph.FindUsage("list").Usage.ShouldEqual("fubu link <appfolder> [-c, --cleanall] [-n, --notepad]");
         }
 
         [Test]
         public void get_the_command_usage_of_the_link_usage()
         {
             var usg = theUsageGraph.FindUsage("link");
-            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r] [-cleanall] [-notepad]");
+            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-c, --cleanall] [-n, --notepad]");
         }
 
         [Test]
@@ -156,7 +156,7 @@ namespace FubuCore.Testing.CommandLine
 
         [Description("Removes the link from the application to the package")]
         [ValidUsage("link")]
-        [FlagAlias("r")]
+        [FlagAlias("remove", 'r')]
         public bool RemoveFlag { get; set; }
 
         [Description("Removes all links from the application folder")]

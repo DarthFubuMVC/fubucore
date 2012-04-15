@@ -20,19 +20,19 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_usage_description_with_an_alias()
         {
-            getFlag(x => x.AliasedFlag).ToUsageDescription().ShouldEqual("[-f]");
+            getFlag(x => x.AliasedFlag).ToUsageDescription().ShouldEqual("[-a, --aliased]");
         }
 
         [Test]
         public void get_usage_description_without_an_alias()
         {
-            getFlag(x => x.NormalFlag).ToUsageDescription().ShouldEqual("[-normal]");
+            getFlag(x => x.NormalFlag).ToUsageDescription().ShouldEqual("[-n, --normal]");
         }
     }
 
     public class BooleanFlagTarget
     {
-        [FlagAlias("f")]
+        [FlagAlias("aliased", 'a')]
         public bool AliasedFlag { get; set; }
         public bool NormalFlag { get; set; }
     }

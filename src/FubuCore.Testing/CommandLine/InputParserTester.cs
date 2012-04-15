@@ -73,18 +73,31 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
-        public void get_the_flag_name_for_a_property()
+        public void get_the_long_flag_name_for_a_property()
         {
             var property = ReflectionHelper.GetProperty<InputModel>(x => x.OrderFlag);
-            InputParser.ToFlagName(property).ShouldEqual("-order");
+            InputParser.ToFlagAliases(property).LongForm.ShouldEqual("--order");
         }
 
-
         [Test]
-        public void get_the_flag_name_for_a_property_with_an_alias()
+        public void get_the_short_flag_name_for_a_property()
+        {
+            var property = ReflectionHelper.GetProperty<InputModel>(x => x.OrderFlag);
+            InputParser.ToFlagAliases(property).ShortForm.ShouldEqual("-o");
+        }
+        
+        [Test]
+        public void get_the_long_flag_name_for_a_property_with_an_alias()
         {
             var property = ReflectionHelper.GetProperty<InputModel>(x => x.AliasedFlag);
-            InputParser.ToFlagName(property).ShouldEqual("-a");
+            InputParser.ToFlagAliases(property).LongForm.ShouldEqual("--aliased");
+        }
+
+        [Test]
+        public void get_the_short_flag_name_for_a_property_with_an_alias()
+        {
+            var property = ReflectionHelper.GetProperty<InputModel>(x => x.AliasedFlag);
+            InputParser.ToFlagAliases(property).ShortForm.ShouldEqual("-a");
         }
 
         [Test]
@@ -97,22 +110,21 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void boolean_flag_does_catch()
         {
-            handle(x => x.TrueFalseFlag, "-TrueFalse").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "--TrueFalse").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
-
 
         [Test]
         public void boolean_flag_does_catch_2()
         {
-            handle(x => x.TrueFalseFlag, "-truefalse").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "--truefalse").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
 
         [Test]
         public void boolean_flag_does_catch_case_insensitive()
         {
-            handle(x => x.TrueFalseFlag, "-trueFalse").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "--trueFalse").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
 
@@ -146,11 +158,10 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void enumeration_flag_positive()
         {
-            handle(x => x.ColorFlag, "-color", "blue").ShouldBeTrue();
+            handle(x => x.ColorFlag, "--color", "blue").ShouldBeTrue();
             theInput.ColorFlag.ShouldEqual(Color.blue);
         }
-
-
+        
         [Test]
         public void string_argument()
         {
@@ -168,7 +179,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void int_flag_catches()
         {
-            handle(x => x.OrderFlag, "-order", "23").ShouldBeTrue();
+            handle(x => x.OrderFlag, "--order", "23").ShouldBeTrue();
             theInput.OrderFlag.ShouldEqual(23);
         }
 
@@ -194,7 +205,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void integrated_test_with_mix_of_flags()
         {
-            var input = build("file1", "-color", "green", "blue", "-order", "12");
+            var input = build("file1", "--color", "green", "blue", "--order", "12");
             input.File.ShouldEqual("file1");
             input.Color.ShouldEqual(Color.blue);
             input.ColorFlag.ShouldEqual(Color.green);
@@ -204,10 +215,56 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void integrated_test_with_a_boolean_flag()
         {
-            var input = build("file1", "blue", "-truefalse");
+            var input = build("file1", "blue", "--truefalse");
             input.TrueFalseFlag.ShouldBeTrue();
 
             build("file1", "blue").TrueFalseFlag.ShouldBeFalse();
+        }
+
+        [Test]
+        public void isflag_should_match_on_double_hyphen()
+        {
+            InputParser.IsFlag("--f").ShouldBeTrue();
+        }
+
+        [Test]
+        public void isflag_should_not_match_without_double_hyphen()
+        {
+            InputParser.IsFlag("f").ShouldBeFalse();
+        }
+
+        [Test]
+        public void boolean_short_flag_does_not_catch()
+        {
+            handle(x => x.TrueFalseFlag, "-f").ShouldBeFalse();
+            theInput.TrueFalseFlag.ShouldBeFalse();
+        }
+
+        [Test]
+        public void boolean_short_flag_does_catch()
+        {
+            handle(x => x.TrueFalseFlag, "-T").ShouldBeTrue();
+            theInput.TrueFalseFlag.ShouldBeTrue();
+        }
+
+        [Test]
+        public void boolean_short_flag_case_insensitive()
+        {
+            handle(x => x.TrueFalseFlag, "-t").ShouldBeTrue();
+            theInput.TrueFalseFlag.ShouldBeTrue();
+        }
+
+        [Test]
+        public void enumeration_short_flag_negative()
+        {
+            handle(x => x.ColorFlag, "green").ShouldBeFalse();
+        }
+
+        [Test]
+        public void enumeration_short_flag_positive()
+        {
+            handle(x => x.ColorFlag, "-c", "blue").ShouldBeTrue();
+            theInput.ColorFlag.ShouldEqual(Color.blue);
         }
     }
 
@@ -233,7 +290,7 @@ namespace FubuCore.Testing.CommandLine
         [RequiredUsage("ages")]
         public IEnumerable<int> Ages { get; set; }
 
-        [FlagAlias("a")]
+        [FlagAlias("aliased", 'a')]
         public string AliasedFlag { get; set; }
     }
 
