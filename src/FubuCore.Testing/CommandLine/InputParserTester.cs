@@ -266,6 +266,60 @@ namespace FubuCore.Testing.CommandLine
             handle(x => x.ColorFlag, "-c", "blue").ShouldBeTrue();
             theInput.ColorFlag.ShouldEqual(Color.blue);
         }
+
+        [Test]
+        public void IsFlag_should_match_for_short_flag()
+        {
+            InputParser.IsFlag("-x").ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsFlag_should_match_for_long_flag()
+        {
+            InputParser.IsFlag("--xerces").ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsFlag_negative()
+        {
+            InputParser.IsFlag("x").ShouldBeFalse();
+        }
+
+        [Test]
+        public void IsFlag_negative_2()
+        {
+            InputParser.IsFlag("---x").ShouldBeFalse();
+        }
+
+        [Test]
+        public void IsShortFlag_should_match_for_short_flag()
+        {
+            InputParser.IsShortFlag("-x").ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsShortFlag_should_not_match_for_long_flag()
+        {
+            InputParser.IsShortFlag("--xerces").ShouldBeFalse();
+        }
+
+        [Test]
+        public void IsLongFlag_should_not_match_for_short_flag()
+        {
+            InputParser.IsLongFlag("-x").ShouldBeFalse();
+        }
+
+        [Test]
+        public void IsLongFlag_should_match_for_long_flag()
+        {
+            InputParser.IsLongFlag("--xerces").ShouldBeTrue();
+        }
+
+        [Test]
+        public void IsLongFlag_should_not_match_for_triple_long_flag()
+        {
+            InputParser.IsLongFlag("---xerces").ShouldBeFalse();
+        }
     }
 
 
