@@ -18,7 +18,7 @@ namespace FubuCore.CommandLine
 
         public override bool Handle(object input, Queue<string> tokens)
         {
-            if (tokens.NextIsFlag(_property))
+            if (tokens.NextIsFlagFor(_property))
             {
                 tokens.Dequeue();
                 var rawValue = tokens.Dequeue();
@@ -35,16 +35,16 @@ namespace FubuCore.CommandLine
 
         public override string ToUsageDescription()
         {
-            var flagName = InputParser.ToFlagName(_property);
+            var flagAliases = InputParser.ToFlagAliases(_property);
 
             if (_property.PropertyType.IsEnum)
             {
                 var enumValues = Enum.GetNames(_property.PropertyType).Join("|");
-                return "[{0} {1}]".ToFormat(flagName, enumValues);
+                return "[{0} {1}]".ToFormat(flagAliases, enumValues);
             }
 
             
-            return "[{0} <{1}>]".ToFormat(flagName, _property.Name.ToLower().TrimEnd('f', 'l','a','g'));
+            return "[{0} <{1}>]".ToFormat(flagAliases, _property.Name.ToLower().TrimEnd('f', 'l','a','g'));
         }
     }
 }

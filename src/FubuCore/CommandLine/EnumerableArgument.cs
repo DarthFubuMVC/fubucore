@@ -23,7 +23,7 @@ namespace FubuCore.CommandLine
             var list = typeof (List<>).CloseAndBuildAs<IList>(elementType);
 
             var wasHandled = false;
-            while (tokens.Count > 0 && !tokens.Peek().StartsWith(InputParser.FLAG_PREFIX))
+            while (tokens.Count > 0 && !tokens.NextIsFlag())
             {
                 var value = _converter.FromString(tokens.Dequeue(), elementType);
                 list.Add(value);
@@ -41,7 +41,7 @@ namespace FubuCore.CommandLine
 
         public override string ToUsageDescription()
         {
-            return "[{0} <{1}1 {1}2 {1}3 ...>]".ToFormat(InputParser.ToFlagName(_property), _property.Name.ToLower());
+            return "[{0} <{1}1 {1}2 {1}3 ...>]".ToFormat(InputParser.ToFlagAliases(_property), _property.Name.ToLower());
         }
     }
 }

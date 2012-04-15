@@ -23,7 +23,7 @@ namespace FubuCore.CommandLine
         {
             if (_isLatched) return false;
 
-            if (tokens.Peek().StartsWith(InputParser.FLAG_PREFIX)) return false;
+            if (tokens.NextIsFlag()) return false;
 
             var value = _converter.FromString(tokens.Dequeue(), _property.PropertyType);
             _property.SetValue(input, value, null);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace FubuCore.CommandLine
 {
@@ -15,7 +16,7 @@ namespace FubuCore.CommandLine
 
         public override bool Handle(object input, Queue<string> tokens)
         {
-            if (tokens.NextIsFlag(_property))
+            if (tokens.NextIsFlagFor(_property))
             {
                 tokens.Dequeue();
                 _property.SetValue(input, true, null);
@@ -28,7 +29,7 @@ namespace FubuCore.CommandLine
 
         public override string ToUsageDescription()
         {
-            return "[{0}]".ToFormat(InputParser.ToFlagName(_property));
+            return "[{0}]".ToFormat(InputParser.ToFlagAliases(_property));
         }
     }
 }
