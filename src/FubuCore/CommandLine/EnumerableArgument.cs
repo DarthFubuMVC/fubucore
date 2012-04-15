@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
@@ -42,7 +41,7 @@ namespace FubuCore.CommandLine
 
         public override string ToUsageDescription()
         {
-            return "[{0}1 {0}2 {0}3 ...]".ToFormat(_property.Name.ToLower());
+            return "[<{0}1 {0}2 {0}3 ...>]".ToFormat(_property.Name.ToLower());
         }
     }
 }

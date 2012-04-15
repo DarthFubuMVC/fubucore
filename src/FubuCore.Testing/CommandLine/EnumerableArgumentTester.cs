@@ -32,8 +32,8 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void to_usage_description_with_a_simple_string_or_number_type()
         {
-            argFor(x => x.Names).ToUsageDescription().ShouldEqual("[-names <names1 names2 names3 ...>]");
-            argFor(x => x.Ages).ToUsageDescription().ShouldEqual("[-ages <ages1 ages2 ages3 ...>]");
+            argFor(x => x.Names).ToUsageDescription().ShouldEqual("[<names1 names2 names3 ...>]");
+            argFor(x => x.Ages).ToUsageDescription().ShouldEqual("[<ages1 ages2 ages3 ...>]");
         }
 
         [Test]
