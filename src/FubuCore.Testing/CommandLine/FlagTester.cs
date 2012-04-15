@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.CommandLine;
 using FubuCore.Conversion;
@@ -48,6 +49,22 @@ namespace FubuCore.Testing.CommandLine
             forProp(x => x.EnumFlag).OptionalForUsage("a").ShouldBeTrue();
             forProp(x => x.EnumFlag).OptionalForUsage("b").ShouldBeTrue();
             forProp(x => x.EnumFlag).OptionalForUsage("c").ShouldBeFalse();
+        }
+
+        [Test]
+        public void should_provide_useful_error_message_when_no_value_provided()
+        {
+            typeof(InvalidUsageException).ShouldBeThrownBy(() =>
+                forProp(x => x.AliasFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-a" })))
+                .Message.ShouldEqual("No value specified for flag -a.");
+        }
+
+        [Test]
+        public void should_provide_useful_error_message_for_invalid_enum_value()
+        {
+            typeof(InvalidUsageException).ShouldBeThrownBy(() =>
+                forProp(x => x.EnumFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-e", "x" })))
+                .Message.ShouldEqual("'x' is not a valid value for flag [-e, --enum]");
         }
     }
 

@@ -41,7 +41,7 @@ namespace FubuCore.CommandLine
         {
             if( propertyType.CanBeCastTo<Enum>() && !Enum.IsDefined(propertyType, rawValue))
             {
-                throw new InvalidUsageException("'{0}' is not a valid value for argument [{1}]".ToFormat(rawValue, InputParser.ToFlagAliases(_property)));
+                throw new InvalidUsageException("'{0}' is not a valid value for flag [{1}]".ToFormat(rawValue, InputParser.ToFlagAliases(_property)));
             }
         }
 
