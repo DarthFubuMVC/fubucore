@@ -20,8 +20,12 @@ namespace FubuCore.CommandLine
         {
             if (tokens.NextIsFlagFor(_property))
             {
-                tokens.Dequeue();
+                var flag = tokens.Dequeue();
+
+                if( tokens.Count == 0 ) throw new InvalidUsageException("No value specified for flag {0}.".ToFormat(flag));
+
                 var rawValue = tokens.Dequeue();
+                checkEnum(_property.PropertyType, rawValue);
                 var value = _converter.FromString(rawValue, _property.PropertyType);
 
                 _property.SetValue(input, value, null);
@@ -31,6 +35,14 @@ namespace FubuCore.CommandLine
 
 
             return false;
+        }
+
+        private void checkEnum(Type propertyType, string rawValue)
+        {
+            if( propertyType.CanBeCastTo<Enum>() && !Enum.IsDefined(propertyType, rawValue))
+            {
+                throw new InvalidUsageException("'{0}' is not a valid value for argument [{1}]".ToFormat(rawValue, InputParser.ToFlagAliases(_property)));
+            }
         }
 
         public override string ToUsageDescription()
