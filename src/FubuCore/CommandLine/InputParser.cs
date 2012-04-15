@@ -80,7 +80,7 @@ namespace FubuCore.CommandLine
 
             property.ForAttribute<FlagAliasAttribute>(att =>
                                                           {
-                                                              name = att.Alias;
+                                                              name = att.LongAlias;
                                                               oneLetterName = att.OneLetterAlias;
                                                           });
             return new FlagAliases
