@@ -108,7 +108,7 @@ namespace FubuCore.Testing.CommandLine
             var factory = new CommandFactory();
             factory.RegisterCommands(GetType().Assembly);
 
-            var run = factory.BuildRun("my Jeremy -force");
+            var run = factory.BuildRun("my Jeremy --force");
 
             run.Command.ShouldBeOfType<MyCommand>();
             var input = run.Input.ShouldBeOfType<MyCommandInput>();
@@ -147,7 +147,7 @@ namespace FubuCore.Testing.CommandLine
             var factory = new CommandFactory();
             factory.RegisterCommands(GetType().Assembly);
 
-            var run = factory.BuildRun(new string[] {"help"});
+            var run = factory.BuildRun(new [] {"help"});
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
                 .ShouldContain(typeof (MyCommand));
@@ -160,7 +160,7 @@ namespace FubuCore.Testing.CommandLine
             var factory = new CommandFactory();
             factory.RegisterCommands(GetType().Assembly);
 
-            var run = factory.BuildRun(new string[] {"?"});
+            var run = factory.BuildRun(new [] {"?"});
             run.Command.ShouldBeOfType<HelpCommand>();
             run.Input.ShouldBeOfType<HelpInput>().CommandTypes
                 .ShouldContain(typeof (MyCommand));
@@ -174,6 +174,18 @@ namespace FubuCore.Testing.CommandLine
             factory.HelpRun(new Queue<string>()).Execute();
         }
 
+        [Test]
+        public void build_command_with_multiargs()
+        {
+            var factory = new CommandFactory();
+            factory.RegisterCommands(GetType().Assembly);
+
+            var run = factory.BuildRun("my Jeremy -ft");
+            var input = run.Input.ShouldBeOfType<MyCommandInput>();
+            input.ForceFlag.ShouldBeTrue();
+            input.SecondFlag.ShouldBeFalse();
+            input.ThirdFlag.ShouldBeTrue();
+        }
 
     }
 
@@ -227,5 +239,7 @@ namespace FubuCore.Testing.CommandLine
     {
         public string Name { get; set; }
         public bool ForceFlag { get; set; }
+        public bool SecondFlag { get; set; }
+        public bool ThirdFlag { get; set; }
     }
 }

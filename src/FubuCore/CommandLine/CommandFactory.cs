@@ -10,7 +10,7 @@ namespace FubuCore.CommandLine
 {
     public class CommandFactory : ICommandFactory
     {
-        private static readonly string[] _helpCommands = new string[]{"help", "?"}; 
+        private static readonly string[] _helpCommands = new []{"help", "?"}; 
         private readonly Cache<string, Type> _commandTypes = new Cache<string, Type>();
         private string _appName;
 
@@ -23,6 +23,8 @@ namespace FubuCore.CommandLine
         public CommandRun BuildRun(IEnumerable<string> args)
         {
             if (!args.Any()) return HelpRun(new Queue<string>());
+
+            args = ArgPreprocessor.Process(args);
 
             var queue = new Queue<string>(args);
             var commandName = queue.Dequeue().ToLowerInvariant();
