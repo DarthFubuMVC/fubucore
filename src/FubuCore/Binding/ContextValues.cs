@@ -29,6 +29,14 @@ namespace FubuCore.Binding
             return _converter.FromString<T>(bindingValue.RawValue.ToString());
         }
 
+        public object ValueAs(Type type, string name)
+        {
+            var bindingValue = RawValue(name);
+            if (bindingValue == null || bindingValue.RawValue == null) return null;
+
+            return _converter.FromString(bindingValue.RawValue.ToString(), type);
+        }
+
         public bool ValueAs<T>(string name, Action<T> continuation)
         {
             return RawValue(name, value =>

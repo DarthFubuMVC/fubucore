@@ -209,6 +209,17 @@ HeldClassAge=36
         }
 
         [Test]
+        public void value_by_name_with_continuation()
+        {
+            var theKey = "some key";
+            var theValue = Guid.NewGuid();
+
+            theRawRequest[theKey] = theValue;
+
+            ClassUnderTest.As<IBindingContext>().Data.ValueAs(typeof (Guid), theKey).ShouldEqual(theValue);
+        }
+
+        [Test]
         public void value_as_t_from_property_info()
         {
             var property = ReflectionHelper.GetProperty<ClassThatIsHeld>(x => x.Name);
