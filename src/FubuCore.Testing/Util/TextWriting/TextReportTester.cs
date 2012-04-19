@@ -25,7 +25,7 @@ namespace FubuCore.Testing.Util.TextWriting
 =================
 the title of this
 =================
-".TrimStart());
+");
         }
 
         [Test]
@@ -46,7 +46,7 @@ the title of this
 the title of this
 ==============================
 some more stuff that is longer
-".TrimStart());
+");
         }
 
         [Test]
@@ -77,7 +77,7 @@ a1     b1     c1
 a2     b2     c2
 a3     b3     c3
 ==================
-".TrimStart());
+");
         }
 
 
@@ -111,7 +111,7 @@ a1***     b1        c1
 a2        b2***     c2   
 a3        b3        c3***
 =========================
-".TrimStart());
+");
         }
 
 
