@@ -60,11 +60,10 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
-        public void should_provide_useful_error_message_for_invalid_enum_value()
+        public void should_catch_invalid_enum_value()
         {
-            typeof(InvalidUsageException).ShouldBeThrownBy(() =>
-                forProp(x => x.EnumFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-e", "x" })))
-                .Message.ShouldEqual("'x' is not a valid value for flag [-e, --enum]");
+            typeof(ArgumentException).ShouldBeThrownBy(() =>
+                forProp(x => x.EnumFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-e", "x" })));
         }
     }
 
