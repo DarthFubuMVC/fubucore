@@ -35,20 +35,12 @@ namespace FubuCore.CommandLine
             //this needs to take into account that the default console is only 80 char wide
 
             var firstLength = _data.GetAllKeys().Max(x => x.Length);
-            var secondLength = _data.GetAll().Max(x => x.Length);
-
-            var totalLength = firstLength + secondLength + 10;
-            if (_title.Length > totalLength)
-            {
-                totalLength = _title.Length;
-            }
 
             Console.WriteLine();
 
-            var separator = "  ".PadRight(totalLength, '-');
-            Console.WriteLine(separator);
+            ConsoleWriter.PrintHorizontalLine(2);
             Console.WriteLine("    " + _title);
-            Console.WriteLine(separator);
+            ConsoleWriter.PrintHorizontalLine(2);
 
             var format = "    {0," + firstLength + "} -> ";
             if (!SecondColumnColor.HasValue)
@@ -71,7 +63,7 @@ namespace FubuCore.CommandLine
                 }
             });
 
-            Console.WriteLine(separator);
+            ConsoleWriter.PrintHorizontalLine(2);
         }
 
         
