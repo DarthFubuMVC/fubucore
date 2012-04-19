@@ -32,6 +32,15 @@ namespace FubuCore.Binding
         bool ValueAs<T>(string name, Action<T> continuation);
 
         /// <summary>
+        /// CPS style call to ValueAs().  The continuation is only called if the named value is
+        /// in the current request data.  Respects the current prefix.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="continuation"></param>
+        /// <returns></returns>
+        bool ValueAs(Type type, string name, Action<object> continuation);
+
+        /// <summary>
         /// Gets an unconverted value from the underlying data
         /// </summary>
         /// <param name="name"></param>

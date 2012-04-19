@@ -49,6 +49,18 @@ namespace FubuCore.Binding
             });
         }
 
+        public bool ValueAs(Type type, string name, Action<object> continuation)
+        {
+            return RawValue(name, value =>
+            {
+                if (value.RawValue != null)
+                {
+                    var convertedValue = _converter.FromString(value.RawValue.ToString(), type);
+                    continuation(convertedValue);
+                }
+            });
+        }
+
         public BindingValue RawValue(string name)
         {
             BindingValue value = null;

@@ -209,6 +209,20 @@ HeldClassAge=36
         }
 
         [Test]
+        public void value_as_by_name_with_continuation()
+        {
+            var action = MockRepository.GenerateMock<Action<object>>();
+            var theKey = "some key";
+            var theValue = Guid.NewGuid();
+
+            theRawRequest[theKey] = theValue;
+
+            ClassUnderTest.As<IBindingContext>().Data.ValueAs(typeof(Guid), theKey, action).ShouldBeTrue();
+
+            action.AssertWasCalled(x => x.Invoke(theValue));
+        }
+
+        [Test]
         public void value_by_name_with_continuation()
         {
             var theKey = "some key";
