@@ -61,7 +61,7 @@ namespace FubuCore.Util.TextWriting
 
         public void WriteToConsole()
         {
-            Write(Console.Out, ConsoleWriter.CONSOLE_WIDTH);
+            Write(Console.Out, ConsoleWriter.ConsoleBufferWidth);
         }
     }
 }

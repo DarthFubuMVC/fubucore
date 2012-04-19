@@ -5,7 +5,9 @@ namespace FubuCore.CommandLine
 {
     public static class ConsoleWriter
     {
-        public static int CONSOLE_WIDTH = 120;
+        public const int DefaultConsoleWidth = 120;
+
+        private static readonly int _consoleWidth = DefaultConsoleWidth;
 
         public static string HL { get; private set;}
 
@@ -13,13 +15,24 @@ namespace FubuCore.CommandLine
         {
             try
             {
-                CONSOLE_WIDTH = Console.BufferWidth;
+                _consoleWidth = Console.BufferWidth;
             }
             catch
             {
                 // Console.BufferWidth(get) will throw exceptions in certain circumstances
             }
-            HL = new string('-', CONSOLE_WIDTH);
+
+            if (_consoleWidth < 10) // Mono will return 0 instead of throwing an exception
+            {
+                _consoleWidth = DefaultConsoleWidth;
+            }
+
+            HL = new string('-', _consoleWidth);
+        }
+
+        public static int ConsoleBufferWidth
+        {
+            get { return _consoleWidth; } 
         }
 
         public static void Line()
@@ -73,7 +86,7 @@ namespace FubuCore.CommandLine
 
             while (input.Length > 0)
             {
-                var width = CONSOLE_WIDTH - indent;
+                var width = _consoleWidth - indent;
                 var chomp = input.Length > width ? width : input.Length;
 
                 string c = new string(' ', indent) + input.Substring(0, chomp);
@@ -94,7 +107,7 @@ namespace FubuCore.CommandLine
 
             while(input.Length > 0)
             {
-                var chomp = input.Length > CONSOLE_WIDTH ? CONSOLE_WIDTH : input.Length;
+                var chomp = input.Length > _consoleWidth ? _consoleWidth : input.Length;
                 string c = input.Substring(0, chomp);
                 lines.Add(c);
                 input = input.Remove(0, chomp);
