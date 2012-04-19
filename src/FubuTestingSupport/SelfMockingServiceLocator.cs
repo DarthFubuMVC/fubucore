@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using FubuCore;
 using FubuCore.Util;
 using Rhino.Mocks;
@@ -12,6 +13,8 @@ namespace FubuTestingSupport
             var makerType = typeof (MockMaker<>).MakeGenericType(t);
             return Activator.CreateInstance(makerType).As<MockMaker>().Make();
         });
+
+        private readonly Dictionary<string, object> _namedMocks = new Dictionary<string,object>();
 
         public TService GetInstance<TService>()
         {
@@ -31,6 +34,18 @@ namespace FubuTestingSupport
         public object GetInstance(Type serviceType)
         {
             return _mocks[serviceType];
+        }
+
+        public T GetInstance<T>(string name)
+        {
+            if(!_namedMocks.ContainsKey(name))
+            {
+                var t = typeof (T);
+                var makerType = typeof(MockMaker<>).MakeGenericType(t);
+                _namedMocks[name] = Activator.CreateInstance(makerType).As<MockMaker>().Make();
+            }
+
+            return (T)_namedMocks[name];
         }
 
 
