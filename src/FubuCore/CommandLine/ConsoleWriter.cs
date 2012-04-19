@@ -5,13 +5,20 @@ namespace FubuCore.CommandLine
 {
     public static class ConsoleWriter
     {
-        public static int CONSOLE_WIDTH = 300;
+        public static int CONSOLE_WIDTH = 120;
 
         public static string HL { get; private set;}
 
         static ConsoleWriter()
         {
-            //CONSOLE_WIDTH = Console.BufferWidth;
+            try
+            {
+                CONSOLE_WIDTH = Console.BufferWidth;
+            }
+            catch
+            {
+                // Console.BufferWidth(get) will throw exceptions in certain circumstances
+            }
             HL = new string('-', CONSOLE_WIDTH);
         }
 
@@ -23,6 +30,11 @@ namespace FubuCore.CommandLine
         public static void PrintHorizontalLine()
         {
             Console.WriteLine(HL);
+        }
+
+        public static void PrintHorizontalLine(int indent)
+        {
+            Console.WriteLine(new string(' ', indent) + HL.Substring(indent));
         }
 
         public static void Write(string stuff)
