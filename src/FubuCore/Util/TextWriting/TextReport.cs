@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using FubuCore.CommandLine;
 
 namespace FubuCore.Util.TextWriting
 {
@@ -48,14 +49,19 @@ namespace FubuCore.Util.TextWriting
         public void Write(TextWriter writer)
         {
             var maxWidth = _lines.Max(x => x.Width);
-            _dividers.Each(x => x.Width = maxWidth);
+            Write(writer, maxWidth);
+        }
 
+        public void Write(TextWriter writer, int maxWidth)
+        {
+            _dividers.Each(x => x.Width = maxWidth);
+            writer.WriteLine();
             _lines.Each(x => x.Write(writer));
         }
 
         public void WriteToConsole()
         {
-            Write(Console.Out);
+            Write(Console.Out, ConsoleWriter.CONSOLE_WIDTH);
         }
     }
 }
