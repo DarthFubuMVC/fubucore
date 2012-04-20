@@ -61,7 +61,7 @@ assemblyinfo :version do |asm|
 end
 
 desc "Prepares the working directory for a new build"
-task :clean => [:update_buigit ldsupport] do
+task :clean => [:update_buildsupport] do
 	
 	FileUtils.rm_rf props[:stage]
     # work around nasty latency issue where folder still exists for a short while after it is removed
