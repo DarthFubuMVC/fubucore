@@ -50,6 +50,7 @@ namespace FubuCore.Binding
         /// <param name="continuation"></param>
         /// <returns></returns>
         void BindObject(IRequestData data, Type type, Action<object> continuation);
+        void BindObject(Type type, Action<object> continuation);
 
         /// <summary>
         /// Binds property values to an existing object
@@ -58,7 +59,11 @@ namespace FubuCore.Binding
         void BindProperties(object instance);
 
         IEnumerable<IRequestData> GetEnumerableRequests(string name);
+
+        [MarkedForTermination("No usages in FubuCore - dru")]
         IRequestData GetSubRequest(string name);
+
+        IBindingContext GetSubContext(string name);
 
         /// <summary>
         /// The current object being bound
