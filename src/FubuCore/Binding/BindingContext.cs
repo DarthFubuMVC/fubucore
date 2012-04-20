@@ -49,6 +49,11 @@ namespace FubuCore.Binding
             });
         }
 
+        public IRequestData RequestData
+        {
+            get { return _requestData; }
+        }
+
         public IBindingLogger Logger
         {
             get { return _logger; }
