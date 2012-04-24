@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 
@@ -20,8 +18,8 @@ namespace FubuCore.Binding
                 return;
             }
 
-            var childRequest = context.GetSubRequest(property.Name);
-            context.BindObject(childRequest, property.PropertyType, o =>
+            var childContext = context.GetSubContext(property.Name);
+            childContext.BindObject(property.PropertyType, o =>
             {
                 property.SetValue(context.Object, o, null);
             });

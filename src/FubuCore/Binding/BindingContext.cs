@@ -49,6 +49,12 @@ namespace FubuCore.Binding
             });
         }
 
+        private BindingContext(IRequestData requestData, IServiceLocator locator, IBindingLogger logger, IList<ConvertProblem> problems)
+            : this(requestData, locator, logger)
+        {
+            _problems = problems;
+        }
+
         public IBindingLogger Logger
         {
             get { return _logger; }
@@ -65,6 +71,11 @@ namespace FubuCore.Binding
             return _requestData.GetChildRequest(name);
         }
 
+        public IBindingContext GetSubContext(string name)
+        {
+            var requestData = _requestData.GetChildRequest(name);
+            return new BindingContext(requestData, _locator, _logger, _problems);
+        }
 
         public IList<ConvertProblem> Problems
         {
@@ -80,6 +91,7 @@ namespace FubuCore.Binding
         {
             get { return _values.Value; }
         }
+
 
         public bool HasChildRequest(string name)
         {
@@ -125,6 +137,16 @@ namespace FubuCore.Binding
             });
         }
 
+        public void BindObject(Type type, Action<object> continuation)
+        {
+            _resolver.Value.TryBindModel(type, _requestData, result =>
+            {
+                // TODO -- log the value
+                _problems.AddRange(result.Problems);
+
+                continuation(result.Value);
+            });
+        }
 
         public void BindProperties(object instance)
         {
