@@ -37,6 +37,13 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void x()
+        {
+            Console.WriteLine(argFor(x => x.OptionalFlag).ToUsageDescription());
+           
+        }
+
+        [Test]
         public void handle()
         {
             var target = new EnumerableArgumentTarget();
@@ -58,6 +65,8 @@ namespace FubuCore.Testing.CommandLine
         [RequiredUsage("a", "b", "c")]
         public IEnumerable<string> Names { get; set; }
 
+        public IEnumerable<string> OptionalFlag { get; set; }
+            
         [RequiredUsage("c")]
         public IEnumerable<TargetEnum> Enums { get; set; }
 
