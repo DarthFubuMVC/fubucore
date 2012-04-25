@@ -76,6 +76,8 @@ namespace FubuCore.CommandLine
                 name = name.Substring(0, property.Name.Length - 4);
             }
 
+            name = splitOnPascalCaseAndAddHyphens(name);
+
             var oneLetterName = name.ToLower()[0];
 
             property.ForAttribute<FlagAliasAttribute>(att =>
@@ -90,5 +92,9 @@ namespace FubuCore.CommandLine
                        };
         }
 
+        private static string splitOnPascalCaseAndAddHyphens(string name)
+        {
+            return name.SplitPascalCase().Split(' ').Join("-");
+        }
     }
 }

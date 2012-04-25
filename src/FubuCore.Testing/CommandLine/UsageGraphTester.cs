@@ -160,7 +160,7 @@ namespace FubuCore.Testing.CommandLine
         public bool RemoveFlag { get; set; }
 
         [Description("Removes all links from the application folder")]
-        [FlagAlias("clean-all",'C')]
+        [FlagAlias('C')]
         public bool CleanAllFlag { get; set; }
         
         [Description("clean a single folder")]

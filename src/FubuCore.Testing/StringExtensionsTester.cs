@@ -234,5 +234,17 @@ e
         {
              
         }
+
+        [Test]
+        public void should_split_on_camel_case()
+        {
+            "camelCaseString".SplitCamelCase().ShouldEqual("camel Case String");
+        }
+
+        [Test]
+        public void should_split_on_pascal_case()
+        {
+            "PascalCaseString".SplitPascalCase().ShouldEqual("Pascal Case String");
+        }
     }
 }
