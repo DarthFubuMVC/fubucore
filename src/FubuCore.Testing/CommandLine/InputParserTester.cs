@@ -87,6 +87,13 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void the_long_name_should_allow_overriding()
+        {
+            var property = ReflectionHelper.GetProperty<InputModel>(x => x.MakeSuckModeFlag);
+            InputParser.ToFlagAliases(property).LongForm.ShouldEqual("--makesuckmode");
+        }
+
+        [Test]
         public void get_the_short_flag_name_for_a_property()
         {
             var property = ReflectionHelper.GetProperty<InputModel>(x => x.OrderFlag);
@@ -117,21 +124,14 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void boolean_flag_long_form_should_be_case_insensitive()
         {
-            handle(x => x.TrueFalseFlag, "--TrueFalse").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "--True-False").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
 
         [Test]
         public void boolean_flag_does_catch_2()
         {
-            handle(x => x.TrueFalseFlag, "--truefalse").ShouldBeTrue();
-            theInput.TrueFalseFlag.ShouldBeTrue();
-        }
-
-        [Test]
-        public void boolean_flag_does_catch_case_insensitive()
-        {
-            handle(x => x.TrueFalseFlag, "--trueFalse").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "--true-false").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
 
@@ -222,7 +222,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void integrated_test_with_a_boolean_flag()
         {
-            var input = build("file1", "blue", "--truefalse");
+            var input = build("file1", "blue", "--true-false");
             input.TrueFalseFlag.ShouldBeTrue();
 
             build("file1", "blue").TrueFalseFlag.ShouldBeFalse();
@@ -381,11 +381,13 @@ namespace FubuCore.Testing.CommandLine
         public Color Color { get; set; }
         public int OrderFlag { get; set; }
         public bool TrueFalseFlag { get; set; }
-        [FlagAlias("true-or-false",'T')]
+        [FlagAlias('T')]
         public bool TrueOrFalseFlag { get; set; }
 
-        [FlagAlias("herp-derp")]
         public bool HerpDerpFlag { get; set; }
+
+        [FlagAlias("makesuckmode")]
+        public bool MakeSuckModeFlag { get; set; }
 
         [RequiredUsage("ages")]
         public IEnumerable<int> Ages { get; set; }
