@@ -80,6 +80,13 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void the_long_name_should_allow_for_dashes()
+        {
+            var property = ReflectionHelper.GetProperty<InputModel>(x => x.TrueOrFalseFlag);
+            InputParser.ToFlagAliases(property).LongForm.ShouldEqual("--true-or-false");
+        }
+
+        [Test]
         public void get_the_short_flag_name_for_a_property()
         {
             var property = ReflectionHelper.GetProperty<InputModel>(x => x.OrderFlag);
@@ -108,7 +115,7 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
-        public void boolean_flag_does_catch()
+        public void boolean_flag_long_form_should_be_case_insensitive()
         {
             handle(x => x.TrueFalseFlag, "--TrueFalse").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
@@ -222,6 +229,15 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void long_flag_with_dashes_should_pass()
+        {
+            var input = build("file1", "blue", "--herp-derp");
+            input.HerpDerpFlag.ShouldBeTrue();
+
+            build("file1", "blue").HerpDerpFlag.ShouldBeFalse();
+        }
+
+        [Test]
         public void isflag_should_match_on_double_hyphen()
         {
             InputParser.IsFlag("--f").ShouldBeTrue();
@@ -243,15 +259,34 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void boolean_short_flag_does_catch()
         {
-            handle(x => x.TrueFalseFlag, "-T").ShouldBeTrue();
+            handle(x => x.TrueFalseFlag, "-t").ShouldBeTrue();
             theInput.TrueFalseFlag.ShouldBeTrue();
         }
 
         [Test]
-        public void boolean_short_flag_case_insensitive()
+        public void boolean_short_flag_case_uppercase()
         {
-            handle(x => x.TrueFalseFlag, "-t").ShouldBeTrue();
-            theInput.TrueFalseFlag.ShouldBeTrue();
+
+            var input = build("file1", "blue", "-T");
+            input.TrueFalseFlag.ShouldBeFalse();
+            input.TrueOrFalseFlag.ShouldBeTrue();
+        }
+
+        [Test]
+        public void boolean_short_flag_case_lowercase()
+        {
+
+           var  input = build("file1", "blue", "-t");
+            input.TrueFalseFlag.ShouldBeTrue();
+            input.TrueOrFalseFlag.ShouldBeFalse();
+        }
+
+        [Test]
+        public void boolean_short_flag_case_both()
+        {
+            var input = build("file1", "blue", "-t", "-T");
+            input.TrueFalseFlag.ShouldBeTrue();
+            input.TrueOrFalseFlag.ShouldBeTrue();
         }
 
         [Test]
@@ -316,6 +351,12 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void IsLongFlag_with_dashes_should_match_for_long_flag()
+        {
+            InputParser.IsLongFlag("--herp-derp").ShouldBeTrue();
+        }
+
+        [Test]
         public void IsLongFlag_should_not_match_for_triple_long_flag()
         {
             InputParser.IsLongFlag("---xerces").ShouldBeFalse();
@@ -340,6 +381,11 @@ namespace FubuCore.Testing.CommandLine
         public Color Color { get; set; }
         public int OrderFlag { get; set; }
         public bool TrueFalseFlag { get; set; }
+        [FlagAlias("true-or-false",'T')]
+        public bool TrueOrFalseFlag { get; set; }
+
+        [FlagAlias("herp-derp")]
+        public bool HerpDerpFlag { get; set; }
 
         [RequiredUsage("ages")]
         public IEnumerable<int> Ages { get; set; }

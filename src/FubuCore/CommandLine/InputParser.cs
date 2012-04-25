@@ -76,16 +76,16 @@ namespace FubuCore.CommandLine
                 name = name.Substring(0, property.Name.Length - 4);
             }
 
-            var oneLetterName = name[0];
+            var oneLetterName = name.ToLower()[0];
 
             property.ForAttribute<FlagAliasAttribute>(att =>
                                                           {
-                                                              name = att.LongAlias;
-                                                              oneLetterName = att.OneLetterAlias;
+                                                              name = att.LongAlias ?? name;
+                                                              oneLetterName = att.OneLetterAlias ?? oneLetterName;
                                                           });
             return new FlagAliases
                        {
-                           ShortForm = (SHORT_FLAG_PREFIX + oneLetterName).ToLower(),
+                           ShortForm = (SHORT_FLAG_PREFIX + oneLetterName),
                            LongForm = LONG_FLAG_PREFIX + name.ToLower()
                        };
         }
