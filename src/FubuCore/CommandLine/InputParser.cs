@@ -30,14 +30,20 @@ namespace FubuCore.CommandLine
 
         public static ITokenHandler BuildHandler(PropertyInfo property)
         {
-            if (property.PropertyType != typeof(string) && property.PropertyType.Closes(typeof(IEnumerable<>)))
-            {
-                return new EnumerableArgument(property, _converter);
-            }
-
             if (!property.Name.EndsWith(FLAG_SUFFIX))
             {
+                if (property.PropertyType != typeof (string) && property.PropertyType.Closes(typeof (IEnumerable<>)))
+                {
+                    return new EnumerableArgument(property, _converter);
+                }
+
                 return new Argument(property, _converter);
+            }
+
+
+            if (property.PropertyType != typeof(string) && property.PropertyType.Closes(typeof(IEnumerable<>)))
+            {
+                return new EnumerableFlag(property, _converter);
             }
 
             if (property.PropertyType == typeof(bool))
@@ -45,7 +51,11 @@ namespace FubuCore.CommandLine
                 return new BooleanFlag(property);
             }
             
-            return new Flag(property, _converter);
+                //if for enumerable too
+
+                //else
+                return new Flag(property, _converter);
+                
         }
 
         public static bool IsFlag(string token)

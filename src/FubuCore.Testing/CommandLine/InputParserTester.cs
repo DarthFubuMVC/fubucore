@@ -290,6 +290,15 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void integration_test_with_enumerable_flags()
+        {
+            var input = build("file1", "blue", "-t", "-s", "suck", "fail", "-T");
+            input.TrueFalseFlag.ShouldBeTrue();
+            input.TrueOrFalseFlag.ShouldBeTrue();
+            input.SillyFlag.ShouldHaveTheSameElementsAs("suck","fail");
+        }
+
+        [Test]
         public void enumeration_short_flag_negative()
         {
             handle(x => x.ColorFlag, "green").ShouldBeFalse();
@@ -361,6 +370,13 @@ namespace FubuCore.Testing.CommandLine
         {
             InputParser.IsLongFlag("---xerces").ShouldBeFalse();
         }
+
+        [Test]
+        public void complex_usage_smoketest()
+        {
+            new UsageGraph("derp", typeof(InputCommand)).WriteUsages();
+        }
+      
     }
 
 
@@ -384,6 +400,8 @@ namespace FubuCore.Testing.CommandLine
         [FlagAlias('T')]
         public bool TrueOrFalseFlag { get; set; }
 
+        public IEnumerable<string> SillyFlag { get; set; } 
+
         public bool HerpDerpFlag { get; set; }
 
         [FlagAlias("makesuckmode")]
@@ -396,8 +414,8 @@ namespace FubuCore.Testing.CommandLine
         public string AliasedFlag { get; set; }
     }
 
-    [Usage("default", "whatever")]
-    [Usage("ages", "whatever")]
+    [Usage("default", "default")]
+    [Usage("ages", "ages")]
     public class InputCommand : FubuCommand<InputModel>
     {
         public override bool Execute(InputModel input)

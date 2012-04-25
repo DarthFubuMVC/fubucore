@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuCore.CommandLine;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -110,6 +111,41 @@ namespace FubuCore.Testing.CommandLine
     }
 
     [TestFixture]
+    public class enumberable_argument_usages
+    {
+        UsageGraph theUsageGraph;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theUsageGraph = new UsageGraph("derp", typeof(ComplexCommand));
+        }
+
+        [Test]
+        public void smoke_test_writing_usage()
+        {
+            theUsageGraph.WriteUsages();
+        }
+    }
+
+    public class ComplexInput
+    {
+        public string Name { get; set; }
+        public IEnumerable<string> NickNames { get; set; }
+
+        public IEnumerable<string> HerpDerpFlag { get; set; }
+    }
+
+    [CommandDescription("does complex thing")]
+    public class ComplexCommand : FubuCommand<ComplexInput>
+    {
+        public override bool Execute(ComplexInput input)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [TestFixture]
     public class valid_usage_tester
     {
         private UsageGraph theUsageGraph;
@@ -191,6 +227,9 @@ namespace FubuCore.Testing.CommandLine
         public string Arg2 { get; set; }
     }
 
+   
+
+
     [CommandDescription("does simple thing")]
     public class SimpleCommand : FubuCommand<SimpleInput>
     {
@@ -199,4 +238,6 @@ namespace FubuCore.Testing.CommandLine
             throw new NotImplementedException();
         }
     }
+
+
 }
