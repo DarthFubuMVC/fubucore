@@ -28,7 +28,7 @@ namespace FubuCore.Testing.Configuration
         public void SetUp()
         {
             var resolver = ObjectResolver.Basic();
-            _settingsSource = _settingsSource = new TestSettingsSource();
+            _settingsSource = new TestSettingsSource();
             theProvider = new SettingsProvider(resolver, new[] { _settingsSource });
         }
 
