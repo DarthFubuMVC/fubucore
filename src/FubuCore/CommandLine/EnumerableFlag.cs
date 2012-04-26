@@ -37,17 +37,14 @@ namespace FubuCore.CommandLine
 
                     wasHandled = true;
                 }
-            }
 
-            if (wasHandled)
-            {
+                if(!wasHandled)
+                {
+                    throw new InvalidUsageException("No values specified for flag {0}.".ToFormat(flag));
+                }
+
                 _property.SetValue(input, list, null);
             }
-            else
-            {
-                throw new InvalidUsageException("No values specified for flag {0}.".ToFormat(flag));
-            }
-
 
             return wasHandled;
         }
