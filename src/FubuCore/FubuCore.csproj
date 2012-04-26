@@ -112,6 +112,7 @@
     <Compile Include="Binding\Values\GenericValueSource.cs" />
     <Compile Include="Binding\Values\NamedKeyValues.cs" />
     <Compile Include="CommandLine\ArgPreprocessor.cs" />
+    <Compile Include="CommandLine\EnumerableFlag.cs" />
     <Compile Include="CommandLine\FlagAliases.cs" />
     <Compile Include="Configuration\SettingsData.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />

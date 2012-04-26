@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FubuCore.CommandLine;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -46,7 +47,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void has_the_flags()
         {
-            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
+            theUsageGraph.Flags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "CleanFlag", "NotepadFlag");
         }
 
         [Test]
@@ -58,7 +59,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void first_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("list").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("CleanAllFlag", "NotepadFlag");
+            theUsageGraph.FindUsage("list").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("CleanAllFlag", "CleanFlag", "NotepadFlag");
         }
 
         [Test]
@@ -70,7 +71,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void second_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "NotepadFlag");
+            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "CleanFlag", "NotepadFlag");
         }
 
         [Test]
@@ -83,14 +84,14 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_the_command_usage_of_the_list_usage()
         {
-            theUsageGraph.FindUsage("list").Usage.ShouldEqual("fubu link <appfolder> [-c, --cleanall] [-n, --notepad]");
+            theUsageGraph.FindUsage("list").Usage.ShouldEqual("fubu link <appfolder> [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
         }
 
         [Test]
         public void get_the_command_usage_of_the_link_usage()
         {
             var usg = theUsageGraph.FindUsage("link");
-            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-c, --cleanall] [-n, --notepad]");
+            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
         }
 
         [Test]
@@ -106,6 +107,41 @@ namespace FubuCore.Testing.CommandLine
             var usage = graph.Usages.Single();
             usage.Description.ShouldEqual(typeof (SimpleCommand).GetAttribute<CommandDescriptionAttribute>().Description);
             usage.Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("Arg1", "Arg2");
+        }
+    }
+
+    [TestFixture]
+    public class enumberable_argument_usages
+    {
+        UsageGraph theUsageGraph;
+
+        [SetUp]
+        public void SetUp()
+        {
+            theUsageGraph = new UsageGraph("derp", typeof(ComplexCommand));
+        }
+
+        [Test]
+        public void smoke_test_writing_usage()
+        {
+            theUsageGraph.WriteUsages();
+        }
+    }
+
+    public class ComplexInput
+    {
+        public string Name { get; set; }
+        public IEnumerable<string> NickNames { get; set; }
+
+        public IEnumerable<string> HerpDerpFlag { get; set; }
+    }
+
+    [CommandDescription("does complex thing")]
+    public class ComplexCommand : FubuCommand<ComplexInput>
+    {
+        public override bool Execute(ComplexInput input)
+        {
+            throw new NotImplementedException();
         }
     }
 
@@ -160,7 +196,11 @@ namespace FubuCore.Testing.CommandLine
         public bool RemoveFlag { get; set; }
 
         [Description("Removes all links from the application folder")]
+        [FlagAlias('C')]
         public bool CleanAllFlag { get; set; }
+        
+        [Description("clean a single folder")]
+        public string CleanFlag { get; set; }
 
         [Description("Opens the application manifest in notepad")]
         public bool NotepadFlag { get; set; }
@@ -187,6 +227,9 @@ namespace FubuCore.Testing.CommandLine
         public string Arg2 { get; set; }
     }
 
+   
+
+
     [CommandDescription("does simple thing")]
     public class SimpleCommand : FubuCommand<SimpleInput>
     {
@@ -195,4 +238,6 @@ namespace FubuCore.Testing.CommandLine
             throw new NotImplementedException();
         }
     }
+
+
 }

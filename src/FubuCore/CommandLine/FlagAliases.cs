@@ -7,9 +7,14 @@
 
         public bool Matches(string token)
         {
+            if(InputParser.IsShortFlag(token))
+            {
+                return token == ShortForm;
+            }
+
             var lowerToken = token.ToLower();
 
-            return lowerToken == ShortForm.ToLower() || lowerToken == LongForm.ToLower();
+            return lowerToken == LongForm.ToLower();
         }
 
         public override string ToString()

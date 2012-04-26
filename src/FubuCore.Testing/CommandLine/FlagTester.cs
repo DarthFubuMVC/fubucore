@@ -29,6 +29,8 @@ namespace FubuCore.Testing.CommandLine
             forProp(x => x.AliasFlag).ToUsageDescription().ShouldEqual("[-a, --aliased <alias>]");
         }
 
+    
+
         [Test]
         public void to_usage_description_for_an_enum_field()
         {
@@ -65,6 +67,34 @@ namespace FubuCore.Testing.CommandLine
             typeof(ArgumentException).ShouldBeThrownBy(() =>
                 forProp(x => x.EnumFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-e", "x" })));
         }
+
+        private EnumerableFlag forArg(Expression<Func<FlagTarget, object>> expression)
+        {
+            return new EnumerableFlag(expression.ToAccessor().InnerProperty, new ObjectConverter());
+        }
+
+        [Test]
+        public void to_usage_description_for_a_enumerable_flag()
+        {
+            forArg(x => x.HerpDerpFlag).ToUsageDescription().ShouldEqual("[-h, --herp-derp [<herpderp1 herpderp2 herpderp3 ...>]]");
+        }
+
+        [Test]
+        public void should_provide_error_message()
+        {
+            typeof(InvalidUsageException).ShouldBeThrownBy(() =>
+               forArg(x => x.HerpDerpFlag).Handle(new FlagTarget(), new Queue<string>(new[] { "-h" })))
+               .Message.ShouldEqual("No values specified for flag -h.");
+        }
+
+        [Test]
+        public void enumerable_flag_should_handle_arguments_correctly()
+        {
+            var flagTarget = new FlagTarget();
+            forArg(x => x.HerpDerpFlag).Handle(flagTarget, new Queue<string>(new[] {"-h", "a", "b", "-c"}));
+
+            flagTarget.HerpDerpFlag.ShouldHaveTheSameElementsAs("a","b");
+        }
     }
 
     public enum FlagEnum
@@ -81,5 +111,7 @@ namespace FubuCore.Testing.CommandLine
 
         [FlagAlias("aliased", 'a')]
         public string AliasFlag { get; set;}
+
+        public IEnumerable<string> HerpDerpFlag { get; set; }
     }
 }

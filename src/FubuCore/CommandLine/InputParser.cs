@@ -30,14 +30,20 @@ namespace FubuCore.CommandLine
 
         public static ITokenHandler BuildHandler(PropertyInfo property)
         {
-            if (property.PropertyType != typeof(string) && property.PropertyType.Closes(typeof(IEnumerable<>)))
-            {
-                return new EnumerableArgument(property, _converter);
-            }
-
             if (!property.Name.EndsWith(FLAG_SUFFIX))
             {
+                if (property.PropertyType != typeof (string) && property.PropertyType.Closes(typeof (IEnumerable<>)))
+                {
+                    return new EnumerableArgument(property, _converter);
+                }
+
                 return new Argument(property, _converter);
+            }
+
+
+            if (property.PropertyType != typeof(string) && property.PropertyType.Closes(typeof(IEnumerable<>)))
+            {
+                return new EnumerableFlag(property, _converter);
             }
 
             if (property.PropertyType == typeof(bool))
@@ -45,7 +51,11 @@ namespace FubuCore.CommandLine
                 return new BooleanFlag(property);
             }
             
-            return new Flag(property, _converter);
+                //if for enumerable too
+
+                //else
+                return new Flag(property, _converter);
+                
         }
 
         public static bool IsFlag(string token)
@@ -76,19 +86,25 @@ namespace FubuCore.CommandLine
                 name = name.Substring(0, property.Name.Length - 4);
             }
 
-            var oneLetterName = name[0];
+            name = splitOnPascalCaseAndAddHyphens(name);
+
+            var oneLetterName = name.ToLower()[0];
 
             property.ForAttribute<FlagAliasAttribute>(att =>
                                                           {
-                                                              name = att.LongAlias;
-                                                              oneLetterName = att.OneLetterAlias;
+                                                              name = att.LongAlias ?? name;
+                                                              oneLetterName = att.OneLetterAlias ?? oneLetterName;
                                                           });
             return new FlagAliases
                        {
-                           ShortForm = (SHORT_FLAG_PREFIX + oneLetterName).ToLower(),
+                           ShortForm = (SHORT_FLAG_PREFIX + oneLetterName),
                            LongForm = LONG_FLAG_PREFIX + name.ToLower()
                        };
         }
 
+        private static string splitOnPascalCaseAndAddHyphens(string name)
+        {
+            return name.SplitPascalCase().Split(' ').Join("-");
+        }
     }
 }
