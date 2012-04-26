@@ -19,6 +19,12 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void combined_short_flags_should_be_case_sensitive()
+        {
+            ArgPreprocessor.Process(new[] { "-aAbBcC" }).ShouldHaveTheSameElementsAs("-a","-A", "-b","-B", "-c","-C");
+        }
+
+        [Test]
         public void should_ignore_long_flag_args()
         {
             ArgPreprocessor.Process(new[] {"--abc"}).ShouldHaveTheSameElementsAs("--abc");
