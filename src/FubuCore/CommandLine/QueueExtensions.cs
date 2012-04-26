@@ -12,7 +12,7 @@ namespace FubuCore.CommandLine
 
         public static bool NextIsFlagFor(this Queue<string> queue, PropertyInfo property)
         {
-            return InputParser.IsFlagFor(queue.Peek().ToLower(), property);
+            return InputParser.IsFlagFor(queue.Peek(), property);
         }
     }
 }

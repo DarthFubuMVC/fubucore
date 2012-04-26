@@ -270,6 +270,25 @@ namespace FubuCore
             return MD5.Create().ComputeHash(Encoding.UTF8.GetBytes(text)).Select(b => b.ToString("x2")).Join("");
         }
 
+        /// <summary>
+        /// Splits a camel cased string into seperate words delimitted by a space
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string SplitCamelCase(this string str)
+        {
+            return Regex.Replace(Regex.Replace(str, @"(\P{Ll})(\P{Ll}\p{Ll})", "$1 $2"), @"(\p{Ll})(\P{Ll})", "$1 $2");
+        }
+
+        /// <summary>
+        /// Splits a pascal cased string into seperate words delimitted by a space
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string SplitPascalCase(this string str)
+        {
+            return SplitCamelCase(str);
+        }
 
         public static TEnum ToEnum<TEnum>(this string text) where TEnum : struct
         {
