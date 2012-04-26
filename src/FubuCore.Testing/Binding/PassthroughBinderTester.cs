@@ -50,6 +50,16 @@ namespace FubuCore.Testing.Binding
             context.VerifyAllExpectations();
         }
 
+        [Test]
+        public void detects_BindingValue_and_returns_inner_value()
+        {
+            var testValue = "testValue";
+            var binder = new PassthroughConverter<HttpPostedFileBase>();
+            var context = MockRepository.GenerateMock<IPropertyContext>();
+            context.Stub(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = testValue });
+            binder.Convert(context).ShouldBeTheSameAs(testValue);
+        }
+
         private PropertyInfo property(Expression<Func<ModelWithHttpPostedFileBase, object>> expression)
         {
             return ReflectionHelper.GetProperty(expression);

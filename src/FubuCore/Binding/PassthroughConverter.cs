@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using FubuCore.Descriptions;
 
@@ -13,7 +12,7 @@ namespace FubuCore.Binding
 
         public override object Convert(IPropertyContext context)
         {
-            return context.RawValueFromRequest;
+            return context.RawValueFromRequest != null ? context.RawValueFromRequest.RawValue : null;
         }
 
         public void Describe(Description description)
