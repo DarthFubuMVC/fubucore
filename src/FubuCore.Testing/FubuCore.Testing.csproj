@@ -81,7 +81,6 @@
     <Compile Include="Binding\FlatFileRequestDataTester.cs" />
     <Compile Include="Binding\InMemoryRequestDataTester.cs" />
     <Compile Include="Binding\InMemory\InMemoryServiceLocatorTester.cs" />
-    <Compile Include="Binding\ModelBinderCacheTester.cs" />
     <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
     <Compile Include="Binding\ObjectResolverTester.cs" />
     <Compile Include="Binding\ObjectTypeFamilyTester.cs" />
