@@ -28,7 +28,7 @@ namespace FubuCore.Binding
         {
             context.ForProperty(property, x =>
             {
-                var data = x.RawValueFromRequest;
+                var data = x.RawValueFromRequest != null ? x.RawValueFromRequest.RawValue : null;
                 if (data != null)
                 {
                     var converter = _cache[property];

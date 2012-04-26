@@ -63,11 +63,11 @@ namespace FubuCore.Binding
 
         public object Convert(IPropertyContext context)
         {
-            if (context.RawValueFromRequest == null) return _defaulter.Default();
+            if (context.RawValueFromRequest == null || context.RawValueFromRequest.RawValue == null) return _defaulter.Default();
 
 
-            return context.RawValueFromRequest.GetType().CanBeCastTo(_propertyType)
-                       ? context.RawValueFromRequest
+            return context.RawValueFromRequest.RawValue.GetType().CanBeCastTo(_propertyType)
+                       ? context.RawValueFromRequest.RawValue
                        : _strategy.Convert(context);
         }
 
