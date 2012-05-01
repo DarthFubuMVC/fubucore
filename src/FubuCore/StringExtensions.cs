@@ -6,7 +6,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Web;
 using System.Linq;
 
 namespace FubuCore
@@ -136,31 +135,6 @@ namespace FubuCore
         public static string Capitalize(this string stringValue)
         {
             return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(stringValue);
-        }
-
-        public static string HtmlAttributeEncode(this string unEncoded)
-        {
-            return HttpUtility.HtmlAttributeEncode(unEncoded);
-        }
-
-        public static string HtmlEncode(this string unEncoded)
-        {
-            return HttpUtility.HtmlEncode(unEncoded);
-        }
-
-        public static string HtmlDecode(this string encoded)
-        {
-            return HttpUtility.HtmlDecode(encoded);
-        }
-
-        public static string UrlEncode(this string unEncoded)
-        {
-            return HttpUtility.UrlEncode(unEncoded);
-        }
-
-        public static string UrlDecode(this string encoded)
-        {
-            return HttpUtility.UrlDecode(encoded);
         }
 
         /// <summary>

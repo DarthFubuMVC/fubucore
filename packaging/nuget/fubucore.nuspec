@@ -16,6 +16,5 @@
   </metadata>
   <files>
     <file src="..\..\build\FubuCore.*" target="lib" />
-    <file src="..\..\src\FubuCore\**\*.cs" target="src" />
   </files>
 </package>
