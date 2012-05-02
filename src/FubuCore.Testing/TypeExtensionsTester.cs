@@ -154,6 +154,20 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void is_nullable_of_T_when_type_is_null()
+        {
+            Type type = null;
+            type.IsNullableOfT().ShouldBeFalse();
+        }
+
+        [Test]
+        public void is_nullable_of_a_given_type_when_type_is_null()
+        {
+            Type type = null;
+            type.IsNullableOf(typeof(int)).ShouldBeFalse();
+        }
+
+        [Test]
         public void is_nullable_of_a_given_type()
         {
             typeof(string).IsNullableOf(typeof(int)).ShouldBeFalse();
@@ -190,7 +204,9 @@ namespace FubuCore.Testing
             this.GetType().IsInNamespace(this.GetType().Namespace + ".something").ShouldBeFalse();
             this.GetType().IsInNamespace(this.GetType().Namespace).ShouldBeTrue();
             this.GetType().IsInNamespace(this.GetType().Assembly.GetName().Name).ShouldBeTrue();
-            
+
+            Type type = null;
+            type.IsInNamespace("anything").ShouldBeFalse();
         }
 
         [Test]
@@ -199,6 +215,9 @@ namespace FubuCore.Testing
             typeof(int).IsOpenGeneric().ShouldBeFalse();
             typeof(Nullable<>).IsOpenGeneric().ShouldBeTrue();
             typeof(Nullable<int>).IsOpenGeneric().ShouldBeFalse();
+
+            Type type = null;
+            type.IsOpenGeneric().ShouldBeFalse();
         }
 
         [Test]
@@ -210,6 +229,9 @@ namespace FubuCore.Testing
             typeof(Message2).IsConcreteTypeOf<IMessage>().ShouldBeTrue();
             typeof(Message3).IsConcreteTypeOf<IMessage>().ShouldBeTrue();
             this.GetType().IsConcreteTypeOf<IMessage>().ShouldBeFalse();
+
+            Type type = null;
+            type.IsConcreteTypeOf<IMessage>().ShouldBeFalse();
         }
 
         [Test]
@@ -249,6 +271,9 @@ namespace FubuCore.Testing
             typeof(IMessage).IsConcrete().ShouldBeFalse();
             typeof(AbstractMessage).IsConcrete().ShouldBeFalse();
             typeof(Message2).IsConcrete().ShouldBeTrue();
+
+            Type type = null;
+            type.IsConcrete().ShouldBeFalse();
         }
 
         [Test]

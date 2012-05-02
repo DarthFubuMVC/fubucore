@@ -20,6 +20,8 @@ namespace FubuCore
 
         public static bool IsNullableOfT(this Type theType)
         {
+            if (theType == null) return false;
+
             return theType.IsGenericType && theType.GetGenericTypeDefinition().Equals(typeof (Nullable<>));
         }
 
@@ -53,22 +55,30 @@ namespace FubuCore
 
         public static bool IsInNamespace(this Type type, string nameSpace)
         {
+            if (type == null) return false;
+
             return type.Namespace.StartsWith(nameSpace);
         }
 
         public static bool IsOpenGeneric(this Type type)
         {
+            if (type == null) return false;
+
             return type.IsGenericTypeDefinition || type.ContainsGenericParameters;
         }
 
         public static bool IsGenericEnumerable(this Type type)
         {
+            if (type == null) return false;
+
             var genericArgs = type.GetGenericArguments();
             return genericArgs.Length == 1 && typeof (IEnumerable<>).MakeGenericType(genericArgs).IsAssignableFrom(type);
         }
 
         public static bool IsConcreteTypeOf<T>(this Type pluggedType)
         {
+            if (pluggedType == null) return false;
+
             return pluggedType.IsConcrete() && typeof (T).IsAssignableFrom(pluggedType);
         }
 
@@ -192,6 +202,8 @@ namespace FubuCore
 
         public static bool IsConcrete(this Type type)
         {
+            if (type == null) return false;
+
             return !type.IsAbstract && !type.IsInterface;
         }
 
