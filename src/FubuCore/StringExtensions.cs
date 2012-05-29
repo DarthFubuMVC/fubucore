@@ -34,6 +34,16 @@ namespace FubuCore
             }
         }
 
+        /// <summary>
+        /// Returns true if a string is null (the string can, however, be empty)
+        /// </summary>
+        /// <param name="value">A string value</param>
+        /// <returns>True if the string value is null, otherwise false</returns>
+        public static bool IsNull(this string value)
+        {
+            return value == null;
+        }
+
         public static string ToFullPath(this string path)
         {
             return Path.GetFullPath(path);
