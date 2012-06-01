@@ -55,7 +55,7 @@ namespace FubuCore.Reflection
                 return null;
             }
 
-            return _innerProperty.GetValue(target);
+            return _valueGetters.Last().GetValue(target);
         }
 
         public Type OwnerType

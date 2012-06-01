@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -7,27 +8,43 @@ namespace FubuCore.Reflection
     public class MethodValueGetter : IValueGetter
     {
         private readonly MethodInfo _methodInfo;
-        private readonly object _firstArgument;
+        private readonly object[] _arguments;
 
-        public MethodValueGetter(MethodInfo methodInfo, object firstArgument)
+        public MethodValueGetter(MethodInfo methodInfo, object[] arguments)
         {
+            if (arguments.Length > 1)
+            {
+                throw new NotSupportedException("ReflectionHelper only supports methods with no arguments or a single indexer argument");
+            }
+
             _methodInfo = methodInfo;
-            _firstArgument = firstArgument;
+            _arguments = arguments;
         }
 
         public object GetValue(object target)
         {
-            return _methodInfo.Invoke(target, new[] {_firstArgument});
+            return _methodInfo.Invoke(target, _arguments);
         }
 
         public string Name
         {
-            get { return "[{0}]".ToFormat(_firstArgument); }
+            get
+            {
+                if (_arguments.Length == 1) return "[{0}]".ToFormat(_arguments[0]);
+                if (_arguments.Length == 0) return _methodInfo.Name;
+
+                throw new NotSupportedException("Dunno how to deal with this method");
+            }
         }
 
         public Type DeclaringType
         {
             get { return _methodInfo.DeclaringType; }
+        }
+
+        public Type ReturnType
+        {
+            get { return _methodInfo.ReturnType; }
         }
 
         public Expression ChainExpression(Expression body)
@@ -47,15 +64,23 @@ namespace FubuCore.Reflection
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other._methodInfo, _methodInfo) && Equals(other._firstArgument, _firstArgument);
+            return Equals(other._methodInfo, _methodInfo) && Enumerable.SequenceEqual(other._arguments, _arguments);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return ((_methodInfo != null ? _methodInfo.GetHashCode() : 0)*397) ^ (_firstArgument != null ? _firstArgument.GetHashCode() : 0);
+                if (_arguments.Length == 0)
+                {
+                    return ((_methodInfo != null ? _methodInfo.GetHashCode() : 0) * 397) ^ (_arguments[0] != null ? _arguments[0].GetHashCode() : 0);
+                }
+
+                return _methodInfo.GetHashCode();
             }
         }
     }
+
+
+
 }

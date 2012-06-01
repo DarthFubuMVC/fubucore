@@ -314,6 +314,87 @@ namespace FubuCore.Testing.Reflection
 
         }
 
+
+
+
+    }
+
+    [TestFixture]
+    public class when_using_an_accessor_for_a_method
+    {
+        [Test]
+        public void can_get_The_name()
+        {
+            ReflectionHelper.GetAccessor<TargetHolder>(x => x.GetTarget())
+                .Name.ShouldEqual("GetTarget");
+        }
+
+        [Test]
+        public void get_value_simple()
+        {
+            var accessor = ReflectionHelper.GetAccessor<MethodTarget>(x => x.GetName());
+
+            accessor.GetValue(new MethodTarget("red")).ShouldEqual("red");
+            accessor.GetValue(new MethodTarget(null)).ShouldEqual(null);
+        }
+
+        [Test]
+        public void get_value_at_the_endof_a_chain()
+        {
+            var accessor = ReflectionHelper.GetAccessor<MethodHolder>(x => x.MethodGuy.GetName());
+
+            accessor.GetValue(new MethodHolder()).ShouldEqual(null);
+            accessor.GetValue(new MethodHolder{
+                MethodGuy = new MethodTarget("red")
+            }).ShouldEqual("red");
+
+
+        }
+
+        [Test]
+        public void method_is_at_beginning_of_a_chain()
+        {
+            var accessor = ReflectionHelper.GetAccessor<TargetHolder>(x => x.GetTarget().GetName());
+            accessor.GetValue(new TargetHolder(null)).ShouldEqual(null);
+            accessor.GetValue(new TargetHolder(new MethodTarget(null))).ShouldBeNull();
+            accessor.GetValue(new TargetHolder(new MethodTarget("red"))).ShouldEqual("red");
+        }
+
+
+        public class TargetHolder
+        {
+            private readonly MethodTarget _target;
+
+            public TargetHolder(MethodTarget target)
+            {
+                _target = target;
+            }
+
+            public MethodTarget GetTarget()
+            {
+                return _target;
+            }
+        }
+
+        public class MethodHolder
+        {
+            public MethodTarget MethodGuy { get; set; }
+        }
+
+        public class MethodTarget
+        {
+            private readonly string _name;
+
+            public MethodTarget(string name)
+            {
+                _name = name;
+            }
+
+            public string GetName()
+            {
+                return _name;
+            }
+        }
     }
 
 }

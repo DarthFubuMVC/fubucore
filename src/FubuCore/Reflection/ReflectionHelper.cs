@@ -116,21 +116,31 @@ namespace FubuCore.Reflection
 
         public static Accessor GetAccessor<TModel>(Expression<Func<TModel, object>> expression)
         {
+            if (expression.Body is MethodCallExpression)
+            {
+                return GetAccessor((Expression)expression.Body);
+            }
+
             MemberExpression memberExpression = getMemberExpression(expression);
 
             return GetAccessor(memberExpression);
         }
 
-        public static Accessor GetAccessor(MemberExpression memberExpression)
+        public static Accessor GetAccessor(Expression memberExpression)
         {
             var list = new List<IValueGetter>();
 
             buildValueGetters(memberExpression, list);
 
-            if (list.Count == 1)
+            if (list.Count == 1 && list[0] is PropertyValueGetter)
             {
                 var propertyValueGetter = list[0] as PropertyValueGetter;
                 return propertyValueGetter != null ? new SingleProperty(propertyValueGetter.PropertyInfo) : null;
+            }
+
+            if (list.Count == 1 && list[0] is MethodValueGetter)
+            {
+                return new SingleMethod((MethodValueGetter) list[0]);
             }
 
             list.Reverse();
@@ -155,14 +165,24 @@ namespace FubuCore.Reflection
             if (methodCallExpression != null)
             {
                 var methodInfo = methodCallExpression.Method;
-                Expression argument = methodCallExpression.Arguments.First();
-               
-                object value;
-                if (TryEvaluateExpression(argument, out value))
+                Expression argument = methodCallExpression.Arguments.FirstOrDefault();
+
+                if (argument == null)
                 {
-                    var methodValueGetter = new MethodValueGetter(methodInfo, value);
+                    var methodValueGetter = new MethodValueGetter(methodInfo, new object[0]);
                     list.Add(methodValueGetter);
                 }
+                else
+                {
+                    object value;
+                    if (TryEvaluateExpression(argument, out value))
+                    {
+                        var methodValueGetter = new MethodValueGetter(methodInfo, new object[] { value });
+                        list.Add(methodValueGetter);
+                    }  
+                }
+               
+
                 
                 if (methodCallExpression.Object != null)
                 {
