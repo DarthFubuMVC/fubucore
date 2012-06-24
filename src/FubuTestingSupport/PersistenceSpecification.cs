@@ -10,9 +10,15 @@ using FubuCore;
 
 namespace FubuTestingSupport
 {
-    
+    public interface IPersistenceSpecification<T>
+    {
+        T Original { get; set; }
+        void Check(params Expression<Func<T, object>>[] expressions);
+        void CheckProperties(Func<PropertyInfo, bool> filter);
+        void CheckAllPropertiesDeclaredBy<TDeclaringType>();
+    }
 
-    public class PersistenceSpecification<T>
+    public class PersistenceSpecification<T> : IPersistenceSpecification<T>
     {
         private readonly Func<T, T> _persistor;
         private readonly IList<IPersistenceCheck> _checks = new List<IPersistenceCheck>();
