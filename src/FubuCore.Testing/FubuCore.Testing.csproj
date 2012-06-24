@@ -171,6 +171,7 @@
     <Compile Include="Conversion\StringConstructorConverterFamilyTester.cs" />
     <Compile Include="StringExtensionsTester.cs" />
     <Compile Include="TemplateParserTester.cs" />
+    <Compile Include="TestingSupport\AccessorPersistenceCheckTester.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />
     <Compile Include="TimeSpanExtensionsTester.cs" />

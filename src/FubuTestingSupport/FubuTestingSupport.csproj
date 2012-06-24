@@ -58,6 +58,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="InteractionContext.cs" />
+    <Compile Include="PersistenceSpecification.cs" />
     <Compile Include="SelfMockingServiceLocator.cs" />
     <Compile Include="SpecificationExtensions.cs" />
   </ItemGroup>
