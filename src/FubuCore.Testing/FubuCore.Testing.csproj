@@ -172,6 +172,7 @@
     <Compile Include="StringExtensionsTester.cs" />
     <Compile Include="TemplateParserTester.cs" />
     <Compile Include="TestingSupport\AccessorPersistenceCheckTester.cs" />
+    <Compile Include="TestingSupport\EnumerablePersistenceCheckTester.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />
     <Compile Include="TimeSpanExtensionsTester.cs" />

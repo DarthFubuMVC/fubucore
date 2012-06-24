@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.Reflection;
 using System.Linq;
 using NUnit.Framework;
-using FubuCore;
 
 namespace FubuTestingSupport
 {
@@ -52,59 +52,34 @@ namespace FubuTestingSupport
         }
     }
 
-
-    public interface IPersistenceCheck
+    public class EnumerablePersistenceCheck<T> : AccessorPersistenceCheck
     {
-        void CheckValue(object original, object persisted, Action<string> writeError);
-    }
-
-    public class AccessorPersistenceCheck : IPersistenceCheck
-    {
-        private readonly Accessor _accessor;
-
-        public static AccessorPersistenceCheck For<T>(Expression<Func<T, object>> expression)
+        public new static EnumerablePersistenceCheck<TElement> For<T, TElement>(Expression<Func<T, IEnumerable<TElement>>> expression)
         {
-            return new AccessorPersistenceCheck(expression.ToAccessor());
+            var accessor = ReflectionHelper.GetAccessor(expression);
+            return new EnumerablePersistenceCheck<TElement>(accessor);
         }
 
-        public AccessorPersistenceCheck(Accessor accessor)
+        public EnumerablePersistenceCheck(Accessor accessor) : base(accessor)
         {
-            _accessor = accessor;
         }
 
-        public void CheckValue(object original, object persisted, Action<string> writeError)
+        protected override bool matches(object originalValue, object persistedValue)
         {
-            var originalValue = _accessor.GetValue(original);
-            var persistedValue = _accessor.GetValue(persisted);
+            IEnumerable<T> enum1 = originalValue as IEnumerable<T>;
+            IEnumerable<T> enum2 = persistedValue as IEnumerable<T>;
 
-            if (originalValue == null)
+            if (enum1 == null)
             {
-                if (persistedValue == null) return;
+                if (enum2 == null) return true;
             }
+            else if (enum2 == null) return false;
             else
             {
-                if (originalValue.Equals(persistedValue)) return;
+                if (enum1.SequenceEqual(enum2)) return true;
             }
 
-            var message = "{0}:  original was {1}, but the persisted value was {2}".ToFormat(_accessor.Name,
-                                                                                             displayFor(originalValue),
-                                                                                             displayFor(persistedValue));
-            writeError(message);
-        }
-
-        private static string displayFor(object value)
-        {
-            if (value == null)
-            {
-                return "null";
-            }
-
-            if (value is string)
-            {
-                return "'" + value.ToString() + "'";
-            }
-
-            return value.ToString();
+            return false;
         }
     }
 }
