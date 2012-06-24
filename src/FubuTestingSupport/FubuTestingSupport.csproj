@@ -58,6 +58,7 @@
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AccessorPersistenceCheck.cs" />
+    <Compile Include="EnumerablePersistenceCheck.cs" />
     <Compile Include="InteractionContext.cs" />
     <Compile Include="IPersistenceCheck.cs" />
     <Compile Include="PersistenceSpecification.cs" />

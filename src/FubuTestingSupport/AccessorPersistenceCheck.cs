@@ -72,5 +72,10 @@ namespace FubuTestingSupport
 
             return value.ToString();
         }
+
+        public Accessor Accessor
+        {
+            get { return _accessor; }
+        }
     }
 }
