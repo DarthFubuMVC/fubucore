@@ -246,5 +246,11 @@ e
         {
             "PascalCaseString".SplitPascalCase().ShouldEqual("Pascal Case String");
         }
+
+        [Test]
+        public void file_escape()
+        {
+            "my file".FileEscape().ShouldEqual("\"my file\"");
+        }
     }
 }

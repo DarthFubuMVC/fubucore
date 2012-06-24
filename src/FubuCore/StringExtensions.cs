@@ -270,5 +270,15 @@ namespace FubuCore
             if(!enumType.IsEnum) throw new ArgumentException("{0} is not an Enum".ToFormat(enumType.Name));
             return (TEnum) Enum.Parse(enumType, text, true);
         }
+
+        /// <summary>
+        /// Wraps a string with parantheses.  Originally used to file escape file names when making command line calls
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static string FileEscape(this string file)
+        {
+            return "\"{0}\"".ToFormat(file);
+        }
     }
 }
