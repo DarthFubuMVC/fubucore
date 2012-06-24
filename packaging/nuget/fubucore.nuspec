@@ -13,6 +13,9 @@
     <tags>utilities, fubu</tags>
     <dependencies>
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Web" />
+    </frameworkAssemblies>
   </metadata>
   <files>
     <file src="..\..\build\FubuCore.*" target="lib" />
