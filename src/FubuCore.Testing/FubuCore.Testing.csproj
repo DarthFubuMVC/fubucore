@@ -132,6 +132,10 @@
     <Compile Include="Configuration\SubstitutedRequestDataTester.cs" />
     <Compile Include="Configuration\XmlSettingsDataTester.cs" />
     <Compile Include="Configuration\XmlSettingsIntegratedTester.cs" />
+    <Compile Include="Dates\DateTester.cs" />
+    <Compile Include="Dates\DateTimeExtensionTester.cs" />
+    <Compile Include="Dates\PeriodTester.cs" />
+    <Compile Include="Dates\SystemTimeTester.cs" />
     <Compile Include="DependencyAnalysis\Bottle.cs" />
     <Compile Include="DependencyAnalysis\DependencyGraphTester.cs" />
     <Compile Include="Descriptions\DescriptionTester.cs" />
@@ -174,6 +178,7 @@
     <Compile Include="TestingSupport\AccessorPersistenceCheckTester.cs" />
     <Compile Include="TestingSupport\EnumerablePersistenceCheckTester.cs" />
     <Compile Include="TestingSupport\PersistenceSpecificationTester.cs" />
+    <Compile Include="TestingSupport\SystemTimeMechanicsInInteractionContext.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />
     <Compile Include="TimeSpanExtensionsTester.cs" />
