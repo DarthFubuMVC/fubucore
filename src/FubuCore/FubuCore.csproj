@@ -156,7 +156,12 @@
     <Compile Include="Conversion\StringConverterStrategy.cs" />
     <Compile Include="Conversion\TimeZoneConverter.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
+    <Compile Include="Dates\Clock.cs" />
+    <Compile Include="Dates\IClock.cs" />
+    <Compile Include="Dates\ITimeZoneContext.cs" />
+    <Compile Include="Dates\MachineTimeZoneContext.cs" />
     <Compile Include="Dates\Period.cs" />
+    <Compile Include="Dates\SimpleTimeZoneContext.cs" />
     <Compile Include="Dates\SystemTime.cs" />
     <Compile Include="Dates\Date.cs" />
     <Compile Include="Dates\DateTimeExtensions.cs" />

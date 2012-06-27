@@ -3,6 +3,7 @@ using FubuCore.Dates;
 using NUnit.Framework;
 using FubuTestingSupport;
 using FubuCore;
+using System.Collections.Generic;
 
 namespace FubuCore.Testing.Dates
 {
@@ -66,6 +67,19 @@ namespace FubuCore.Testing.Dates
             var secondNow = DateTime.Now;
 
             secondNow.Subtract(firstNow).TotalSeconds.ShouldBeLessThan(1);
+        }
+
+        [Test]
+        public void time_zone_is_used_to_calculate_local_time()
+        {
+            TimeZoneInfo.GetSystemTimeZones().Each(zone =>
+            {
+                var time = new SystemTime(new Clock(), new SimpleTimeZoneContext(zone));
+                var first = time.LocalNow();
+                var second = DateTime.UtcNow.ToLocalTime(zone);
+
+                second.Subtract(first).TotalMilliseconds.ShouldBeLessThan(100);
+            });
         }
     }
 }

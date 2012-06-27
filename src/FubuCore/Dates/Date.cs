@@ -28,15 +28,15 @@ namespace FubuCore.Dates
             _date = DateTime.ParseExact(ddmmyyyy, TimeFormat, null);
         }
 
-        public Date NextDay()
-        {
-            return new Date(_date.AddDays(1));
-        }
-
         public DateTime Day
         {
             get { return _date; }
             set { _date = value; }
+        }
+
+        public Date NextDay()
+        {
+            return new Date(_date.AddDays(1));
         }
 
         public bool Equals(Date other)
@@ -50,8 +50,8 @@ namespace FubuCore.Dates
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(Date)) return false;
-            return Equals((Date)obj);
+            if (obj.GetType() != typeof (Date)) return false;
+            return Equals((Date) obj);
         }
 
         public static bool operator ==(Date left, Date right)

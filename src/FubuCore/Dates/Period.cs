@@ -54,15 +54,15 @@ namespace FubuCore.Dates
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof(Period)) return false;
-            return Equals((Period)obj);
+            if (obj.GetType() != typeof (Period)) return false;
+            return Equals((Period) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (From.GetHashCode() * 397) ^ (To.HasValue ? To.Value.GetHashCode() : 0);
+                return (From.GetHashCode()*397) ^ (To.HasValue ? To.Value.GetHashCode() : 0);
             }
         }
 
