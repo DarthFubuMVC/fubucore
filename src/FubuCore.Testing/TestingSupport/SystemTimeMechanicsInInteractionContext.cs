@@ -13,13 +13,13 @@ namespace FubuCore.Testing.TestingSupport
         protected override void beforeEach()
         {
             systemTime = DateTime.Today.AddHours(3);
-            SystemTime = systemTime;
+            LocalSystemTime = systemTime;
         }
 
         [Test]
         public void the_time_was_set_in_the_beforeEach()
         {
-            ClassUnderTest.SystemTime.Now().ShouldEqual(systemTime);
+            ClassUnderTest.SystemTime.LocalNow().ShouldEqual(systemTime);
         }
     }
 

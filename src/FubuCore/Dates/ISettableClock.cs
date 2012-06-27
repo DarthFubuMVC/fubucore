@@ -4,6 +4,6 @@ namespace FubuCore.Dates
 {
     public interface ISettableClock : ISystemTime
     {
-        SystemTime Now(DateTime now);
+        SystemTime LocalNow(DateTime now);
     }
 }

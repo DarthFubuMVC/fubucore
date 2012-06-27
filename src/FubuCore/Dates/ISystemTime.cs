@@ -4,8 +4,9 @@ namespace FubuCore.Dates
 {
     public interface ISystemTime
     {
-        DateTime Now();
-        Date Today();
-        TimeSpan CurrentTime();
+        DateTime LocalNow();
+        Date LocalDay();
+        TimeSpan LocalTime();
+        DateTime UtcNow();
     }
 }

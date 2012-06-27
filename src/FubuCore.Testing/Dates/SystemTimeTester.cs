@@ -10,24 +10,26 @@ namespace FubuCore.Testing.Dates
     public class SystemTimeTester
     {
         [Test]
-        public void now()
+        public void local_now()
         {
-            var now = new SystemTime().Now();
+            var now = SystemTime.Default().LocalNow();
             var secondNow = DateTime.Now;
 
             secondNow.Subtract(now).TotalSeconds.ShouldBeLessThan(1);
         }
 
+
+
         [Test]
         public void get_today()
         {
-            new SystemTime().Today().Day.ShouldEqual(DateTime.Today);
+            SystemTime.Default().LocalDay().Day.ShouldEqual(DateTime.Today);
         }
 
         [Test]
         public void current_time()
         {
-            var now = new SystemTime().CurrentTime();
+            var now = SystemTime.Default().LocalTime();
             var secondNow = DateTime.Now.TimeOfDay;
 
             secondNow.Subtract(now).TotalSeconds.ShouldBeLessThan(1);
@@ -38,12 +40,13 @@ namespace FubuCore.Testing.Dates
         {
             var now = DateTime.Today.AddDays(1).AddHours(8);
 
-            var systemTime = new SystemTime();
-            systemTime.Now(now);
+            var clock = new Clock();
+            var systemTime = new SystemTime(clock, new MachineTimeZoneContext());
+            clock.LocalNow(now);
 
-            systemTime.Now().ShouldEqual(now);
-            systemTime.CurrentTime().ShouldEqual(800.ToTime());
-            systemTime.Today().Day.ShouldEqual(DateTime.Today.AddDays(1));
+            systemTime.LocalNow().ShouldEqual(now);
+            systemTime.LocalTime().ShouldEqual(800.ToTime());
+            systemTime.LocalDay().Day.ShouldEqual(DateTime.Today.AddDays(1));
         }
 
         [Test]
@@ -51,14 +54,15 @@ namespace FubuCore.Testing.Dates
         {
             var now = DateTime.Today.AddDays(1).AddHours(8);
 
-            var systemTime = new SystemTime();
-            systemTime.Now(now);
+            var clock = new Clock();
+            var systemTime = new SystemTime(clock, new MachineTimeZoneContext());
+            clock.LocalNow(now);
 
-            systemTime.Now().ShouldEqual(now);
+            systemTime.LocalNow().ShouldEqual(now);
 
-            systemTime.Live();
+            clock.Live();
 
-            var firstNow = new SystemTime().Now();
+            var firstNow = SystemTime.Default().LocalNow();
             var secondNow = DateTime.Now;
 
             secondNow.Subtract(firstNow).TotalSeconds.ShouldBeLessThan(1);

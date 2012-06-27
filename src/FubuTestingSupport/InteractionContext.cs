@@ -11,12 +11,14 @@ namespace FubuTestingSupport
     {
         private readonly MockMode _mode;
         private SystemTime _systemTime;
+        private Clock _clock;
 
         public InteractionContext() : this(MockMode.AAA) { }
         public InteractionContext(MockMode mode)
         {
             _mode = mode;
-            _systemTime = new SystemTime();
+            _clock = new Clock();
+            _systemTime = new SystemTime(_clock, new MachineTimeZoneContext());
         }
 
         public IContainer Container { get { return Services.Container; } }
@@ -44,15 +46,15 @@ namespace FubuTestingSupport
             MockFor<MOCK>().VerifyAllExpectations();
         }
 
-        public DateTime SystemTime
+        public DateTime LocalSystemTime
         {
             get
             {
-                return _systemTime.Now();
+                return _systemTime.LocalNow();
             }
             set
             {
-                _systemTime.Now(value);
+                _clock.LocalNow(value);
             }
         }
     }

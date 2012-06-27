@@ -1,19 +1,47 @@
 using System;
+using System.Threading;
 
 namespace FubuCore.Dates
 {
-    public class SystemTime : ISystemTime, ISettableClock
+    public interface IClock
     {
-        private Func<DateTime> _now;
+        DateTime UtcNow();
+    }
 
-        public SystemTime()
+    public interface ITimeZoneContext
+    {
+        TimeZoneInfo GetTimeZone();
+    }
+
+    public class MachineTimeZoneContext : ITimeZoneContext
+    {
+        public TimeZoneInfo GetTimeZone()
         {
-            _now = () => DateTime.Now;
+            return TimeZoneInfo.Local;
+        }
+    }
+
+    public class SimpleTimeZoneContext : ITimeZoneContext
+    {
+        private readonly TimeZoneInfo _timeZone;
+
+        public SimpleTimeZoneContext(TimeZoneInfo timeZone)
+        {
+            _timeZone = timeZone;
         }
 
-        public DateTime Now()
+        public TimeZoneInfo GetTimeZone()
         {
-            // TODO -- Need to go UTC sooner rather than later
+            return _timeZone;
+        }
+    }
+
+    public class Clock : IClock
+    {
+        private Func<DateTime> _now = () => DateTime.UtcNow;
+
+        public DateTime UtcNow()
+        {
             return _now();
         }
 
@@ -22,35 +50,63 @@ namespace FubuCore.Dates
             _now = () => DateTime.Now;
         }
 
-        public SystemTime Now(DateTime now)
+        public Clock LocalNow(DateTime localTime, TimeZoneInfo localZone = null)
         {
+            var zone = localZone ?? TimeZoneInfo.Local;
+            var now = localTime.ToUniversalTime(zone);
+
             _now = () => now;
             return this;
         }
 
-        public SystemTime Now(Func<DateTime> now)
+        public Clock RestartAtLocal(DateTime desiredLocalTime, TimeZoneInfo localZone = null)
         {
-            _now = now;
+            var zone = localZone ?? TimeZoneInfo.Local;
+            var desired = desiredLocalTime.ToUniversalTime(zone);
+
+            var delta = desired.Subtract(DateTime.UtcNow);
+            _now = () => DateTime.UtcNow.Add(delta);
 
             return this;
         }
+    }
 
-        public SystemTime RestartAt(DateTime desiredTime)
+
+    public class SystemTime : ISystemTime
+    {
+        private readonly IClock _clock;
+        private readonly ITimeZoneContext _context;
+
+        public static SystemTime Default()
         {
-            var delta = desiredTime.Subtract(DateTime.Now);
-            Now(() => DateTime.Now.Add(delta));
-
-            return this;
+            return new SystemTime(new Clock(), new MachineTimeZoneContext());
         }
 
-        public Date Today()
+        public SystemTime(IClock clock, ITimeZoneContext context)
         {
-            return new Date(Now().Date);
+            _clock = clock;
+            _context = context;
         }
 
-        public TimeSpan CurrentTime()
+        public DateTime LocalNow()
         {
-            return Now().TimeOfDay;
+            return _clock.UtcNow().ToLocalTime(_context.GetTimeZone());
+        }
+
+
+        public Date LocalDay()
+        {
+            return new Date(LocalNow().Date);
+        }
+
+        public TimeSpan LocalTime()
+        {
+            return LocalNow().TimeOfDay;
+        }
+
+        public DateTime UtcNow()
+        {
+            return _clock.UtcNow();
         }
     }
 }
