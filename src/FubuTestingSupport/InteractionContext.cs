@@ -10,15 +10,12 @@ namespace FubuTestingSupport
     public class InteractionContext<T> where T : class
     {
         private readonly MockMode _mode;
-        private SystemTime _systemTime;
-        private Clock _clock;
+        private SettableClock _clock;
 
         public InteractionContext() : this(MockMode.AAA) { }
         public InteractionContext(MockMode mode)
         {
             _mode = mode;
-            _clock = new Clock();
-            _systemTime = new SystemTime(_clock, new MachineTimeZoneContext());
         }
 
         public IContainer Container { get { return Services.Container; } }
@@ -28,8 +25,10 @@ namespace FubuTestingSupport
         [SetUp]
         public void SetUp()
         {
+            _clock = new SettableClock();
+
             Services = new RhinoAutoMocker<T>(_mode);
-            Services.Inject<ISystemTime>(_systemTime);
+            Services.Inject<ISystemTime>(_clock);
             beforeEach();
         }
 
@@ -50,11 +49,19 @@ namespace FubuTestingSupport
         {
             get
             {
-                return _systemTime.LocalNow();
+                return _clock.LocalTime().Time;
             }
             set
             {
                 _clock.LocalNow(value);
+            }
+        }
+
+        public DateTime UtcSystemTime
+        {
+            get
+            {
+                return _clock.UtcNow();
             }
         }
     }

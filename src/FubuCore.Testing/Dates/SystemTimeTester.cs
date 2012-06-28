@@ -13,7 +13,7 @@ namespace FubuCore.Testing.Dates
         [Test]
         public void local_now()
         {
-            var now = SystemTime.Default().LocalNow();
+            var now = SystemTime.Default().LocalTime().Time;
             var secondNow = DateTime.Now;
 
             secondNow.Subtract(now).TotalSeconds.ShouldBeLessThan(1);
@@ -24,13 +24,13 @@ namespace FubuCore.Testing.Dates
         [Test]
         public void get_today()
         {
-            SystemTime.Default().LocalDay().Day.ShouldEqual(DateTime.Today);
+            SystemTime.Default().LocalTime().Date.Day.ShouldEqual(DateTime.Today);
         }
 
         [Test]
         public void current_time()
         {
-            var now = SystemTime.Default().LocalTime();
+            var now = SystemTime.Default().LocalTime().TimeOfDay;
             var secondNow = DateTime.Now.TimeOfDay;
 
             secondNow.Subtract(now).TotalSeconds.ShouldBeLessThan(1);
@@ -45,9 +45,9 @@ namespace FubuCore.Testing.Dates
             var systemTime = new SystemTime(clock, new MachineTimeZoneContext());
             clock.LocalNow(now);
 
-            systemTime.LocalNow().ShouldEqual(now);
-            systemTime.LocalTime().ShouldEqual(800.ToTime());
-            systemTime.LocalDay().Day.ShouldEqual(DateTime.Today.AddDays(1));
+            systemTime.LocalTime().Time.ShouldEqual(now);
+            systemTime.LocalTime().TimeOfDay.ShouldEqual(800.ToTime());
+            systemTime.LocalTime().Date.Day.ShouldEqual(DateTime.Today.AddDays(1));
         }
 
         [Test]
@@ -59,11 +59,11 @@ namespace FubuCore.Testing.Dates
             var systemTime = new SystemTime(clock, new MachineTimeZoneContext());
             clock.LocalNow(now);
 
-            systemTime.LocalNow().ShouldEqual(now);
+            systemTime.LocalTime().Time.ShouldEqual(now);
 
             clock.Live();
 
-            var firstNow = SystemTime.Default().LocalNow();
+            var firstNow = SystemTime.Default().LocalTime().Time;
             var secondNow = DateTime.Now;
 
             secondNow.Subtract(firstNow).TotalSeconds.ShouldBeLessThan(1);
@@ -75,7 +75,7 @@ namespace FubuCore.Testing.Dates
             TimeZoneInfo.GetSystemTimeZones().Each(zone =>
             {
                 var time = new SystemTime(new Clock(), new SimpleTimeZoneContext(zone));
-                var first = time.LocalNow();
+                var first = time.LocalTime().Time;
                 var second = DateTime.UtcNow.ToLocalTime(zone);
 
                 second.Subtract(first).TotalMilliseconds.ShouldBeLessThan(100);

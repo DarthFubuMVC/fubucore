@@ -13,19 +13,9 @@ namespace FubuCore.Dates
             _context = context;
         }
 
-        public DateTime LocalNow()
+        public LocalTime LocalTime()
         {
-            return _clock.UtcNow().ToLocalTime(_context.GetTimeZone());
-        }
-
-        public Date LocalDay()
-        {
-            return new Date(LocalNow().Date);
-        }
-
-        public TimeSpan LocalTime()
-        {
-            return LocalNow().TimeOfDay;
+            return new LocalTime(_clock.UtcNow(), _context.GetTimeZone());
         }
 
         public DateTime UtcNow()
@@ -36,6 +26,11 @@ namespace FubuCore.Dates
         public static SystemTime Default()
         {
             return new SystemTime(new Clock(), new MachineTimeZoneContext());
+        }
+
+        public static SystemTime AtLocalTime(DateTime now)
+        {
+            return new SystemTime(new Clock().LocalNow(now), new MachineTimeZoneContext());
         }
     }
 }

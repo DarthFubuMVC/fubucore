@@ -19,7 +19,7 @@ namespace FubuCore.Testing.TestingSupport
         [Test]
         public void the_time_was_set_in_the_beforeEach()
         {
-            ClassUnderTest.SystemTime.LocalNow().ShouldEqual(systemTime);
+            ClassUnderTest.SystemTime.LocalTime().Time.ShouldEqual(systemTime);
         }
     }
 

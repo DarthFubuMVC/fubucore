@@ -4,6 +4,30 @@ namespace FubuCore.Dates
 {
     public interface ISettableClock : ISystemTime
     {
-        SystemTime LocalNow(DateTime now);
+        ISettableClock LocalNow(DateTime now, TimeZoneInfo timeZone = null);
+    }
+
+    public class SettableClock : ISettableClock
+    {
+        private DateTime _time = DateTime.UtcNow;
+        private TimeZoneInfo _timeZone = TimeZoneInfo.Local;
+
+        public DateTime UtcNow()
+        {
+            return _time;
+        }
+
+        public LocalTime LocalTime()
+        {
+            return new LocalTime(_time, _timeZone);
+        }
+
+        public ISettableClock LocalNow(DateTime now, TimeZoneInfo timeZone = null)
+        {
+            _timeZone = timeZone ?? TimeZoneInfo.Local;
+            _time = now.ToUniversalTime(_timeZone);
+
+            return this;
+        }
     }
 }
