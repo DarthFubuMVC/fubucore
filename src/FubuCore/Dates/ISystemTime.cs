@@ -36,6 +36,11 @@ namespace FubuCore.Dates
             return candidate;
         }
 
+        public static LocalTime Now()
+        {
+            return new LocalTime(DateTime.UtcNow, TimeZoneInfo.Local);
+        }
+
         public LocalTime AtTime(TimeSpan time)
         {
             return BeginningOfDay().Add(time);
@@ -132,6 +137,16 @@ namespace FubuCore.Dates
         public static bool operator <(LocalTime left, LocalTime right)
         {
             return left.UtcTime < right.UtcTime;
+        }
+
+        public static bool operator >=(LocalTime left, LocalTime right)
+        {
+            return left.UtcTime >= right.UtcTime;
+        }
+
+        public static bool operator <=(LocalTime left, LocalTime right)
+        {
+            return left.UtcTime <= right.UtcTime;
         }
     }
 }

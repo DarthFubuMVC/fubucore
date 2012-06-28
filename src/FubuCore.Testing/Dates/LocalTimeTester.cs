@@ -39,6 +39,19 @@ namespace FubuCore.Testing.Dates
         }
 
         [Test]
+        public void less_than_or_equal()
+        {
+            var time1 = new LocalTime(DateTime.Today.AddHours(8), TimeZoneInfo.Local);
+            var time2 = new LocalTime(DateTime.Today.AddHours(10), TimeZoneInfo.Local);
+            var time3 = new LocalTime(DateTime.Today.AddHours(10), TimeZoneInfo.Local);
+
+            (time1 <= time2).ShouldBeTrue();
+            (time2 <= time1).ShouldBeFalse();
+            (time2 <= time3).ShouldBeTrue();
+            (time3 <= time2).ShouldBeTrue();
+        }
+
+        [Test]
         public void greater_than_operator()
         {
             var time1 = new LocalTime(DateTime.Today.AddHours(8), TimeZoneInfo.Local);
@@ -46,6 +59,20 @@ namespace FubuCore.Testing.Dates
 
             (time1 > time2).ShouldBeFalse();
             (time2 > time1).ShouldBeTrue();
+        }
+
+        [Test]
+        public void greater_than_or_equal_operator()
+        {
+            var time1 = new LocalTime(DateTime.Today.AddHours(8), TimeZoneInfo.Local);
+            var time2 = new LocalTime(DateTime.Today.AddHours(10), TimeZoneInfo.Local);
+            var time3 = new LocalTime(DateTime.Today.AddHours(10), TimeZoneInfo.Local);
+
+            (time1 >= time2).ShouldBeFalse();
+            (time2 >= time1).ShouldBeTrue();
+        
+            (time2 >= time3).ShouldBeTrue();
+            (time3 >= time2).ShouldBeTrue();
         }
 
         [Test]
