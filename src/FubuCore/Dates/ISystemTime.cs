@@ -81,6 +81,11 @@ namespace FubuCore.Dates
             }
         }
 
+        public TimeSpan Subtract(LocalTime otherTime)
+        {
+            return UtcTime.Subtract(otherTime.UtcTime);
+        }
+
         public LocalTime Add(TimeSpan duration)
         {
             return new LocalTime(_utcTime.Add(duration), _timeZone);

@@ -67,6 +67,15 @@ namespace FubuCore.Testing.Dates
         }
 
         [Test]
+        public void subtract()
+        {
+            var firstTime = LocalTime.AtMachineTime(DateTime.Today.AddHours(8));
+            var secondTime = LocalTime.AtMachineTime(DateTime.Today.AddHours(12));
+
+            secondTime.Subtract(firstTime).ShouldEqual(4.Hours());
+        }
+
+        [Test]
         public void guess_utc_time_with_base_time()
         {
             var eveningTime = LocalTime.AtMachineTime(DateTime.Today.AddHours(22));
