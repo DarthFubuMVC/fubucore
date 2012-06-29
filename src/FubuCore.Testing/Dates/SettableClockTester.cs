@@ -20,5 +20,18 @@ namespace FubuCore.Testing.Dates
 
             clock.UtcNow().ShouldEqual(localNow.ToUniversalTime(TimeZoneInfo.Local));
         }
+
+        [Test]
+        public void set_the_clock_with_a_local_time()
+        {
+            var local = LocalTime.AtMachineTime("0800");
+
+            var clock = new SettableClock();
+            clock.LocalNow(local);
+
+            clock.LocalTime().ShouldNotBeTheSameAs(local).ShouldEqual(local);
+
+            clock.UtcNow().ShouldEqual(local.UtcTime);
+        }
     }
 }

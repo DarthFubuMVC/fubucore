@@ -5,6 +5,7 @@ namespace FubuCore.Dates
     public interface ISettableClock : ISystemTime
     {
         ISettableClock LocalNow(DateTime now, TimeZoneInfo timeZone = null);
+        ISettableClock LocalNow(LocalTime time);
     }
 
     public class SettableClock : ISettableClock
@@ -20,6 +21,14 @@ namespace FubuCore.Dates
         public LocalTime LocalTime()
         {
             return new LocalTime(_time, _timeZone);
+        }
+
+        public ISettableClock LocalNow(LocalTime time)
+        {
+            _timeZone = time.TimeZone;
+            _time = time.UtcTime;
+
+            return this;
         }
 
         public ISettableClock LocalNow(DateTime now, TimeZoneInfo timeZone = null)

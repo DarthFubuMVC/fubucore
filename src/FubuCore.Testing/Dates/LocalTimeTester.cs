@@ -9,6 +9,19 @@ namespace FubuCore.Testing.Dates
     public class LocalTimeTester
     {
         [Test]
+        public void dehydrate_and_hydrate()
+        {
+            var time = LocalTime.AtMachineTime("0800");
+            var text = time.Hydrate();
+            var time2 = new LocalTime(text);
+
+            time2.UtcTime.ShouldEqual(time.UtcTime);
+
+            time2.ShouldNotBeTheSameAs(time);
+            time2.ShouldEqual(time);
+        }
+
+        [Test]
         public void create_local_time()
         {
             var time = new LocalTime(DateTime.Today.AddHours(8).ToUniversalTime(TimeZoneInfo.Local), TimeZoneInfo.Local);

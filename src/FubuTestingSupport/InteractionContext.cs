@@ -57,6 +57,14 @@ namespace FubuTestingSupport
             }
         }
 
+        public LocalTime LocalTime
+        {
+            get
+            {
+                return _clock.LocalTime();
+            }
+        }
+
         public DateTime UtcSystemTime
         {
             get
