@@ -65,6 +65,14 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void find_interface_that_closes_open_interface_does_not_crater_on_Object()
+        {
+            // And yes, this was apparently necessary
+            typeof(object).FindInterfaceThatCloses(typeof(IService<>))
+                .ShouldBeNull();
+        }
+
+        [Test]
         public void find_interface_that_closes_open_interface()
         {
             typeof (Service1).FindInterfaceThatCloses(typeof (IService<>))

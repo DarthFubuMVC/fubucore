@@ -104,6 +104,8 @@ namespace FubuCore
 
         public static Type FindInterfaceThatCloses(this Type type, Type openType)
         {
+            if (type == typeof(object)) return null;
+
             if (type.IsInterface && type.IsGenericType && type.GetGenericTypeDefinition() == openType) return type;
 
 
