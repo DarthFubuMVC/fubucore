@@ -10,21 +10,27 @@ namespace FubuCore.Dates
         {
         }
 
-        public Period(DateTime @from)
+        public Period(DateTime utcTime) : this(new LocalTime(utcTime, TimeZoneInfo.Utc))
+        {
+            
+        }
+
+        public Period(LocalTime @from)
         {
             From = from;
         }
 
-        public Period(DateTime @from, DateTime? to)
+        public Period(LocalTime @from, LocalTime to)
         {
             From = from;
             To = to;
         }
 
-        public DateTime From { get; set; }
-        public DateTime? To { get; set; }
 
-        public void MarkCompleted(DateTime completedTime)
+        public LocalTime From { get; set; }
+        public LocalTime To { get; set; }
+
+        public void MarkCompleted(LocalTime completedTime)
         {
             To = completedTime;
         }
@@ -34,12 +40,17 @@ namespace FubuCore.Dates
             return "{0} - {1}".ToFormat(From, To);
         }
 
-        public bool IsActiveAt(DateTime timestamp)
+        public bool IsActiveAt(LocalTime timestamp)
         {
-            if (timestamp < From) return false;
+            return IsActiveAt(timestamp.UtcTime);
+        }
 
-            return To.HasValue
-                       ? timestamp < To.Value
+        public bool IsActiveAt(DateTime utcTime)
+        {
+            if (utcTime < From.UtcTime) return false;
+
+            return To != null
+                       ? utcTime < To.UtcTime
                        : true;
         }
 
@@ -47,7 +58,7 @@ namespace FubuCore.Dates
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return other.From.Equals(From) && other.To.Equals(To);
+            return Equals(other.From, From) && Equals(other.To, To);
         }
 
         public override bool Equals(object obj)
@@ -62,30 +73,30 @@ namespace FubuCore.Dates
         {
             unchecked
             {
-                return (From.GetHashCode()*397) ^ (To.HasValue ? To.Value.GetHashCode() : 0);
+                return ((From != null ? From.GetHashCode() : 0)*397) ^ (To != null ? To.GetHashCode() : 0);
             }
         }
 
-        public DateTime FindDateTime(TimeSpan time)
+        public LocalTime FindDateTime(TimeSpan time)
         {
-            if (!To.HasValue)
+            if (To == null)
             {
                 throw new InvalidOperationException("FindDateTime can only be used if there is a value for To");
             }
 
-            var date = From.Date;
-            while (date <= To.Value)
+            var date = From.BeginningOfDay();
+            while (date <= To)
             {
                 var candidate = date.Add(time);
                 if (IsActiveAt(candidate)) return candidate;
 
-                date = date.AddDays(1);
+                date = date.Add(1.Days());
             }
 
             throw new InvalidOperationException("Unable to find the matching time");
         }
 
-        public DateTime FindDateTime(string timeString)
+        public LocalTime FindDateTime(string timeString)
         {
             return FindDateTime(TimeSpanConverter.GetTimeSpan(timeString));
         }

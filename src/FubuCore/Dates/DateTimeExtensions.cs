@@ -65,7 +65,16 @@ namespace FubuCore.Dates
         /// <returns></returns>
         public static DateTime ToUniversalTime(this DateTime localTime, TimeZoneInfo sourceTimeZone)
         {
+            if (localTime.Kind == DateTimeKind.Utc) return localTime;
+
             return TimeZoneInfo.ConvertTimeToUtc(localTime, sourceTimeZone);
+        }
+
+        public static LocalTime ToLocal(this DateTime localTime, TimeZoneInfo timeZone = null)
+        {
+            timeZone = timeZone ?? TimeZoneInfo.Local;
+
+            return new LocalTime(localTime.ToUniversalTime(timeZone), timeZone);
         }
     }
 }

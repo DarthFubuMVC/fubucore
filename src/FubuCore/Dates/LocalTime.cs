@@ -19,20 +19,24 @@ namespace FubuCore.Dates
             return LocalTime.AtMachineTime(DateTime.Today.Add(timeString.ToTime()));
         }
 
-        public static LocalTime GuessTime(LocalTime localTime, TimeSpan timeOfDay, DateTime? baseTime = null)
+        public static LocalTime GuessDayFromTimeOfDay(LocalTime currentTime, TimeSpan timeOfDay)
         {
-            var candidate = localTime.AtTime(timeOfDay);
-            if (baseTime == null)
+            var today = currentTime.AtTime(timeOfDay);
+            
+            
+            
+            if (Math.Abs(currentTime.Subtract(today).TotalHours) < 12)
             {
-                return candidate;
+                return today;
             }
 
-            while (candidate.UtcTime < baseTime.Value)
+            var yesterday = today.Add(-1.Days());
+            if (Math.Abs(currentTime.Subtract(yesterday).TotalHours) < 12)
             {
-                candidate = candidate.Add(1.Days());
+                return yesterday;
             }
 
-            return candidate;
+            return today.Add(1.Days());
         }
 
         public static LocalTime Now()

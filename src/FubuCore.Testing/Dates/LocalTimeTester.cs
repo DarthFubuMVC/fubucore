@@ -96,14 +96,32 @@ namespace FubuCore.Testing.Dates
         }
 
         [Test]
-        public void determine_utc_time_without_base_time()
+        public void GuessDayFromTimeOfDay()
         {
             var morningTime = LocalTime.AtMachineTime(DateTime.Today.AddHours(8)); // 8 in the morning
 
-            LocalTime.GuessTime(morningTime, "0600".ToTime()).ShouldEqual(morningTime.Add(-2.Hours()));
-            LocalTime.GuessTime(morningTime, "0900".ToTime()).ShouldEqual(morningTime.Add(1.Hours()));
-            LocalTime.GuessTime(morningTime, "1000".ToTime()).ShouldEqual(morningTime.Add(2.Hours()));
-            LocalTime.GuessTime(morningTime, "1500".ToTime()).ShouldEqual(morningTime.Add(7.Hours()));
+            LocalTime.GuessDayFromTimeOfDay(morningTime, "0600".ToTime()).ShouldEqual(morningTime.Add(-2.Hours()));
+            LocalTime.GuessDayFromTimeOfDay(morningTime, "0900".ToTime()).ShouldEqual(morningTime.Add(1.Hours()));
+            LocalTime.GuessDayFromTimeOfDay(morningTime, "1000".ToTime()).ShouldEqual(morningTime.Add(2.Hours()));
+            LocalTime.GuessDayFromTimeOfDay(morningTime, "1500".ToTime()).ShouldEqual(morningTime.Add(7.Hours()));
+        }
+
+        [Test]
+        public void guess_day_should_find_tomorrow()
+        {
+            var currentTime = LocalTime.AtMachineTime("2300");
+
+            LocalTime.GuessDayFromTimeOfDay(currentTime, 800.ToTime())
+                .ShouldEqual(currentTime.Add(9.Hours()));
+        }
+
+        [Test]
+        public void should_find_yesterday()
+        {
+            var currentTime = LocalTime.AtMachineTime("0300");
+
+            LocalTime.GuessDayFromTimeOfDay(currentTime, 2100.ToTime())
+                .ShouldEqual(currentTime.Add(-6.Hours()));
         }
 
         [Test]
@@ -115,17 +133,6 @@ namespace FubuCore.Testing.Dates
             secondTime.Subtract(firstTime).ShouldEqual(4.Hours());
         }
 
-        [Test]
-        public void guess_utc_time_with_base_time()
-        {
-            var eveningTime = LocalTime.AtMachineTime(DateTime.Today.AddHours(22));
-            var floor = eveningTime.BeginningOfDay().AtTime(700.ToTime()).UtcTime;
 
-            
-            LocalTime.GuessTime(eveningTime, "2300".ToTime(), floor).ShouldEqual(eveningTime.Add(1.Hours()));
-
-            // rolls over to the next day
-            LocalTime.GuessTime(eveningTime, "0100".ToTime(), floor).ShouldEqual(eveningTime.Add(3.Hours()));
-        }
     }
 }
