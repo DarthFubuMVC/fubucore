@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace FubuCore.Dates
 {
@@ -70,8 +71,19 @@ namespace FubuCore.Dates
         public LocalTime(string representation)
         {
             var parts = representation.Split('@');
-            TimeZone = TimeZoneInfo.FindSystemTimeZoneById(parts[1]);
-            UtcTime = DateTime.ParseExact(parts[0], "r", null);
+
+            if (parts.Count() == 1)
+            {
+                TimeZone = TimeZoneInfo.Local;
+                UtcTime = DateTime.Today.Add(representation.ToTime()).ToUniversalTime();
+            }
+            else
+            {
+                TimeZone = TimeZoneInfo.FindSystemTimeZoneById(parts[1]);
+                UtcTime = DateTime.ParseExact(parts[0], "r", null);
+            }
+
+
         }
 
         public TimeZoneInfo TimeZone

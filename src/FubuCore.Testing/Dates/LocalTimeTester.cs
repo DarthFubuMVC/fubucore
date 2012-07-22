@@ -22,6 +22,12 @@ namespace FubuCore.Testing.Dates
         }
 
         [Test]
+        public void hydrate_with_only_time()
+        {
+            new LocalTime("0800").ShouldEqual(LocalTime.AtMachineTime("0800"));
+        }
+
+        [Test]
         public void create_local_time()
         {
             var time = new LocalTime(DateTime.Today.AddHours(8).ToUniversalTime(TimeZoneInfo.Local), TimeZoneInfo.Local);
