@@ -63,7 +63,7 @@ namespace FubuCore.Binding
         {
             yield return new AttributePropertyBinder();
             yield return new ArrayPropertyBinder(Converters);
-            yield return new CollectionPropertyBinder();
+            yield return new CollectionPropertyBinder(Converters);
             yield return new ConversionPropertyBinder(this);
             yield return new NestedObjectPropertyBinder();
         }
