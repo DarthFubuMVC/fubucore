@@ -34,6 +34,7 @@ namespace FubuCore.Testing.Binding
         public Address Address { get; set; }
         public bool ShouldShow { get; set; }
         public IList<LocalityViewModel> Localities { get; set; }
+        public string[] StringArray { get; set; }
     }
 
     public class LocalityViewModel

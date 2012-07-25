@@ -33,6 +33,7 @@ namespace FubuCore.Testing.Binding
             shouldNotMatch(x => x.Address.DateEntered);
             shouldNotMatch(x => x.Address.Color);
             shouldNotMatch(x => x.Address.Guid);
+            shouldNotMatch(x => x.StringArray);
         }
 
         [Test]
