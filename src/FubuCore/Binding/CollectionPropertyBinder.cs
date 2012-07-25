@@ -2,18 +2,26 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using FubuCore.Conversion;
 
 namespace FubuCore.Binding
 {
     [Description("Binds a collection or list property")]
     public class CollectionPropertyBinder : IPropertyBinder
     {
+        private readonly ConverterLibrary _library;
+
+        public CollectionPropertyBinder(ConverterLibrary library)
+        {
+            _library = library;
+        }
+
         public bool Matches(PropertyInfo property)
         {
             var propertyType = property.PropertyType;
             if (propertyType == typeof (string)) return false;
 
-            return propertyType.Closes(typeof (IEnumerable<>));
+            return propertyType.Closes(typeof (IEnumerable<>)) && !_library.CanBeParsed(propertyType);
         }
 
         public void Bind(PropertyInfo property, IBindingContext context)

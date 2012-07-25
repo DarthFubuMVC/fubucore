@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
+using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace FubuCore.Testing.Binding
         [SetUp]
         public void Setup()
         {
-            propertyBinder = new CollectionPropertyBinder();
+            propertyBinder = new CollectionPropertyBinder(new ConverterLibrary());
         }
 
         [Test]
@@ -33,6 +34,7 @@ namespace FubuCore.Testing.Binding
             shouldNotMatch(x => x.Address.DateEntered);
             shouldNotMatch(x => x.Address.Color);
             shouldNotMatch(x => x.Address.Guid);
+            shouldNotMatch(x => x.StringArray);
         }
 
         [Test]
