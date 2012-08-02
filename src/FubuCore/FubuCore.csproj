@@ -179,6 +179,10 @@
     <Compile Include="Descriptions\DescriptionTextWriter.cs" />
     <Compile Include="Descriptions\IDescriptionVisitor.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILogListener.cs" />
+    <Compile Include="Logging\ListenerCollection.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Reflection\SingleMethod.cs" />
     <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="Util\DictionaryKeyValues.cs" />
