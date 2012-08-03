@@ -7,6 +7,36 @@ namespace FubuCore
 {
     public class FileSet
     {
+        /// <summary>
+        /// Does a deep search in the folder
+        /// </summary>
+        /// <param name="include">Semicolon delimited list of search criteria to be included in the results</param>
+        /// <param name="exclude">Semicolon delimited list of search criteria to be excluded in the results</param>
+        /// <returns></returns>
+        public static FileSet Deep(string include, string exclude = null)
+        {
+            return new FileSet{
+                DeepSearch = true,
+                Exclude = exclude,
+                Include = include
+            };
+        }
+
+        /// <summary>
+        /// Does a shallow search in the immediate folder for files matching the path search
+        /// </summary>
+        /// <param name="include">Semicolon delimited list of search criteria to be included in the results</param>
+        /// <param name="exclude">Semicolon delimited list of search criteria to be excluded in the results</param>
+        /// <returns></returns>
+        public static FileSet Shallow(string include, string exclude = null)
+        {
+            return new FileSet{
+                DeepSearch = false,
+                Exclude = exclude,
+                Include = include
+            };
+        }
+
         public FileSet()
         {
             Include = "*.*";

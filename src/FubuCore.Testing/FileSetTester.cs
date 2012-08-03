@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using FubuTestingSupport;
@@ -84,6 +85,26 @@ namespace FubuCore.Testing
 			theFileSet.Include = "config/*.config;config/zeppelin.yaml";			
 			includedFiles().ShouldHaveTheSameElementsAs("a.config", "b.config", "zeppelin.yaml");			
 		}
+
+        [Test]
+        public void find_does_not_wig_out_when_the_exclude_pattern_is_an_invalid_directory()
+        {
+            writeFile("config/a.config");
+            writeFile("config/b.config");
+            writeFile("config/zeppelin.yaml");
+            writeFile("hitchhiker.config");
+
+            new FileSystem().DeleteDirectory("data");
+
+            theFileSet = new FileSet()
+            {
+                Include = "*.as*x;*.master;Content{0}*.*;*.config".ToFormat(Path.DirectorySeparatorChar),
+                Exclude = "data/*"
+            };
+
+
+            includedFiles().ShouldHaveTheSameElementsAs("a.config", "b.config", "hitchhiker.config");	
+        }
 
         [Test]
         public void a_null_include_finds_everything()
