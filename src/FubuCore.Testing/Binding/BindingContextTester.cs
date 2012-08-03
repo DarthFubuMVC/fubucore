@@ -1,7 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Values;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuCore.Util;
@@ -283,6 +286,75 @@ HeldClassAge=36
         }
     }
 
+    [TestFixture]
+    public class nested_object_and_logger
+    {
+        private IBindingLogger _logger;
+        private BindingContext _context;
+        private InMemoryRequestData _request;
+        private PropertyInfo _fooProperty;
+
+        [SetUp]
+        public void Setup()
+        {
+            var services = new InMemoryServiceLocator();
+            var resolver = new ObjectResolver(services, new BindingRegistry(), new NulloBindingLogger());
+            _request = new InMemoryRequestData();
+            _logger = MockRepository.GenerateMock<IBindingLogger>();
+            _context = new BindingContext(_request, services, _logger);
+
+            services.Add<IObjectResolver>(resolver);
+            _request[ReflectionHelper.GetAccessor<ComplexClass>(x => x.Nested.Foo).Name] = "Bar";
+            _fooProperty = ReflectionHelper.GetProperty<ComplexClass>(x => x.Nested.Foo);
+            setup();
+        }
+
+        protected virtual void setup()
+        {
+        }
+
+        [TestFixture]
+        public class binding_object_with_type : nested_object_and_logger
+        {
+            protected override void setup()
+            {
+                _context.BindObject(typeof (ComplexClass), o => { });
+            }
+
+            [Test]
+            public void logs_the_properties_using_the_context_logger()
+            {
+                _logger.AssertWasCalled(x => x.Chose(Arg<PropertyInfo>.Is.Equal(_fooProperty), Arg<IPropertyBinder>.Is.Anything));
+            }
+        }
+
+        [TestFixture]
+        public class binding_object_with_request_data : nested_object_and_logger
+        {
+            protected override void setup()
+            {
+                _context.BindObject(_request, typeof (ComplexClass), o => { });
+            }
+
+            [Test]
+            public void logs_the_properties_using_the_context_logger()
+            {
+                _logger.AssertWasCalled(x => x.Chose(Arg<PropertyInfo>.Is.Equal(_fooProperty), Arg<IPropertyBinder>.Is.Anything));
+            }
+        }
+    }
+
+
+    public class ComplexClass
+    {
+        public NestedClass Nested { get; set; }
+    }
+
+    public class NestedClass
+    {
+        public string Foo { get; set; }
+    }
+
     public class StubSmartRequest : ISmartRequest
     {
         private readonly Cache<string, object> _values = new Cache<string, object>();
@@ -326,6 +398,7 @@ HeldClassAge=36
             return true;
         }
     }
+
 
     public class ClassThatIsHeld
     {
