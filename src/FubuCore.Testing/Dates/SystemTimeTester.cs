@@ -81,5 +81,12 @@ namespace FubuCore.Testing.Dates
                 second.Subtract(first).TotalMilliseconds.ShouldBeLessThan(100);
             });
         }
+
+        [Test]
+        public void stub_by_using_at_local_time_by_time()
+        {
+            var systemTime = SystemTime.AtLocalTime("0700".ToTime());
+            systemTime.LocalTime().ShouldEqual(LocalTime.AtMachineTime("0700"));
+        }
     }
 }

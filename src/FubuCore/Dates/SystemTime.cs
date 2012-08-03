@@ -32,5 +32,10 @@ namespace FubuCore.Dates
         {
             return new SystemTime(new Clock().LocalNow(now), new MachineTimeZoneContext());
         }
+
+        public static SystemTime AtLocalTime(TimeSpan timeOfDay)
+        {
+            return AtLocalTime(DateTime.Today.Add(timeOfDay));
+        }
     }
 }
