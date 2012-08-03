@@ -128,9 +128,8 @@ namespace FubuCore.Binding
 
         public void BindObject(IRequestData data, Type type, Action<object> continuation)
         {
-            _resolver.Value.TryBindModel(type, data, result =>
+            _resolver.Value.TryBindModel(type, new BindingContext(data, _locator, _logger), result =>
             {
-                // TODO -- log the value
                 _problems.AddRange(result.Problems);
 
                 continuation(result.Value);
@@ -139,9 +138,8 @@ namespace FubuCore.Binding
 
         public void BindObject(Type type, Action<object> continuation)
         {
-            _resolver.Value.TryBindModel(type, _requestData, result =>
+            _resolver.Value.TryBindModel(type, new BindingContext(_requestData, _locator, _logger), result =>
             {
-                // TODO -- log the value
                 _problems.AddRange(result.Problems);
 
                 continuation(result.Value);
