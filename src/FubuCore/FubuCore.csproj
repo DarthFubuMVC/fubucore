@@ -183,6 +183,8 @@
     <Compile Include="Logging\ILogListener.cs" />
     <Compile Include="Logging\ListenerCollection.cs" />
     <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LogRecord.cs" />
+    <Compile Include="Logging\StringMessage.cs" />
     <Compile Include="Reflection\SingleMethod.cs" />
     <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="Util\DictionaryKeyValues.cs" />

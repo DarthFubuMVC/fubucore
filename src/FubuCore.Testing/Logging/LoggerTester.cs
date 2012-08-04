@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FubuCore.Dates;
 using FubuCore.Logging;
 using FubuCore.Util;
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace FubuCore.Testing.Logging
             var l2 = MockRepository.GenerateMock<ILogListener>();
             var l3 = MockRepository.GenerateMock<ILogListener>();
 
-            var logger = new Logger(new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             var ex = new NotImplementedException();
             logger.Error("some message", ex);
@@ -36,7 +37,7 @@ namespace FubuCore.Testing.Logging
             var l2 = MockRepository.GenerateMock<ILogListener>();
             var l3 = MockRepository.GenerateMock<ILogListener>();
 
-            var logger = new Logger(new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             var ex = new NotImplementedException();
             var correlationId = Guid.NewGuid();
@@ -51,11 +52,11 @@ namespace FubuCore.Testing.Logging
         [Test]
         public void debug_with_mixed_listeners()
         {
-            var l1 = new RecordingLogListener{IsDebugEnabled = true};
-            var l2 = new RecordingLogListener{IsDebugEnabled = false, IsInfoEnabled = true};
-            var l3 = new RecordingLogListener{IsDebugEnabled = true};
+            var l1 = new RecordingLogListener { IsDebugEnabled = true };
+            var l2 = new RecordingLogListener { IsDebugEnabled = false, IsInfoEnabled = true };
+            var l3 = new RecordingLogListener { IsDebugEnabled = true };
 
-            var logger = new Logger(new ILogListener[]{l1, l2, l3});
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             logger.Debug("message {0}", 1);
             logger.Debug("message {0}", 2);
@@ -74,7 +75,7 @@ namespace FubuCore.Testing.Logging
             var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
             var l3 = new RecordingLogListener { IsInfoEnabled = true };
 
-            var logger = new Logger(new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             logger.Info("message {0}", 1);
             logger.Info("message {0}", 2);
@@ -93,15 +94,15 @@ namespace FubuCore.Testing.Logging
             var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
             var l3 = new RecordingLogListener { IsInfoEnabled = true };
 
-            l1.ListensForTypes[typeof (Trace1)] = true;
-            l2.ListensForTypes[typeof (Trace1)] = true;
-            l3.ListensForTypes[typeof (Trace2)] = true;
+            l1.ListensForTypes[typeof(Trace1)] = true;
+            l2.ListensForTypes[typeof(Trace1)] = true;
+            l3.ListensForTypes[typeof(Trace2)] = true;
 
-            var logger = new Logger(new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             var msg1 = new Trace1();
             var msg2 = new Trace1();
-            
+
             logger.DebugMessage(msg1);
             logger.DebugMessage(() => msg2);
 
@@ -110,11 +111,91 @@ namespace FubuCore.Testing.Logging
             l3.DebugMessages.Any().ShouldBeFalse(); // does not listen to Trace1
         }
 
+        [Test]
+        public void debugging_by_message_puts_a_time_stamp_on_it()
+        {
+            var l1 = new RecordingLogListener { IsInfoEnabled = true };
+            var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
+            var l3 = new RecordingLogListener { IsInfoEnabled = true };
+
+            l1.ListensForTypes[typeof(StringMessage)] = true;
+            l2.ListensForTypes[typeof(StringMessage)] = true;
+            l3.ListensForTypes[typeof(StringMessage)] = true;
+
+            var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
+            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+
+            var message = new StringMessage("something");
+            logger.DebugMessage(() => message);
+
+            message.Time.ShouldEqual(systemTime.UtcNow());
+        }
+
+        [Test]
+        public void info_by_message_puts_a_time_stamp_on_it()
+        {
+            var l1 = new RecordingLogListener { IsInfoEnabled = true };
+            var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
+            var l3 = new RecordingLogListener { IsInfoEnabled = true };
+
+            l1.ListensForTypes[typeof(StringMessage)] = true;
+            l2.ListensForTypes[typeof(StringMessage)] = true;
+            l3.ListensForTypes[typeof(StringMessage)] = true;
+
+            var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
+            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+
+            var message = new StringMessage("something");
+            logger.InfoMessage(() => message);
+
+            message.Time.ShouldEqual(systemTime.UtcNow());
+        }
+
+        [Test]
+        public void debugging_by_message_puts_a_time_stamp_on_it_2()
+        {
+            var l1 = new RecordingLogListener { IsInfoEnabled = true };
+            var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
+            var l3 = new RecordingLogListener { IsInfoEnabled = true };
+
+            l1.ListensForTypes[typeof(StringMessage)] = true;
+            l2.ListensForTypes[typeof(StringMessage)] = true;
+            l3.ListensForTypes[typeof(StringMessage)] = true;
+
+            var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
+            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+
+            var message = new StringMessage("something");
+            logger.DebugMessage(message);
+
+            message.Time.ShouldEqual(systemTime.UtcNow());
+        }
+
+        [Test]
+        public void info_by_message_puts_a_time_stamp_on_it_2()
+        {
+            var l1 = new RecordingLogListener { IsInfoEnabled = true };
+            var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
+            var l3 = new RecordingLogListener { IsInfoEnabled = true };
+
+            l1.ListensForTypes[typeof(StringMessage)] = true;
+            l2.ListensForTypes[typeof(StringMessage)] = true;
+            l3.ListensForTypes[typeof(StringMessage)] = true;
+
+            var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
+            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+
+            var message = new StringMessage("something");
+            logger.InfoMessage(message);
+
+            message.Time.ShouldEqual(systemTime.UtcNow());
+        }
+
 
         [Test]
         public void info_by_object()
         {
-            var l1 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true};
+            var l1 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
             var l2 = new RecordingLogListener { IsDebugEnabled = false, IsInfoEnabled = true };
             var l3 = new RecordingLogListener { IsInfoEnabled = true };
 
@@ -122,7 +203,7 @@ namespace FubuCore.Testing.Logging
             l2.ListensForTypes[typeof(Trace1)] = true;
             l3.ListensForTypes[typeof(Trace2)] = true;
 
-            var logger = new Logger(new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
 
             var msg1 = new Trace1();
             var msg2 = new Trace1();
@@ -135,24 +216,26 @@ namespace FubuCore.Testing.Logging
             l3.InfoMessages.Any().ShouldBeFalse(); // does not listen to Trace1
         }
 
-        public class Trace1{}
-        public class Trace2{}
-        public class Trace3{}
+        public class Trace1 : LogRecord { }
+        public class Trace2 : LogRecord { }
+        public class Trace3 : LogRecord { }
     }
 
     public class RecordingLogListener : ILogListener
     {
         public bool IsDebugEnabled
         {
-            get; set;
+            get;
+            set;
         }
 
         public bool IsInfoEnabled
         {
-            get; set;
+            get;
+            set;
         }
 
-        public readonly Cache<Type, bool> ListensForTypes = new Cache<Type,bool>(t => false);
+        public readonly Cache<Type, bool> ListensForTypes = new Cache<Type, bool>(t => false);
 
         public bool ListensFor(Type type)
         {
