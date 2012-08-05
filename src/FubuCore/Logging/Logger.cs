@@ -37,12 +37,32 @@ namespace FubuCore.Logging
 
         public void Error(string message, Exception ex)
         {
-            _listeners.Each(x => x.Error(message, ex));
+            _listeners.Each(x =>
+            {
+                try
+                {
+                    x.Error(message, ex);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
         }
 
         public void Error(object correlationId, string message, Exception ex)
         {
-            _listeners.Each(x => x.Error(correlationId, message, ex));
+            _listeners.Each(x =>
+            {
+                try
+                {
+                    x.Error(correlationId, message, ex);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            });
         }
 
         public void Debug(Func<string> message)

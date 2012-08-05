@@ -14,6 +14,76 @@ namespace FubuCore.Testing.Logging
     public class LoggerTester
     {
         [Test]
+        public void logger_will_not_throw_an_exception_if_one_listener_blows_chunks_for_error()
+        {
+            var l1 = MockRepository.GenerateMock<ILogListener>();
+            var l2 = MockRepository.GenerateMock<ILogListener>();
+            var l3 = MockRepository.GenerateMock<ILogListener>();
+
+            
+
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+
+            var ex = new NotImplementedException();
+
+            l2.Expect(x => x.Error("some message", ex)).Throw(new NotSupportedException());
+
+            logger.Error("some message", ex);
+
+            l1.AssertWasCalled(x => x.Error("some message", ex));
+            l2.AssertWasCalled(x => x.Error("some message", ex));
+            l3.AssertWasCalled(x => x.Error("some message", ex));
+        }
+
+        [Test]
+        public void logger_will_not_throw_an_exception_if_one_listener_blows_chunks_for_debug()
+        {
+            var l1 = MockRepository.GenerateMock<ILogListener>();
+            var l2 = MockRepository.GenerateMock<ILogListener>();
+            var l3 = MockRepository.GenerateMock<ILogListener>();
+
+            l1.Stub(x => x.IsDebugEnabled).Return(true);
+            l2.Stub(x => x.IsDebugEnabled).Return(true);
+            l3.Stub(x => x.IsDebugEnabled).Return(true);
+
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+
+            var ex = new NotImplementedException();
+
+            l2.Expect(x => x.Debug("some message")).Throw(new NotSupportedException());
+
+            logger.Debug("some message");
+
+            l1.AssertWasCalled(x => x.Debug("some message"));
+            l2.AssertWasCalled(x => x.Debug("some message"));
+            l3.AssertWasCalled(x => x.Debug("some message"));
+        }
+
+        [Test]
+        public void logger_will_not_throw_an_exception_if_one_listener_blows_chunks_for_info()
+        {
+            var l1 = MockRepository.GenerateMock<ILogListener>();
+            var l2 = MockRepository.GenerateMock<ILogListener>();
+            var l3 = MockRepository.GenerateMock<ILogListener>();
+
+            l1.Stub(x => x.IsInfoEnabled).Return(true);
+            l2.Stub(x => x.IsInfoEnabled).Return(true);
+            l3.Stub(x => x.IsInfoEnabled).Return(true);
+
+            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+
+            var ex = new NotImplementedException();
+
+            l2.Expect(x => x.Info("some message")).Throw(new NotSupportedException());
+
+            logger.Info("some message");
+
+            l1.AssertWasCalled(x => x.Info("some message"));
+            l2.AssertWasCalled(x => x.Info("some message"));
+            l3.AssertWasCalled(x => x.Info("some message"));
+        }
+
+        [Test]
         public void error_just_delegates_to_all_listeners()
         {
             var l1 = MockRepository.GenerateMock<ILogListener>();

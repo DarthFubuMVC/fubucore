@@ -21,8 +21,26 @@ namespace FubuCore.Logging
             {
                 return source =>
                 {
-                    var msg = source();
-                    listeners.Each(x => proceed(x, msg));
+                    try
+                    {
+                        var msg = source();
+                        listeners.Each(x =>
+                        {
+                            try
+                            {
+                                proceed(x, msg);
+                            }
+                            catch (Exception e)
+                            {
+                                // It's just logging
+                                Console.WriteLine(e);
+                            }
+                        });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
                 };
             }
 
