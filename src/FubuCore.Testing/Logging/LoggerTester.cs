@@ -50,8 +50,6 @@ namespace FubuCore.Testing.Logging
 
             var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
-            var ex = new NotImplementedException();
-
             l2.Expect(x => x.Debug("some message")).Throw(new NotSupportedException());
 
             logger.Debug("some message");
