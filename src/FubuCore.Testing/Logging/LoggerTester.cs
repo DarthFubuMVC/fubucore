@@ -13,6 +13,8 @@ namespace FubuCore.Testing.Logging
     [TestFixture]
     public class LoggerTester
     {
+        private readonly IEnumerable<ILogModifier> NulloModifiers = Enumerable.Empty<ILogModifier>();
+
         [Test]
         public void logger_will_not_throw_an_exception_if_one_listener_blows_chunks_for_error()
         {
@@ -22,7 +24,7 @@ namespace FubuCore.Testing.Logging
 
             
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var ex = new NotImplementedException();
 
@@ -46,7 +48,7 @@ namespace FubuCore.Testing.Logging
             l2.Stub(x => x.IsDebugEnabled).Return(true);
             l3.Stub(x => x.IsDebugEnabled).Return(true);
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var ex = new NotImplementedException();
 
@@ -70,7 +72,7 @@ namespace FubuCore.Testing.Logging
             l2.Stub(x => x.IsInfoEnabled).Return(true);
             l3.Stub(x => x.IsInfoEnabled).Return(true);
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var ex = new NotImplementedException();
 
@@ -90,7 +92,7 @@ namespace FubuCore.Testing.Logging
             var l2 = MockRepository.GenerateMock<ILogListener>();
             var l3 = MockRepository.GenerateMock<ILogListener>();
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var ex = new NotImplementedException();
             logger.Error("some message", ex);
@@ -107,7 +109,7 @@ namespace FubuCore.Testing.Logging
             var l2 = MockRepository.GenerateMock<ILogListener>();
             var l3 = MockRepository.GenerateMock<ILogListener>();
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var ex = new NotImplementedException();
             var correlationId = Guid.NewGuid();
@@ -126,7 +128,7 @@ namespace FubuCore.Testing.Logging
             var l2 = new RecordingLogListener { IsDebugEnabled = false, IsInfoEnabled = true };
             var l3 = new RecordingLogListener { IsDebugEnabled = true };
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             logger.Debug("message {0}", 1);
             logger.Debug("message {0}", 2);
@@ -145,7 +147,7 @@ namespace FubuCore.Testing.Logging
             var l2 = new RecordingLogListener { IsInfoEnabled = false, IsDebugEnabled = true };
             var l3 = new RecordingLogListener { IsInfoEnabled = true };
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             logger.Info("message {0}", 1);
             logger.Info("message {0}", 2);
@@ -168,7 +170,7 @@ namespace FubuCore.Testing.Logging
             l2.ListensForTypes[typeof(Trace1)] = true;
             l3.ListensForTypes[typeof(Trace2)] = true;
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var msg1 = new Trace1();
             var msg2 = new Trace1();
@@ -193,7 +195,7 @@ namespace FubuCore.Testing.Logging
             l3.ListensForTypes[typeof(StringMessage)] = true;
 
             var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
-            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, new ILogModifier[]{new LogRecordModifier(systemTime)});
 
             var message = new StringMessage("something");
             logger.DebugMessage(() => message);
@@ -213,7 +215,7 @@ namespace FubuCore.Testing.Logging
             l3.ListensForTypes[typeof(StringMessage)] = true;
 
             var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
-            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, new ILogModifier[] { new LogRecordModifier(systemTime) });
 
             var message = new StringMessage("something");
             logger.InfoMessage(() => message);
@@ -233,7 +235,7 @@ namespace FubuCore.Testing.Logging
             l3.ListensForTypes[typeof(StringMessage)] = true;
 
             var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
-            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, new ILogModifier[] { new LogRecordModifier(systemTime) });
 
             var message = new StringMessage("something");
             logger.DebugMessage(message);
@@ -253,7 +255,7 @@ namespace FubuCore.Testing.Logging
             l3.ListensForTypes[typeof(StringMessage)] = true;
 
             var systemTime = SystemTime.AtLocalTime(DateTime.Today.AddHours(8));
-            var logger = new Logger(systemTime, new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, new ILogModifier[] { new LogRecordModifier(systemTime) });
 
             var message = new StringMessage("something");
             logger.InfoMessage(message);
@@ -273,7 +275,7 @@ namespace FubuCore.Testing.Logging
             l2.ListensForTypes[typeof(Trace1)] = true;
             l3.ListensForTypes[typeof(Trace2)] = true;
 
-            var logger = new Logger(SystemTime.Default(), new ILogListener[] { l1, l2, l3 });
+            var logger = new Logger(new ILogListener[] { l1, l2, l3 }, NulloModifiers);
 
             var msg1 = new Trace1();
             var msg2 = new Trace1();

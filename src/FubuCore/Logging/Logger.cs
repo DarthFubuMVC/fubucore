@@ -7,17 +7,15 @@ namespace FubuCore.Logging
 {
     public class Logger : ILogger
     {
-        private readonly ISystemTime _systemTime;
         private readonly ListenerCollection _listeners;
         private readonly Lazy<Action<Func<string>>> _debugString;
         private readonly Lazy<Action<Func<string>>> _infoString;
         private readonly Cache<Type, Action<Func<object>>> _debugMessage = new Cache<Type, Action<Func<object>>>();
         private readonly Cache<Type, Action<Func<object>>> _infoMessage = new Cache<Type, Action<Func<object>>>();
 
-        public Logger(ISystemTime systemTime, IEnumerable<ILogListener> listeners)
+        public Logger(IEnumerable<ILogListener> listeners, IEnumerable<ILogModifier> modifiers)
         {
-            _systemTime = systemTime;
-            _listeners = new ListenerCollection(listeners);
+            _listeners = new ListenerCollection(listeners, modifiers);
             _debugString = new Lazy<Action<Func<string>>>(() => _listeners.Debug());
             _infoString = new Lazy<Action<Func<string>>>(() => _listeners.Info());
 
@@ -75,7 +73,7 @@ namespace FubuCore.Logging
             _infoString.Value(message);
         }
 
-        public void DebugMessage(LogRecord message)
+        public void DebugMessage(LogTopic message)
         {
             if (message == null)
             {
@@ -83,40 +81,27 @@ namespace FubuCore.Logging
             }
 
 
-            _debugMessage[message.GetType()](wrapWithTime(() => message));
+            _debugMessage[message.GetType()](() => message);
         }
 
-        public void InfoMessage(LogRecord message)
+        public void InfoMessage(LogTopic message)
         {
             if (message == null)
             {
                 return;
             }
 
-            _infoMessage[message.GetType()](wrapWithTime(() => message));
+            _infoMessage[message.GetType()](() => message);
         }
 
-        private Func<T> wrapWithTime<T>(Func<T> func) where T : LogRecord
+        public void DebugMessage<T>(Func<T> message) where T : class, LogTopic
         {
-            return () =>
-            {
-                var log = func();
-                log.Time = _systemTime.UtcNow();
-
-                return log;
-            };
+            _debugMessage[typeof(T)](message);
         }
 
-        public void DebugMessage<T>(Func<T> message) where T : LogRecord
+        public void InfoMessage<T>(Func<T> message) where T : class, LogTopic
         {
-            Func<T> withTime = wrapWithTime(message);
-            _debugMessage[typeof(T)](withTime);
-        }
-
-        public void InfoMessage<T>(Func<T> message) where T : LogRecord
-        {
-            Func<T> withTime = wrapWithTime(message);
-            _infoMessage[typeof(T)](withTime);
+            _infoMessage[typeof(T)](message);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace FubuCore.Logging
     /// Using this interface is not mandatory, but it will help with diagnostic
     /// UI filters
     /// </summary>
-    public abstract class LogRecord
+    public abstract class LogRecord : LogTopic
     {
         protected LogRecord()
         {

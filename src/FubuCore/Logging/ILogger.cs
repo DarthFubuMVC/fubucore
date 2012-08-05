@@ -12,10 +12,10 @@ namespace FubuCore.Logging
         void Debug(Func<string> message);
         void Info(Func<string> message);
 
-        void DebugMessage(LogRecord message);
-        void InfoMessage(LogRecord message);
+        void DebugMessage(LogTopic message);
+        void InfoMessage(LogTopic message);
 
-        void DebugMessage<T>(Func<T> message) where T : LogRecord;
-        void InfoMessage<T>(Func<T> message) where T : LogRecord;
+        void DebugMessage<T>(Func<T> message) where T : class, LogTopic;
+        void InfoMessage<T>(Func<T> message) where T : class, LogTopic;
     }
 }
