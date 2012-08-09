@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using FubuCore.Dates;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -13,6 +14,9 @@ namespace FubuCore.Testing.Dates
         {
             var time = LocalTime.AtMachineTime("0800");
             var text = time.Hydrate();
+
+            Debug.WriteLine(text);
+
             var time2 = new LocalTime(text);
 
             time2.UtcTime.ShouldEqual(time.UtcTime);
@@ -25,6 +29,13 @@ namespace FubuCore.Testing.Dates
         public void hydrate_with_only_time()
         {
             new LocalTime("0800").ShouldEqual(LocalTime.AtMachineTime("0800"));
+        }
+
+        [Test]
+        public void hydrate_with_date_and_time()
+        {
+            var expectedDay = new Date("26022012");
+            new LocalTime("26022012:0800").ShouldEqual(LocalTime.AtDayAndTime(expectedDay, "0800".ToTime()));
         }
 
         [Test]

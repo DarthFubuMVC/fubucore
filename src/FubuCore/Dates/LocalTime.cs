@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace FubuCore.Dates
@@ -50,6 +51,12 @@ namespace FubuCore.Dates
             return BeginningOfDay().Add(time);
         }
 
+        public static LocalTime AtDayAndTime(Date date, TimeSpan time)
+        {
+            var localTime = date.AtTime(time);
+            return AtMachineTime(localTime);
+        }
+
         public LocalTime BeginningOfDay()
         {
             var beginningTime = Time.Date.ToUniversalTime(TimeZone);
@@ -75,15 +82,39 @@ namespace FubuCore.Dates
             if (parts.Count() == 1)
             {
                 TimeZone = TimeZoneInfo.Local;
-                UtcTime = DateTime.Today.Add(representation.ToTime()).ToUniversalTime();
+
+                var localTime = findLocalTime(representation);
+                UtcTime = localTime.ToUniversalTime();
             }
             else
             {
                 TimeZone = TimeZoneInfo.FindSystemTimeZoneById(parts[1]);
-                UtcTime = DateTime.ParseExact(parts[0], "r", null);
+
+                DateTime time;
+                if (DateTime.TryParseExact(parts.First(), "r", null,DateTimeStyles.RoundtripKind, out time))
+                {
+                    UtcTime = time;
+                }
+                else
+                {
+                    UtcTime = findLocalTime(parts.First()).ToUniversalTime();   
+                }
             }
 
 
+        }
+
+        private static DateTime findLocalTime(string text)
+        {
+            var parts = text.Split(':');
+
+            if (parts.Count() == 1)
+            {
+                return DateTime.Today.Add(text.ToTime());
+            }
+
+            var date = new Date(parts.First());
+            return date.AtTime(parts.Last());
         }
 
         public TimeZoneInfo TimeZone
