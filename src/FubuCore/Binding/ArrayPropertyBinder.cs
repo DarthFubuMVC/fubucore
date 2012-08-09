@@ -10,26 +10,21 @@ namespace FubuCore.Binding
     [Description("Binds an array")]
     public class ArrayPropertyBinder : IPropertyBinder
     {
-        private readonly ConverterLibrary _library;
+        private readonly ConversionPropertyBinder _conversionPropertyBinder;
 
-        public ArrayPropertyBinder(ConverterLibrary library)
+        public ArrayPropertyBinder(ConversionPropertyBinder conversionPropertyBinder)
         {
-            _library = library;
+            _conversionPropertyBinder = conversionPropertyBinder;
         }
 
         public bool Matches(PropertyInfo property)
         {
-            var propertyType = property.PropertyType;
-            if (!propertyType.IsArray) return false;
-
-            var elementType = propertyType.GetElementType();
-
-            return !_library.CanBeParsed(elementType);
+            return property.PropertyType.IsArray;
         }
 
         public void Bind(PropertyInfo property, IBindingContext context)
         {
-            var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IArrayBuilder>(property.PropertyType.GetElementType());
+            var builder = typeof (ArrayBuilder<>).CloseAndBuildAs<IArrayBuilder>(_conversionPropertyBinder ,property.PropertyType.GetElementType());
             builder.FillValues(property, context);
         }
 
@@ -40,8 +35,21 @@ namespace FubuCore.Binding
 
         public class ArrayBuilder<T> : IArrayBuilder
         {
+            private readonly ConversionPropertyBinder _conversionPropertyBinder;
+
+            public ArrayBuilder(ConversionPropertyBinder conversionPropertyBinder)
+            {
+                _conversionPropertyBinder = conversionPropertyBinder;
+            }
+
             public void FillValues(PropertyInfo property, IBindingContext context)
             {
+                if (_conversionPropertyBinder.CanBeParsed(property.PropertyType))
+                {
+                    bool convertedAsIs = context.Data.ValueAs<string>(property.Name, value => _conversionPropertyBinder.Bind(property, context));
+                    if (convertedAsIs) return;
+                }
+
                 var requests = context.GetEnumerableRequests(property.Name).ToList();
 
                 // TODO -- need an end to end test on this behavior 

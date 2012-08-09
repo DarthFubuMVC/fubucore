@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -7,5 +8,7 @@ namespace FubuCore.Binding
     {
         ValueConverter FindConverter(PropertyInfo property);
         IEnumerable<IConverterFamily> AllConverterFamilies();
+
+        bool CanBeParsed(Type type);
     }
 }

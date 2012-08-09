@@ -10,7 +10,7 @@ namespace FubuCore.Binding
     public class ConversionPropertyBinder : IPropertyBinder, DescribesItself
     {
         private readonly Cache<PropertyInfo, ValueConverter> _cache = new Cache<PropertyInfo, ValueConverter>();
-        private IValueConverterRegistry _converters;
+        private readonly IValueConverterRegistry _converters;
 
         public ConversionPropertyBinder(IValueConverterRegistry converters)
         {
@@ -21,6 +21,11 @@ namespace FubuCore.Binding
         public bool Matches(PropertyInfo property)
         {
             return _cache[property] != null;
+        }
+
+        public bool CanBeParsed(Type propertyType)
+        {
+            return _converters.CanBeParsed(propertyType);
         }
 
 

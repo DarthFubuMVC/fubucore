@@ -24,9 +24,7 @@ namespace FubuCore.Dates
         public static LocalTime GuessDayFromTimeOfDay(LocalTime currentTime, TimeSpan timeOfDay)
         {
             var today = currentTime.AtTime(timeOfDay);
-            
-            
-            
+
             if (Math.Abs(currentTime.Subtract(today).TotalHours) < 12)
             {
                 return today;

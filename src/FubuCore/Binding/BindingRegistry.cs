@@ -61,10 +61,14 @@ namespace FubuCore.Binding
 
         private IEnumerable<IPropertyBinder> buildDefaultPropertyBinders()
         {
+            var conversionPropertyBinder = new ConversionPropertyBinder(this);
+
+
             yield return new AttributePropertyBinder();
-            yield return new ArrayPropertyBinder(Converters);
-            yield return new CollectionPropertyBinder(Converters);
-            yield return new ConversionPropertyBinder(this);
+            yield return new ArrayPropertyBinder(conversionPropertyBinder);
+            yield return new CollectionPropertyBinder(conversionPropertyBinder);
+            
+            yield return conversionPropertyBinder;
             yield return new NestedObjectPropertyBinder();
         }
 
@@ -130,6 +134,11 @@ namespace FubuCore.Binding
             {
                 yield return family;
             }
+        }
+
+        public bool CanBeParsed(Type type)
+        {
+            return Converters.CanBeParsed(type);
         }
 
         public ConverterLibrary Converters { private set; get; }

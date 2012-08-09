@@ -9,19 +9,21 @@ namespace FubuCore.Binding
     [Description("Binds a collection or list property")]
     public class CollectionPropertyBinder : IPropertyBinder
     {
-        private readonly ConverterLibrary _library;
+        private readonly ConversionPropertyBinder _conversionPropertyBinder;
 
-        public CollectionPropertyBinder(ConverterLibrary library)
+        public CollectionPropertyBinder(ConversionPropertyBinder conversionPropertyBinder)
         {
-            _library = library;
+            _conversionPropertyBinder = conversionPropertyBinder;
         }
 
         public bool Matches(PropertyInfo property)
         {
             var propertyType = property.PropertyType;
+
+            if (propertyType.IsArray) return false; // Arrays are slightly special
             if (propertyType == typeof (string)) return false;
 
-            return propertyType.Closes(typeof (IEnumerable<>)) && !_library.CanBeParsed(propertyType);
+            return propertyType.Closes(typeof (IEnumerable<>));
         }
 
         public void Bind(PropertyInfo property, IBindingContext context)
@@ -29,7 +31,7 @@ namespace FubuCore.Binding
             var type = property.PropertyType;
             var elementType = type.FindInterfaceThatCloses(typeof (IEnumerable<>)).GetGenericArguments().Single();
 
-            var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(elementType);
+            var builder = typeof (EnumerableBuilder<>).CloseAndBuildAs<IEnumerableBuilder>(_conversionPropertyBinder, elementType);
             builder.FillValues(property, context);
         }
 
@@ -37,8 +39,21 @@ namespace FubuCore.Binding
 
         public class EnumerableBuilder<T> : IEnumerableBuilder
         {
+            private readonly ConversionPropertyBinder _conversionPropertyBinder;
+
+            public EnumerableBuilder(ConversionPropertyBinder conversionPropertyBinder)
+            {
+                _conversionPropertyBinder = conversionPropertyBinder;
+            }
+
             public void FillValues(PropertyInfo property, IBindingContext context)
             {
+                if (_conversionPropertyBinder.CanBeParsed(property.PropertyType))
+                {
+                    bool convertedAsIs = context.Data.ValueAs<string>(property.Name, value => _conversionPropertyBinder.Bind(property, context));
+                    if (convertedAsIs) return;
+                }
+
                 var collection = property.GetValue(context.Object, null) as ICollection<T>;
                 if (collection == null)
                 {
