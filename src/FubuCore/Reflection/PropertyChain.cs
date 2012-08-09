@@ -6,6 +6,7 @@ using System.Reflection;
 
 namespace FubuCore.Reflection
 {
+    [Serializable]
     public class PropertyChain : Accessor
     {
         private readonly IValueGetter[] _chain;

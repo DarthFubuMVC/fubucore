@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace FubuCore.Reflection
 {
+    [Serializable]
     public class MethodValueGetter : IValueGetter
     {
         private readonly MethodInfo _methodInfo;

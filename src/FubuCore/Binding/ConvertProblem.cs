@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using FubuCore.Reflection;
 
 namespace FubuCore.Binding
 {
@@ -11,7 +12,8 @@ namespace FubuCore.Binding
         public object Item { get; set; }
         public BindingValue Value { get; set; }
         public string ExceptionText { get; set; }
-        public PropertyInfo Property { get; set; }
+        public PropertyInfo Property { get { return Accessor.InnerProperty; } }
+        public Accessor Accessor { get; set; }
 
         public override string ToString()
         {
