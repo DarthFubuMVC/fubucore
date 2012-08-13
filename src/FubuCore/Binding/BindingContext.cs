@@ -18,8 +18,6 @@ namespace FubuCore.Binding
         private readonly Lazy<IObjectResolver> _resolver;
         private readonly Lazy<IContextValues> _values;
 
-        private readonly AccessorLogger _accessorLogger;
-
         static BindingContext()
         {
             _namingStrategies = new List<Func<string, string>>{
@@ -36,7 +34,6 @@ namespace FubuCore.Binding
             _requestData = requestData;
             _locator = locator;
             _logger = logger is AccessorLogger ? logger : new AccessorLogger(logger);
-            _accessorLogger = (AccessorLogger) _logger;
 
             _resolver = new Lazy<IObjectResolver>(() =>
             {
@@ -185,7 +182,7 @@ namespace FubuCore.Binding
             var problem = new ConvertProblem{
                 ExceptionText = exceptionText,
                 Item = Object,
-                Accessor = _accessorLogger.AccessorOf(property),
+                Accessor = ((AccessorLogger) _logger).AccessorOf(property),
                 Value = value
             };
 
