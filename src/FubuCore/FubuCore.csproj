@@ -110,6 +110,8 @@
     <Compile Include="Binding\Values\GenericKeyValues.cs" />
     <Compile Include="Binding\Values\GenericValueSource.cs" />
     <Compile Include="Binding\Values\NamedKeyValues.cs" />
+    <Compile Include="Binding\Values\ValueReport.cs" />
+    <Compile Include="Binding\Values\ValueReportBase.cs" />
     <Compile Include="CommandLine\ArgPreprocessor.cs" />
     <Compile Include="CommandLine\EnumerableFlag.cs" />
     <Compile Include="CommandLine\FlagAliases.cs" />
