@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using FubuCore.Descriptions;
 using FubuTestingSupport;
@@ -171,10 +172,34 @@ namespace FubuCore.Testing.Descriptions
             description.Title.ShouldEqual(typeof (SimpleTarget).Name);
             description.ShortDescription.ShouldEqual(target.ToString());
         }
+
+        [Test]
+        public void has_explicit_short_description()
+        {
+            Description.For(new SimpleTarget()).HasExplicitShortDescription().ShouldBeFalse();
+
+            Description.For(new MakesOwnDescription()).HasExplicitShortDescription().ShouldBeTrue();
+        
+            Description.For(new TargetWithCustomToString()).HasExplicitShortDescription().ShouldBeTrue();
+
+            new Description().HasExplicitShortDescription().ShouldBeFalse();
+
+            new Description{
+                ShortDescription = "something"
+            }.HasExplicitShortDescription().ShouldBeTrue();
+        }
     }
 
     public class SimpleTarget
     {
+    }
+
+    public class TargetWithCustomToString
+    {
+        public override string ToString()
+        {
+            return "something not default";
+        }
     }
 
     public class MakesOwnDescription : DescribesItself

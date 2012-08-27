@@ -4,11 +4,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using FubuCore.Reflection;
 using System.Linq;
+using FubuCore.Util;
 
 namespace FubuCore.Descriptions
 {
     public class Description
     {
+        private readonly Cache<string, string> _properties = new Cache<string, string>();
+
         public Description()
         {
             BulletLists = new List<BulletList>();
@@ -19,6 +22,22 @@ namespace FubuCore.Descriptions
         public string ShortDescription { get; set; }
         public string LongDescription { get; set; }
 
+        public Indexer<string, string> Properties
+        {
+            get
+            {
+                return new Indexer<string, string>(key => _properties[key], (key, value) => _properties[key] = value);
+            }
+        }
+
+        public bool HasExplicitShortDescription()
+        {
+            if (ShortDescription.IsEmpty()) return false;
+
+            if (TargetType == null) return true;
+
+            return ShortDescription != TargetType.FullName.ToString();
+        }
 
         public IList<BulletList> BulletLists { get; private set; }
 
@@ -48,6 +67,8 @@ namespace FubuCore.Descriptions
                 Title = type.Name,
                 ShortDescription = target.ToString()
             };
+
+
 
             type.ForAttribute<DescriptionAttribute>(x => description.ShortDescription = x.Description);
             type.ForAttribute<TitleAttribute>(x => description.Title = x.Title);
