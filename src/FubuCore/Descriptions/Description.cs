@@ -22,12 +22,9 @@ namespace FubuCore.Descriptions
         public string ShortDescription { get; set; }
         public string LongDescription { get; set; }
 
-        public Indexer<string, string> Properties
+        public Cache<string, string> Properties
         {
-            get
-            {
-                return new Indexer<string, string>(key => _properties[key], (key, value) => _properties[key] = value);
-            }
+            get { return _properties; }
         }
 
         public bool HasExplicitShortDescription()
