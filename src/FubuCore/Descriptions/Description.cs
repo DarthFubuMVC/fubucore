@@ -11,6 +11,7 @@ namespace FubuCore.Descriptions
     public class Description
     {
         private readonly Cache<string, string> _properties = new Cache<string, string>();
+        private readonly Cache<string, Description> _children = new Cache<string, Description>();
 
         public Description()
         {
@@ -25,6 +26,11 @@ namespace FubuCore.Descriptions
         public Cache<string, string> Properties
         {
             get { return _properties; }
+        }
+
+        public Cache<string, Description> Children
+        {
+            get { return _children; }
         }
 
         public bool HasExplicitShortDescription()
