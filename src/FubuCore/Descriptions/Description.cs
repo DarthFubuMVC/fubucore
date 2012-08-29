@@ -42,6 +42,11 @@ namespace FubuCore.Descriptions
             return ShortDescription != TargetType.FullName.ToString();
         }
 
+        public bool HasMoreThanTitle()
+        {
+            return HasExplicitShortDescription() || BulletLists.Any() || Children.Any() || Properties.Any();
+        }
+
         public IList<BulletList> BulletLists { get; private set; }
 
         public BulletList AddList(string name, IEnumerable objects)

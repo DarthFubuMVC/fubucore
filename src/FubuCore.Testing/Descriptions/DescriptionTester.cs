@@ -188,6 +188,55 @@ namespace FubuCore.Testing.Descriptions
                 ShortDescription = "something"
             }.HasExplicitShortDescription().ShouldBeTrue();
         }
+
+
+    }
+
+    [TestFixture]
+    public class Description_HasMoreThanTitle_Tester
+    {
+        private Description description;
+
+        [SetUp]
+        public void SetUp()
+        {
+            description = Description.For(new SimpleTarget());
+        }
+
+        [Test]
+        public void is_false_with_just_the_title()
+        {
+            description.HasMoreThanTitle().ShouldBeFalse();
+        }
+
+        [Test]
+        public void is_true_with_a_property()
+        {
+            description.Properties["something"] = "else";
+            description.HasMoreThanTitle().ShouldBeTrue();
+        }
+
+        [Test]
+        public void is_true_with_a_child()
+        {
+            description.Children["something"] = new Description();
+            description.HasMoreThanTitle().ShouldBeTrue();
+        }
+
+        [Test]
+        public void is_true_with_a_short_description()
+        {
+            description.ShortDescription = "something special";
+            description.HasMoreThanTitle().ShouldBeTrue();
+        }
+
+        [Test]
+        public void is_true_with_a_bullet_list()
+        {
+            description.BulletLists.Add(new BulletList());
+
+            description.HasMoreThanTitle().ShouldBeTrue();
+        }
     }
 
     public class SimpleTarget
