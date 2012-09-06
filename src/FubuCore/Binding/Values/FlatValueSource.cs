@@ -45,7 +45,7 @@ namespace FubuCore.Binding.Values
 
         public IValueSource GetChild(string key)
         {
-            return new FlatValueSource<T>(new PrefixedKeyValues<T>(key, _values));
+            return new FlatValueSource<T>(new PrefixedKeyValues<T>(key, _values), Provenance);
         }
 
         public IEnumerable<IValueSource> GetChildren(string key)
