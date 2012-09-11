@@ -5,11 +5,11 @@ namespace FubuCore.Formatting
     public class DisplayFormatter : IDisplayFormatter
     {
         private readonly IServiceLocator _locator;
-        private readonly Stringifier _stringifier;
+        private readonly IStringifier _stringifier;
 
         // IServiceLocator should be injected into the constructor as
         // a dependency
-        public DisplayFormatter(IServiceLocator locator, Stringifier stringifier)
+        public DisplayFormatter(IServiceLocator locator, IStringifier stringifier)
         {
             _locator = locator;
             _stringifier = stringifier;
