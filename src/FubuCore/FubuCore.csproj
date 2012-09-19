@@ -163,6 +163,7 @@
     <Compile Include="Dates\ITimeZoneContext.cs" />
     <Compile Include="Dates\LocalTime.cs" />
     <Compile Include="Dates\MachineTimeZoneContext.cs" />
+    <Compile Include="Dates\Milestone.cs" />
     <Compile Include="Dates\Period.cs" />
     <Compile Include="Dates\SimpleTimeZoneContext.cs" />
     <Compile Include="Dates\SystemTime.cs" />

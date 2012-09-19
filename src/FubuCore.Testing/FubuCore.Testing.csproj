@@ -136,6 +136,7 @@
     <Compile Include="Dates\DateTester.cs" />
     <Compile Include="Dates\DateTimeExtensionTester.cs" />
     <Compile Include="Dates\LocalTimeTester.cs" />
+    <Compile Include="Dates\MilestoneTester.cs" />
     <Compile Include="Dates\PeriodTester.cs" />
     <Compile Include="Dates\SettableClockTester.cs" />
     <Compile Include="Dates\SystemTimeTester.cs" />
