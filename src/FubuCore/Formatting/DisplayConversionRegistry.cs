@@ -9,14 +9,14 @@ namespace FubuCore.Formatting
         private readonly IList<StringifierStrategy> _strategies = new List<StringifierStrategy>();
 
 
-        public Stringifier BuildStringifier()
+        public IStringifier BuildStringifier()
         {
             var stringifier = new Stringifier();
             Configure(stringifier);
             return stringifier;
         }
 
-        public void Configure(Stringifier stringifier)
+        public void Configure(IStringifier stringifier)
         {
             _strategies.Each(s => stringifier.AddStrategy(s));
         }
