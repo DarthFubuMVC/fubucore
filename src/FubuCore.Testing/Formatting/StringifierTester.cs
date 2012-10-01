@@ -21,7 +21,7 @@ namespace FubuCore.Testing.Formatting
 
         #endregion
 
-        private Stringifier stringifier;
+        private IStringifier stringifier;
         private InMemoryServiceLocator locator;
 
         public interface Something

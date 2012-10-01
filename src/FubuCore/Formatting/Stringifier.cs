@@ -5,8 +5,15 @@ using System.Reflection;
 
 namespace FubuCore.Formatting
 {
-    public class Stringifier
-    {
+	public interface IStringifier
+	{
+		string GetString(GetStringRequest request);
+		string GetString(object rawValue);
+		void AddStrategy(StringifierStrategy strategy);
+	}
+
+	public class Stringifier : IStringifier
+	{
         private readonly List<PropertyOverrideStrategy> _overrides = new List<PropertyOverrideStrategy>();
         private readonly List<StringifierStrategy> _strategies = new List<StringifierStrategy>();
 
