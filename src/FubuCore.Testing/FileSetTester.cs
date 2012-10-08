@@ -194,6 +194,22 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void mixed_include_and_exclude()
+        {
+            writeFile("a.txt");
+            writeFile("a.xml");
+            writeFile("f1/b.txt");
+            writeFile("b.xml");
+            writeFile("f1/f2/c.txt");
+            writeFile("c.xml");
+
+            theFileSet.Include = "*.xml";
+            theFileSet.Exclude = "a.xml";
+
+            new FileSystem().FindFiles("target", theFileSet).Select(x => Path.GetFileName(x)).ShouldHaveTheSameElementsAs("b.xml", "c.xml");
+        }
+
+        [Test]
         public void get_fileset_for_assembly_names()
         {
             var names = new string[]{"a", "b", "c", "d"};

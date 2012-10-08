@@ -253,7 +253,11 @@ namespace FubuCore
         // Only here for mocking/stubbing file system junk
         public IEnumerable<string> FindFiles(string directory, FileSet searchSpecification)
         {
-            return searchSpecification.IncludedFilesFor(directory);
+            var excluded = searchSpecification.ExcludedFilesFor(directory);
+            var files = searchSpecification.IncludedFilesFor(directory).ToList();
+            files.RemoveAll(excluded.Contains);
+
+            return files;
         }
 
         public void ReadTextFile(string path, Action<string> callback)

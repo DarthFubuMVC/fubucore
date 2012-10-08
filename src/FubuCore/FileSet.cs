@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
@@ -97,7 +98,7 @@ namespace FubuCore
             return pattern.Split(';').SelectMany(x =>
             {
                 var fullPath = path;
-                var dirParts = x.Split(Path.DirectorySeparatorChar);
+                var dirParts = x.Replace("\\", "/").Split('/');
                 var filePattern = x;
 
                 if (dirParts.Length > 1)
@@ -110,9 +111,16 @@ namespace FubuCore
                 var directory = new DirectoryInfo(fullPath);
                 var searchOption = DeepSearch ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
-                return directory.Exists
-                    ? Directory.GetFiles(fullPath, filePattern, searchOption)
-                    : new string[0];
+                try
+                {
+                    return directory.Exists
+                               ? Directory.GetFiles(fullPath, filePattern, searchOption)
+                               : new string[0];
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    return new string[0];
+                }
             }).Distinct();
         }
 
