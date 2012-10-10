@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq.Expressions;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
@@ -162,6 +161,11 @@ namespace FubuCore.Testing.Reflection
         {
             SingleProperty.Build<Target>(t => t.Child.GrandChild.Name).PropertyNames.
                 ShouldHaveCount(1).ShouldContain("Name");
+        }
+        [Test]
+        public void should_be_serializable()
+        {
+            typeof(SingleProperty).IsSerializable.ShouldBeTrue();
         }
     }
 }

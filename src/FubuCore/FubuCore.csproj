@@ -46,7 +46,7 @@
     </Compile>
     <Compile Include="Attributes.cs" />
     <Compile Include="BasicExtensions.cs" />
-    <Compile Include="Binding\InMemory\AccessorLogger.cs" />
+    <Compile Include="Binding\Logging\AccessorLogger.cs" />
     <Compile Include="Binding\Logging\AccessorNode.cs" />
     <Compile Include="Binding\Logging\AccessorReport.cs" />
     <Compile Include="Binding\ArrayPropertyBinder.cs" />

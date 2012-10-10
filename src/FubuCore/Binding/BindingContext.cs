@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Logging;
 using FubuCore.Conversion;
 
 namespace FubuCore.Binding

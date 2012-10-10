@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using FubuCore.Binding.Logging;
+using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 
-namespace FubuCore.Binding.InMemory
+namespace FubuCore.Binding.Logging
 {
     public class AccessorLogger : IBindingLogger
     {

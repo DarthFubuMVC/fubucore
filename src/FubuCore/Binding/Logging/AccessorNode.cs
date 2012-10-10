@@ -22,7 +22,7 @@ namespace FubuCore.Binding.Logging
         {
             if (values.Any())
             {
-                _accessor = new PropertyChain(values.Concat(new IValueGetter[] { new PropertyValueGetter(property), }).ToArray());
+                _accessor = new PropertyChain(values.Concat(new [] { new PropertyValueGetter(property)}).ToArray());
             }
             else
             {
@@ -37,7 +37,7 @@ namespace FubuCore.Binding.Logging
 
         public AccessorReport Element()
         {
-            var report = new AccessorReport(_accessor.Getters().Concat(new IValueGetter[] { new MethodValueGetter(_indexer, new object[] { _index }) }));
+            var report = new AccessorReport(_accessor.Getters().Concat(new [] { new MethodValueGetter(_indexer, new object[] { _index }) }));
             _index++;
             return report;
         }
