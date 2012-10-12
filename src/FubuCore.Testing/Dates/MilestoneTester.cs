@@ -87,7 +87,7 @@ namespace FubuCore.Testing.Dates
             var time = DateTime.Today.AddHours(8);
             var milestone = new Milestone(time);
 
-            milestone.HappenedBefore(time).ShouldBeFalse();
+            milestone.HappenedBefore(time.AddMinutes(-1)).ShouldBeFalse();
             milestone.HappenedBefore(time.AddDays(-1)).ShouldBeFalse();
             milestone.HappenedBefore(time.AddDays(1)).ShouldBeTrue();
         }
