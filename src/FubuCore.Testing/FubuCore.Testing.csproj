@@ -160,6 +160,7 @@
     <Compile Include="Conversion\ObjectConverterTester.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReflectionExtensionsTester.cs" />
+    <Compile Include="Reflection\AccessorRulesTester.cs" />
     <Compile Include="Reflection\Expressions\ConstructorBuilderTester.cs" />
     <Compile Include="Reflection\Expressions\ConstructorFunctionBuilderTester.cs" />
     <Compile Include="Reflection\Expressions\EqualsPropertyOperationTester.cs" />

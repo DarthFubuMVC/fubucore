@@ -191,6 +191,7 @@
     <Compile Include="Logging\LogRecordModifier.cs" />
     <Compile Include="Logging\LogTopic.cs" />
     <Compile Include="Logging\StringMessage.cs" />
+    <Compile Include="Reflection\AccessorRules.cs" />
     <Compile Include="Reflection\SingleMethod.cs" />
     <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="Util\DictionaryKeyValues.cs" />
