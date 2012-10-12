@@ -158,6 +158,10 @@
     <Compile Include="Conversion\StringConverterStrategy.cs" />
     <Compile Include="Conversion\TimeZoneConverter.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
+    <Compile Include="Csv\ColumnMapping.cs" />
+    <Compile Include="Csv\CsvFileReader.cs" />
+    <Compile Include="Csv\ICsvReader.cs" />
+    <Compile Include="Csv\IValueSourceProvider.cs" />
     <Compile Include="Dates\Clock.cs" />
     <Compile Include="Dates\IClock.cs" />
     <Compile Include="Dates\ITimeZoneContext.cs" />
