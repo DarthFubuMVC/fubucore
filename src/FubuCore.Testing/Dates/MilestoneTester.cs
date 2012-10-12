@@ -84,7 +84,7 @@ namespace FubuCore.Testing.Dates
         [Test]
         public void happened_before()
         {
-            var time = DateTime.Today.AddHours(8);
+            var time = DateTime.Today.AddHours(8).ToUniversalTime();
             var milestone = new Milestone(time);
 
             milestone.HappenedBefore(time.AddMinutes(-1)).ShouldBeFalse();
