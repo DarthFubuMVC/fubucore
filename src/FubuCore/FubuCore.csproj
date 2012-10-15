@@ -159,7 +159,8 @@
     <Compile Include="Conversion\TimeZoneConverter.cs" />
     <Compile Include="Conversion\TypeDescripterConverterFamily.cs" />
     <Compile Include="Csv\ColumnMapping.cs" />
-    <Compile Include="Csv\CsvFileReader.cs" />
+    <Compile Include="Csv\CsvReader.cs" />
+    <Compile Include="Csv\CsvRequest.cs" />
     <Compile Include="Csv\ICsvReader.cs" />
     <Compile Include="Csv\IValueSourceProvider.cs" />
     <Compile Include="Dates\Clock.cs" />

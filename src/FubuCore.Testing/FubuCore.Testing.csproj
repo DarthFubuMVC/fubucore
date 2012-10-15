@@ -77,8 +77,7 @@
     <Compile Include="Binding\ConverterFamilyTester.cs" />
     <Compile Include="Binding\ConvertProblemTester.cs" />
     <Compile Include="Csv\ColumnMappingTester.cs" />
-    <Compile Include="Csv\CsvFileReaderIntegratedTester.cs" />
-    <Compile Include="Csv\CsvReaderIntegratedTester.cs" />
+    <Compile Include="Csv\when_process_a_csv_file_with_headers.cs" />
     <Compile Include="Csv\TestCsvObject.cs" />
     <Compile Include="Binding\descriptors_on_all_binding_support_classes.cs" />
     <Compile Include="Binding\EnumerateFlatRequestDataTester.cs" />
