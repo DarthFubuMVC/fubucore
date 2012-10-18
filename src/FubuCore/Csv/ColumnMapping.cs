@@ -1,32 +1,69 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using FubuCore.Binding.Values;
 using FubuCore.Reflection;
 
 namespace FubuCore.Csv
 {
-    public abstract class ColumnMapping<T> : IValueSourceProvider
+    public abstract class ColumnMapping<T> : IColumnMapping
     {
-        private readonly IList<Accessor> _accessors = new List<Accessor>();   
+        private readonly IList<ColumnDefinition> _columns = new List<ColumnDefinition>();
 
-        // TODO -- We *could* enable aliasing here and let the column order vary
-        public void Column(Expression<Func<T, object>> expression)
+        public ColumnExpression Column(Expression<Func<T, object>> expression)
         {
-            _accessors.Add(expression.ToAccessor());
+            return Column(expression.ToAccessor());
         }
 
-        IValueSource IValueSourceProvider.Build(string data)
+        public ColumnExpression Column(Accessor accessor)
         {
-            // TODO -- Harden this
+            var column = new ColumnDefinition(accessor);
+            _columns.Add(column);
+
+            return new ColumnExpression(column);
+        }
+
+        IEnumerable<ColumnDefinition> IColumnMapping.Columns()
+        {
+            return _columns;
+        }
+
+        ColumnDefinition IColumnMapping.ColumnFor(string alias)
+        {
+            return _columns.SingleOrDefault(x => x.Name == alias);
+        }
+
+        ColumnDefinition IColumnMapping.ColumnFor(Accessor accessor)
+        {
+            return _columns.SingleOrDefault(x => x.Accessor.Equals(accessor));
+        }
+
+        IValueSource IColumnMapping.ValueSource(CsvValues data)
+        {
+            return sourceFor(_columns, data);
+        }
+
+        IValueSource IColumnMapping.ValueSource(CsvValues data, CsvValues headers)
+        {
+            var columns = headers
+                .Values
+                .Select(x => ((IColumnMapping)this).ColumnFor(x));
+
+            return sourceFor(columns, data);
+        }
+
+        private IValueSource sourceFor(IEnumerable<ColumnDefinition> columns, CsvValues data)
+        {
+            var index = 0;
             var dictionary = new Dictionary<string, string>();
-            var values = data.Split(new[] {","}, StringSplitOptions.None);
-            for (var i = 0; i < values.Length; i++)
+            columns.Each(col =>
             {
-                // TODO -- Blow up with a nicer error
-                dictionary.Add(_accessors[i].Name, values[i]);
-            }
-                
+                // TODO -- Harden this
+                dictionary.Add(col.Accessor.Name, data.Values[index]);
+                ++index;
+            });
+
             return new FlatValueSource(dictionary);
         }
     }
