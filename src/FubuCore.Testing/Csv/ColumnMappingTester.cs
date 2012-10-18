@@ -31,7 +31,7 @@ namespace FubuCore.Testing.Csv
             theMapping = new TestCsvMapping();
             theRawValues = "Test,true,1";
 
-            theValues = theMapping.ValueSource(new CsvValues(theRawValues));
+            theValues = theMapping.ValueSource(new CsvData(theRawValues));
         }
 
         [Test]
@@ -73,16 +73,16 @@ namespace FubuCore.Testing.Csv
     public class building_value_source_by_headers
     {
         private IColumnMapping theMapping;
-        private CsvValues theRawValues;
-        private CsvValues theHeaders;
+        private CsvData theRawValues;
+        private CsvData theHeaders;
         private IValueSource theValues;
 
         [SetUp]
         public void SetUp()
         {
             theMapping = new TestCsvMapping();
-            theHeaders = new CsvValues("Count,Flag,Name");
-            theRawValues = new CsvValues("1,true,Test");
+            theHeaders = new CsvData("Count,Flag,Name");
+            theRawValues = new CsvData("1,true,Test");
 
             theValues = theMapping.ValueSource(theRawValues, theHeaders);
         }
@@ -105,16 +105,16 @@ namespace FubuCore.Testing.Csv
     public class building_value_source_by_headers_with_aliases
     {
         private IColumnMapping theMapping;
-        private CsvValues theRawValues;
-        private CsvValues theHeaders;
+        private CsvData theRawValues;
+        private CsvData theHeaders;
         private IValueSource theValues;
 
         [SetUp]
         public void SetUp()
         {
             theMapping = new MappingWithAliases();
-            theHeaders = new CsvValues("Count,Flag,SomethingElse");
-            theRawValues = new CsvValues("1,true,Test");
+            theHeaders = new CsvData("Count,Flag,SomethingElse");
+            theRawValues = new CsvData("1,true,Test");
 
             theValues = theMapping.ValueSource(theRawValues, theHeaders);
         }

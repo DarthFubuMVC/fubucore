@@ -11,7 +11,7 @@ namespace FubuCore.Csv
         ColumnDefinition ColumnFor(string alias);
         ColumnDefinition ColumnFor(Accessor accessor);
         
-        IValueSource ValueSource(CsvValues data);
-        IValueSource ValueSource(CsvValues data, CsvValues headers);
+        IValueSource ValueSource(CsvData data);
+        IValueSource ValueSource(CsvData data, CsvData headers);
     }
 }

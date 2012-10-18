@@ -2,9 +2,9 @@
 
 namespace FubuCore.Csv
 {
-    public class CsvValues
+    public class CsvData
     {
-        public CsvValues(string values)
+        public CsvData(string values)
         {
             Values = Parse(values);
         }

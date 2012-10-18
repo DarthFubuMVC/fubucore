@@ -39,12 +39,12 @@ namespace FubuCore.Csv
             return _columns.SingleOrDefault(x => x.Accessor.Equals(accessor));
         }
 
-        IValueSource IColumnMapping.ValueSource(CsvValues data)
+        IValueSource IColumnMapping.ValueSource(CsvData data)
         {
             return sourceFor(_columns, data);
         }
 
-        IValueSource IColumnMapping.ValueSource(CsvValues data, CsvValues headers)
+        IValueSource IColumnMapping.ValueSource(CsvData data, CsvData headers)
         {
             var columns = headers
                 .Values
@@ -53,7 +53,7 @@ namespace FubuCore.Csv
             return sourceFor(columns, data);
         }
 
-        private IValueSource sourceFor(IEnumerable<ColumnDefinition> columns, CsvValues data)
+        private IValueSource sourceFor(IEnumerable<ColumnDefinition> columns, CsvData data)
         {
             var index = 0;
             var dictionary = new Dictionary<string, string>();

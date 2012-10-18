@@ -26,21 +26,21 @@ namespace FubuCore.Csv
             }
         }
 
-        private CsvValues determineHeaders<T>(StreamReader reader, CsvRequest<T> request)
+        private CsvData determineHeaders<T>(StreamReader reader, CsvRequest<T> request)
         {
-            CsvValues headers = null;
+            CsvData headers = null;
             if (request.HeadersExist)
             {
                 var values = reader.ReadLine();
                 if (values.IsEmpty()) return null;
 
-                if (request.UseHeaderOrdering) headers = new CsvValues(values);
+                if (request.UseHeaderOrdering) headers = new CsvData(values);
             }
 
             return headers;
         }
 
-        private void processData<T>(StreamReader reader, CsvValues headers, CsvRequest<T> request)
+        private void processData<T>(StreamReader reader, CsvData headers, CsvRequest<T> request)
         {
             string line;
             var mapping = request.Mapping.As<IColumnMapping>();
@@ -53,9 +53,9 @@ namespace FubuCore.Csv
             }
         }
 
-        private IValueSource valueSourceFor(string line, CsvValues headers, IColumnMapping mapping)
+        private IValueSource valueSourceFor(string line, CsvData headers, IColumnMapping mapping)
         {
-            var values = new CsvValues(line);
+            var values = new CsvData(line);
             return headers == null
                        ? mapping.ValueSource(values)
                        : mapping.ValueSource(values, headers);
