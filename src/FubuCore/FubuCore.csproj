@@ -164,6 +164,7 @@
     <Compile Include="Csv\CsvReader.cs" />
     <Compile Include="Csv\CsvRequest.cs" />
     <Compile Include="Csv\CsvData.cs" />
+    <Compile Include="Csv\CsvTokenizer.cs" />
     <Compile Include="Csv\ICsvReader.cs" />
     <Compile Include="Csv\IColumnMapping.cs" />
     <Compile Include="Dates\Clock.cs" />

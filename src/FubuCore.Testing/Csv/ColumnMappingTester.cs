@@ -16,20 +16,25 @@ namespace FubuCore.Testing.Csv
             Column(x => x.Flag);
             Column(x => x.Count);
         }
+
+        public TestCsvMapping(Action<TestCsvMapping> configure)
+        {
+            configure(this);
+        }
     }
 
     [TestFixture]
     public class ColumnMappingTester
     {
         private IColumnMapping theMapping;
-        private string theRawValues;
+        private string[] theRawValues;
         private IValueSource theValues;
 
         [SetUp]
         public void SetUp()
         {
             theMapping = new TestCsvMapping();
-            theRawValues = "Test,true,1";
+            theRawValues = new[] { "Test", "true", "1" };
 
             theValues = theMapping.ValueSource(new CsvData(theRawValues));
         }
@@ -81,8 +86,8 @@ namespace FubuCore.Testing.Csv
         public void SetUp()
         {
             theMapping = new TestCsvMapping();
-            theHeaders = new CsvData("Count,Flag,Name");
-            theRawValues = new CsvData("1,true,Test");
+            theHeaders = new CsvData(new[] { "Count", "Flag", "Name" });
+            theRawValues = new CsvData(new[] { "1", "true", "Test" });
 
             theValues = theMapping.ValueSource(theRawValues, theHeaders);
         }
@@ -113,8 +118,8 @@ namespace FubuCore.Testing.Csv
         public void SetUp()
         {
             theMapping = new MappingWithAliases();
-            theHeaders = new CsvData("Count,Flag,SomethingElse");
-            theRawValues = new CsvData("1,true,Test");
+            theHeaders = new CsvData(new[] { "Count", "Flag", "SomethingElse" });
+            theRawValues = new CsvData(new[] { "1", "true", "Test" });
 
             theValues = theMapping.ValueSource(theRawValues, theHeaders);
         }

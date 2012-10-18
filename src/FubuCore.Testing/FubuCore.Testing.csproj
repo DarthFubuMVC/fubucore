@@ -81,7 +81,8 @@
     <Compile Include="Csv\ColumnMappingTester.cs" />
     <Compile Include="Csv\CsvReaderHarness.cs" />
     <Compile Include="Csv\CsvRequestTester.cs" />
-    <Compile Include="Csv\CsvDataTester.cs" />
+    <Compile Include="Csv\CsvTokenizerTester.cs" />
+    <Compile Include="Csv\SpecialCharacterHeaderHarness.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers_and_aliases.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_without_headers.cs" />
     <Compile Include="Csv\TestCsvObject.cs" />
@@ -144,6 +145,8 @@
     <Compile Include="Configuration\XmlSettingsIntegratedTester.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers_that_are_ignored.cs" />
+    <Compile Include="Csv\when_processing_a_csv_file_with_special_characters.cs" />
+    <Compile Include="Csv\when_processing_a_csv_file_with_special_characters_in_headers.cs" />
     <Compile Include="Dates\DateTester.cs" />
     <Compile Include="Dates\DateTimeExtensionTester.cs" />
     <Compile Include="Dates\LocalTimeTester.cs" />

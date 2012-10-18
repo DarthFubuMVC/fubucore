@@ -1,20 +1,15 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace FubuCore.Csv
 {
     public class CsvData
     {
-        public CsvData(string values)
+        public CsvData(IEnumerable<string> values)
         {
-            Values = Parse(values);
+            Values = values.ToArray();
         }
 
-        public string[] Values { get; set; } 
-
-        public static string[] Parse(string input)
-        {
-            // TODO -- Support escape tokens
-            return input .Split(new[] { "," }, StringSplitOptions.None);
-        }
+        public string[] Values { get; private set; } 
     }
 }
