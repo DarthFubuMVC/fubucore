@@ -20,6 +20,8 @@ namespace FubuCore.Testing.Csv
         {
             theFile = "{0}.csv".ToFormat(GetType().Name);
 
+            beforeEach();
+
             using (var writer = new StreamWriter(theFile))
             {
                 writeFile(writer);
@@ -36,11 +38,16 @@ namespace FubuCore.Testing.Csv
                              Callback = theResults.Add
                          };
 
-            beforeEach();
-
             configureRequest(theRequest);
 
             theReader.Read(theRequest);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (!File.Exists(theFile)) return;
+            File.Delete(theFile);
         }
 
         protected virtual void beforeEach()

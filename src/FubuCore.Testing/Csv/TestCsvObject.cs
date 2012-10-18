@@ -4,7 +4,7 @@ namespace FubuCore.Testing.Csv
     {
         protected bool Equals(TestCsvObject other)
         {
-            return Count == other.Count && string.Equals(Name, other.Name) && Flag.Equals(other.Flag);
+            return Count == other.Count && string.Equals(Name, other.Name) && Flag.Equals(other.Flag) && string.Equals(Description, other.Description);
         }
 
         public override int GetHashCode()
@@ -21,6 +21,7 @@ namespace FubuCore.Testing.Csv
         public int Count { get; set; }
         public string Name { get; set; }
         public bool Flag { get; set; }
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
