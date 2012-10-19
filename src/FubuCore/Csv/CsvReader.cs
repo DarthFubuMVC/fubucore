@@ -10,13 +10,12 @@ namespace FubuCore.Csv
     // See the CsvReaderHarness for integration tests against this
     public class CsvReader : ICsvReader
     {
-        readonly IObjectResolver _resolver;
-        readonly CsvTokenizer _tokenizer;
+        private readonly IObjectResolver _resolver;
+        private readonly CsvTokenizer _tokenizer;
 
         public CsvReader(IObjectResolver resolver)
         {
             _resolver = resolver;
-            // Worth injecting this?
             _tokenizer = new CsvTokenizer();
         }
 
