@@ -190,7 +190,11 @@
     <Compile Include="Descriptions\DescribesItself.cs" />
     <Compile Include="Descriptions\DescriptionTextWriter.cs" />
     <Compile Include="Descriptions\IDescriptionVisitor.cs" />
+    <Compile Include="Descriptions\IPrefixSource.cs" />
+    <Compile Include="Descriptions\NumberedPrefixSource.cs" />
+    <Compile Include="Descriptions\Spacer.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
+    <Compile Include="Descriptions\UnorderedPrefixSource.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\ILogListener.cs" />
     <Compile Include="Logging\ILogModifier.cs" />

@@ -109,7 +109,17 @@ namespace FubuCore.Descriptions
 
         public bool IsMultiLevel()
         {
-            return BulletLists.Any();
+            return BulletLists.Any() || Children.Any(x => x.IsMultiLevel());
+        }
+
+        /// <summary>
+        /// Shortcut for doing Child[name] = Description.For(child)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="child"></param>
+        public void AddChild(string name, object child)
+        {
+            Children[name] = Description.For(child);
         }
     }
 }

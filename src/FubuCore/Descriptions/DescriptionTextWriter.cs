@@ -1,60 +1,28 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using FubuCore.Util.TextWriting;
 using System.Linq;
 
 namespace FubuCore.Descriptions
 {
-    public interface IPrefixSource
+    public static class DescriptionExtensions
     {
-        string GetPrefix();
-    }
-
-    public class Spacer : IPrefixSource
-    {
-        private readonly string _prefix;
-
-        public Spacer(int numberOfSpaces)
+        public static string ToDescriptionText(this object target)
         {
-            _prefix = "".PadRight(numberOfSpaces, ' ');
+            var description = Description.For(target);
+            var writer = new DescriptionTextWriter(description);
+
+            return writer.ToString();
         }
 
-        public string GetPrefix()
+        public static void WriteDescriptionToConsole(this object target)
         {
-            return _prefix;
-        }
-    }
+            var description = Description.For(target);
+            var writer = new DescriptionTextWriter(description);
 
-    public class NumberedPrefixSource : IPrefixSource
-    {
-        private readonly string _prefix;
-        private int _number;
-
-        public NumberedPrefixSource(int numberOfSpaces)
-        {
-            _prefix = "".PadRight(numberOfSpaces, ' ');
-            _number = 0;
-        }
-
-        public string GetPrefix()
-        {
-            return _prefix + (++_number).ToString().PadLeft(3) + ".) ";
-        }
-    }
-
-    public class UnorderedPrefixSource : IPrefixSource
-    {
-        private readonly string _prefix;
-
-        public UnorderedPrefixSource(int numberOfSpaces)
-        {
-            _prefix = "".PadRight(numberOfSpaces, ' ');
-        }
-
-        public string GetPrefix()
-        {
-            return _prefix + "* ";
+            writer.WriteToConsole();
         }
     }
 
@@ -68,15 +36,14 @@ namespace FubuCore.Descriptions
 
         public DescriptionTextWriter(Description description)
         {
-            if (!description.IsMultiLevel())
-            {
-                _report.AddText(description.ToString());
-            }
-            else
+            if (description.IsMultiLevel())
             {
                 description.AcceptVisitor(this);
             }
-            
+            else
+            {
+                this.As<IDescriptionVisitor>().Start(description);
+            }
         }
 
         public void WriteToConsole()
@@ -99,11 +66,62 @@ namespace FubuCore.Descriptions
                 _report.AddDivider('=');
                 _report.AddText(description.ToString());
                 _report.AddDivider('=');
+
+                writeProperties(4, description);
+
+                writeChildren(4, description);
             }
             else
             {
-                _report.AddColumnData(_prefixes.Peek().GetPrefix() + description.Title, description.ShortDescription);    
+                var prefix = _prefixes.Peek().GetPrefix();
+                _report.AddColumnData(prefix, description.Title, description.ShortDescription);
+
+                writeProperties(prefix.Length, description);
+                writeChildren(prefix.Length, description);
             }
+        }
+
+        private void writeChildren(int indent, Description description)
+        {
+            if (!description.Children.Any()) return;
+
+            if (description.Properties.Any())
+            {
+                _report.AddText("");
+            }
+
+            _level++;
+
+            _report.StartColumns(new Column(ColumnJustification.right, indent + 2, 2), new Column(ColumnJustification.left, 0, 5), new Column(ColumnJustification.left, 0, 0));
+            
+                        
+            description.Children.Each((name, child) => {
+
+                _prefixes.Push(new LiteralPrefixSource(" " + name + ":"));
+                child.AcceptVisitor(this);
+                _prefixes.Pop();
+
+            });
+
+            _level--;
+            _report.EndColumns();
+
+
+
+        }
+
+        private void writeProperties(int indent, Description description)
+        {
+            _report.StartColumns(2);
+            
+            var spaces = "".PadRight(indent, ' ') + " * ";
+
+            description.Properties.Each((key, prop) =>
+            {
+                _report.AddColumnData(spaces + key, prop.ToString());
+            });
+
+            _report.EndColumns();
         }
 
         private int numberOfSpacesOnLeft
@@ -119,10 +137,12 @@ namespace FubuCore.Descriptions
             return "".PadRight(numberOfSpacesOnLeft, ' ');
         }
 
+        private readonly string _icon = " ** ";
+
         void IDescriptionVisitor.StartList(BulletList list)
         {
             _level++;
-            _report.AddText(spacer() + " ** " + (list.Label ?? list.Name));
+            _report.AddText(spacer() + _icon + (list.Label ?? list.Name));
             _level++;
 
             if (list.IsOrderDependent)
@@ -131,10 +151,15 @@ namespace FubuCore.Descriptions
             }
             else
             {
-                _prefixes.Push(new UnorderedPrefixSource(numberOfSpacesOnLeft));
+                addUnorderedPrefix();
             }
 
-            _report.StartColumns(2);
+            _report.StartColumns(new Column(ColumnJustification.right, 0, 0), new Column(ColumnJustification.left, 0, 5), new Column(ColumnJustification.left, 0, 0));
+        }
+
+        private void addUnorderedPrefix()
+        {
+            _prefixes.Push(new UnorderedPrefixSource(numberOfSpacesOnLeft));
         }
 
         void IDescriptionVisitor.EndList()
