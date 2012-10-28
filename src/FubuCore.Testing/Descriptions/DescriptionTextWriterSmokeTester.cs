@@ -47,8 +47,13 @@ namespace FubuCore.Testing.Descriptions
     }
 
     [Description("I'm a described child")]
-    public class DescribedChild
+    public class DescribedChild : DescribesItself
     {
-        
+        public void Describe(Description description)
+        {
+            description.Properties["Color"] = "Orange";
+            description.Properties["Direction"] = "North";
+            description.Properties["Name"] = "Max";
+        }
     }
 }

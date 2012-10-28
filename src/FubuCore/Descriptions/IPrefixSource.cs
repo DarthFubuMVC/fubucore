@@ -9,9 +9,9 @@ namespace FubuCore.Descriptions
     {
         private readonly string _text;
 
-        public LiteralPrefixSource(string text)
+        public LiteralPrefixSource(int numberOfSpacesOnLeft, string text)
         {
-            _text = text;
+            _text = "".PadRight(numberOfSpacesOnLeft) + text;
         }
 
         public string GetPrefix()

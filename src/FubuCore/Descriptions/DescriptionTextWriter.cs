@@ -74,10 +74,20 @@ namespace FubuCore.Descriptions
             else
             {
                 var prefix = _prefixes.Peek().GetPrefix();
-                _report.AddColumnData(prefix, description.Title, description.ShortDescription);
+                var indent = prefix.Length;
+                if (_childName.IsNotEmpty())
+                {
+                    prefix = prefix + _childName + ":";
+                    indent += 5;
+                }
 
-                writeProperties(prefix.Length, description);
-                writeChildren(prefix.Length, description);
+                var firstColumn = _childName.IsEmpty() ? prefix : prefix + _childName + ":";
+                _report.AddColumnData(firstColumn, description.Title, description.ShortDescription ?? string.Empty);
+
+                
+
+                writeProperties(indent, description);
+                writeChildren(indent, description);
             }
         }
 
@@ -92,13 +102,17 @@ namespace FubuCore.Descriptions
 
             _level++;
 
-            _report.StartColumns(new Column(ColumnJustification.right, indent + 2, 2), new Column(ColumnJustification.left, 0, 5), new Column(ColumnJustification.left, 0, 0));
+            _report.StartColumns(new Column(ColumnJustification.left, indent, 5), new Column(ColumnJustification.left, 0, 5), new Column(ColumnJustification.left, 0, 0));
             
                         
             description.Children.Each((name, child) => {
 
-                _prefixes.Push(new LiteralPrefixSource(" " + name + ":"));
+                _prefixes.Push(new LiteralPrefixSource(numberOfSpacesOnLeft, " * "));
+                _childName = name;
+
                 child.AcceptVisitor(this);
+
+                _childName = null;
                 _prefixes.Pop();
 
             });
@@ -117,9 +131,7 @@ namespace FubuCore.Descriptions
             var spaces = "".PadRight(indent, ' ') + " * ";
 
             description.Properties.Each((key, prop) =>
-            {
-                _report.AddColumnData(spaces + key, prop.ToString());
-            });
+            { if (prop != null) _report.AddColumnData(spaces + key, prop.ToString()); });
 
             _report.EndColumns();
         }
@@ -138,6 +150,7 @@ namespace FubuCore.Descriptions
         }
 
         private readonly string _icon = " ** ";
+        private string _childName;
 
         void IDescriptionVisitor.StartList(BulletList list)
         {
