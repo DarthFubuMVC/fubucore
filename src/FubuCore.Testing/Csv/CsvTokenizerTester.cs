@@ -14,6 +14,13 @@ namespace FubuCore.Testing.Csv
             tokensFor("1,2,3").ShouldHaveTheSameElementsAs("1", "2", "3");
         }
 
+		[Test]
+		public void delimit_by_non_default()
+		{
+			ClassUnderTest.DelimitBy('|');
+			tokensFor("1|2|3").ShouldHaveTheSameElementsAs("1", "2", "3");
+		}
+
         [Test]
         public void escaped_commas()
         {

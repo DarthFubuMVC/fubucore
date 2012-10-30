@@ -6,24 +6,30 @@ namespace FubuCore.Csv
 {
     public class CsvTokenizer
     {
-        readonly List<string> _tokens;
-        readonly List<char> _characters;
-        Mode _mode;
-        readonly Dictionary<Mode, Action<char>> _read;
-        const char Comma = ',';
-        const char DoubleQuote = '"';
+		const char DoubleQuote = '"';
 
-        public CsvTokenizer()
-        {
-            _tokens = new List<string>();
-            _characters = new List<char>();
-            _read = new Dictionary<Mode, Action<char>>
+		private Mode _mode;
+        private readonly List<string> _tokens;
+        private readonly List<char> _characters;
+        private readonly Dictionary<Mode, Action<char>> _read;
+        private char _delimiter = ',';
+
+		public CsvTokenizer()
+		{
+			_tokens = new List<string>();
+			_characters = new List<char>();
+			_read = new Dictionary<Mode, Action<char>>
             {
                 { Mode.Normal, normalRead },
                 { Mode.Escape, escapeRead },
                 { Mode.ExitingEscape, exitingEscapeRead }
             };
-        }
+		}
+
+		public void DelimitBy(char delimiter)
+		{
+			_delimiter = delimiter;
+		}
 
         public IEnumerable<string> Tokens
         {
@@ -85,18 +91,19 @@ namespace FubuCore.Csv
 
         private void normalRead(char c)
         {
-            switch (c)
-            {
-                case Comma:
-                    tokenize();
-                    break;
-                case DoubleQuote:
-                    mode(Mode.Escape);
-                    break;
-                default:
-                    addChar(c);
-                    break;
-            }
+			if(c == _delimiter)
+			{
+				tokenize();
+				return;
+			}
+
+			if(c == DoubleQuote)
+			{
+				mode(Mode.Escape);
+				return;
+			}
+
+			addChar(c);
         }
 
         private void escapeRead(char c)
@@ -114,19 +121,20 @@ namespace FubuCore.Csv
         private void exitingEscapeRead(char c)
         {
             mode(Mode.Normal);
-            switch (c)
-            {
-                case Comma:
-                    tokenize();
-                    break;
-                case DoubleQuote:
-                    mode(Mode.Escape);
-                    addChar(c);
-                    break;
-                default:
-                    addChar(c);
-                    break;
-            }
+			if (c == _delimiter)
+			{
+				tokenize();
+				return;
+			}
+
+			if (c == DoubleQuote)
+			{
+				mode(Mode.Escape);
+				addChar(c);
+				return;
+			}
+
+			addChar(c);
         }
 
         private enum Mode

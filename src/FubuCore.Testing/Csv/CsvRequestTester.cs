@@ -26,5 +26,11 @@ namespace FubuCore.Testing.Csv
         {
             theRequest.UseHeaderOrdering.ShouldBeTrue();
         }
+
+		[Test]
+		public void defaults_to_comma_delimiter()
+		{
+			theRequest.Delimiter.ShouldEqual(',');
+		}
     }
 }

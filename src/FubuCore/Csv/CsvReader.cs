@@ -25,6 +25,8 @@ namespace FubuCore.Csv
             {
                 using (var reader = new StreamReader(stream))
                 {
+					_tokenizer.DelimitBy(request.Delimiter);
+
                     var headers = determineHeaders(reader, request);
                     processData(reader, headers, request);
                 }

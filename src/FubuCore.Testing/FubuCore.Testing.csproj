@@ -145,6 +145,7 @@
     <Compile Include="Configuration\XmlSettingsIntegratedTester.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers_that_are_ignored.cs" />
+    <Compile Include="Csv\when_processing_a_csv_file_with_non_default_delimiter.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_special_characters.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_special_characters_in_headers.cs" />
     <Compile Include="Dates\DateTester.cs" />
