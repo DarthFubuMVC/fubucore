@@ -8,11 +8,12 @@ namespace FubuCore.Binding.Values
     public class ValueSourceReport
     {
         private readonly string _name;
-        private readonly IDictionary<string, string> _values = new Dictionary<string, string>();
+        private readonly Cache<string, IList<string>> _values;
 
         public ValueSourceReport(string name)
         {
             _name = name;
+            _values = new Cache<string, IList<string>>(x => new List<string>());
         }
 
         public string Name
@@ -23,10 +24,10 @@ namespace FubuCore.Binding.Values
         public void Store(string key, object value)
         {
             var stored = value == null ? "NULL" : value.ToString();
-            _values.Add(key, stored);
+            _values[key].Add(stored);
         }
 
-        public IDictionary<string, string> Values
+        public Cache<string, IList<string>> Values
         {
             get { return _values; }
         }
