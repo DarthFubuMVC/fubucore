@@ -185,7 +185,11 @@ namespace FubuCore.CommandLine
             }
 
             
-
+            /// <summary>
+            /// The valid arguments for this command usage in exact order
+            /// </summary>
+            /// <param name="properties"></param>
+            /// <returns></returns>
             public UsageExpression<T> Arguments(params Expression<Func<T, object>>[] properties)
             {
                 _commandUsage.Arguments =
@@ -196,6 +200,11 @@ namespace FubuCore.CommandLine
                 return this;
             }
 
+            /// <summary>
+            /// Optional, use this to limit the flags that are valid with this usage.  If this method is not called,
+            /// the CLI support assumes that every possible flag from the input type is valid
+            /// </summary>
+            /// <param name="properties"></param>
             public void ValidFlags(params Expression<Func<T, object>>[] properties)
             {
                 _commandUsage.ValidFlags =
