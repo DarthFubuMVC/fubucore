@@ -16,7 +16,7 @@ namespace FubuCore.Testing.TestingSupport
         [SetUp]
         public void SetUp()
         {
-            check = EnumerablePersistenceCheck<string>.For<EnumerableCheckTarget, string>(x => x.Names);
+            check = EnumerablePersistenceCheck<string>.For<EnumerableCheckTarget>(x => x.Names);
             original = new EnumerableCheckTarget();
             persisted = new EnumerableCheckTarget();
         }
