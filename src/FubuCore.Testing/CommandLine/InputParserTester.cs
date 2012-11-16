@@ -193,7 +193,7 @@ namespace FubuCore.Testing.CommandLine
         private InputModel build(params string[] tokens)
         {
             var queue = new Queue<string>(tokens);
-            var graph = new UsageGraph("fubu",typeof (InputCommand));
+            var graph = new UsageGraph(typeof (InputCommand));
 
             return (InputModel) graph.BuildInput(queue);
         }
@@ -374,7 +374,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void complex_usage_smoketest()
         {
-            new UsageGraph("derp", typeof(InputCommand)).WriteUsages();
+            new UsageGraph(typeof(InputCommand)).WriteUsages("fubu");
         }
       
     }

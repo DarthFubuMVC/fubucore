@@ -54,6 +54,7 @@ namespace FubuCore.CommandLine
             {
                 Command = new HelpCommand(),
                 Input = new HelpInput(){
+                    AppName = _appName,
                     Name = commandName,
                     CommandTypes = _commandTypes.GetAll(),
                     InvalidCommandName = true
@@ -71,8 +72,6 @@ namespace FubuCore.CommandLine
 
                 // TODO -- change the signature to take in the app name when needed
                 var usageGraph = command.Usages;
-                usageGraph.AppName = _appName;
-
                 var input = usageGraph.BuildInput(queue);
 
                 return new CommandRun
@@ -134,7 +133,7 @@ namespace FubuCore.CommandLine
 
         public virtual CommandRun HelpRun(Queue<string> queue)
         {
-            var input = (HelpInput) (new UsageGraph(_appName, typeof (HelpCommand)).BuildInput(queue));
+            var input = (HelpInput) (new UsageGraph(typeof (HelpCommand)).BuildInput(queue));
             input.CommandTypes = _commandTypes.GetAll();
 
 
@@ -145,7 +144,7 @@ namespace FubuCore.CommandLine
                 _commandTypes.WithValue(input.Name, type =>
                 {
                     input.InvalidCommandName = false;
-                    input.Usage = new UsageGraph(_appName, type);
+                    input.Usage = new UsageGraph(type);
                 });
             }
 

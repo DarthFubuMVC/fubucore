@@ -65,10 +65,13 @@ namespace FubuCore.Testing.CommandLine
         public void trying_to_build_a_missing_command_will_list_the_existing_commands()
         {
             var factory = new CommandFactory();
+            factory.SetAppName("bottles");
             factory.RegisterCommands(GetType().Assembly);
 
             var commandRun = factory.BuildRun("junk");
             var theInput = commandRun.Input.ShouldBeOfType<HelpInput>();
+
+            theInput.AppName.ShouldEqual("bottles");
             theInput.Name.ShouldEqual("junk");
             theInput.InvalidCommandName.ShouldBeTrue();
             commandRun.Command.ShouldBeOfType<HelpCommand>();

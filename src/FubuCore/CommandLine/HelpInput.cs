@@ -18,5 +18,8 @@ namespace FubuCore.CommandLine
 
         [IgnoreOnCommandLine]
         public UsageGraph Usage { get; set; }
+
+        [IgnoreOnCommandLine]
+        public string AppName { get; set; }
     }
 }

@@ -15,7 +15,7 @@ namespace FubuCore.CommandLine
         {
             if (input.Usage != null)
             {
-                input.Usage.WriteUsages();
+                input.Usage.WriteUsages(input.AppName);
                 return false;
             }
 

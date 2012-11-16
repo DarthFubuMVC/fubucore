@@ -13,16 +13,10 @@ namespace FubuCore.CommandLine
         private string _description;
         private readonly Type _inputType;
         private readonly List<ITokenHandler> _handlers;
-        private string _appName;
         private readonly Lazy<IEnumerable<CommandUsage>> _validUsages; 
 
-        public UsageGraph(Type commandType) : this("fubu", commandType)
+        public UsageGraph(Type commandType)
         {
-        }
-
-        public UsageGraph(string appName, Type commandType)
-        {
-            _appName = appName;
             _commandType = commandType;
             _inputType = commandType.FindInterfaceThatCloses(typeof (IFubuCommand<>)).GetGenericArguments().First();
 
@@ -43,7 +37,6 @@ namespace FubuCore.CommandLine
 
                 var usage = new CommandUsage()
                 {
-                    AppName = _appName,
                     CommandName = _commandName,
                     UsageKey = "default",
                     Description = _description,
@@ -53,12 +46,6 @@ namespace FubuCore.CommandLine
 
                 return new CommandUsage[]{usage};
             });
-        }
-
-        public string AppName
-        {
-            get { return _appName; }
-            set { _appName = value; }
         }
 
         public object BuildInput(Queue<string> tokens)
@@ -94,7 +81,6 @@ namespace FubuCore.CommandLine
         private CommandUsage buildUsage(UsageAttribute att)
         {
             return new CommandUsage(){
-                AppName = _appName,
                 CommandName = _commandName,
                 UsageKey = att.Name,
                 Description = att.Description,
@@ -138,7 +124,7 @@ namespace FubuCore.CommandLine
             get { return _description; }
         }
 
-        public void WriteUsages()
+        public void WriteUsages(string appName)
         {
             if (!Usages.Any())
             {
@@ -151,12 +137,12 @@ namespace FubuCore.CommandLine
             if (Usages.Count() == 1)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(" " + Usages.Single().Usage);
+                Console.WriteLine(" " + Usages.Single().ToUsage(appName));
                 Console.ResetColor();
             }
             else
             {
-                writeMultipleUsages();
+                writeMultipleUsages(appName);
             }
 
             if(Arguments.Any())
@@ -168,7 +154,7 @@ namespace FubuCore.CommandLine
             writeFlags();
         }
 
-        private void writeMultipleUsages()
+        private void writeMultipleUsages(string appName)
         {
             var usageReport = new TwoColumnReport("Usages"){
                 SecondColumnColor = ConsoleColor.Cyan
@@ -176,7 +162,7 @@ namespace FubuCore.CommandLine
 
             Usages.OrderBy(x => x.Arguments.Count()).ThenBy(x => x.ValidFlags.Count()).Each(u =>
             {
-                usageReport.Add(u.Description, u.Usage);
+                usageReport.Add(u.Description, u.ToUsage(appName));
             });
 
             usageReport.Write();

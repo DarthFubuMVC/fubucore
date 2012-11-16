@@ -17,7 +17,7 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            theUsageGraph = new UsageGraph("fubu",typeof (FakeLinkCommand));
+            theUsageGraph = new UsageGraph(typeof (FakeLinkCommand));
         }
 
         [Test]
@@ -84,26 +84,26 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void get_the_command_usage_of_the_list_usage()
         {
-            theUsageGraph.FindUsage("list").Usage.ShouldEqual("fubu link <appfolder> [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
+            theUsageGraph.FindUsage("list").ToUsage("fubu").ShouldEqual("fubu link <appfolder> [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
         }
 
         [Test]
         public void get_the_command_usage_of_the_link_usage()
         {
             var usg = theUsageGraph.FindUsage("link");
-            usg.Usage.ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
+            usg.ToUsage("fubu").ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
         }
 
         [Test]
         public void smoke_test_writing_usage()
         {
-            theUsageGraph.WriteUsages();
+            theUsageGraph.WriteUsages("fubu");
         }
 
         [Test]
         public void derive_a_single_usage_for_any_command_that_has_no_specific_usages()
         {
-            var graph = new UsageGraph("fubu", typeof (SimpleCommand));
+            var graph = new UsageGraph(typeof (SimpleCommand));
             var usage = graph.Usages.Single();
             usage.Description.ShouldEqual(typeof (SimpleCommand).GetAttribute<CommandDescriptionAttribute>().Description);
             usage.Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("Arg1", "Arg2");
@@ -118,13 +118,13 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            theUsageGraph = new UsageGraph("derp", typeof(ComplexCommand));
+            theUsageGraph = new UsageGraph(typeof(ComplexCommand));
         }
 
         [Test]
         public void smoke_test_writing_usage()
         {
-            theUsageGraph.WriteUsages();
+            theUsageGraph.WriteUsages("fubu");
         }
     }
 
@@ -153,7 +153,7 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            theUsageGraph = new UsageGraph("fubu", typeof (FakeLinkCommand));
+            theUsageGraph = new UsageGraph(typeof (FakeLinkCommand));
         }
 
         private bool isValidUsage(params string[] args)

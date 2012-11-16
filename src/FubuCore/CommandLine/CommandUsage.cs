@@ -5,20 +5,17 @@ namespace FubuCore.CommandLine
 {
     public class CommandUsage
     {
-        public string AppName { get; set; }
         public string UsageKey { get; set; }
         public string CommandName { get; set; }
         public string Description { get; set; }
         public IEnumerable<Argument> Arguments { get; set; }
         public IEnumerable<ITokenHandler> ValidFlags { get; set; }
 
-        public string Usage
+        public string ToUsage(string appName)
         {
-            get
-            {
-                return "{0} {1} {2}".ToFormat(AppName, CommandName,
-                                               (Arguments.Cast<ITokenHandler>().Union(ValidFlags).Select(x => x.ToUsageDescription())).Join(" "));
-            }
+            return "{0} {1} {2}".ToFormat(appName, CommandName,
+                                          (Arguments.Cast<ITokenHandler>().Union(ValidFlags).Select(x => x.ToUsageDescription()))
+                                              .Join(" "));
         }
 
 
