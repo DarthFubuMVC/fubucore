@@ -4,6 +4,18 @@ namespace FubuCore.CommandLine
 {
     public abstract class FubuCommand<T> : IFubuCommand<T>
     {
+        private readonly UsageGraph _usages;
+
+        protected FubuCommand()
+        {
+            _usages = new UsageGraph(GetType());
+        }
+
+        public UsageGraph Usages
+        {
+            get { return _usages; }
+        }
+
         public Type InputType
         {
             get

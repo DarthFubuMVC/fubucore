@@ -68,7 +68,11 @@ namespace FubuCore.CommandLine
             // this is where we'll call into UsageGraph?
             try
             {
-                var usageGraph = new UsageGraph(_appName, _commandTypes[commandName]);
+
+                // TODO -- change the signature to take in the app name when needed
+                var usageGraph = command.Usages;
+                usageGraph.AppName = _appName;
+
                 var input = usageGraph.BuildInput(queue);
 
                 return new CommandRun

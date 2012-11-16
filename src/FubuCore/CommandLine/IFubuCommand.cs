@@ -6,6 +6,7 @@ namespace FubuCore.CommandLine
     {
         bool Execute(object input);
         Type InputType { get; }
+        UsageGraph Usages { get; }
     }
 
     public interface IFubuCommand<T> : IFubuCommand

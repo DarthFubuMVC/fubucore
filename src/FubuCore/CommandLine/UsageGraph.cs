@@ -13,7 +13,7 @@ namespace FubuCore.CommandLine
         private string _description;
         private readonly Type _inputType;
         private readonly List<ITokenHandler> _handlers;
-        private readonly string _appName;
+        private string _appName;
         private readonly Lazy<IEnumerable<CommandUsage>> _validUsages; 
 
         public UsageGraph(Type commandType) : this("fubu", commandType)
@@ -53,6 +53,12 @@ namespace FubuCore.CommandLine
 
                 return new CommandUsage[]{usage};
             });
+        }
+
+        public string AppName
+        {
+            get { return _appName; }
+            set { _appName = value; }
         }
 
         public object BuildInput(Queue<string> tokens)
