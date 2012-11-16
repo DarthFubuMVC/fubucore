@@ -115,6 +115,7 @@
     <Compile Include="CommandLine\ArgPreprocessor.cs" />
     <Compile Include="CommandLine\EnumerableFlag.cs" />
     <Compile Include="CommandLine\FlagAliases.cs" />
+    <Compile Include="CommandLine\InvalidUsageException.cs" />
     <Compile Include="Configuration\SettingsData.cs" />
     <Compile Include="Binding\Values\FlatValueSource.cs" />
     <Compile Include="Binding\Values\IValueReport.cs" />
