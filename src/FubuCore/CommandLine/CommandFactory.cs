@@ -133,7 +133,7 @@ namespace FubuCore.CommandLine
 
         public virtual CommandRun HelpRun(Queue<string> queue)
         {
-            var input = (HelpInput) (new UsageGraph(typeof (HelpCommand)).BuildInput(queue));
+            var input = (HelpInput) (new HelpCommand().Usages.BuildInput(queue));
             input.CommandTypes = _commandTypes.GetAll();
 
 

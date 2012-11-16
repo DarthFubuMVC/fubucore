@@ -42,18 +42,5 @@ namespace FubuCore.CommandLine
 
             return "<{0}>".ToFormat(_property.Name.ToLower());
         }
-
-        public bool RequiredForUsage(string usage)
-        {
-            var returnValue = false;
-            _property.ForAttribute<RequiredUsageAttribute>(att => { returnValue = att.Usages.Contains(usage); });
-
-            return returnValue;
-        }
-
-        public override bool OptionalForUsage(string usage)
-        {
-            return false;
-        }
     }
 }

@@ -17,13 +17,13 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            theUsageGraph = new UsageGraph(typeof (FakeLinkCommand));
+            theUsageGraph = new FakeLinkCommand().Usages;
         }
 
         [Test]
         public void has_the_command_name()
         {
-            theUsageGraph.CommandName.ShouldEqual("link");
+            theUsageGraph.CommandName.ShouldEqual("list the links");
         }
 
         [Test]
@@ -35,7 +35,7 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void has_both_usages()
         {
-            theUsageGraph.Usages.Select(x => x.UsageKey).OrderBy(x => x).ShouldHaveTheSameElementsAs("link", "list");
+            theUsageGraph.Usages.Select(x => x.Description).OrderBy(x => x).ShouldHaveTheSameElementsAs("Link an application folder to a package folder", "List the links");
         }
 
         [Test]
@@ -53,45 +53,45 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void first_usage_has_all_the_right_mandatories()
         {
-            theUsageGraph.FindUsage("list").Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder");
+            theUsageGraph.FindUsage("Link an application folder to a package folder").Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder", "PackageFolder");
         }
 
         [Test]
         public void first_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("list").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("CleanAllFlag", "CleanFlag", "NotepadFlag");
+            theUsageGraph.FindUsage("Link an application folder to a package folder").ValidFlags.Select(x => x.PropertyName).OrderBy(x => x).ShouldHaveTheSameElementsAs("CleanAllFlag", "CleanFlag", "RemoveFlag");
         }
 
         [Test]
         public void second_usage_has_all_the_right_mandatories()
         {
-            theUsageGraph.FindUsage("link").Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder", "PackageFolder");
+            theUsageGraph.FindUsage("List the links").Arguments.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("AppFolder");
         }
 
         [Test]
         public void second_usage_has_all_the_right_flags()
         {
-            theUsageGraph.FindUsage("link").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "CleanFlag", "NotepadFlag");
+            theUsageGraph.FindUsage("List the links").ValidFlags.Select(x => x.PropertyName).ShouldHaveTheSameElementsAs("RemoveFlag", "CleanAllFlag", "CleanFlag", "NotepadFlag");
         }
 
         [Test]
         public void get_the_description_of_both_usages()
         {
-            theUsageGraph.FindUsage("list").Description.ShouldEqual("List the links");
-            theUsageGraph.FindUsage("link").Description.ShouldEqual("Link an application folder to a package folder");
+            theUsageGraph.FindUsage("Link an application folder to a package folder").ShouldNotBeNull();
+            theUsageGraph.FindUsage("List the links").Description.ShouldNotBeNull();
         }
 
         [Test]
         public void get_the_command_usage_of_the_list_usage()
         {
-            theUsageGraph.FindUsage("list").ToUsage("fubu").ShouldEqual("fubu link <appfolder> [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
+            theUsageGraph.FindUsage("Link an application folder to a package folder").ToUsage("fubu", "link").ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>]");
         }
 
         [Test]
         public void get_the_command_usage_of_the_link_usage()
         {
-            var usg = theUsageGraph.FindUsage("link");
-            usg.ToUsage("fubu").ShouldEqual("fubu link <appfolder> <packagefolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
+            var usg = theUsageGraph.FindUsage("List the links");
+            usg.ToUsage("fubu", "list").ShouldEqual("fubu list <appfolder> [-r, --remove] [-C, --clean-all] [-c, --clean <clean>] [-n, --notepad]");
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            theUsageGraph = new UsageGraph(typeof (FakeLinkCommand));
+            theUsageGraph = new FakeLinkCommand().Usages;
         }
 
         private bool isValidUsage(params string[] args)
@@ -178,20 +178,19 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void invalid_flags()
         {
-            isValidUsage("AppFolder", "RemoveFlag").ShouldBeFalse();
+            isValidUsage("AppFolder", "PackageFolder", "NotepadFlag").ShouldBeFalse();
         }
     }
     
     public class FakeLinkInput
     {
-        [RequiredUsage("list", "link"), Description("The root directory of the web folder")]
+        [Description("The root directory of the web folder")]
         public string AppFolder { get; set; }
 
-        [RequiredUsage("link"), Description("The root directory of a package project")]
+        [Description("The root directory of a package project")]
         public string PackageFolder { get; set; }
 
         [Description("Removes the link from the application to the package")]
-        [ValidUsage("link")]
         [FlagAlias("remove", 'r')]
         public bool RemoveFlag { get; set; }
 
@@ -206,15 +205,18 @@ namespace FubuCore.Testing.CommandLine
         public bool NotepadFlag { get; set; }
 
         [Description("An array of stuff")]
-        [ValidUsage("link")]
         public string[] Stuff { get; set; }
     }
 
-    [Usage("list", "List the links")]
-    [Usage("link", "Link an application folder to a package folder")]
-    [CommandDescription("Manage links", Name = "link")]
+    [CommandDescription("Manage links", Name = "List the links")]
     public class FakeLinkCommand : FubuCommand<FakeLinkInput>
     {
+        public FakeLinkCommand()
+        {
+            Usage("List the links").Arguments(x => x.AppFolder);
+            Usage("Link an application folder to a package folder").Arguments(x => x.AppFolder, x => x.PackageFolder).ValidFlags(x => x.RemoveFlag, x => x.CleanAllFlag, x => x.CleanFlag);
+        }
+
         public override bool Execute(FakeLinkInput input)
         {
             throw new NotImplementedException();

@@ -32,14 +32,6 @@ namespace FubuCore.CommandLine
         public abstract bool Handle(object input, Queue<string> tokens);
         public abstract string ToUsageDescription();
 
-        public virtual bool OptionalForUsage(string usage)
-        {
-            var returnValue =  true;
-            _property.ForAttribute<ValidUsageAttribute>(att => returnValue = att.Usages.Contains(usage));
-
-            return returnValue;
-        }
-
         public bool Equals(TokenHandlerBase other)
         {
             if (ReferenceEquals(null, other)) return false;

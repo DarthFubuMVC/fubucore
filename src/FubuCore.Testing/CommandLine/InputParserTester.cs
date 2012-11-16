@@ -193,7 +193,7 @@ namespace FubuCore.Testing.CommandLine
         private InputModel build(params string[] tokens)
         {
             var queue = new Queue<string>(tokens);
-            var graph = new UsageGraph(typeof (InputCommand));
+            var graph = new InputCommand().Usages;
 
             return (InputModel) graph.BuildInput(queue);
         }
@@ -389,11 +389,9 @@ namespace FubuCore.Testing.CommandLine
 
     public class InputModel
     {
-        [RequiredUsage("default", "ages")]
         public string File { get; set; }
         public Color ColorFlag { get; set; }
 
-        [RequiredUsage("default", "ages")]
         public Color Color { get; set; }
         public int OrderFlag { get; set; }
         public bool TrueFalseFlag { get; set; }
@@ -407,17 +405,20 @@ namespace FubuCore.Testing.CommandLine
         [FlagAlias("makesuckmode")]
         public bool MakeSuckModeFlag { get; set; }
 
-        [RequiredUsage("ages")]
         public IEnumerable<int> Ages { get; set; }
 
         [FlagAlias("aliased", 'a')]
         public string AliasedFlag { get; set; }
     }
 
-    [Usage("default", "default")]
-    [Usage("ages", "ages")]
     public class InputCommand : FubuCommand<InputModel>
     {
+        public InputCommand()
+        {
+            Usage("default").Arguments(x => x.File, x => x.Color);
+            Usage("ages").Arguments(x => x.File, x => x.Color, x => x.Ages);
+        }
+
         public override bool Execute(InputModel input)
         {
             throw new NotImplementedException();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using FubuCore.Reflection;
 
 namespace FubuCore.CommandLine
@@ -27,18 +28,11 @@ namespace FubuCore.CommandLine
 
             _handlers = InputParser.GetHandlers(_inputType);
 
-            _commandType.ForAttribute<UsageAttribute>(att =>
-            {
-                _usages.Add(buildUsage(att));
-            });
-
             _validUsages = new Lazy<IEnumerable<CommandUsage>>(() => {
                 if (_usages.Any()) return _usages;
 
                 var usage = new CommandUsage()
                 {
-                    CommandName = _commandName,
-                    UsageKey = "default",
                     Description = _description,
                     Arguments = _handlers.OfType<Argument>(),
                     ValidFlags = _handlers.Where(x => !(x is Argument))
@@ -76,22 +70,6 @@ namespace FubuCore.CommandLine
         public IEnumerable<ITokenHandler> Handlers
         {
             get { return _handlers; }
-        }
-
-        private CommandUsage buildUsage(UsageAttribute att)
-        {
-            return new CommandUsage(){
-                CommandName = _commandName,
-                UsageKey = att.Name,
-                Description = att.Description,
-                Arguments = _handlers.OfType<Argument>().Where(x => x.RequiredForUsage(att.Name)),
-                ValidFlags = _handlers.Where(x => x.OptionalForUsage(att.Name))
-            };
-        }
-
-        public CommandUsage FindUsage(string key)
-        {
-            return _validUsages.Value.FirstOrDefault(x => x.UsageKey == key);
         }
 
         public string CommandName
@@ -137,7 +115,7 @@ namespace FubuCore.CommandLine
             if (Usages.Count() == 1)
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(" " + Usages.Single().ToUsage(appName));
+                Console.WriteLine(" " + Usages.Single().ToUsage(appName, _commandName));
                 Console.ResetColor();
             }
             else
@@ -162,7 +140,7 @@ namespace FubuCore.CommandLine
 
             Usages.OrderBy(x => x.Arguments.Count()).ThenBy(x => x.ValidFlags.Count()).Each(u =>
             {
-                usageReport.Add(u.Description, u.ToUsage(appName));
+                usageReport.Add(u.Description, u.ToUsage(appName, _commandName));
             });
 
             usageReport.Write();
@@ -180,6 +158,55 @@ namespace FubuCore.CommandLine
             var flagReport = new TwoColumnReport("Flags");
             Flags.Each(x => flagReport.Add(x.ToUsageDescription(), x.Description));
             flagReport.Write();
+        }
+
+        public UsageExpression<T> AddUsage<T>(string description)
+        {
+            return new UsageExpression<T>(this, description);
+        } 
+
+        public class UsageExpression<T>
+        {
+            private readonly UsageGraph _parent;
+            private readonly CommandUsage _commandUsage;
+
+            public UsageExpression(UsageGraph parent, string description)
+            {
+                _parent = parent;
+
+                _commandUsage = new CommandUsage
+                {
+                    Description = description,
+                    Arguments = new Argument[0],
+                    ValidFlags = _parent.Handlers.Where(x => !x.GetType().CanBeCastTo<Argument>()).ToArray() // Hokum.
+                };
+
+                _parent._usages.Add(_commandUsage);
+            }
+
+            
+
+            public UsageExpression<T> Arguments(params Expression<Func<T, object>>[] properties)
+            {
+                _commandUsage.Arguments =
+                    properties.Select(
+                        expr => _parent.Handlers.FirstOrDefault(x => x.PropertyName == expr.ToAccessor().Name)).OfType
+                        <Argument>();
+
+                return this;
+            }
+
+            public void ValidFlags(params Expression<Func<T, object>>[] properties)
+            {
+                _commandUsage.ValidFlags =
+                    properties.Select(
+                        expr => _parent.Handlers.FirstOrDefault(x => x.PropertyName == expr.ToAccessor().Name)).ToArray();
+            }
+        }
+
+        public CommandUsage FindUsage(string description)
+        {
+            return _usages.FirstOrDefault(x => x.Description == description);
         }
     }
 }

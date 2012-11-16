@@ -11,6 +11,11 @@ namespace FubuCore.CommandLine
             _usages = new UsageGraph(GetType());
         }
 
+        public UsageGraph.UsageExpression<T> Usage(string description)
+        {
+            return _usages.AddUsage<T>(description);
+        }
+
         public UsageGraph Usages
         {
             get { return _usages; }

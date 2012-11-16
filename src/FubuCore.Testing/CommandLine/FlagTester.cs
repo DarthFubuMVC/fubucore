@@ -37,21 +37,6 @@ namespace FubuCore.Testing.CommandLine
             forProp(x => x.EnumFlag).ToUsageDescription().ShouldEqual("[-e, --enum red|blue|green]");
         }
 
-        [Test]
-        public void flag_is_always_optional_if_no_attribute_stating_otherwise()
-        {
-            forProp(x => x.NameFlag).OptionalForUsage("a").ShouldBeTrue();
-            forProp(x => x.NameFlag).OptionalForUsage("b").ShouldBeTrue();
-            forProp(x => x.NameFlag).OptionalForUsage("c").ShouldBeTrue();
-        }
-
-        [Test]
-        public void flag_is_selectively_optional_if_attribute_states_specific_usages()
-        {
-            forProp(x => x.EnumFlag).OptionalForUsage("a").ShouldBeTrue();
-            forProp(x => x.EnumFlag).OptionalForUsage("b").ShouldBeTrue();
-            forProp(x => x.EnumFlag).OptionalForUsage("c").ShouldBeFalse();
-        }
 
         [Test]
         public void should_provide_useful_error_message_when_no_value_provided()
@@ -106,7 +91,6 @@ namespace FubuCore.Testing.CommandLine
     {
         public string NameFlag { get; set; }
 
-        [ValidUsage("a", "b")]
         public FlagEnum EnumFlag { get; set; }
 
         [FlagAlias("aliased", 'a')]

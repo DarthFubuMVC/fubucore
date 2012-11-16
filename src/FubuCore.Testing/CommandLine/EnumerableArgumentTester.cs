@@ -62,12 +62,10 @@ namespace FubuCore.Testing.CommandLine
     
     public class EnumerableArgumentTarget
     {
-        [RequiredUsage("a", "b", "c")]
         public IEnumerable<string> Names { get; set; }
 
         public IEnumerable<string> OptionalFlag { get; set; }
             
-        [RequiredUsage("c")]
         public IEnumerable<TargetEnum> Enums { get; set; }
 
         [System.ComponentModel.Description("ages of target")]

@@ -246,14 +246,11 @@
     <Compile Include="CommandLine\InputParser.cs" />
     <Compile Include="CommandLine\ITokenHandler.cs" />
     <Compile Include="CommandLine\QueueExtensions.cs" />
-    <Compile Include="CommandLine\RequiredUsageAttribute.cs" />
     <Compile Include="CommandLine\StringTokenizer.cs" />
     <Compile Include="CommandLine\TokenHandlerBase.cs" />
     <Compile Include="CommandLine\TwoColumnReport.cs" />
     <Compile Include="CommandLine\TokenParser.cs" />
-    <Compile Include="CommandLine\UsageAttribute.cs" />
     <Compile Include="CommandLine\UsageGraph.cs" />
-    <Compile Include="CommandLine\ValidUsageAttribute.cs" />
     <Compile Include="Configuration\AppSettingsProvider.cs" />
     <Compile Include="Configuration\AppSettingsRequestData.cs" />
     <Compile Include="Configuration\ISettingsProvider.cs" />

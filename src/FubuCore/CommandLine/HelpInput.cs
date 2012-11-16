@@ -9,7 +9,6 @@ namespace FubuCore.CommandLine
         [IgnoreOnCommandLine]
         public IEnumerable<Type> CommandTypes { get; set; }
 
-        [RequiredUsage("usage")]
         [Description("A command name")]
         public string Name { get; set; }
 
