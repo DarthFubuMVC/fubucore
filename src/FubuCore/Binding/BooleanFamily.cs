@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 
 namespace FubuCore.Binding
@@ -8,6 +10,7 @@ namespace FubuCore.Binding
     public class BooleanFamily : StatelessConverter
     {
         private static TypeConverter _converter = TypeDescriptor.GetConverter(typeof(bool));
+        private static IList<string> _aliases = new List<string> { "yes", "y" };
         public const string CheckboxOn = "on";
 
         public override bool Matches(PropertyInfo property)
@@ -25,6 +28,7 @@ namespace FubuCore.Binding
 
             return valueString.Contains(context.Property.Name)
             || valueString.EqualsIgnoreCase(CheckboxOn)
+            || _aliases.Any(x => x.Equals(valueString, StringComparison.OrdinalIgnoreCase))
             || (bool)_converter.ConvertFrom(rawValue);
         }
     }

@@ -75,6 +75,24 @@ namespace FubuCore.Testing.Binding
         }
 
         [Test]
+        public void treats_no_string_as_false()
+        {
+            WithValue("no").ShouldBeFalse();
+            WithValue("NO").ShouldBeFalse();
+            WithValue("n").ShouldBeFalse();
+            WithValue("N").ShouldBeFalse();
+        }
+
+        [Test]
+        public void treats_yes_string_as_true()
+        {
+            WithValue("yes").ShouldBeTrue();
+            WithValue("YES").ShouldBeTrue();
+            WithValue("y").ShouldBeTrue();
+            WithValue("Y").ShouldBeTrue();
+        }
+
+        [Test]
         public void treats_empty_string_as_false()
         {
             WithValue("").ShouldBeFalse();
