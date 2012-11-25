@@ -8,7 +8,7 @@ namespace FubuTestingSupport
 {
     public class EnumerablePersistenceCheck<T> : AccessorPersistenceCheck
     {
-        public new static EnumerablePersistenceCheck<T> For<TParent>(Expression<Func<TParent, IEnumerable<T>>> expression)
+        public static EnumerablePersistenceCheck<T> For<TParent>(Expression<Func<TParent, IEnumerable<T>>> expression)
         {
             var accessor = ReflectionHelper.GetAccessor(expression);
             return new EnumerablePersistenceCheck<T>(accessor);
