@@ -41,7 +41,7 @@ namespace FubuCore.Csv
 
         IValueSource IColumnMapping.ValueSource(CsvData data)
         {
-            return sourceFor(_columns, data);
+            return data.ToValueSource(_columns);
         }
 
         IValueSource IColumnMapping.ValueSource(CsvData data, CsvData headers)
@@ -50,21 +50,7 @@ namespace FubuCore.Csv
                 .Values
                 .Select(x => ((IColumnMapping)this).ColumnFor(x));
 
-            return sourceFor(columns, data);
-        }
-
-        private IValueSource sourceFor(IEnumerable<ColumnDefinition> columns, CsvData data)
-        {
-            var index = 0;
-            var dictionary = new Dictionary<string, string>();
-            columns.Each(col =>
-            {
-                // TODO -- Harden this
-                dictionary.Add(col.Accessor.Name, data.Values[index]);
-                ++index;
-            });
-
-            return new FlatValueSource(dictionary);
+            return data.ToValueSource(columns);
         }
     }
 }

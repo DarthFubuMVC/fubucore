@@ -82,10 +82,13 @@
     <Compile Include="Csv\ColumnDefinitionTester.cs" />
     <Compile Include="Csv\ColumnExpressionTester.cs" />
     <Compile Include="Csv\ColumnMappingTester.cs" />
+    <Compile Include="Csv\creating_a_value_source_when_not_all_values_exist.cs" />
+    <Compile Include="Csv\creating_a_value_source_when_all_values_exist.cs" />
     <Compile Include="Csv\CsvReaderHarness.cs" />
     <Compile Include="Csv\CsvRequestTester.cs" />
     <Compile Include="Csv\CsvTokenizerTester.cs" />
     <Compile Include="Csv\SpecialCharacterHeaderHarness.cs" />
+    <Compile Include="Csv\when_processing_a_csv_file_with_empty_last_column.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_with_headers_and_aliases.cs" />
     <Compile Include="Csv\when_processing_a_csv_file_without_headers.cs" />
     <Compile Include="Csv\TestCsvObject.cs" />
