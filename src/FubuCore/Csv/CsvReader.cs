@@ -21,7 +21,7 @@ namespace FubuCore.Csv
 
         public void Read<T>(CsvRequest<T> request)
         {
-            using (var stream = new FileStream(request.FileName, FileMode.Open, FileAccess.Read))
+            using (var stream = request.OpenStream())
             {
                 using (var reader = new StreamReader(stream))
                 {
