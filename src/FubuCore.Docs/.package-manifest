@@ -5,4 +5,5 @@
   <ContentFileSet Include="*.*" Exclude="Properties/*;bin/*;obj/*;*.csproj*;packages.config;repositories.config;pak-*.zip;*.sln">
     <DeepSearch>true</DeepSearch>
   </ContentFileSet>
+  <assembly>FubuCore.Docs</assembly>
 </package>
