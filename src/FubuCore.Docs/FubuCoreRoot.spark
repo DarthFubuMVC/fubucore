@@ -1,0 +1,9 @@
+<viewdata model="FubuCore.Docs.FubuCoreRoot"/>
+<use master="Topic" />
+<content:main>
+
+<markdown>
+
+</markdown>
+
+</content:main>

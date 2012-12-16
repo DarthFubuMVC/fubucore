@@ -46,7 +46,29 @@
     <Compile Include="..\CommonAssemblyInfo.cs">
       <Link>CommonAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Binding\ModelBinding.cs" />
+    <Compile Include="Extensions\BooleanExtensions.cs" />
+    <Compile Include="Extensions\ContinuationPassingStyleExtensions.cs" />
+    <Compile Include="Extensions\DictionaryExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Extensions\ExtensionLibraries.cs" />
+    <Compile Include="Extensions\FileHashingExtensions.cs" />
+    <Compile Include="Extensions\NumberExtensions.cs" />
+    <Compile Include="Extensions\ReaderwriterlockExtensions.cs" />
+    <Compile Include="Extensions\Safedispose.cs" />
+    <Compile Include="Extensions\StreamExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Extensions\TimespanExtensions.cs" />
+    <Compile Include="FileSystem\Filechangepollingwatcher.cs" />
+    <Compile Include="FileSystem\Ifilesystem.cs" />
+    <Compile Include="FileSystem\ManipulatingTextFiles.cs" />
+    <Compile Include="FileSystem\WorkingWithTheFileSystem.cs" />
+    <Compile Include="FubuCoreRoot.cs" />
+    <Compile Include="FubuCoreRootTopicRegistry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reflection\ReflectionHelpers.cs" />
+    <Compile Include="Reflection\TypeExtensions.cs" />
+    <Compile Include="Reflection\Typeresolver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -64,5 +86,28 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="pak-Config.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Binding\ModelBinding.spark" />
+    <None Include="Extensions\BooleanExtensions.spark" />
+    <None Include="Extensions\ContinuationPassingStyleExtensions.spark" />
+    <None Include="Extensions\DictionaryExtensions.spark" />
+    <None Include="Extensions\EnumerableExtensions.spark" />
+    <None Include="Extensions\ExtensionLibraries.spark" />
+    <None Include="Extensions\FileHashingExtensions.spark" />
+    <None Include="Extensions\NumberExtensions.spark" />
+    <None Include="Extensions\ReaderwriterlockExtensions.spark" />
+    <None Include="Extensions\Safedispose.spark" />
+    <None Include="Extensions\StreamExtensions.spark" />
+    <None Include="Extensions\StringExtensions.spark" />
+    <None Include="Extensions\TimespanExtensions.spark" />
+    <None Include="FileSystem\Filechangepollingwatcher.spark" />
+    <None Include="FileSystem\Ifilesystem.spark" />
+    <None Include="FileSystem\ManipulatingTextFiles.spark" />
+    <None Include="FileSystem\WorkingWithTheFileSystem.spark" />
+    <None Include="FubuCoreRoot.spark" />
+    <None Include="Reflection\ReflectionHelpers.spark" />
+    <None Include="Reflection\TypeExtensions.spark" />
+    <None Include="Reflection\Typeresolver.spark" />
   </ItemGroup>
 </Project>

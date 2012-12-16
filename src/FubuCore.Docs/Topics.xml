@@ -1,2 +1,78 @@
-<Topic title="CHANGEME" name="CHANGEME">
+<Topic title="FubuCore" name="FubuCoreRoot">
+  <Binding>
+    <Topic title="Model Binding">
+      
+    </Topic>
+  </Binding>
+
+  <CommandLine>
+    
+  </CommandLine>
+
+  <Configuration>
+    
+  </Configuration>
+
+  <Csv>
+    
+  </Csv>
+
+  <Dates>
+    
+  </Dates>
+
+  <DependencyAnalysis>
+    
+  </DependencyAnalysis>
+
+  <Descriptions>
+    
+  </Descriptions>
+
+  <Formatting>
+    
+  </Formatting>
+
+  <Logging>
+    
+  </Logging>
+
+  <Reflection>
+    <Topic title="Reflection Helpers">
+      <Topic title="Type Extensions"/>
+      <Topic title="TypeResolver"/>
+    </Topic>
+  </Reflection>
+
+  <Utility>
+    <TextWriting>
+      
+    </TextWriting>
+  </Utility>
+
+  <FileSystem>
+    <Topic title="Working with the File System">
+      <Topic title="IFileSystem"/>
+      <Topic title="FileChangePollingWatcher"/>
+      <Topic title="Manipulating Text Files"/>
+      
+    </Topic>
+  </FileSystem>
+
+  <Extensions>
+    <Topic title="Extension Libraries">
+      <Topic title="SafeDispose"/>
+      <Topic title="Continuation Passing Style Extensions"/>
+      <Topic title="Boolean Extensions"/>
+      <Topic title="Dictionary Extensions"/>
+      <Topic title="Enumerable Extensions"/>
+      <Topic title="File Hashing Extensions"/>
+      <Topic title="Number Extensions"/>
+      <Topic title="ReaderWriterLock Extensions"/>
+      <Topic title="Stream Extensions"/>
+      <Topic title="String Extensions"/>
+      <Topic title="TimeSpan Extensions"/>
+      
+    </Topic>
+  </Extensions>
 </Topic>
