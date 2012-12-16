@@ -83,7 +83,7 @@ end
 
 
 desc "Compiles the app"
-task :compile => [:clean, :restore_if_missing, :version] do
+task :compile => [:clean, :restore_if_missing, :version, "docs:bottle"] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
   copyOutputFiles "src/FubuCore/bin/#{COMPILE_TARGET}", "Fubu*.{dll,pdb}", props[:stage]  
   copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "localizer*.{exe,pdb}", props[:stage]   
