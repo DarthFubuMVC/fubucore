@@ -171,6 +171,7 @@ namespace FubuCore.Reflection
             return target;
         }
 
+
         public override string ToString()
         {
             return _chain.First().DeclaringType.FullName + _chain.Select(x => x.Name).Join(".");
