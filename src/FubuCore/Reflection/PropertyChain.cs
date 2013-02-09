@@ -9,7 +9,6 @@ namespace FubuCore.Reflection
     public class PropertyChain : Accessor
     {
         private readonly IValueGetter[] _chain;
-        private readonly SingleProperty _innerProperty;
         private readonly IValueGetter[] _valueGetters;
 
 
@@ -21,12 +20,12 @@ namespace FubuCore.Reflection
                 _chain[i] = valueGetters[i];
             }
 
-            var innerValueGetter = valueGetters[valueGetters.Length - 1] as PropertyValueGetter;
-            if (innerValueGetter != null)
-            {
-                _innerProperty = new SingleProperty(innerValueGetter.PropertyInfo);
-            }
             _valueGetters = valueGetters;
+        }
+
+        public IValueGetter[] ValueGetters
+        {
+            get { return _valueGetters; }
         }
 
 
@@ -39,11 +38,6 @@ namespace FubuCore.Reflection
             }
 
             setValueOnInnerObject(target, propertyValue);
-        }
-
-        protected virtual void setValueOnInnerObject(object target, object propertyValue)
-        {
-            _innerProperty.SetValue(target, propertyValue);
         }
 
         public object GetValue(object target)
@@ -60,36 +54,58 @@ namespace FubuCore.Reflection
 
         public Type OwnerType
         {
-            get 
+            get
             {
-                //TODO: Does MethodValueGetter need to provide some kind of OwnerType if its the last item in the chain?
-                //assuming the last item is a PropertyValueGetter for now...
-                //example: Person.FamilyMembers[0].FirstName would have the _chain.Last() output a MethodValueGetter
-                //in which case we would not be able to get to our OwnerType the same way as being done below
+                // Check if we're an indexer here
+                if (_valueGetters.Last() is MethodValueGetter)
+                {
+                    var nextUp = _chain.Reverse().Skip(1).FirstOrDefault() as PropertyValueGetter;
+                    if (nextUp != null)
+                    {
+                        return nextUp.PropertyInfo.PropertyType;
+                    }
+                }
 
                 var propertyGetter = _chain.Last() as PropertyValueGetter;
                 return propertyGetter != null ? propertyGetter.PropertyInfo.PropertyType : null;
             }
         }
 
-        public string FieldName { get { return _innerProperty.FieldName; } }
+        public string FieldName
+        {
+            get { 
+                var last = _valueGetters.Last();
+                if (last is PropertyValueGetter) return last.Name;
 
-        public Type PropertyType { get { return _innerProperty.PropertyType; } }
+                var previous = _valueGetters[_valueGetters.Count() - 2];
+                return previous.Name + last.Name;
+            }
+        }
 
-        public PropertyInfo InnerProperty { get { return _innerProperty.InnerProperty; } }
+        public Type PropertyType
+        {
+            get { return _valueGetters.Last().ValueType; }
+        }
 
-        public Type DeclaringType { get { return _chain[0].DeclaringType; } }
+        public PropertyInfo InnerProperty
+        {
+            get
+            {
+                var last = _valueGetters.Last() as PropertyValueGetter;
+                return last == null ? null : last.PropertyInfo;
+            }
+        }
+
+        public Type DeclaringType
+        {
+            get { return _chain[0].DeclaringType; }
+        }
 
         public Accessor GetChildAccessor<T>(Expression<Func<T, object>> expression)
         {
-            PropertyInfo property = ReflectionHelper.GetProperty(expression);
-            var list = new List<IValueGetter>(_chain)
-            {
-                new PropertyValueGetter(_innerProperty.InnerProperty),
-                new PropertyValueGetter(property)
-            };
-
-            return new PropertyChain(list.ToArray());
+            var accessor = expression.ToAccessor();
+            var allGetters = Getters().Union(accessor.Getters()).ToArray();
+            return new PropertyChain(allGetters);
         }
 
         public string[] PropertyNames
@@ -100,21 +116,19 @@ namespace FubuCore.Reflection
 
         public Expression<Func<T, object>> ToExpression<T>()
         {
-            var parameter = Expression.Parameter(typeof(T), "x");
+            ParameterExpression parameter = Expression.Parameter(typeof (T), "x");
             Expression body = parameter;
 
-            _valueGetters.Each(getter =>
-            {
-                body = getter.ChainExpression(body);
-            });
+            _valueGetters.Each(getter => { body = getter.ChainExpression(body); });
 
-            var delegateType = typeof(Func<,>).MakeGenericType(typeof(T), typeof(object));
+            Type delegateType = typeof (Func<,>).MakeGenericType(typeof (T), typeof (object));
             return (Expression<Func<T, object>>) Expression.Lambda(delegateType, body, parameter);
         }
 
         public Accessor Prepend(PropertyInfo property)
         {
-            var list = new List<IValueGetter>{
+            var list = new List<IValueGetter>
+            {
                 new PropertyValueGetter(property)
             };
             list.AddRange(_valueGetters);
@@ -127,27 +141,19 @@ namespace FubuCore.Reflection
             return _valueGetters;
         }
 
-        public IValueGetter[] ValueGetters { get { return _valueGetters; } }
-
 
         /// <summary>
-        /// Concatenated names of all the properties in the chain.
-        /// Case.Site.Name == "CaseSiteName"
+        ///     Concatenated names of all the properties in the chain.
+        ///     Case.Site.Name == "CaseSiteName"
         /// </summary>
         public string Name
         {
-            get
-            {
-                string returnValue = string.Empty;
-                foreach (IValueGetter info in _chain)
-                {
-                    returnValue += info.Name;
-                }
+            get { return _valueGetters.Select(x => x.Name).Join(""); }
+        }
 
-                returnValue += _innerProperty.Name;
-
-                return returnValue;
-            }
+        protected virtual void setValueOnInnerObject(object target, object propertyValue)
+        {
+            _valueGetters.Last().SetValue(target, propertyValue);
         }
 
 
@@ -175,17 +181,7 @@ namespace FubuCore.Reflection
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
 
-            if (_chain.Length != other._chain.Length) return false;
-
-            for (int i = 0; i < _chain.Length; i++)
-            {
-                IValueGetter info = _chain[i];
-                IValueGetter otherInfo = other._chain[i];
-
-                if (!info.Equals(otherInfo)) return false;
-            }
-
-            return _innerProperty.Equals(other._innerProperty);
+            return _valueGetters.SequenceEqual(other._valueGetters);
         }
 
         public override bool Equals(object obj)

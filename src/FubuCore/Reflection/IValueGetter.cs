@@ -9,6 +9,9 @@ namespace FubuCore.Reflection
         string Name { get; }
         Type DeclaringType { get; }
 
+        Type ValueType { get; }
+
         Expression ChainExpression(Expression body);
+        void SetValue(object target, object propertyValue);
     }
 }

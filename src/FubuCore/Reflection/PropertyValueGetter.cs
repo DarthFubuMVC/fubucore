@@ -30,6 +30,11 @@ namespace FubuCore.Reflection
             get { return _propertyInfo.DeclaringType; }
         }
 
+        public Type ValueType
+        {
+            get { return _propertyInfo.PropertyType; }
+        }
+
         public Expression ChainExpression(Expression body)
         {
             var memberExpression = Expression.Property(body, _propertyInfo);
@@ -39,6 +44,11 @@ namespace FubuCore.Reflection
             }
 
             return Expression.Convert(memberExpression, typeof (object));
+        }
+
+        public void SetValue(object target, object propertyValue)
+        {
+            _propertyInfo.SetValue(target, propertyValue, null);
         }
 
         public override bool Equals(object obj)

@@ -70,7 +70,13 @@ namespace FubuCore.Reflection
             return _getter.GetValue(target);
         }
 
-        public Type OwnerType { get { return _ownerType ?? DeclaringType; } }
+        public Type OwnerType
+        {
+            get
+            {
+                return _ownerType ?? DeclaringType;
+            }
+        }
 
 
         public bool Equals(SingleMethod other)

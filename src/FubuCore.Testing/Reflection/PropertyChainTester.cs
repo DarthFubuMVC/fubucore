@@ -221,6 +221,16 @@ namespace FubuCore.Testing.Reflection
         }
 
         [Test]
+        public void propertyChain_can_get_child_accessor_from_indexer()
+        {
+            var expected = ReflectionHelper.GetAccessor<Target>(x => x.Child.GrandChildren[1].Name);
+            var child = ReflectionHelper.GetAccessor<Target>(x => x.Child.GrandChildren[1])
+                                        .GetChildAccessor<GrandChildTarget>(x => x.Name);
+
+            child.ShouldEqual(expected);
+        }
+
+        [Test]
         public void propertyChain_can_get_the_name()
         {
             ReflectionHelper.GetAccessor<Target>(t => t.Child.GrandChild.BirthDay).Name.ShouldEqual(

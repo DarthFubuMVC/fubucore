@@ -212,6 +212,8 @@ namespace FubuCore.Testing.Reflection
         }
 
 
+
+
         [Test]
         public void get_value_by_indexer_when_the_indexer_is_variable_reference()
         {
@@ -314,9 +316,29 @@ namespace FubuCore.Testing.Reflection
 
         }
 
+        [Test]
+        public void get_owner_type_by_indexer()
+        {
+            var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1].Deep.Color);
+            accessor.OwnerType.ShouldEqual(typeof (DeepTarget));
 
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]).OwnerType.ShouldEqual(typeof(ChildTarget));
+        }
 
+        [Test]
+        public void get_inner_property_with_method_accessor()
+        {
+            var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]);
+            accessor.PropertyType.ShouldEqual(typeof (GrandChildTarget));
+        }
 
+        [Test]
+        public void get_field_name_by_method_accessor()
+        {
+            var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]);
+            accessor.FieldName.ShouldEqual("Grandchildren[1]");
+            accessor.Name.ShouldEqual("ChildGrandchildren[1]");
+        }
     }
 
     [TestFixture]

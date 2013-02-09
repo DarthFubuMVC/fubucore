@@ -42,12 +42,22 @@ namespace FubuCore.Reflection
             get { return _methodInfo.DeclaringType; }
         }
 
+        public Type ValueType
+        {
+            get { return _methodInfo.ReturnType; }
+        }
+
         public Type ReturnType
         {
             get { return _methodInfo.ReturnType; }
         }
 
         public Expression ChainExpression(Expression body)
+        {
+            throw new NotSupportedException();
+        }
+
+        public void SetValue(object target, object propertyValue)
         {
             throw new NotSupportedException();
         }
