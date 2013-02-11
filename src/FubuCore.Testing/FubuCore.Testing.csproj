@@ -169,6 +169,7 @@
     <Compile Include="FileChangePollingWatcherTester.cs" />
     <Compile Include="FileHashingExtensionsTester.cs" />
     <Compile Include="FileSetTester.cs" />
+    <Compile Include="FilesSystem_load_from_file.cs" />
     <Compile Include="FileSystemTester.cs" />
     <Compile Include="FlatFileWriterTester.cs" />
     <Compile Include="Formatting\GetStringRequestTester.cs" />
