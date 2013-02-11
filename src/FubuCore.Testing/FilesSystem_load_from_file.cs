@@ -61,6 +61,18 @@ namespace FubuCore.Testing
 
 			typeof(ApplicationException).ShouldBeThrownBy(() => fileSystem.LoadFromFileOrThrow<SerializeMe>(fileName));
 		}
+	}
 
+	[TestFixture]
+	public class FilesSystem_load_from_file_or_throw
+	{
+		[Test]
+		public void should_throw_when_file_does_not_exist()
+		{
+			var fileSystem = new FileSystem();
+			const string fileName = "does not exist";
+
+			typeof(ApplicationException).ShouldBeThrownBy(() => fileSystem.LoadFromFileOrThrow<SerializeMe>(fileName));
+		}
 	}
 }
