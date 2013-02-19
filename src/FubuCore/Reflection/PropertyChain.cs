@@ -67,7 +67,8 @@ namespace FubuCore.Reflection
                 }
 
                 var propertyGetter = _chain.Last() as PropertyValueGetter;
-                return propertyGetter != null ? propertyGetter.PropertyInfo.PropertyType : null;
+                if (propertyGetter != null) return propertyGetter.PropertyInfo.PropertyType;
+                return InnerProperty != null ? InnerProperty.DeclaringType : null;
             }
         }
 
