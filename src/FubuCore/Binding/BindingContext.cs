@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using FubuCore.Binding.InMemory;
+using FubuCore.Binding.Logging;
 using FubuCore.Conversion;
 
 namespace FubuCore.Binding
@@ -17,7 +18,6 @@ namespace FubuCore.Binding
         private readonly IRequestData _requestData;
         private readonly Lazy<IObjectResolver> _resolver;
         private readonly Lazy<IContextValues> _values;
-
 
         static BindingContext()
         {
@@ -34,7 +34,8 @@ namespace FubuCore.Binding
 
             _requestData = requestData;
             _locator = locator;
-            _logger = logger;
+            _logger = logger is AccessorLogger ? logger : new AccessorLogger(logger);
+
             _resolver = new Lazy<IObjectResolver>(() =>
             {
                 if (_locator == null) return ObjectResolver.Basic();
@@ -182,7 +183,7 @@ namespace FubuCore.Binding
             var problem = new ConvertProblem{
                 ExceptionText = exceptionText,
                 Item = Object,
-                Property = property,
+                Accessor = ((AccessorLogger) _logger).AccessorOf(property),
                 Value = value
             };
 

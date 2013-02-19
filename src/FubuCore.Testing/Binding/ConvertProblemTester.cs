@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using FubuCore.Binding;
+using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
 
@@ -16,7 +17,7 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             _problem = new ConvertProblem { Item = "some item", Value = new BindingValue() { RawValue = "some value" }, ExceptionText = "exception message" };
-            _problem.Property = typeof (PropertyHolder).GetProperty("SomeProperty");
+            _problem.Accessor = ReflectionExtensions.ToAccessor<PropertyHolder>(x => x.SomeProperty);
         }
 
         [Test]

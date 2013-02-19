@@ -4,6 +4,7 @@ using System.Reflection;
 
 namespace FubuCore.Reflection
 {
+    [Serializable]
     public class PropertyValueGetter : IValueGetter
     {
         private readonly PropertyInfo _propertyInfo;

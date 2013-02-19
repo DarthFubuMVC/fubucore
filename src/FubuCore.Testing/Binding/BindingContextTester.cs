@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
-using FubuCore.Binding.Values;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuCore.Util;
@@ -129,8 +129,17 @@ HeldClassAge=36
         {
             theScenario = BindingScenario<HolderClass>.For(x =>
             {
+                x.Data("Number", "NOT A NUMBER");
                 x.Data("HeldClassName", "Jeremy");
-                x.Data("HeldClassAge", "NOT A NUMBER");
+                x.Data("HeldClassAge", "NOT A NUMBER JEREMY");
+                x.Data("Collection[0]Name", "Jaime");
+                x.Data("Collection[0]Age", "28");
+                x.Data("Collection[1]Name", "Peter");
+                x.Data("Collection[1]Age", "NOT A NUMBER PETER");
+                x.Data("Collection[2]Name", "Charles");
+                x.Data("Collection[2]Age", "30");
+                x.Data("Collection[3]Name", "Rose");
+                x.Data("Collection[3]Age", "NOT A NUMBER ROSE");
             });
         }
 
@@ -144,18 +153,33 @@ HeldClassAge=36
         public void the_properties_of_the_child_object_are_filled_in_from_the_request_data()
         {
             theScenario.Model.HeldClass.Name.ShouldEqual("Jeremy");
-
+            theScenario.Model.Collection.ShouldNotBeNull().ShouldHaveCount(4);
+            theScenario.Model.Collection[0].Name.ShouldEqual("Jaime");
+            theScenario.Model.Collection[0].Age.ShouldEqual(28);
+            theScenario.Model.Collection[1].Name.ShouldEqual("Peter");
+            theScenario.Model.Collection[2].Name.ShouldEqual("Charles");
+            theScenario.Model.Collection[2].Age.ShouldEqual(30);
+            theScenario.Model.Collection[3].Name.ShouldEqual("Rose");
         }
 
         [Test]
-        public void should_be_one_problems_recorded()
+        public void should_record_all_the_problems()
         {
-            var problem = theScenario.Problems.Single();
-            
-            problem.Property.Name.ShouldEqual("Age");
-            problem.Item.ShouldBeOfType<ClassThatIsHeld>();
-            //taken out ' is not a valid value for Int32' to support non english culture tests
-            problem.ExceptionText.ShouldContain("NOT A NUMBER");
+            var problems = theScenario.Problems.OrderBy(x => x.Accessor.PropertyNames.Length).ThenBy(x => x.Accessor.Name).ToList();
+            problems.ShouldHaveCount(4);
+
+            checkProblem(problems[0], typeof(HolderClass), x => x.Number, "NOT A NUMBER");
+            checkProblem(problems[1], typeof(ClassThatIsHeld), x => x.HeldClass.Age, "NOT A NUMBER JEREMY");
+            checkProblem(problems[2], typeof(ClassThatIsHeld), x => x.Collection[1].Age, "NOT A NUMBER PETER");
+            checkProblem(problems[3], typeof(ClassThatIsHeld), x => x.Collection[3].Age, "NOT A NUMBER ROSE");
+        }
+
+        private static void checkProblem(ConvertProblem problem, Type itemType, Expression<Func<HolderClass, object>> exp, string error)
+        {
+            problem.Property.ShouldEqual(exp.ToAccessor().InnerProperty);
+            problem.Item.ShouldBeOfType(itemType);
+            problem.Accessor.Name.ShouldEqual(exp.ToAccessor().Name);
+            problem.ExceptionText.ShouldContain(error);
         }
     }
 
@@ -432,6 +456,10 @@ HeldClassAge=36
                 _heldClass = value;
             }
         }
+
+        public List<ClassThatIsHeld> Collection { get; set; }
+
+        public int Number { get; set; }
     }
 
 

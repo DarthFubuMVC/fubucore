@@ -5,6 +5,7 @@ using System.Reflection;
 
 namespace FubuCore.Reflection
 {
+    [Serializable]
     public class SingleProperty : Accessor
     {
         private readonly PropertyInfo _property;

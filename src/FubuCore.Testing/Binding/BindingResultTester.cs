@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Reflection;
 using FubuTestingSupport;
@@ -31,7 +29,7 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_throw_bind_result_assertion_exception_on_problems()
         {
-            var problem = new ConvertProblem { Property = typeof(PropertyHolder).GetProperty("SomeProperty"), Value = new BindingValue() { RawValue = "some value" } };
+            var problem = new ConvertProblem { Accessor = ReflectionExtensions.ToAccessor<PropertyHolder>(x => x.SomeProperty), Value = new BindingValue() { RawValue = "some value" } };
             result.Problems.Add(problem);
 
             var ex = typeof (BindResultAssertionException).ShouldBeThrownBy(
@@ -48,8 +46,8 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void exception_should_serialize_properly()
         {
-            var firstProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Month) };
-            var secondProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Day)  };
+            var firstProblem = new ConvertProblem { Accessor = ReflectionHelper.GetAccessor<DateTime>(d => d.Month) };
+            var secondProblem = new ConvertProblem { Accessor = ReflectionHelper.GetAccessor<DateTime>(d => d.Day) };
             var originalException = new BindResultAssertionException(typeof(string), new[] { firstProblem, secondProblem });
             
             var deserializedException = originalException.ShouldTransferViaSerialization();

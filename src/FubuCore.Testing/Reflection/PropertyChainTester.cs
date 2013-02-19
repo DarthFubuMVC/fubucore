@@ -99,6 +99,12 @@ namespace FubuCore.Testing.Reflection
             prependedAccessor.GetValue(target).ShouldEqual(new DateTime(1974, 1, 1));
         }
 
+        [Test]
+        public void should_be_serializable()
+        {
+            typeof(PropertyChain).IsSerializable.ShouldBeTrue();
+        }
+
         private PropertyChain _chain;
 
         public class Target
