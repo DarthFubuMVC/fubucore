@@ -320,9 +320,10 @@ namespace FubuCore.Testing.Reflection
         public void get_owner_type_by_indexer()
         {
             var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1].Deep.Color);
-            accessor.OwnerType.ShouldEqual(typeof (DeepTarget));
+            accessor.OwnerType.ShouldEqual(typeof(DeepTarget));
 
             ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]).OwnerType.ShouldEqual(typeof(ChildTarget));
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1].Name).OwnerType.ShouldEqual(typeof(GrandChildTarget));
         }
 
         [Test]
