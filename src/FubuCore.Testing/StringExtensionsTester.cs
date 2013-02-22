@@ -24,6 +24,13 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void parent_directory_ending_with_directory_seperator()
+        {
+            var path = ".".ToFullPath();
+            (path + Path.DirectorySeparatorChar).ParentDirectory().ShouldEqual(Path.GetDirectoryName(path));
+        }
+
+        [Test]
         public void if_not_null_positive()
         {
             var action = MockRepository.GenerateMock<Action<string>>();
@@ -47,7 +54,7 @@ namespace FubuCore.Testing
         [Test]
         public void combine_to_path_when_rooted()
         {
-			var rooted = Path.Combine(Path.GetPathRoot(AppDomain.CurrentDomain.BaseDirectory), "here");
+            var rooted = Path.Combine(Path.GetPathRoot(AppDomain.CurrentDomain.BaseDirectory), "here");
             rooted.CombineToPath("there").ShouldEqual(rooted);
         }
 
