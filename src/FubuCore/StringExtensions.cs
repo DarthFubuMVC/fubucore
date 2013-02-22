@@ -47,7 +47,7 @@ namespace FubuCore
         /// <returns></returns>
         public static string ParentDirectory(this string path)
         {
-            return Path.GetDirectoryName(path);
+            return Path.GetDirectoryName(path.TrimEnd(Path.DirectorySeparatorChar));
         }
 
         /// <summary>
