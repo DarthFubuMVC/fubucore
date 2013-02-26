@@ -1,6 +1,8 @@
+using System;
 using System.IO;
 using FubuCore.Csv;
 using NUnit.Framework;
+using FubuTestingSupport;
 
 namespace FubuCore.Testing.Csv
 {
@@ -28,7 +30,34 @@ namespace FubuCore.Testing.Csv
 
             theResultsAre(t1, t2);
         }
+
+        [Test]
+        public void the_alias_matching_is_case_insensitive()
+        {
+            var mapping = new TestAliasMapping().As<IColumnMapping>();
+            mapping.ColumnFor("The_flag").Accessor.Name.ShouldEqual("Flag");
+        }
+
+        
     }
+
+    [TestFixture]
+    public class when_reading_in_garbage_columns
+    {
+
+        [Test]
+        public void try_it_out()
+        {
+            Exception<CsvColumnException>.ShouldBeThrownBy(() => {
+                new TestAliasMapping().As<IColumnMapping>()
+                                      .ValueSource(new CsvData(new string[] { "a", "b", "c" }),
+                                                   new CsvData(new string[] { "junk", "junk2", "junk3" }));
+            }).Message.ShouldContain("junk, junk2, junk3");
+
+
+        }
+    }
+
 
     public class TestAliasMapping : ColumnMapping<TestCsvObject>
     {

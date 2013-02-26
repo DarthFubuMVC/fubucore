@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using FubuCore.Binding.Values;
 using FubuCore.Reflection;
 
@@ -31,7 +32,7 @@ namespace FubuCore.Csv
 
         ColumnDefinition IColumnMapping.ColumnFor(string alias)
         {
-            return _columns.SingleOrDefault(x => x.Name == alias);
+            return _columns.SingleOrDefault(x => x.Name.EqualsIgnoreCase(alias));
         }
 
         ColumnDefinition IColumnMapping.ColumnFor(Accessor accessor)
@@ -46,11 +47,39 @@ namespace FubuCore.Csv
 
         IValueSource IColumnMapping.ValueSource(CsvData data, CsvData headers)
         {
+            var mapping = this.As<IColumnMapping>();
+            var badColumns = new List<string>();
+
             var columns = headers
                 .Values
-                .Select(x => ((IColumnMapping)this).ColumnFor(x));
+                .Select(x => {
+                    var column = mapping.ColumnFor(x);
+                    if (column == null)
+                    {
+                        badColumns.Add(x);
+                    }
+
+                    return column;
+                }).ToArray();
+
+            if (badColumns.Any())
+            {
+                throw new CsvColumnException(badColumns);
+            }
 
             return data.ToValueSource(columns);
+        }
+    }
+
+    [Serializable]
+    public class CsvColumnException : Exception
+    {
+        public CsvColumnException(IEnumerable<string> columns) : base("Unrecognized columns:  " + columns.Join(", "))
+        {
+        }
+
+        protected CsvColumnException(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
         }
     }
 }
