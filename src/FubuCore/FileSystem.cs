@@ -175,9 +175,22 @@ namespace FubuCore
             }
         }
 
+		public T LoadFromFileOrThrow<T>(string filename) where T : new()
+		{
+			if (!FileExists(filename))
+			{
+				throw new ApplicationException("Unable to deserialize the contents of file {0}. It does not exist or we do not have read access to it.");
+			}
+
+			return LoadFromFile<T>(filename);
+		}
+
         public T LoadFromFile<T>(string filename) where T : new()
         {
-            if (!FileExists(filename)) return new T();
+            if (!FileExists(filename))
+            {
+	            return new T();
+            }
 
             var serializer = new XmlSerializer(typeof (T));
 
