@@ -9,8 +9,9 @@ namespace FubuCore.Binding
     [Description("Converts to booean values, HTML checkbox friendly conversion")]
     public class BooleanFamily : StatelessConverter
     {
-        private static TypeConverter _converter = TypeDescriptor.GetConverter(typeof(bool));
-        private static IList<string> _aliases = new List<string> { "yes", "y" };
+        private static readonly TypeConverter _converter = TypeDescriptor.GetConverter(typeof(bool));
+        private static readonly IList<string> _positives = new List<string> { "yes", "y" };
+        private static readonly IList<string> _negatives = new List<string> { "no", "n" };
         public const string CheckboxOn = "on";
 
         public override bool Matches(PropertyInfo property)
@@ -26,10 +27,13 @@ namespace FubuCore.Binding
 
             var valueString = rawValue.ToString();
 
-            return valueString.Contains(context.Property.Name)
-            || valueString.EqualsIgnoreCase(CheckboxOn)
-            || _aliases.Any(x => x.Equals(valueString, StringComparison.OrdinalIgnoreCase))
-            || (bool)_converter.ConvertFrom(rawValue);
+            if (valueString.IsEmpty()) return false;
+            if (valueString.Contains(context.Property.Name)) return true;
+            if (valueString.EqualsIgnoreCase(CheckboxOn)) return true;
+            if (_positives.Any(x => x.Equals(valueString, StringComparison.OrdinalIgnoreCase))) return true;
+            if (_negatives.Any(x => x.Equals(valueString, StringComparison.OrdinalIgnoreCase))) return false;
+
+            return (bool)_converter.ConvertFrom(rawValue);
         }
     }
 }

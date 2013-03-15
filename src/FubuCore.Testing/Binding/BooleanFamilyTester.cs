@@ -5,6 +5,7 @@ using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuTestingSupport;
 using NUnit.Framework;
+using System.Linq;
 
 namespace FubuCore.Testing.Binding
 {
@@ -44,11 +45,10 @@ namespace FubuCore.Testing.Binding
     {
         private bool WithValue(string value)
         {
-            return BindingScenario<BooleanTarget>.For(x =>
-            {
-                x.Data(o => o.IsTrue, value);
+            var scenario = BindingScenario<BooleanTarget>.For(x => { x.Data(o => o.IsTrue, value); });
+            scenario.Problems.Any().ShouldBeFalse();
 
-            }).Model.IsTrue;
+            return scenario.Model.IsTrue;
         }
 
         [Test]
