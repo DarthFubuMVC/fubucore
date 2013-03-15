@@ -197,9 +197,13 @@
     <Compile Include="Descriptions\Spacer.cs" />
     <Compile Include="Descriptions\TitleAttribute.cs" />
     <Compile Include="Descriptions\UnorderedPrefixSource.cs" />
+    <Compile Include="Logging\ConsoleListener.cs" />
+    <Compile Include="Logging\DebugListener.cs" />
+    <Compile Include="Logging\FilteredListener.cs" />
     <Compile Include="Logging\ILogger.cs" />
     <Compile Include="Logging\ILogListener.cs" />
     <Compile Include="Logging\ILogModifier.cs" />
+    <Compile Include="Logging\Level.cs" />
     <Compile Include="Logging\ListenerCollection.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LogRecord.cs" />

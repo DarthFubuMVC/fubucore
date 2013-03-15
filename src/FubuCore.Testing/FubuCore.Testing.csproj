@@ -176,6 +176,9 @@
     <Compile Include="Formatting\StringifierTester.cs" />
     <Compile Include="FubuExceptionTester.cs" />
     <Compile Include="GenericEnumerableExtensionsTester.cs" />
+    <Compile Include="Logging\ConsoleListenerSmokeTester.cs" />
+    <Compile Include="Logging\Copy of ConsoleListenerSmokeTester.cs" />
+    <Compile Include="Logging\FilteredListenerTester.cs" />
     <Compile Include="Logging\LoggerTester.cs" />
     <Compile Include="Logging\LogRecordModifierTester.cs" />
     <Compile Include="NumberExtensionsTester.cs" />
