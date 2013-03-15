@@ -1,40 +1,76 @@
 <Topic title="FubuCore" name="FubuCoreRoot">
+  <Topic title="IoC Abstractions" />
   <Binding>
-    <Topic title="Model Binding">
-      
+    <Topic title="Model Binding and Type Conversion">
+      <Topic title="Type Conversions">
+        <Topic title="Built in Conversions"/>
+        <Topic title="Customizing"/>
+        <Topic title="Architecture">
+          <Topic title="ObjectResolver"/>
+          <Topic title="Integration with IoC"/>
+          <Topic title="IConverterStrategy"/>
+          <Topic title="ConverterLibrary"/>
+        </Topic>
+      </Topic>
+      <Topic title="Using with an IoC Tool"/>
+      <Topic title="Using without an IoC Tool"/>
+      <Topic title="Architecture">
+        <Topic title="IObjectResolver" />
+        <Topic title="BindingRegistry" />
+        <Topic title="IValueSource" />
+        <Topic title="IKeyValues"/>
+        <Topic title="IModelBinder" />
+        <Topic title="IBindingContext" />
+        <Topic title="IPropertyBinder" />
+        <Topic title="IConverterFamily" />
+      </Topic>
+      <Topic title="Built In Binders">
+
+      </Topic>
+      <Topic title="Blacklisting Properties"/>
+      <Topic title="Whitelisting Properties"/>
+      <Topic title="Extending">
+        <Topic title="Integration with your IoC Container"/>
+        <Topic title="Custom Value Sources" />
+        <Topic title="Custom Model Binders" />
+        <Topic title="Custom Property Binders" />
+        <Topic title="Custom Value Conversions" />
+      </Topic>
+      <Topic title="Unit Testing"/>
+      <Topic title="Logging and Diagnostics"/>
     </Topic>
   </Binding>
 
   <CommandLine>
-    
+    <Topic title="Building Command Line Tools"/>
   </CommandLine>
 
   <Configuration>
-    
+    <Topic title="Configuration the Fubu Way"/>
   </Configuration>
 
   <Csv>
-    
+    <Topic title="Working with Flat Files"/>
   </Csv>
 
   <Dates>
-    
+    <Topic title="Date Utilities"/>
   </Dates>
 
   <DependencyAnalysis>
-    
+    <Topic title="Dependency Analysis"/>
   </DependencyAnalysis>
 
   <Descriptions>
-    
+    <Topic title="Self Describing Objects"/>
   </Descriptions>
 
   <Formatting>
-    
+    <Topic title="Display Formatting"/>
   </Formatting>
 
   <Logging>
-    
+    <Topic title="Generic Logging Support"/>
   </Logging>
 
   <Reflection>
@@ -45,9 +81,9 @@
   </Reflection>
 
   <Utility>
-    <TextWriting>
-      
-    </TextWriting>
+    <Topic title="Writing Text Reports"/>
+    <Topic title="Cache"/>
+    <Topic title="Composite Actions and Filters"/>
   </Utility>
 
   <FileSystem>

@@ -1,0 +1,9 @@
+<viewdata model="FubuCore.Docs.Binding.CustomPropertyBinders"/>
+<use master="Topic" />
+<content:main>
+
+<markdown>
+
+</markdown>
+
+</content:main>
