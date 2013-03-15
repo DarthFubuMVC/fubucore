@@ -24,7 +24,8 @@ namespace FubuCore
 
         string ReadStringFromFile(string filename);
         void WriteObjectToFile(string filename, object target);
-        T LoadFromFile<T>(string filename) where T : new();
+		T LoadFromFile<T>(string filename) where T : new();
+		T LoadFromFileOrThrow<T>(string filename) where T : new();
 
         void CreateDirectory(string directory);
 
