@@ -47,10 +47,10 @@
       <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap">
-      <HintPath>..\packages\StructureMap\lib\net40\StructureMap.dll</HintPath>
+      <HintPath>..\packages\StructureMap\lib\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="StructureMap.AutoMocking">
-      <HintPath>..\packages\StructureMap.AutoMocking\lib\net40\StructureMap.AutoMocking.dll</HintPath>
+      <HintPath>..\packages\StructureMap.AutoMocking\lib\StructureMap.AutoMocking.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
