@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{24FF3768-92B4-4600-8286-D26E05559590}</ProjectGuid>
+    <ProjectGuid>{41E2377E-C76B-47C0-9AF3-984BC7106CEC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FubuCore.Docs</RootNamespace>
@@ -31,86 +31,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FubuDocs">
-      <HintPath>..\packages\FubuDocs\lib\net40\FubuDocs.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Binding\Architecture.cs" />
-    <Compile Include="Binding\Bindingregistry.cs" />
-    <Compile Include="Binding\BlacklistingProperties.cs" />
-    <Compile Include="Binding\BuiltInBinders.cs" />
-    <Compile Include="Binding\BuiltInConversions.cs" />
-    <Compile Include="Binding\Converterlibrary.cs" />
-    <Compile Include="Binding\Customizing.cs" />
-    <Compile Include="Binding\CustomModelBinders.cs" />
-    <Compile Include="Binding\CustomPropertyBinders.cs" />
-    <Compile Include="Binding\CustomValueConversions.cs" />
-    <Compile Include="Binding\CustomValueSources.cs" />
-    <Compile Include="Binding\Extending.cs" />
-    <Compile Include="Binding\Ibindingcontext.cs" />
-    <Compile Include="Binding\Iconverterfamily.cs" />
-    <Compile Include="Binding\Iconverterstrategy.cs" />
-    <Compile Include="Binding\Ikeyvalues.cs" />
-    <Compile Include="Binding\Imodelbinder.cs" />
-    <Compile Include="Binding\IntegrationWithIoc.cs" />
-    <Compile Include="Binding\IntegrationWithYourIocContainer.cs" />
-    <Compile Include="Binding\Iobjectresolver.cs" />
-    <Compile Include="Binding\Ipropertybinder.cs" />
-    <Compile Include="Binding\Ivaluesource.cs" />
-    <Compile Include="Binding\LoggingAndDiagnostics.cs" />
-    <Compile Include="Binding\ModelBinding.cs" />
-    <Compile Include="Binding\ModelBindingAndTypeConversion.cs" />
-    <Compile Include="Binding\Objectresolver.cs" />
-    <Compile Include="Binding\TypeConversions.cs" />
-    <Compile Include="Binding\UnitTesting.cs" />
-    <Compile Include="Binding\UsingWithAnIocTool.cs" />
-    <Compile Include="Binding\UsingWithoutAnIocTool.cs" />
-    <Compile Include="Binding\WhitelistingProperties.cs" />
-    <Compile Include="CommandLine\BuildingCommandLineTools.cs" />
-    <Compile Include="Configuration\ConfigurationTheFubuWay.cs" />
-    <Compile Include="Csv\WorkingWithFlatFiles.cs" />
-    <Compile Include="Dates\DateUtilities.cs" />
-    <Compile Include="DependencyAnalysis\DependencyAnalysis.cs" />
-    <Compile Include="Descriptions\SelfDescribingObjects.cs" />
-    <Compile Include="Extensions\BooleanExtensions.cs" />
-    <Compile Include="Extensions\ContinuationPassingStyleExtensions.cs" />
-    <Compile Include="Extensions\DictionaryExtensions.cs" />
-    <Compile Include="Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Extensions\ExtensionLibraries.cs" />
-    <Compile Include="Extensions\FileHashingExtensions.cs" />
-    <Compile Include="Extensions\NumberExtensions.cs" />
-    <Compile Include="Extensions\ReaderwriterlockExtensions.cs" />
-    <Compile Include="Extensions\Safedispose.cs" />
-    <Compile Include="Extensions\StreamExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="Extensions\TimespanExtensions.cs" />
-    <Compile Include="FileSystem\Filechangepollingwatcher.cs" />
-    <Compile Include="FileSystem\Ifilesystem.cs" />
-    <Compile Include="FileSystem\ManipulatingTextFiles.cs" />
-    <Compile Include="FileSystem\WorkingWithTheFileSystem.cs" />
-    <Compile Include="Formatting\DisplayFormatting.cs" />
-    <Compile Include="FubuCoreRoot.cs" />
-    <Compile Include="FubuCoreRootTopicRegistry.cs" />
-    <Compile Include="IocAbstractions.cs" />
-    <Compile Include="Logging\GenericLoggingSupport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\ReflectionHelpers.cs" />
-    <Compile Include="Reflection\TypeExtensions.cs" />
-    <Compile Include="Reflection\Typeresolver.cs" />
-    <Compile Include="Utility\Cache.cs" />
-    <Compile Include="Utility\CompositeActionsAndFilters.cs" />
-    <Compile Include="Utility\WritingTextReports.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
@@ -128,70 +58,5 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="pak-Config.zip" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Binding\Architecture.spark" />
-    <None Include="Binding\Bindingregistry.spark" />
-    <None Include="Binding\BlacklistingProperties.spark" />
-    <None Include="Binding\BuiltInBinders.spark" />
-    <None Include="Binding\BuiltInConversions.spark" />
-    <None Include="Binding\Converterlibrary.spark" />
-    <None Include="Binding\Customizing.spark" />
-    <None Include="Binding\CustomModelBinders.spark" />
-    <None Include="Binding\CustomPropertyBinders.spark" />
-    <None Include="Binding\CustomValueConversions.spark" />
-    <None Include="Binding\CustomValueSources.spark" />
-    <None Include="Binding\Extending.spark" />
-    <None Include="Binding\Ibindingcontext.spark" />
-    <None Include="Binding\Iconverterfamily.spark" />
-    <None Include="Binding\Iconverterstrategy.spark" />
-    <None Include="Binding\Ikeyvalues.spark" />
-    <None Include="Binding\Imodelbinder.spark" />
-    <None Include="Binding\IntegrationWithIoc.spark" />
-    <None Include="Binding\IntegrationWithYourIocContainer.spark" />
-    <None Include="Binding\Iobjectresolver.spark" />
-    <None Include="Binding\Ipropertybinder.spark" />
-    <None Include="Binding\Ivaluesource.spark" />
-    <None Include="Binding\LoggingAndDiagnostics.spark" />
-    <None Include="Binding\ModelBinding.spark" />
-    <None Include="Binding\ModelBindingAndTypeConversion.spark" />
-    <None Include="Binding\Objectresolver.spark" />
-    <None Include="Binding\TypeConversions.spark" />
-    <None Include="Binding\UnitTesting.spark" />
-    <None Include="Binding\UsingWithAnIocTool.spark" />
-    <None Include="Binding\UsingWithoutAnIocTool.spark" />
-    <None Include="Binding\WhitelistingProperties.spark" />
-    <None Include="CommandLine\BuildingCommandLineTools.spark" />
-    <None Include="Configuration\ConfigurationTheFubuWay.spark" />
-    <None Include="Csv\WorkingWithFlatFiles.spark" />
-    <None Include="Dates\DateUtilities.spark" />
-    <None Include="DependencyAnalysis\DependencyAnalysis.spark" />
-    <None Include="Descriptions\SelfDescribingObjects.spark" />
-    <None Include="Extensions\BooleanExtensions.spark" />
-    <None Include="Extensions\ContinuationPassingStyleExtensions.spark" />
-    <None Include="Extensions\DictionaryExtensions.spark" />
-    <None Include="Extensions\EnumerableExtensions.spark" />
-    <None Include="Extensions\ExtensionLibraries.spark" />
-    <None Include="Extensions\FileHashingExtensions.spark" />
-    <None Include="Extensions\NumberExtensions.spark" />
-    <None Include="Extensions\ReaderwriterlockExtensions.spark" />
-    <None Include="Extensions\Safedispose.spark" />
-    <None Include="Extensions\StreamExtensions.spark" />
-    <None Include="Extensions\StringExtensions.spark" />
-    <None Include="Extensions\TimespanExtensions.spark" />
-    <None Include="FileSystem\Filechangepollingwatcher.spark" />
-    <None Include="FileSystem\Ifilesystem.spark" />
-    <None Include="FileSystem\ManipulatingTextFiles.spark" />
-    <None Include="FileSystem\WorkingWithTheFileSystem.spark" />
-    <None Include="Formatting\DisplayFormatting.spark" />
-    <None Include="FubuCoreRoot.spark" />
-    <None Include="IocAbstractions.spark" />
-    <None Include="Logging\GenericLoggingSupport.spark" />
-    <None Include="Reflection\ReflectionHelpers.spark" />
-    <None Include="Reflection\TypeExtensions.spark" />
-    <None Include="Reflection\Typeresolver.spark" />
-    <None Include="Utility\Cache.spark" />
-    <None Include="Utility\CompositeActionsAndFilters.spark" />
-    <None Include="Utility\WritingTextReports.spark" />
   </ItemGroup>
 </Project>

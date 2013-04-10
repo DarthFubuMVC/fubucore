@@ -2,8 +2,8 @@
 <package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Role>module</Role>
   <Name>FubuCore.Docs</Name>
+  <assembly>FubuCore.Docs</assembly>
   <ContentFileSet Include="*.*" Exclude="Properties/*;bin/*;obj/*;*.csproj*;packages.config;repositories.config;pak-*.zip;*.sln">
     <DeepSearch>true</DeepSearch>
   </ContentFileSet>
-  <assembly>FubuCore.Docs</assembly>
 </package>
