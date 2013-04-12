@@ -9,6 +9,15 @@ namespace FubuCore.CommandLine
         public IEnumerable<Argument> Arguments { get; set; }
         public IEnumerable<ITokenHandler> ValidFlags { get; set; }
 
+        public UsageReport ToReport(string appName, string commandName)
+        {
+            return new UsageReport
+            {
+                Description = Description,
+                Usage = ToUsage(appName, commandName)
+            };
+        }
+
         public string ToUsage(string appName, string commandName)
         {
             return "{0} {1} {2}".ToFormat(appName, commandName,

@@ -133,6 +133,21 @@ namespace FubuCore.Testing.CommandLine
         }
 
         [Test]
+        public void fetch_the_dump_usages_command_if_the_command_is_dump_usages()
+        {
+            var factory = new CommandFactory();
+            factory.RegisterCommands(GetType().Assembly);
+
+            var run = factory.BuildRun(new string[] {"dump-usages", "ripple", "somewhere.xml"});
+            run.Command.ShouldBeOfType<DumpUsagesCommand>();
+
+            var input = run.Input.ShouldBeOfType<DumpUsagesInput>();
+            input.Commands.ShouldBeTheSameAs(factory);
+            input.ApplicationName.ShouldEqual("ripple");
+            input.Location.ShouldEqual("somewhere.xml");
+        }
+
+        [Test]
         public void fetch_the_help_command_if_the_args_are_empty()
         {
             var factory = new CommandFactory();

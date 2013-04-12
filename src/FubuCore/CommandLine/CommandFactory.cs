@@ -29,6 +29,11 @@ namespace FubuCore.CommandLine
             var queue = new Queue<string>(args);
             var commandName = queue.Dequeue().ToLowerInvariant();
 
+            if (commandName == "dump-usages")
+            {
+                return dumpUsagesRun(queue);
+            }
+
             // TEMPORARY
             if (_helpCommands.Contains(commandName))
             {
@@ -42,6 +47,7 @@ namespace FubuCore.CommandLine
 
             return InvalidCommandRun(commandName);
         }
+
 
         public IEnumerable<Type> AllCommandTypes()
         {
@@ -117,6 +123,12 @@ namespace FubuCore.CommandLine
                 .Each(t => { _commandTypes[CommandNameFor(t)] = t; });
         }
 
+        public IEnumerable<IFubuCommand> BuildAllCommands()
+        {
+            return _commandTypes.Select(x => {
+                return Activator.CreateInstance(x).As<IFubuCommand>();
+            });
+        }
 
 
         public IFubuCommand Build(string commandName)
@@ -153,6 +165,20 @@ namespace FubuCore.CommandLine
                 Input = input
             };
         }
+
+        private CommandRun dumpUsagesRun(Queue<string> queue)
+        {
+            var command = new DumpUsagesCommand();
+            var input = command.Usages.BuildInput(queue).As<DumpUsagesInput>();
+            input.Commands = this;
+            
+            return new CommandRun
+            {
+                Command = command,
+                Input = input
+            };
+        }
+
 
         static readonly Regex regex = new Regex("(?<name>.+)Command",RegexOptions.Compiled);
         public static string CommandNameFor(Type type)

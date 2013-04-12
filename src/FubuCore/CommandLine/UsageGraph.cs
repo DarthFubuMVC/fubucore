@@ -42,6 +42,18 @@ namespace FubuCore.CommandLine
             });
         }
 
+        public CommandReport ToReport(string appName)
+        {
+            return new CommandReport
+            {
+                Name = _commandName,
+                Description = _description,
+                Arguments = Arguments.Select(x => x.ToReport()).ToArray(),
+                Flags = Flags.Select(x => new FlagReport(x)).ToArray(),
+                Usages = _usages.Select(x => x.ToReport(appName, _commandName)).ToArray()
+            };
+        }
+
         public object BuildInput(Queue<string> tokens)
         {
             var model = Activator.CreateInstance(_inputType);

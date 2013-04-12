@@ -19,6 +19,15 @@ namespace FubuCore.CommandLine
             _converter = converter;
         }
 
+        public ArgumentReport ToReport()
+        {
+            return new ArgumentReport
+            {
+                Description = Description,
+                Name = _property.Name.ToLower()
+            };
+        }
+
         public override bool Handle(object input, Queue<string> tokens)
         {
             if (_isLatched) return false;

@@ -8,5 +8,7 @@ namespace FubuCore.CommandLine
         CommandRun BuildRun(string commandLine);
         CommandRun BuildRun(IEnumerable<string> args);
         void RegisterCommands(Assembly assembly);
+
+        IEnumerable<IFubuCommand> BuildAllCommands();
     }
 }
