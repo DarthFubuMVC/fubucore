@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace FubuCore.CommandLine
 {
@@ -6,5 +7,6 @@ namespace FubuCore.CommandLine
     {
         CommandRun BuildRun(string commandLine);
         CommandRun BuildRun(IEnumerable<string> args);
+        void RegisterCommands(Assembly assembly);
     }
 }
