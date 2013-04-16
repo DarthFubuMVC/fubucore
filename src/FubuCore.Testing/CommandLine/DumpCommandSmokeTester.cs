@@ -93,6 +93,13 @@ namespace FubuCore.Testing.CommandLine
             report.ShouldNotBeNull();
             report.Commands.Any().ShouldBeTrue();
         }
+
+        [Test]
+        public void can_read_usage_for_a_single_usage_command()
+        {
+            var simpleReport = report.Commands.Single(x => x.Name == "simple");
+            simpleReport.Usages.Count().ShouldEqual(1);
+        }
     }
 
     public class CrazyInput
@@ -124,6 +131,15 @@ namespace FubuCore.Testing.CommandLine
             Usage("All").Arguments(x => x.Arg1, x => x.Arg2, x => x.Arg3);
         }
 
+        public override bool Execute(CrazyInput input)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    [CommandDescription("The simple one")]
+    public class SingleCommand : FubuCommand<CrazyInput>
+    {
         public override bool Execute(CrazyInput input)
         {
             throw new NotImplementedException();

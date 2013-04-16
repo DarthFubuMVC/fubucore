@@ -50,7 +50,7 @@ namespace FubuCore.CommandLine
                 Description = _description,
                 Arguments = Arguments.Select(x => x.ToReport()).ToArray(),
                 Flags = Flags.Select(x => new FlagReport(x)).ToArray(),
-                Usages = _usages.Select(x => x.ToReport(appName, _commandName)).ToArray()
+                Usages = Usages.Select(x => x.ToReport(appName, _commandName)).ToArray()
             };
         }
 
