@@ -37,3 +37,4 @@ deployment/bottles/*.zip
 src/packages
 results/*
 src/Max
+logs

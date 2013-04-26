@@ -1,18 +1,9 @@
 COMPILE_TARGET = ENV['config'].nil? ? "Debug" : ENV['config']
 CLR_TOOLS_VERSION = "v4.0.30319"
 
-buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
 
-if( ! buildsupportfiles.any? )
-  # no buildsupport, let's go get it for them.
-  sh 'git submodule update --init' unless buildsupportfiles.any?
-  buildsupportfiles = Dir["#{File.dirname(__FILE__)}/buildsupport/*.rb"]
-end
+load 'fuburake.rb'
 
-# nope, we still don't have buildsupport. Something went wrong.
-raise "Run `git submodule update --init` to populate your buildsupport folder." unless buildsupportfiles.any?
-
-buildsupportfiles.each { |ext| load ext }
 
 include FileTest
 require 'albacore'
@@ -61,8 +52,7 @@ assemblyinfo :version do |asm|
 end
 
 desc "Prepares the working directory for a new build"
-task :clean => [:update_buildsupport] do
-	
+task :clean do
 	FileUtils.rm_rf props[:stage]
     # work around nasty latency issue where folder still exists for a short while after it is removed
     waitfor { !exists?(props[:stage]) }
@@ -83,22 +73,13 @@ end
 
 
 desc "Compiles the app"
-task :compile => [:clean, :restore_if_missing, :version, "docs:bottle"] do
+task :compile => [:clean, "ripple:restore", :version, "docs:bottle"] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
   copyOutputFiles "src/FubuCore/bin/#{COMPILE_TARGET}", "Fubu*.{dll,pdb}", props[:stage]  
-  copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "localizer*.{exe,pdb}", props[:stage]   
-  copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "Microsoft.Practices.ServiceLocation.dll", props[:stage]   
+  copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "localizer*.{exe,pdb}", props[:stage]     
   copyOutputFiles "src/FubuTestingSupport/bin/#{COMPILE_TARGET}", "FubuTestingSupport*.{dll,pdb}", props[:stage]  
 end
 
-def copyOutputFiles(fromDir, filePattern, outDir)
-  Dir.glob(File.join(fromDir, filePattern)){|file| 		
-	copy(file, outDir) if File.file?(file)
-  } 
-end
-
-desc "Runs unit tests"
-task :test => [:unit_test]
 
 desc "Runs unit tests"
 task :unit_test => :compile do
