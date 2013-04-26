@@ -11,7 +11,7 @@ load "VERSION.txt"
 
 RESULTS_DIR = "results"
 PRODUCT = "FubuCore"
-COPYRIGHT = 'Copyright 2008-2011 Jeremy D. Miller, Josh Arnold, Joshua Flanagan, et al. All rights reserved.';
+COPYRIGHT = 'Copyright 2008-2013 Jeremy D. Miller, Josh Arnold, Joshua Flanagan, et al. All rights reserved.';
 COMMON_ASSEMBLY_INFO = 'src/CommonAssemblyInfo.cs';
 
 @teamcity_build_id = "bt396"
@@ -62,27 +62,17 @@ task :clean do
 	Dir.mkdir props[:artifacts]
 end
 
-def waitfor(&block)
-  checks = 0
-  until block.call || checks >10 
-    sleep 0.5
-    checks += 1
-  end
-  raise 'waitfor timeout expired' if checks > 10
-end
+
 
 
 desc "Compiles the app"
 task :compile => [:clean, "ripple:restore", :version, "docs:bottle"] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
-  copyOutputFiles "src/FubuCore/bin/#{COMPILE_TARGET}", "Fubu*.{dll,pdb}", props[:stage]  
-  copyOutputFiles "src/localizer/bin/#{COMPILE_TARGET}", "localizer*.{exe,pdb}", props[:stage]     
-  copyOutputFiles "src/FubuTestingSupport/bin/#{COMPILE_TARGET}", "FubuTestingSupport*.{dll,pdb}", props[:stage]  
 end
 
 
 desc "Runs unit tests"
 task :unit_test => :compile do
   runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :source => 'src', :platform => 'x86'
-  runner.executeTests ['FubuCore.Testing']
+  runner.executeTestsInFile 'TESTS.txt'
 end

@@ -29,6 +29,9 @@ namespace :ripple do
 	
 	desc "packages the nuget files from the nuspec files in packaging/nuget and publishes to /artifacts"
 	task :package => [:history] do
+		COMPILE_TARGET = 'release'
+		Rake::Task["compile"].execute
+	
 		sh "ripple local-nuget --version #{BUILD_NUMBER} --destination artifacts"
 	end
 end
@@ -52,6 +55,26 @@ class NUnitRunner
 			file = File.expand_path("#{@sourceDir}/#{assem}/bin/#{@compileTarget}/#{assem}.dll")
 			sh Platform.runtime("#{@nunitExe} -xml=#{@resultsDir}/#{assem}-TestResults.xml \"#{file}\"")
 		end
+	end
+	
+	def executeTestsInFile(file)
+	  if !File.exist?(file)
+		throw "File #{file} does not exist"
+	  end
+	  
+	  tests = Array.new
+
+	  file = File.new(file, "r")
+	  assemblies = file.readlines()
+	  assemblies.each do |a|
+		test = a.gsub("\r\n", "").gsub("\n", "")
+		tests.push(test)
+	  end
+	  file.close
+	  
+	  if (!tests.empty?)
+	    executeTests tests
+	  end
 	end
 end
 
@@ -165,7 +188,24 @@ def copyOutputFiles(fromDir, filePattern, outDir)
   } 
 end
 
+def waitfor(&block)
+  checks = 0
+  until block.call || checks >10 
+    sleep 0.5
+    checks += 1
+  end
+  raise 'waitfor timeout expired' if checks > 10
+end
 
+def cleanDirectory(dir)
+  FileUtils.rm_rf dir;
+  waitfor { !exists?(dir) }
+  Dir.mkdir dir
+end
+
+def cleanFile(file)
+  File.delete file unless !File.exist?(file)
+end
 
 module Nuget
   def self.tool(package, tool)
