@@ -254,8 +254,11 @@ module FubuRake
   
   class SolutionTasks
     @clean = []
+	@compile = nil
 	
-	attr_accessor :clean
+	attr_accessor :clean, :compile
+	
+	 
   end
   
   class Solution
@@ -271,6 +274,15 @@ module FubuRake
 		end
 	  
 		cleanTask.add_description "Prepares the working directory for a new build"
+	  end
+	  
+	  if (tasks.compile != nil)
+		compileTask = Rake::Task.define_task :compile do
+		  MSBuildRunner.compile tasks.compile
+		end
+		
+		compileTask.add_description "Compiles the application"
+		compileTask.enhance [:clean]
 	  end
 	end
   end

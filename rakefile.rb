@@ -24,10 +24,12 @@ ARTIFACTS = File.expand_path("artifacts")
 
 props = { :stage => File.expand_path("build"), :artifacts => ARTIFACTS }
 
-#cleanTask [props[:stage], props[:artifacts]]
 
 FubuRake::Solution.new do |sln|
   sln.clean = [props[:stage], props[:artifacts]]
+  sln.compile = {:compilemode => COMPILE_TARGET, 
+                 :solutionfile => 'src/FubuCore.sln', 
+				 :clrversion => CLR_TOOLS_VERSION}
 end
 
 
@@ -61,10 +63,12 @@ assemblyinfo :version do |asm|
 end
 
 
-desc "Compiles the app"
-task :compile => [:clean, "ripple:restore", :version, "docs:bottle"] do
-  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
-end
+#desc "Compiles the app"
+#task :compile => [:clean, "ripple:restore", :version, "docs:bottle"] do
+#  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_TOOLS_VERSION
+#end
+
+
 
 
 desc "Runs unit tests"
