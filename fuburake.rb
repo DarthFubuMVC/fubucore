@@ -194,8 +194,9 @@ module FubuRake
 	@assembly_info = nil
 	@ripple_enabled = false
 	@fubudocs_enabled = false
+	@options = nil
 	
-	attr_accessor :clean, :compile, :assembly_info, :ripple_enabled, :fubudocs_enabled
+	attr_accessor :clean, :compile, :assembly_info, :ripple_enabled, :fubudocs_enabled, :options
 	
 	
   end
@@ -204,6 +205,14 @@ module FubuRake
     def initialize(&block)
 	  tasks = SolutionTasks.new
 	  block.call(tasks)
+	  
+	  options = tasks.options
+	  options ||= {}
+	  
+	  options = options.merge({
+		:compilemode => ENV['config'].nil? ? "Debug" : ENV['config'],
+		:clrversion => 'v4.0.30319'
+	  })
 	  
 	  if (tasks.clean) == nil
 		tasks.clean = []
@@ -277,7 +286,7 @@ module FubuRake
 
 	  if (tasks.compile != nil)
 		compileTask = Rake::Task.define_task :compile do
-		  MSBuildRunner.compile tasks.compile
+		  MSBuildRunner.compile options.merge(tasks.compile)
 		end
 		
 		compileTask.add_description "Compiles the application"
