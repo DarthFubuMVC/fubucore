@@ -1,4 +1,5 @@
 include FileUtils
+require 'albacore'
 
 namespace :ripple do
 	desc "Restores nuget package files"
@@ -255,16 +256,60 @@ module FubuRake
   class SolutionTasks
     @clean = []
 	@compile = nil
+	@assembly_info = nil
 	
-	attr_accessor :clean, :compile
-	
-	 
+	attr_accessor :clean, :compile, :assembly_info
+
   end
   
   class Solution
     def initialize(&block)
 	  tasks = SolutionTasks.new
 	  block.call(tasks)
+	  
+	  if (tasks.assembly_info != nil)
+	    versionTask = Rake::Task.define_task :version do
+			tc_build_number = ENV["BUILD_NUMBER"]
+			build_revision = tc_build_number || Time.new.strftime('5%H%M')
+		    asm_version = BUILD_VERSION + ".0"
+			build_number = "#{BUILD_VERSION}.#{build_revision}"
+		  
+		    begin
+			  commit = `git log -1 --pretty=format:%H`
+		    rescue
+			  commit = "git unavailable"
+		    end
+		    puts "##teamcity[buildNumber '#{build_number}']" unless tc_build_number.nil?
+		    puts "Version: #{build_number}" if tc_build_number.nil?
+			
+			options = {
+				:trademark => commit, 
+				:product_name => 'CHANGEME', 
+				:description => build_number, 
+				:version => asm_version, 
+				:file_version => build_number,
+				:informational_version => asm_version,
+				:copyright => 'CHANGEME',
+				:output_file => 'src/CommonAssemblyInfo.cs'
+			}
+			
+			options = options.merge(tasks.assembly_info)
+			
+			File.open(options[:output_file], 'w') do |file|
+				file.write "using System.Reflection;\n"
+				file.write "using System.Runtime.InteropServices;\n"
+				file.write "[assembly: AssemblyDescription(\"#{options[:description]}\")]\n"
+				file.write "[assembly: AssemblyProduct(\"#{options[:product_name]}\")]\n"
+				file.write "[assembly: AssemblyCopyright(\"#{options[:copyright]}\")]\n"
+				file.write "[assembly: AssemblyTrademark(\"#{options[:trademark]}\")]\n"
+				file.write "[assembly: AssemblyVersion(\"#{options[:version]}\")]\n"
+				file.write "[assembly: AssemblyFileVersion(\"#{options[:file_version]}\")]\n"
+				file.write "[assembly: AssemblyInformationalVersion(\"#{options[:informational_version]}\")]\n"
+			end
+		end
+		
+		versionTask.add_description "Update the version information for the build"
+	  end
 	  
 	  if (tasks.clean.any?)
 	    cleanTask = Rake::Task.define_task :clean do
@@ -275,7 +320,7 @@ module FubuRake
 	  
 		cleanTask.add_description "Prepares the working directory for a new build"
 	  end
-	  
+
 	  if (tasks.compile != nil)
 		compileTask = Rake::Task.define_task :compile do
 		  MSBuildRunner.compile tasks.compile
@@ -283,7 +328,13 @@ module FubuRake
 		
 		compileTask.add_description "Compiles the application"
 		compileTask.enhance [:clean]
+		
+		if (tasks.assembly_info != nil)
+			compileTask.enhance [:version]
+		end
 	  end
+	  
+
 	end
   end
 end
