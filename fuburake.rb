@@ -205,8 +205,14 @@ module FubuRake
 	  tasks = SolutionTasks.new
 	  block.call(tasks)
 	  
+	  if (tasks.clean) == nil
+		tasks.clean = []
+	  end
+	  
 	  if (tasks.ripple_enabled)
 	    require File.join(File.dirname(__FILE__), 'ripple')
+		
+		tasks.clean << 'artifacts'
 		
 		#TODO -- add more stuff in to tasks
 	  end

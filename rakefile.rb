@@ -8,8 +8,6 @@ load "VERSION.txt"
 ARTIFACTS = File.expand_path("artifacts")
 
 FubuRake::Solution.new do |sln|
-	sln.clean = [ARTIFACTS]
-	
 	sln.compile = {
 		:compilemode => COMPILE_TARGET, 
 		:solutionfile => 'src/FubuCore.sln', 
