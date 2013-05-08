@@ -1,40 +1,7 @@
 include FileUtils
+include FileTest
 
-namespace :ripple do
-	desc "Restores nuget package files"
-	task :restore do
-	  puts 'Restoring all the nuget package files'
-      sh 'ripple restore'
-	end
 
-	desc "Updates nuget package files to the latest"
-	task :update do
-	  puts 'Updating all the nuget package files'
-	  sh 'ripple update'
-	end
-
-	desc "creates a history file for nuget dependencies"
-	task :history do
-	  sh 'ripple history'
-	end
-	
-	desc "publishes all the nuget's published by this solution"
-	task :publish do
-	  nuget_api_key = ENV['apikey']
-	  server = ENV['server']
-	  cmd = "ripple publish #{BUILD_NUMBER} #{nuget_api_key}"
-	  cmd = cmd + " --server #{server}" unless server.nil?
-	  sh cmd
-	end
-	
-	desc "packages the nuget files from the nuspec files in packaging/nuget and publishes to /artifacts"
-	task :package => [:history] do
-		COMPILE_TARGET = 'release'
-		Rake::Task["compile"].execute
-	
-		sh "ripple local-nuget --version #{BUILD_NUMBER} --destination artifacts"
-	end
-end
 
 class NUnitRunner
 	include FileTest
@@ -248,23 +215,25 @@ end
 
 
 module FubuRake
-  def FubuRake.go
-    puts 'GO'
-  end 
-  
   class SolutionTasks
     @clean = []
 	@compile = nil
 	@assembly_info = nil
+	@ripple_enabled = false
 	
-	attr_accessor :clean, :compile, :assembly_info
-
+	attr_accessor :clean, :compile, :assembly_info, :ripple_enabled
+	
+	
   end
   
   class Solution
     def initialize(&block)
 	  tasks = SolutionTasks.new
 	  block.call(tasks)
+	  
+	  if (tasks.ripple_enabled)
+	    require File.join(File.dirname(__FILE__), 'ripple')
+	  end
 	  
 	  if (tasks.assembly_info != nil)
 	    versionTask = Rake::Task.define_task :version do
@@ -326,11 +295,18 @@ module FubuRake
 		end
 		
 		compileTask.add_description "Compiles the application"
-		compileTask.enhance [:clean]
 		
+		if (tasks.clean.any?)
+			compileTask.enhance [:clean]
+		end
+
 		if (tasks.assembly_info != nil)
 			compileTask.enhance [:version]
 		end
+		
+		if (tasks.ripple_enabled)
+			compileTask.enhance ["ripple:restore"]
+		end 
 	  end
 	  
 
