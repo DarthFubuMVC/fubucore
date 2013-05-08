@@ -2,7 +2,9 @@ COMPILE_TARGET = ENV['config'].nil? ? "Debug" : ENV['config']
 CLR_TOOLS_VERSION = "v4.0.30319"
 
 
+
 load 'fuburake.rb'
+
 
 
 include FileTest
@@ -21,6 +23,13 @@ BUILD_NUMBER = "#{BUILD_VERSION}.#{build_revision}"
 ARTIFACTS = File.expand_path("artifacts")
 
 props = { :stage => File.expand_path("build"), :artifacts => ARTIFACTS }
+
+#cleanTask [props[:stage], props[:artifacts]]
+
+FubuRake::Solution.new do |sln|
+  sln.clean = [props[:stage], props[:artifacts]]
+end
+
 
 desc "**Default**, compiles and runs tests"
 task :default => [:compile, :unit_test]
@@ -50,19 +59,6 @@ assemblyinfo :version do |asm|
   asm.copyright = COPYRIGHT
   asm.output_file = COMMON_ASSEMBLY_INFO 
 end
-
-desc "Prepares the working directory for a new build"
-task :clean do
-	FileUtils.rm_rf props[:stage]
-    # work around nasty latency issue where folder still exists for a short while after it is removed
-    waitfor { !exists?(props[:stage]) }
-	Dir.mkdir props[:stage]
-    
-	FileUtils.rm_rf props[:artifacts]
-	Dir.mkdir props[:artifacts]
-end
-
-
 
 
 desc "Compiles the app"

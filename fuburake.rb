@@ -188,6 +188,18 @@ def copyOutputFiles(fromDir, filePattern, outDir)
   } 
 end
 
+def cleanTask(array)
+	desc "Prepares the working directory for a new build"
+	task :clean do
+	  array.each do |a|
+		cleanDirectory a
+	  end
+	end
+end
+
+
+
+
 def waitfor(&block)
   checks = 0
   until block.call || checks >10 
@@ -198,6 +210,7 @@ def waitfor(&block)
 end
 
 def cleanDirectory(dir)
+  puts 'Cleaning directory ' + dir
   FileUtils.rm_rf dir;
   waitfor { !exists?(dir) }
   Dir.mkdir dir
@@ -230,5 +243,35 @@ module Nuget
     end       
 
     root
+  end
+end
+
+
+module FubuRake
+  def FubuRake.go
+    puts 'GO'
+  end 
+  
+  class SolutionTasks
+    @clean = []
+	
+	attr_accessor :clean
+  end
+  
+  class Solution
+    def initialize(&block)
+	  tasks = SolutionTasks.new
+	  block.call(tasks)
+	  
+	  if (tasks.clean.any?)
+	    cleanTask = Rake::Task.define_task :clean do
+		  tasks.clean.each do |dir|
+			cleanDirectory dir
+		  end
+		end
+	  
+		cleanTask.add_description "Prepares the working directory for a new build"
+	  end
+	end
   end
 end
