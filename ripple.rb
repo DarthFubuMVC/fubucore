@@ -7,6 +7,9 @@ namespace :ripple do
 
 	desc "Updates nuget package files to the latest"
 	task :update do
+	  puts 'Cleaning out existing packages out of paranoia'
+	  sh 'ripple clean'
+	
 	  puts 'Updating all the nuget package files'
 	  sh 'ripple update'
 	end

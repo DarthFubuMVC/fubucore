@@ -22,6 +22,7 @@ FubuRake::Solution.new do |sln|
 	}
 	
 	sln.ripple_enabled = true
+	sln.fubudocs_enabled = true
 end
 
 
