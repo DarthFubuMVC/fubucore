@@ -7,11 +7,11 @@ class NUnitRunner
 	include FileTest
 
 	def initialize(paths)
-		@sourceDir = paths.fetch(:source, 'source')
+		@sourceDir = paths.fetch(:source, 'src')
 		@resultsDir = paths.fetch(:results, 'results')
-		@compilePlatform = paths.fetch(:platform, '')
+		@compilePlatform = paths.fetch(:platform, 'x86')
 		@compileTarget = paths.fetch(:compilemode, 'debug')
-	
+	puts "COMPILE TARGET IS #{@compilePlatform}"
 		@nunitExe = Nuget.tool("NUnit", "nunit-console#{(@compilePlatform.empty? ? '' : "-#{@compilePlatform}")}.exe") + Platform.switch("nothread")
 	end
 	
@@ -209,16 +209,17 @@ module FubuRake
 	  options = tasks.options
 	  options ||= {}
 	  
-	  options = options.merge({
+	  options = {
 		:compilemode => ENV['config'].nil? ? "Debug" : ENV['config'],
-		:clrversion => 'v4.0.30319'
-	  })
+		:clrversion => 'v4.0.30319',
+		:platform => 'x86',
+		:unit_test_list_file => 'TESTS.txt',
+		:unit_test_projects => [],
+		:source => 'src'}.merge(options)
+
+	  tasks.clean ||= []
 	  
-	  if (tasks.clean) == nil
-		tasks.clean = []
-	  end
-	  
-	  if (tasks.ripple_enabled)
+	  if tasks.ripple_enabled
 	    require File.join(File.dirname(__FILE__), 'ripple')
 		
 		tasks.clean << 'artifacts'
@@ -226,11 +227,11 @@ module FubuRake
 		#TODO -- add more stuff in to tasks
 	  end
 	  
-	  if (tasks.fubudocs_enabled)
+	  if tasks.fubudocs_enabled
 		require File.join(File.dirname(__FILE__), 'fubudocs')
 	  end
 	  
-	  if (tasks.assembly_info != nil)
+	  if tasks.assembly_info != nil
 	    versionTask = Rake::Task.define_task :version do
 			tc_build_number = ENV["BUILD_NUMBER"]
 			build_revision = tc_build_number || Time.new.strftime('5%H%M')
@@ -274,7 +275,7 @@ module FubuRake
 		versionTask.add_description "Update the version information for the build"
 	  end
 	  
-	  if (tasks.clean.any?)
+	  if tasks.clean.any?
 	    cleanTask = Rake::Task.define_task :clean do
 		  tasks.clean.each do |dir|
 			cleanDirectory dir
@@ -284,7 +285,7 @@ module FubuRake
 		cleanTask.add_description "Prepares the working directory for a new build"
 	  end
 
-	  if (tasks.compile != nil)
+	  if tasks.compile != nil
 		compileTask = Rake::Task.define_task :compile do
 		  MSBuildRunner.compile options.merge(tasks.compile)
 		end
@@ -304,7 +305,25 @@ module FubuRake
 		end 
 	  end
 	  
-
+	  nunitTask = nil
+	  if options[:unit_test_projects].any?
+		nunitTask = Rake::Task.define_task :unit_test do
+		  runner = NUnitRunner.new options
+		  runner.executeTests options[:unit_test_projects]
+		end
+	  elsif options[:unit_test_list_file] != nil
+		file = options[:unit_test_list_file]
+	  
+		nunitTask = Rake::Task.define_task :unit_test do
+		  runner = NUnitRunner.new options
+		  runner.executeTestsInFile file
+		end
+	  end
+	  
+	  if nunitTask != nil
+		nunitTask.enhance [:compile]
+		nunitTask.add_description "Runs unit tests"
+	  end
 	end
   end
 end

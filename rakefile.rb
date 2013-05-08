@@ -1,17 +1,9 @@
-COMPILE_TARGET = ENV['config'].nil? ? "Debug" : ENV['config']
-CLR_TOOLS_VERSION = "v4.0.30319"
-
 load 'fuburake.rb'
-
 load "VERSION.txt"
-
-ARTIFACTS = File.expand_path("artifacts")
 
 FubuRake::Solution.new do |sln|
 	sln.compile = {
-		:compilemode => COMPILE_TARGET, 
-		:solutionfile => 'src/FubuCore.sln', 
-		:clrversion => CLR_TOOLS_VERSION
+		:solutionfile => 'src/FubuCore.sln'
 	}
 				 
 	sln.assembly_info = {
@@ -29,9 +21,3 @@ task :default => [:compile, :unit_test]
 
 desc "Target used for the CI server"
 task :ci => [:default, :history, :package]
-
-desc "Runs unit tests"
-task :unit_test => :compile do
-  runner = NUnitRunner.new :compilemode => COMPILE_TARGET, :source => 'src', :platform => 'x86'
-  runner.executeTestsInFile 'TESTS.txt'
-end
