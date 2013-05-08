@@ -1,5 +1,4 @@
 include FileUtils
-require 'albacore'
 
 namespace :ripple do
 	desc "Restores nuget package files"
