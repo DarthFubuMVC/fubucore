@@ -8,7 +8,6 @@ load 'fuburake.rb'
 
 
 include FileTest
-require 'albacore'
 load "VERSION.txt"
 
 RESULTS_DIR = "results"

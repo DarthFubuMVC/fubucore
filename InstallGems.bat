@@ -2,7 +2,6 @@
 
 @call :install rake
 @call :install rubyzip
-@call :install albacore
 
 @ENDLOCAL
 
