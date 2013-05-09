@@ -27,7 +27,9 @@ module FubuRake
 	  tasks = SolutionTasks.new
 	  block.call(tasks)
 	  
-	  make_default_tasks tasks
+	  @defaultTask = create_task(:default, "**Default**, compiles and runs tests")
+	  @ciTask = create_task(:ci,  "Target used for the CI server")
+	  @ciTask.enhance [:default]
 	  
 	  options = tasks.options
 	  options ||= {}
@@ -52,11 +54,11 @@ module FubuRake
 	  tasks.clean ||= []
 
 	  enable_docs tasks
-	  make_assembly_info tasks
+	  @versionTask = FubuRake::AssemblyInfo.create tasks, @options
 	  enable_ripple tasks
 	  make_clean tasks
-	  make_compile tasks
-	  make_unit_test tasks
+	  @compileTask = FubuRake::MSBuild.create_task tasks, @options
+	  @nunitTask = FubuRake::NUnit.create_task tasks, @options
 
 	  if @compileTask != nil
 		@compileTask.enhance [:clean] unless @cleanTask == nil
@@ -64,9 +66,14 @@ module FubuRake
 		if tasks.ripple_enabled 
 		  @compileTask.enhance ["ripple:restore"]
 		end
+		
+		@nunitTask.enhance [:compile] unless @nunitTask == nil
 	  end
 	  
+	  
+	  
 	  @defaultTask.enhance [:compile] unless @compileTask == nil
+	  @defaultTask.enhance [:unit_test] unless @nunitTask == nil
 	  
 	  if tasks.defaults != nil
 		@defaultTask.enhance tasks.defaults
@@ -78,23 +85,15 @@ module FubuRake
 	  
 	end
 	
-	
-	def make_default_tasks(tasks)
-	  @defaultTask = Rake::Task.define_task :default do
+	def create_task(name, description)
+	  task = Rake::Task.define_task name do
 	  
 	  end
+	  task.add_description description
 	  
-	  @defaultTask.add_description "**Default**, compiles and runs tests"
-	  
-	  @ciTask = Rake::Task.define_task :ci do
-	  
-	  end
-	  
-	  @ciTask.add_description "Target used for the CI server"
-	  @ciTask.enhance [:default]
+	  return task
 	end
-	
-	
+
 	def make_clean(tasks)
 	  if tasks.clean.any?
 	    @cleanTask = Rake::Task.define_task :clean do
@@ -106,39 +105,8 @@ module FubuRake
 		@cleanTask.add_description "Prepares the working directory for a new build"
 	  end
 	end
-	
-	def make_assembly_info(tasks)
-	  @versionTask = FubuRake::AssemblyInfo.create tasks, @options
-	end
 
-	def make_compile(tasks)
-	  @compileTask = FubuRake::MSBuild.create_task tasks, @options
-	end
-	
-	
-	def make_unit_test(tasks)
-	  if @options[:unit_test_projects].any?
-		@nunitTask = Rake::Task.define_task :unit_test do
-		  runner = NUnitRunner.new @options
-		  runner.executeTests options[:unit_test_projects]
-		end
-	  elsif @options[:unit_test_list_file] != nil
-		file = @options[:unit_test_list_file]
-	  
-		@nunitTask = Rake::Task.define_task :unit_test do
-		  runner = NUnitRunner.new @options
-		  runner.executeTestsInFile file
-		end
-	  end
-	  
-	  if @nunitTask != nil
-		@nunitTask.enhance [:compile]
-		@nunitTask.add_description "Runs unit tests"
-		
-		@defaultTask.enhance [:unit_test]
-	  end
-	end
-	
+
 	def enable_ripple(tasks)
 	  if tasks.ripple_enabled
 	    FubuRake::Ripple.create tasks, @options

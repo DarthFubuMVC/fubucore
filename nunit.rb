@@ -1,3 +1,31 @@
+module FubuRake
+  class NUnit
+    def self.create_task(tasks, options)
+	  nunitTask = nil
+	  if options[:unit_test_projects].any?
+		nunitTask = Rake::Task.define_task :unit_test do
+		  runner = NUnitRunner.new options
+		  runner.executeTests options[:unit_test_projects]
+		end
+	  elsif options[:unit_test_list_file] != nil
+		file = options[:unit_test_list_file]
+	  
+		nunitTask = Rake::Task.define_task :unit_test do
+		  runner = NUnitRunner.new options
+		  runner.executeTestsInFile file
+		end
+	  end
+	  
+	  if nunitTask != nil
+		nunitTask.enhance [:compile]
+		nunitTask.add_description "Runs unit tests"
+	  end
+	  
+	  return nunitTask
+	end
+  end
+end
+
 class NUnitRunner
 	include FileTest
 
