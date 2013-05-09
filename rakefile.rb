@@ -1,8 +1,5 @@
 load 'fuburake.rb'
 
-
-
-
 FubuRake::Solution.new do |sln|
 	sln.compile = {
 		:solutionfile => 'src/FubuCore.sln'
