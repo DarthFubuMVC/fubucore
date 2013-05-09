@@ -13,11 +13,18 @@ FubuRake::Solution.new do |sln|
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
+	
+	sln.defaults = [:fake]
+	sln.ci_steps = [:fake]
 end
 
+desc "fake task"
+task :fake do
+  puts "I AM THE FAKE TASK!"
+end
 
-desc "**Default**, compiles and runs tests"
-task :default => [:compile, :unit_test]
+#desc "**Default**, compiles and runs tests"
+#task :default => [:compile, :unit_test]
 
-desc "Target used for the CI server"
-task :ci => [:default, :history, :package]
+#desc "Target used for the CI server"
+#task :ci => [:default, :history, :package]

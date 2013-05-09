@@ -29,10 +29,7 @@ namespace :ripple do
 	end
 	
 	desc "packages the nuget files from the nuspec files in packaging/nuget and publishes to /artifacts"
-	task :package => [:history] do
-		COMPILE_TARGET = 'release'
-		Rake::Task["compile"].execute
-	
+	task :package => ["ripple:history"] do
 		sh "ripple local-nuget --version #{BUILD_NUMBER} --destination artifacts"
 	end
 end
