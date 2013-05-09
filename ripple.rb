@@ -1,6 +1,10 @@
 module FubuRake
   class Ripple
 	def self.create(tasks, options)
+	  if !tasks.ripple_enabled
+		return
+	  end
+	
 	  tasks.clean << 'artifacts'
 	
 	  restoreTask = Rake::Task.define_task 'ripple:restore' do

@@ -55,7 +55,7 @@ module FubuRake
 
 	  enable_docs tasks
 	  @versionTask = FubuRake::AssemblyInfo.create tasks, @options
-	  enable_ripple tasks
+	  FubuRake::Ripple.create tasks, @options
 	  make_clean tasks
 	  @compileTask = FubuRake::MSBuild.create_task tasks, @options
 	  @nunitTask = FubuRake::NUnit.create_task tasks, @options
@@ -107,12 +107,6 @@ module FubuRake
 	end
 
 
-	def enable_ripple(tasks)
-	  if tasks.ripple_enabled
-	    FubuRake::Ripple.create tasks, @options
-	  end
-	end
-	
 	def enable_docs(tasks)
 	  if tasks.fubudocs_enabled
 		require File.join(File.dirname(__FILE__), 'fubudocs')
