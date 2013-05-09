@@ -5,6 +5,9 @@ require File.join(File.dirname(__FILE__), 'nunit')
 require File.join(File.dirname(__FILE__), 'msbuild')
 require File.join(File.dirname(__FILE__), 'nuget')
 require File.join(File.dirname(__FILE__), 'platform')
+require File.join(File.dirname(__FILE__), 'ripple')
+
+load "VERSION.txt"
 
 module FubuRake
   class SolutionTasks
@@ -28,12 +31,21 @@ module FubuRake
 	  options = tasks.options
 	  options ||= {}
 	  
+	  tc_build_number = ENV["BUILD_NUMBER"]
+	  build_revision = tc_build_number || Time.new.strftime('5%H%M')
+	  asm_version = BUILD_VERSION + ".0"
+	  build_number = "#{BUILD_VERSION}.#{build_revision}"
+	  
 	  @options = {
 		:compilemode => ENV['config'].nil? ? "Debug" : ENV['config'],
 		:clrversion => 'v4.0.30319',
 		:platform => 'x86',
 		:unit_test_list_file => 'TESTS.txt',
 		:unit_test_projects => [],
+		:build_number => build_number,
+		:asm_version => asm_version,
+		:tc_build_number => tc_build_number,
+		:build_revision => build_revision,
 		:source => 'src'}.merge(options)
 
 	  tasks.clean ||= []
@@ -45,6 +57,16 @@ module FubuRake
 	  make_compile tasks
 	  make_unit_test tasks
 
+	  if @compileTask != nil
+		@compileTask.enhance [:clean] unless @cleanTask == nil
+		@compileTask.enhance [:version] unless @versionTask == nil
+		if tasks.ripple_enabled 
+		  @compileTask.enhance ["ripple:restore"]
+		end
+	  end
+	  
+	  @defaultTask.enhance [:compile] unless @compileTask == nil
+	  
 	  if tasks.defaults != nil
 		@defaultTask.enhance tasks.defaults
 	  end
@@ -87,26 +109,23 @@ module FubuRake
 	def make_assembly_info(tasks)
 	  if tasks.assembly_info != nil
 	    @versionTask = Rake::Task.define_task :version do
-			tc_build_number = ENV["BUILD_NUMBER"]
-			build_revision = tc_build_number || Time.new.strftime('5%H%M')
-		    asm_version = BUILD_VERSION + ".0"
-			build_number = "#{BUILD_VERSION}.#{build_revision}"
+
 		  
 		    begin
 			  commit = `git log -1 --pretty=format:%H`
 		    rescue
 			  commit = "git unavailable"
 		    end
-		    puts "##teamcity[buildNumber '#{build_number}']" unless tc_build_number.nil?
-		    puts "Version: #{build_number}" if tc_build_number.nil?
+		    puts "##teamcity[buildNumber '#{@options[:build_number]}']" unless @options[:tc_build_number].nil?
+		    puts "Version: #{@options[:build_number]}" if @options[:tc_build_number].nil?
 			
 			options = {
 				:trademark => commit, 
 				:product_name => 'CHANGEME', 
-				:description => build_number, 
-				:version => asm_version, 
-				:file_version => build_number,
-				:informational_version => asm_version,
+				:description => @options[:build_number], 
+				:version => @options[:asm_version], 
+				:file_version => @options[:build_number],
+				:informational_version => @options[:asm_version],
 				:copyright => 'CHANGEME',
 				:output_file => 'src/CommonAssemblyInfo.cs'
 			}
@@ -131,27 +150,7 @@ module FubuRake
 	end
 
 	def make_compile(tasks)
-	  if tasks.compile != nil
-		@compileTask = Rake::Task.define_task :compile do
-		  MSBuildRunner.compile @options.merge(tasks.compile)
-		end
-		
-		@compileTask.add_description "Compiles the application"
-		
-		if (tasks.clean.any?)
-			@compileTask.enhance [:clean]
-		end
-
-		if (tasks.assembly_info != nil)
-			@compileTask.enhance [:version]
-		end
-		
-		if (tasks.ripple_enabled)
-			@compileTask.enhance ["ripple:restore"]
-		end 
-		
-		@defaultTask.enhance [:compile]
-	  end
+	  @compileTask = FubuRake::MSBuild.create_task tasks, @options
 	end
 	
 	
@@ -180,11 +179,7 @@ module FubuRake
 	
 	def enable_ripple(tasks)
 	  if tasks.ripple_enabled
-	    require File.join(File.dirname(__FILE__), 'ripple')
-		
-		tasks.clean << 'artifacts'
-		
-		#TODO -- add more stuff in to tasks
+	    FubuRake::Ripple.create tasks, @options
 	  end
 	end
 	

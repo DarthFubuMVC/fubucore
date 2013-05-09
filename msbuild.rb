@@ -1,3 +1,22 @@
+module FubuRake
+  class MSBuild
+    def self.create_task(tasks, options)
+	  if tasks.compile == nil 
+	    return nil
+	  end
+	  
+	  compileTask = Rake::Task.define_task :compile do
+		MSBuildRunner.compile options.merge(tasks.compile)
+	  end
+		
+	  compileTask.add_description "Compiles the application"
+		
+	  return compileTask
+	end
+  end
+end
+
+
 class MSBuildRunner
 	def self.compile(attributes)
 		compileTarget = attributes.fetch(:compilemode, 'debug')
@@ -7,7 +26,7 @@ class MSBuildRunner
 	    attributes[:properties] ||= []
 	    attributes[:properties] << "Configuration=#{compileTarget}"
 	    attributes[:extraSwitches] = ["v:m", "t:rebuild"]
-		  attributes[:extraSwitches] << "maxcpucount:2" unless Platform.is_nix
+		attributes[:extraSwitches] << "maxcpucount:2" unless Platform.is_nix
 
       self.runProjFile(attributes);
 	end
