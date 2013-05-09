@@ -12,9 +12,6 @@ FubuRake::Solution.new do |sln|
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
-	
-	#sln.defaults = [:fake]
-	#sln.ci_steps = [:fake]
 end
 
 desc "fake task"

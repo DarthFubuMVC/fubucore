@@ -52,37 +52,43 @@ module FubuRake
 		:source => 'src'}.merge(options)
 
 	  tasks.clean ||= []
+	  tasks.defaults ||= []
+	  tasks.ci_steps ||= []
 
 	  enable_docs tasks
-	  @versionTask = FubuRake::AssemblyInfo.create tasks, @options
+	  FubuRake::AssemblyInfo.create tasks, @options
 	  FubuRake::Ripple.create tasks, @options
 	  make_clean tasks
-	  @compileTask = FubuRake::MSBuild.create_task tasks, @options
-	  @nunitTask = FubuRake::NUnit.create_task tasks, @options
+	  FubuRake::MSBuild.create_task tasks, @options
+	  FubuRake::NUnit.create_task tasks, @options
 
-	  if @compileTask != nil
-		@compileTask.enhance [:clean] unless @cleanTask == nil
-		@compileTask.enhance [:version] unless @versionTask == nil
-		if tasks.ripple_enabled 
-		  @compileTask.enhance ["ripple:restore"]
+	  add_dependency :compile, [:clean, :version, 'ripple:restore', 'docs:bottle']
+	  add_dependency :unit_test, :compile
+	  add_dependency :default, [:compile, :unit_test]
+	  add_dependency :default, :unit_test
+	  Rake::Task[:default].enhance tasks.defaults
+	  Rake::Task[:ci].enhance tasks.ci_steps
+	  add_dependency :ci, tasks.ci_steps
+	  
+	  add_dependency :ci, ["ripple:history", "ripple:package"]
+	end
+	
+	def add_dependency(from, to)
+	  if to.kind_of?(Array)
+	    to.each do |dep|
+		  add_dependency from, dep
 		end
-		
-		@nunitTask.enhance [:compile] unless @nunitTask == nil
+	  end
+	
+	  if !Rake::Task.task_defined?(from)
+	    return
 	  end
 	  
+	  if !Rake::Task.task_defined?(to)
+	    return
+	  end 
 	  
-	  
-	  @defaultTask.enhance [:compile] unless @compileTask == nil
-	  @defaultTask.enhance [:unit_test] unless @nunitTask == nil
-	  
-	  if tasks.defaults != nil
-		@defaultTask.enhance tasks.defaults
-	  end
-	  
-	  if tasks.ci_steps != nil
-		@ciTask.enhance tasks.ci_steps
-	  end
-	  
+	  Rake::Task[from].enhance [to]
 	end
 	
 	def create_task(name, description)
