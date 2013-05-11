@@ -1,4 +1,13 @@
-load 'fuburake.rb'
+begin
+  require 'bundler/setup'
+  require 'fuburake'
+rescue LoadError
+  puts 'Bundler and all the gems need to be installed prior to running this rake script. Installing...'
+  system("gem install bundler --source http://rubygems.org")
+  system("bundle exec rake", *ARGV)
+  exit 0
+end
+
 
 FubuRake::Solution.new do |sln|
 	sln.compile = {
@@ -12,9 +21,4 @@ FubuRake::Solution.new do |sln|
 	
 	sln.ripple_enabled = true
 	sln.fubudocs_enabled = true
-end
-
-desc "fake task"
-task :fake do
-  puts "I AM THE FAKE TASK!"
 end
