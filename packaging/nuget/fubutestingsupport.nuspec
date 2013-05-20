@@ -20,6 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\build\FubuTestingSupport.*" target="lib" />
+    <file src="..\..\src\FubuTestingSupport\bin\Release\FubuTestingSupport.*" target="lib" />
   </files>
 </package>

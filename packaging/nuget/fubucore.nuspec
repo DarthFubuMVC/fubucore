@@ -15,6 +15,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\build\FubuCore.*" target="lib" />
+    <file src="..\..\src\FubuCore\bin\Release\FubuCore.*" target="lib" />
   </files>
 </package>
