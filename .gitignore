@@ -38,3 +38,4 @@ src/packages
 results/*
 src/Max
 logs
+Gemfile.lock
