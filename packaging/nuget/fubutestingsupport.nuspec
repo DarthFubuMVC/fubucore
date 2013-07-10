@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+<?xml version="1.0"?>
+<package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <id>FubuTestingSupport</id>
     <version>0.0.0</version>
@@ -13,14 +13,13 @@
     <tags>utilities, testing, fubu</tags>
     <dependencies>
       <dependency id="FubuCore" />
-      <dependency id="NUnit" version="2.6.2.0" />
-      <dependency id="NUnit.Runners" version="2.6.2.0" />
+      <dependency id="NUnit" version="[2.5.10.11092]" />
       <dependency id="RhinoMocks" version="3.6.1" />
       <dependency id="structuremap" version="2.6.3" />
       <dependency id="structuremap.automocking" version="2.6.3" />
     </dependencies>
   </metadata>
-  <files xmlns="">
+  <files>
     <file src="..\..\src\FubuTestingSupport\bin\Release\FubuTestingSupport.*" target="lib" />
   </files>
 </package>
