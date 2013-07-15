@@ -81,7 +81,7 @@ namespace FubuCore.Reflection
         {
             unchecked
             {
-                if (_arguments.Length == 0)
+                if (_arguments.Length != 0)
                 {
                     return ((_methodInfo != null ? _methodInfo.GetHashCode() : 0) * 397) ^ (_arguments[0] != null ? _arguments[0].GetHashCode() : 0);
                 }
