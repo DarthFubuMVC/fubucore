@@ -14,12 +14,6 @@ namespace FubuCore.Testing.Reflection
         private readonly MethodInfo TheArgMethodInfo = ReflectionHelper.GetMethod<TestSubject>(x => x.AnotherMethod("Test"));
 
         [Test]
-        public void should_not_have_null_hashcode()
-        {
-            TheAccessor.GetHashCode().ShouldNotBeNull();
-        }
-
-        [Test]
         public void hashcode_should_not_eq_zero()
         {
             TheAccessor.GetHashCode().ShouldNotEqual(0);
