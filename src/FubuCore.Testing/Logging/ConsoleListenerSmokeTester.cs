@@ -5,9 +5,9 @@ using NUnit.Framework;
 namespace FubuCore.Testing.Logging
 {
     [TestFixture]
-    public class DebugListenerSmokeTester
+    public class ConsoleListenerSmokeTester
     {
-        DebugListener theListener = new DebugListener(Level.All);
+        ConsoleListener theListener = new ConsoleListener(Level.All);
 
         [Test]
         public void debug_message()
