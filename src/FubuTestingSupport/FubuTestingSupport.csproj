@@ -64,6 +64,7 @@
     <Compile Include="PersistenceSpecification.cs" />
     <Compile Include="SelfMockingServiceLocator.cs" />
     <Compile Include="SpecificationExtensions.cs" />
+    <Compile Include="Wait.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuCore\FubuCore.csproj">
