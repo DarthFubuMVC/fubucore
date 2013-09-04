@@ -16,6 +16,9 @@ namespace FubuCore.Testing.TestingSupport
             ClassUnderTest.Go("somewhere");
 
             var debugMessages = RecordedLog().DebugMessages;
+
+            RecordedLog().ShouldBeTheSameAs(logger);
+
             debugMessages.Single().As<StringMessage>()
                 .Message.ShouldEqual("somewhere");
         }
