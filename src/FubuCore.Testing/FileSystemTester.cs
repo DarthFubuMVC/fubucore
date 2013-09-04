@@ -66,6 +66,13 @@ namespace FubuCore.Testing
                 .ShouldBeEmpty();
         }
 
+        [Test, Ignore("This needs to be fixed for GH-72")]
+        public void path_relative_in_parallel_paths()
+        {
+            fullPath("folder1", "file1").PathRelativeTo(fullPath("folder2", "file2"))
+                .ShouldEqual("..{0}folder1{0}file1".ToFormat(Path.DirectorySeparatorChar));
+        }
+
         [Test]
         public void combine_when_it_is_only_one_value()
         {
