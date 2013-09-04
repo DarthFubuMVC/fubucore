@@ -222,6 +222,7 @@
     <Compile Include="TimeSpanExtensionsTester.cs" />
     <Compile Include="TypeExtensionsTester.cs" />
     <Compile Include="TypeResolverTester.cs" />
+    <Compile Include="UrlExtensionsTester.cs" />
     <Compile Include="Util\CacheTester.cs" />
     <Compile Include="Util\CompositePredicateTester.cs" />
     <Compile Include="Util\DictionaryKeyValuesTester.cs" />
