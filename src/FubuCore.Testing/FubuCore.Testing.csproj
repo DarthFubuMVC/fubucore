@@ -216,6 +216,7 @@
     <Compile Include="TestingSupport\AccessorPersistenceCheckTester.cs" />
     <Compile Include="TestingSupport\EnumerablePersistenceCheckTester.cs" />
     <Compile Include="TestingSupport\PersistenceSpecificationTester.cs" />
+    <Compile Include="TestingSupport\RecordingLoggerMechanicsInInteractionContext.cs" />
     <Compile Include="TestingSupport\SystemTimeMechanicsInInteractionContext.cs" />
     <Compile Include="TestObject.cs" />
     <Compile Include="debugging.cs" />

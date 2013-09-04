@@ -1,5 +1,7 @@
 using System;
+using FubuCore;
 using FubuCore.Dates;
+using FubuCore.Logging;
 using NUnit.Framework;
 using Rhino.Mocks;
 using StructureMap;
@@ -32,17 +34,30 @@ namespace FubuTestingSupport
             beforeEach();
         }
 
+        public RecordingLogger RecordLogging()
+        {
+            var logger = new RecordingLogger();
+            Services.Inject<ILogger>(logger);
+
+            return logger;
+        }
+
+        public RecordingLogger RecordedLog()
+        {
+            return MockFor<ILogger>().As<RecordingLogger>();
+        }
+
         // Override this for context specific setup
         protected virtual void beforeEach() {}
 
-        public SERVICE MockFor<SERVICE>() where SERVICE : class
+        public TService MockFor<TService>() where TService : class
         {
-            return Services.Get<SERVICE>();
+            return Services.Get<TService>();
         }
 
-        public void VerifyCallsFor<MOCK>() where MOCK : class
+        public void VerifyCallsFor<TMock>() where TMock : class
         {
-            MockFor<MOCK>().VerifyAllExpectations();
+            MockFor<TMock>().VerifyAllExpectations();
         }
 
         public DateTime LocalSystemTime
