@@ -118,6 +118,7 @@ namespace FubuCore.Testing.Reflection
             public GrandChildTarget GrandChild { get; set; }
             public GrandChildTarget SecondGrandChild { get; set; }
             public IList<GrandChildTarget> GrandChildren { get; set; }
+            public GrandChildTarget[] GrandChildren2 { get; set; }
         }
 
         public class GrandChildTarget
@@ -231,6 +232,16 @@ namespace FubuCore.Testing.Reflection
         }
 
         [Test]
+        public void propertyChain_can_get_child_accessor_from_array_indexer()
+        {
+            var expected = ReflectionHelper.GetAccessor<Target>(x => x.Child.GrandChildren2[1].Name);
+            var child = ReflectionHelper.GetAccessor<Target>(x => x.Child.GrandChildren2[1])
+                                        .GetChildAccessor<GrandChildTarget>(x => x.Name);
+
+            child.ShouldEqual(expected);
+        }
+
+        [Test]
         public void propertyChain_can_get_the_name()
         {
             ReflectionHelper.GetAccessor<Target>(t => t.Child.GrandChild.BirthDay).Name.ShouldEqual(
@@ -331,6 +342,24 @@ namespace FubuCore.Testing.Reflection
 
             accessor.GetValue(target).ShouldEqual("Bob");
             accessor.Name.ShouldEqual("ChildGrandChildren[0]Name");
+        }
+
+        [Test]
+        public void ArrayIndexingPropertyAccessWorks()
+        {
+            Expression<Func<Target, object>> expression = x => x.Child.GrandChildren2[0].Name;
+            var accessor = expression.ToAccessor();
+
+            var target = new Target
+                         {
+                             Child = new ChildTarget
+                                     {
+                                         GrandChildren2 = new[] { new GrandChildTarget { Name = "Bob" } }
+                                     }
+                         };
+
+            accessor.GetValue(target).ShouldEqual("Bob");
+            accessor.Name.ShouldEqual("ChildGrandChildren2[0]Name");
         }
     }
 }

@@ -189,6 +189,25 @@ namespace FubuCore.Reflection
                     buildValueGetters(methodCallExpression.Object, list);
                 }
             }
+
+            if (expression.NodeType == ExpressionType.ArrayIndex)
+            {
+                var binaryExpression = (BinaryExpression) expression;
+
+                var indexExpression = binaryExpression.Right;
+
+                object index;
+                if (TryEvaluateExpression(indexExpression, out index))
+                {
+                    var arrayMemberExpression = (MemberExpression)binaryExpression.Left;
+                    
+                    var indexValueGetter = new IndexerValueGetter((PropertyInfo) arrayMemberExpression.Member, (int) index);
+                    
+                    list.Add(indexValueGetter);
+                }
+
+                buildValueGetters(binaryExpression.Left, list);
+            }
         }
 
         private static bool TryEvaluateExpression(Expression operation, out object value)
