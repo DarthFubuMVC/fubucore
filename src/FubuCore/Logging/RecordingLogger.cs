@@ -1,52 +1,84 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace FubuCore.Logging
 {
     public class RecordingLogger : ILogger
     {
+        private readonly object _lock = new object();
         private readonly IList<object> _debug = new List<object>();
         private readonly IList<object> _info = new List<object>();
         private readonly IList<ExceptionReport> _errors = new List<ExceptionReport>();
 
         public IEnumerable<object> DebugMessages
         {
-            get { return _debug; }
+            get
+            {
+                lock (_lock)
+                {
+                    return _debug.ToArray();
+                }
+            }
         }
 
         public IEnumerable<object> InfoMessages
         {
-            get { return _info; }
+            get
+            {
+                lock (_lock)
+                {
+                    return _info.ToArray();
+                }
+            }
         }
 
         public IEnumerable<LogRecord> ErrorMessages
         {
-            get { return _errors; }
+            get
+            {
+                lock (_lock)
+                {
+                    return _errors.ToArray();
+                }
+            }
         }
 
         public void Debug(string message, params object[] parameters)
         {
-            _debug.Add(new StringMessage(message, parameters));
+            lock (_lock)
+            {
+                _debug.Add(new StringMessage(message, parameters));
+            }
         }
 
         public void Info(string message, params object[] parameters)
         {
-            _info.Add(new StringMessage(message, parameters));
+            lock (_lock)
+            {
+                _info.Add(new StringMessage(message, parameters));
+            }
         }
 
         public void Error(string message, Exception ex)
         {
-            _errors.Add(new ExceptionReport(message, ex));
+            lock (_lock)
+            {
+                _errors.Add(new ExceptionReport(message, ex));
+            }
         }
 
         public void Error(object correlationId, string message, Exception ex)
         {
-            _errors.Add(new ExceptionReport
+            lock (_lock)
             {
-                Message = message,
-                ExceptionText = ex.ToString(),
-                CorrelationId = correlationId
-            });
+                _errors.Add(new ExceptionReport
+                {
+                    Message = message,
+                    ExceptionText = ex.ToString(),
+                    CorrelationId = correlationId
+                });
+            }
         }
 
         public void Debug(Func<string> message)
@@ -61,32 +93,50 @@ namespace FubuCore.Logging
 
         public void DebugMessage(LogTopic message)
         {
-            _debug.Add(message);
+            lock (_lock)
+            {
+                _debug.Add(message);
+            }
         }
 
         public void InfoMessage(LogTopic message)
         {
-            _info.Add(message);
+            lock (_lock)
+            {
+                _info.Add(message);
+            }
         }
 
         public void DebugMessage<T>(Func<T> message) where T : class, LogTopic
         {
-            _debug.Add(message());
+            lock (_lock)
+            {
+                _debug.Add(message());
+            }
         }
 
         public void InfoMessage<T>(Func<T> message) where T : class, LogTopic
         {
-            _info.Add(message());
+            lock (_lock)
+            {
+                _info.Add(message());
+            }
         }
 
         public void DebugMessage(LogRecord message)
         {
-            _debug.Add(message);
+            lock (_lock)
+            {
+                _debug.Add(message);
+            }
         }
 
         public void InfoMessage(LogRecord message)
         {
-            _info.Add(message);
+            lock (_lock)
+            {
+                _info.Add(message);
+            }
         }
 
     }
