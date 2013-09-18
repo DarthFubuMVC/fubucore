@@ -57,7 +57,8 @@ namespace FubuCore.Reflection
             get
             {
                 // Check if we're an indexer here
-                if (_valueGetters.Last() is MethodValueGetter)
+                var last = _valueGetters.Last();
+                if (last is MethodValueGetter || last is IndexerValueGetter)
                 {
                     var nextUp = _chain.Reverse().Skip(1).FirstOrDefault() as PropertyValueGetter;
                     if (nextUp != null)
