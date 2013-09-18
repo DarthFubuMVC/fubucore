@@ -116,7 +116,7 @@ namespace FubuCore.Reflection
 
         public static Accessor GetAccessor<TModel>(Expression<Func<TModel, object>> expression)
         {
-            if (expression.Body is MethodCallExpression)
+            if (expression.Body is MethodCallExpression || expression.Body.NodeType == ExpressionType.ArrayIndex)
             {
                 return GetAccessor((Expression)expression.Body);
             }
