@@ -143,6 +143,11 @@ namespace FubuCore.Reflection
                 return new SingleMethod((MethodValueGetter) list[0]);
             }
 
+            if (list.Count == 1 && list[0] is IndexerValueGetter)
+            {
+                return new ArrayIndexer((IndexerValueGetter) list[0]);
+            }
+
             list.Reverse();
             return new PropertyChain(list.ToArray());
         }
@@ -199,9 +204,7 @@ namespace FubuCore.Reflection
                 object index;
                 if (TryEvaluateExpression(indexExpression, out index))
                 {
-                    var arrayMemberExpression = (MemberExpression)binaryExpression.Left;
-                    
-                    var indexValueGetter = new IndexerValueGetter((PropertyInfo) arrayMemberExpression.Member, (int) index);
+                    var indexValueGetter = new IndexerValueGetter(binaryExpression.Left.Type, (int) index);
                     
                     list.Add(indexValueGetter);
                 }

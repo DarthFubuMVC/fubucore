@@ -7,42 +7,43 @@ namespace FubuCore.Reflection
 {
     public class IndexerValueGetter : IValueGetter
     {
-        private readonly PropertyInfo _arrayPropertyInfo;
-        private readonly int _index;
+        private readonly Type _arrayType;
 
-        public IndexerValueGetter(PropertyInfo arrayPropertyInfo, int index)
+        public IndexerValueGetter(Type arrayType, int index)
         {
-            _arrayPropertyInfo = arrayPropertyInfo;
-            _index = index;
+            _arrayType = arrayType;
+            Index = index;
         }
 
         public object GetValue(object target)
         {
-            return ((Array)target).GetValue(_index);
+            return ((Array)target).GetValue(Index);
         }
 
         public string Name
         {
             get
             {
-                return "[{0}]".ToFormat(_index);
+                return "[{0}]".ToFormat(Index);
             }
         }
 
+        public int Index { get; private set; }
+
         public Type DeclaringType
         {
-            get { return _arrayPropertyInfo.DeclaringType; }
+            get { return _arrayType; }
         }
 
         public Type ValueType
         {
-            get { return _arrayPropertyInfo.PropertyType.GetElementType(); }
+            get { return _arrayType.GetElementType(); }
         }
 
         public Expression ChainExpression(Expression body)
         {
-            var memberExpression = Expression.ArrayIndex(body, Expression.Constant(_index, typeof(int)));
-            if (!_arrayPropertyInfo.PropertyType.GetElementType().IsValueType)
+            var memberExpression = Expression.ArrayIndex(body, Expression.Constant(Index, typeof(int)));
+            if (!_arrayType.GetElementType().IsValueType)
             {
                 return memberExpression;
             }
@@ -52,12 +53,12 @@ namespace FubuCore.Reflection
 
         public void SetValue(object target, object propertyValue)
         {
-            ((Array)target).SetValue(propertyValue, _index);
+            ((Array)target).SetValue(propertyValue, Index);
         }
 
         protected bool Equals(IndexerValueGetter other)
         {
-            return Equals(_arrayPropertyInfo, other._arrayPropertyInfo) && _index == other._index;
+            return _arrayType == other._arrayType && Index == other.Index;
         }
 
         public override bool Equals(object obj)
@@ -72,7 +73,7 @@ namespace FubuCore.Reflection
         {
             unchecked
             {
-                return ((_arrayPropertyInfo != null ? _arrayPropertyInfo.GetHashCode() : 0)*397) ^ _index;
+                return ((_arrayType != null ? _arrayType.GetHashCode() : 0) * 397) ^ Index;
             }
         }
     }
