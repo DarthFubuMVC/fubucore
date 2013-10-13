@@ -192,7 +192,7 @@ namespace FubuCore.Testing.Conversion
 			var date = DateTimeConverter.GetDateTime("2012-06-01T12:52:35Z");
 
 			var gmtOffsetInHours = (int) TimeZone.CurrentTimeZone.GetUtcOffset(date).TotalHours;
-			date.ShouldEqual(new DateTime(2012, 06, 01, 12 + gmtOffsetInHours, 52, 35, DateTimeKind.Local));
+			date.ShouldEqual(new DateTime(2012, 06, 01, 12, 52, 35, DateTimeKind.Local).AddHours(gmtOffsetInHours));
 		}
 
         [Test]
