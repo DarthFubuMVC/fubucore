@@ -215,6 +215,8 @@
     <Compile Include="Logging\RecordingLogger.cs" />
     <Compile Include="Logging\StringMessage.cs" />
     <Compile Include="Reflection\AccessorRules.cs" />
+    <Compile Include="Reflection\ArrayIndexer.cs" />
+    <Compile Include="Reflection\IndexerValueGetter.cs" />
     <Compile Include="Reflection\SingleMethod.cs" />
     <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="UrlExtensions.cs" />

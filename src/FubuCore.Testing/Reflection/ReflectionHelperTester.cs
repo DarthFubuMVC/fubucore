@@ -52,6 +52,7 @@ namespace FubuCore.Testing.Reflection
             public GrandChildTarget SecondGrandChild { get; set; }
 
             public IList<GrandChildTarget> Grandchildren { get; set; }
+            public GrandChildTarget[] Grandchildren2 { get; set; }
         }
 
         public class GrandChildTarget
@@ -317,6 +318,55 @@ namespace FubuCore.Testing.Reflection
         }
 
         [Test]
+        public void get_value_by_array_indexer_when_the_indexer_is_variable_reference_of_a_complex_object()
+        {
+            var target = new Target
+            {
+                Child = new ChildTarget
+                {
+                    Grandchildren2 = new [] {
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Red"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Deep = new DeepTarget{
+                                Color = "Green"
+                            }
+                        },
+                        new GrandChildTarget{
+                            Name = "Third"
+                        }
+                    }
+                }
+            };
+
+            var index = new Index();
+            index.I = 0;
+
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[index.I].Deep.Color)
+                .GetValue(target).ShouldEqual("Red");
+
+            index.I = 2;
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[index.I].Deep.Color)
+                .GetValue(target).ShouldBeNull();
+
+            for (index.I = 0; index.I < target.Child.Grandchildren.Count; index.I++)
+            {
+                ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[index.I].Name)
+                    .GetValue(target).ShouldEqual(target.Child.Grandchildren2[index.I].Name);
+            }
+
+            index.Index2 = new Index.Index2Info();
+            index.Index2.J = 1;
+
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[index.Index2.J].Deep.Color)
+               .GetValue(target).ShouldEqual("Green");
+
+        }
+
+        [Test]
         public void get_owner_type_by_indexer()
         {
             var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1].Deep.Color);
@@ -324,6 +374,16 @@ namespace FubuCore.Testing.Reflection
 
             ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]).OwnerType.ShouldEqual(typeof(ChildTarget));
             ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1].Name).OwnerType.ShouldEqual(typeof(GrandChildTarget));
+        }
+
+        [Test]
+        public void get_owner_type_by_array_indexer()
+        {
+            var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[1].Deep.Color);
+            accessor.OwnerType.ShouldEqual(typeof(DeepTarget));
+
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[1]).OwnerType.ShouldEqual(typeof(ChildTarget));
+            ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[1].Name).OwnerType.ShouldEqual(typeof(GrandChildTarget));
         }
 
         [Test]
@@ -339,6 +399,14 @@ namespace FubuCore.Testing.Reflection
             var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren[1]);
             accessor.FieldName.ShouldEqual("Grandchildren[1]");
             accessor.Name.ShouldEqual("ChildGrandchildren[1]");
+        }
+
+        [Test]
+        public void get_field_name_by_index_accessor()
+        {
+            var accessor = ReflectionHelper.GetAccessor<Target>(x => x.Child.Grandchildren2[1]);
+            accessor.FieldName.ShouldEqual("Grandchildren2[1]");
+            accessor.Name.ShouldEqual("ChildGrandchildren2[1]");
         }
     }
 

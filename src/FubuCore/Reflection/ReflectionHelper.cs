@@ -116,7 +116,7 @@ namespace FubuCore.Reflection
 
         public static Accessor GetAccessor<TModel>(Expression<Func<TModel, object>> expression)
         {
-            if (expression.Body is MethodCallExpression)
+            if (expression.Body is MethodCallExpression || expression.Body.NodeType == ExpressionType.ArrayIndex)
             {
                 return GetAccessor((Expression)expression.Body);
             }
@@ -141,6 +141,11 @@ namespace FubuCore.Reflection
             if (list.Count == 1 && list[0] is MethodValueGetter)
             {
                 return new SingleMethod((MethodValueGetter) list[0]);
+            }
+
+            if (list.Count == 1 && list[0] is IndexerValueGetter)
+            {
+                return new ArrayIndexer((IndexerValueGetter) list[0]);
             }
 
             list.Reverse();
@@ -188,6 +193,23 @@ namespace FubuCore.Reflection
                 {
                     buildValueGetters(methodCallExpression.Object, list);
                 }
+            }
+
+            if (expression.NodeType == ExpressionType.ArrayIndex)
+            {
+                var binaryExpression = (BinaryExpression) expression;
+
+                var indexExpression = binaryExpression.Right;
+
+                object index;
+                if (TryEvaluateExpression(indexExpression, out index))
+                {
+                    var indexValueGetter = new IndexerValueGetter(binaryExpression.Left.Type, (int) index);
+                    
+                    list.Add(indexValueGetter);
+                }
+
+                buildValueGetters(binaryExpression.Left, list);
             }
         }
 
