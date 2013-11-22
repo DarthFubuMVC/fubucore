@@ -22,6 +22,32 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void should_return_remaining_string_if_variable_not_found()
+        {
+            var template = "http://testreplacement.com/{optional}";
+            var substitiutions = new Dictionary<string, string>();
+
+            TemplateParser
+                .Parse(template, substitiutions)
+                .ShouldEqual("http://testreplacement.com/");
+        }
+
+        [Test]
+        public void should_replace_variables_that_are_found_and_replace_unknown_with_nothing()
+        {
+            var template = "http://testreplacement.com/{replaced}/{still-replaced}/{optional}";
+            var substitiutions = new Dictionary<string, string>
+            {
+                {"replaced", "gotreplaced"},
+                {"still-replaced", "stillreplaced"}
+            };
+
+            TemplateParser
+                .Parse(template, substitiutions)
+                .ShouldEqual("http://testreplacement.com/gotreplaced/stillreplaced/");
+        }
+
+        [Test]
         public void should_replace_a_single_variable_with_a_dash()
         {
             var template = "this is a {test-name} template";

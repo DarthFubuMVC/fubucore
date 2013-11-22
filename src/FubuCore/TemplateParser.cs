@@ -63,10 +63,11 @@ namespace FubuCore
             var builder = new StringBuilder();
             foreach (Match match in matches)
             {
+                builder.Append(template.Substring(lastIndex, match.Index - lastIndex));
+
                 var key = match.Groups[TemplateGroup].Value;
-                if ((lastIndex == 0 || match.Index > lastIndex) && values.Has(key))
+                if ((lastIndex == 0 || match.Index > lastIndex) && values.Has(key)) // Should we warn if we can't find the key?
                 {
-                    builder.Append(template.Substring(lastIndex, match.Index - lastIndex));
                     builder.Append(values.Get(key));
                 }
 
