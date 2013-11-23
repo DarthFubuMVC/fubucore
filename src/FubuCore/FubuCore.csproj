@@ -220,6 +220,7 @@
     <Compile Include="Reflection\SingleMethod.cs" />
     <Compile Include="TimeSpanExtensions.cs" />
     <Compile Include="UrlExtensions.cs" />
+    <Compile Include="Util\ConcurrentCache.cs" />
     <Compile Include="Util\DictionaryKeyValues.cs" />
     <Compile Include="FileChangePollingWatcher.cs" />
     <Compile Include="FileHashingExtensions.cs" />
