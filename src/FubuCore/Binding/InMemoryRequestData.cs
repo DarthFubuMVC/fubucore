@@ -6,13 +6,13 @@ namespace FubuCore.Binding
 {
     public class InMemoryRequestData : RequestData
     {
-        private readonly IDictionary<string, object> _values;
+        private readonly Cache<string, object> _values;
 
 
         private InMemoryRequestData(IDictionary<string, object> values)
             : base(new FlatValueSource<object>(values, "in memory"))
         {
-            _values = values;
+            _values = new Cache<string, object>(values);
         }
 
 
@@ -33,7 +33,7 @@ namespace FubuCore.Binding
 
         public IEnumerable<string> GetKeys()
         {
-            return _values.Keys;
+            return _values.GetAllKeys();
         }
     }
 }

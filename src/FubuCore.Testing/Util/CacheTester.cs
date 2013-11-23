@@ -88,6 +88,16 @@ namespace FubuCore.Testing.Util
         }
 
         [Test]
+        public void get_first_value()
+        {
+            cache.Fill(Key, 42);
+            cache.Fill("anotherKey", 99);
+            cache.First.ShouldEqual(42);
+            cache.ClearAll();
+            cache.First.ShouldEqual(0);
+        }
+
+        [Test]
         public void get_all_keys()
         {
             cache.Fill(Key, 42);

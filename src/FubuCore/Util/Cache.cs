@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,7 +8,8 @@ namespace FubuCore.Util
     [Serializable]
     public class Cache<TKey, TValue> : IEnumerable<TValue>
     {
-        private readonly ConcurrentDictionary<TKey, TValue> _values;
+        private readonly object _locker = new object();
+        private readonly IDictionary<TKey, TValue> _values;
 
         private Func<TValue, TKey> _getKey = delegate { throw new NotImplementedException(); };
 
@@ -22,12 +22,12 @@ namespace FubuCore.Util
         };
 
         public Cache()
-            : this(new ConcurrentDictionary<TKey, TValue>())
+            : this(new Dictionary<TKey, TValue>())
         {
         }
 
         public Cache(Func<TKey, TValue> onMissing)
-            : this(new ConcurrentDictionary<TKey, TValue>(), onMissing)
+            : this(new Dictionary<TKey, TValue>(), onMissing)
         {
         }
 
@@ -39,7 +39,7 @@ namespace FubuCore.Util
 
         public Cache(IDictionary<TKey, TValue> dictionary)
         {
-            _values = new ConcurrentDictionary<TKey, TValue>(dictionary);
+            _values = dictionary;
         }
 
         public Action<TValue> OnAddition
@@ -63,12 +63,16 @@ namespace FubuCore.Util
             get { return _values.Count; }
         }
 
-        [Obsolete("Use First() or FirstOrDefault().")]
         public TValue First
         {
             get
             {
-                throw new NotSupportedException("This property is Obsolete.  Use First() or FirstOrDefault().");
+                foreach (var pair in _values)
+                {
+                    return pair.Value;
+                }
+
+                return default(TValue);
             }
         }
 
@@ -83,13 +87,20 @@ namespace FubuCore.Util
             set
             {
                 _onAddition(value);
-                _values[key] = value;
+                if (_values.ContainsKey(key))
+                {
+                    _values[key] = value;
+                }
+                else
+                {
+                    _values.Add(key, value);
+                }
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<TValue>)this).GetEnumerator();
+            return ((IEnumerable<TValue>) this).GetEnumerator();
         }
 
         public IEnumerator<TValue> GetEnumerator()
@@ -109,21 +120,29 @@ namespace FubuCore.Util
 
         public void Fill(TKey key, Func<TKey, TValue> onMissing)
         {
-            bool newValue = false;
-            var value = _values.GetOrAdd(key,
-                k =>
+            if (!_values.ContainsKey(key))
+            {
+                lock (_locker)
                 {
-                    newValue = true;
-                    return onMissing(k);
-                });
-
-            if (newValue)
-                _onAddition(value);
+                    if (!_values.ContainsKey(key))
+                    {
+                        
+                        var value = onMissing(key);
+                        _onAddition(value);
+                        _values.Add(key, value);
+                    }
+                }
+            }
         }
 
         public void Fill(TKey key, TValue value)
         {
-            _values.TryAdd(key, value);
+            if (_values.ContainsKey(key))
+            {
+                return;
+            }
+
+            _values.Add(key, value);
         }
 
         public void Each(Action<TValue> action)
@@ -149,12 +168,24 @@ namespace FubuCore.Util
 
         public bool Exists(Predicate<TValue> predicate)
         {
-            return _values.Any(pair => predicate(pair.Value));
+            var returnValue = false;
+
+            Each(delegate(TValue value) { returnValue |= predicate(value); });
+
+            return returnValue;
         }
 
         public TValue Find(Predicate<TValue> predicate)
         {
-            return _values.FirstOrDefault(x => predicate(x.Value)).Value;
+            foreach (var pair in _values)
+            {
+                if (predicate(pair.Value))
+                {
+                    return pair.Value;
+                }
+            }
+
+            return default(TValue);
         }
 
         public TKey[] GetAllKeys()
@@ -169,8 +200,10 @@ namespace FubuCore.Util
 
         public void Remove(TKey key)
         {
-            TValue _;
-            _values.TryRemove(key, out _);
+            if (_values.ContainsKey(key))
+            {
+                _values.Remove(key);
+            }
         }
 
         public void ClearAll()
@@ -180,10 +213,9 @@ namespace FubuCore.Util
 
         public bool WithValue(TKey key, Action<TValue> callback)
         {
-            TValue value;
-            if (_values.TryGetValue(key, out value))
+            if (Has(key))
             {
-                callback(value);
+                callback(this[key]);
                 return true;
             }
 

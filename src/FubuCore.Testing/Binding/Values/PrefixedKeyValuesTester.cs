@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using FubuCore.Binding.Values;
 using NUnit.Framework;
 using FubuTestingSupport;
@@ -51,7 +50,7 @@ namespace FubuCore.Testing.Binding.Values
             theValues["OneKey5"] = "a";
             theValues["OneKey6"] = "a";
 
-            thePrefixedValues.GetKeys().ToList().Matches("Key4", "Key5", "Key6");
+            thePrefixedValues.GetKeys().ShouldHaveTheSameElementsAs("Key4", "Key5", "Key6");
         }
 
         [Test]
