@@ -66,9 +66,13 @@ namespace FubuCore
                 builder.Append(template.Substring(lastIndex, match.Index - lastIndex));
 
                 var key = match.Groups[TemplateGroup].Value;
-                if ((lastIndex == 0 || match.Index > lastIndex) && values.Has(key)) // Should we warn if we can't find the key?
+                if ((lastIndex == 0 || match.Index > lastIndex) && values.Has(key))
                 {
                     builder.Append(values.Get(key));
+                }
+                else
+                {
+                    builder.Append("{{" + key + "}}"); // escape the missing key so that the while loop ContainsTemplate will terminate
                 }
 
                 lastIndex = match.Index + match.Length;

@@ -22,29 +22,29 @@ namespace FubuCore.Testing
         }
 
         [Test]
-        public void should_return_remaining_string_if_variable_not_found()
+        public void should_return_replacement_string_with_missing_key_not_replaced()
         {
-            var template = "http://testreplacement.com/{optional}";
+            var template = "http://testreplacement.com/{notfound}/blah-blah";
             var substitiutions = new Dictionary<string, string>();
 
             TemplateParser
                 .Parse(template, substitiutions)
-                .ShouldEqual("http://testreplacement.com/");
+                .ShouldEqual("http://testreplacement.com/{notfound}/blah-blah");
         }
 
         [Test]
-        public void should_replace_variables_that_are_found_and_replace_unknown_with_nothing()
+        public void should_replace_variables_that_are_found_and_retain_missing_keys()
         {
-            var template = "http://testreplacement.com/{replaced}/{still-replaced}/{optional}";
+            var template = "http://testreplacement.com/{replaced}/{missing-key}/{goodkey}";
             var substitiutions = new Dictionary<string, string>
             {
                 {"replaced", "gotreplaced"},
-                {"still-replaced", "stillreplaced"}
+                {"goodkey", "alsoreplaced"}
             };
 
             TemplateParser
                 .Parse(template, substitiutions)
-                .ShouldEqual("http://testreplacement.com/gotreplaced/stillreplaced/");
+                .ShouldEqual("http://testreplacement.com/gotreplaced/{missing-key}/alsoreplaced");
         }
 
         [Test]
