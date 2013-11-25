@@ -123,5 +123,21 @@ namespace FubuCore.Testing
         {
             TemplateParser.GetSubstitutions("{that} is a {test} template").ShouldHaveTheSameElementsAs("that", "test");
         }
+
+        [Test]
+        public void should_handle_templates_found_in_replacement_values() //TEMPLATE-CEPTION!
+        {
+            var template = "{who} have to go {where}";
+            var substitutions = new Dictionary<string, string>
+            {
+                {"who", "we"},
+                {"where", "deep{moar-template}"},
+                {"moar-template", "er!"}
+            };
+
+            TemplateParser
+                .Parse(template, substitutions)
+                .ShouldEqual("we have to go deeper!");
+        }
     }
 }
