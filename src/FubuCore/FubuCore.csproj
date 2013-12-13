@@ -321,6 +321,7 @@
     <Compile Include="Util\TextWriting\Line.cs" />
     <Compile Include="Util\TextWriting\PlainLine.cs" />
     <Compile Include="Util\TextWriting\TextReport.cs" />
+    <Compile Include="Platform.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
