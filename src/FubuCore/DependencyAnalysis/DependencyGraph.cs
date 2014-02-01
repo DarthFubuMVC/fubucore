@@ -36,7 +36,13 @@ namespace FubuCore.DependencyAnalysis
 
         public bool HasCycles()
         {
-            var cycles = _cycleDetector.FindCycles().ToList();
+            List<Cycle> cycles;
+            return HasCycles (out cycles);
+        }
+
+        public bool HasCycles(out List<Cycle> cycles)
+        {
+            cycles = _cycleDetector.FindCycles().ToList();
             return cycles.Count() > 0;
         }
 
@@ -75,8 +81,15 @@ namespace FubuCore.DependencyAnalysis
 
         public IEnumerable<string> GetLoadOrder()
         {
-            if(HasCycles())
-                throw new InvalidOperationException("This graph has dependency cycles and cannot be ordered!");
+            List<Cycle> cycles;
+            if (HasCycles (out cycles))
+            {
+                var cycleDescription = cycles.Select (x => x.Name).Join (Environment.NewLine);
+                throw new InvalidOperationException (
+                    @"This graph has dependency cycles and cannot be ordered!
+                    The following cycles exist:
+                    {0}".ToFormat(cycleDescription));
+            }
 
             foreach (var node in _cycleDetector.Order())
             {
