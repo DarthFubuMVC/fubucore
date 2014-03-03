@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using FubuTestingSupport;
 using NUnit.Framework;
+using StructureMap.Pipeline;
 
 namespace FubuCore.Testing
 {
@@ -83,6 +84,30 @@ namespace FubuCore.Testing
             Func<string, bool> whereEvaluator = item => item.CompareTo("c") < 0;
             list.RemoveAll(whereEvaluator);
             list.ShouldHaveCount(1).ShouldContain("c");
+        }
+
+        [Test]
+        public void unions_param_args()
+        {
+            var list = new List<string> {"a", "c", "b"};
+            var union = list.Union("d", "b", "e");
+            union.ShouldHaveTheSameElementsAs("a", "c", "b", "d", "e");
+        }
+
+        [Test]
+        public void unions_param_args_none()
+        {
+            var list = new List<string> {"a", "c", "b"};
+            var union = list.Union();
+            union.ShouldHaveTheSameElementsAs("a", "c", "b");
+        }
+
+        [Test]
+        public void unions_param_args_empty_array()
+        {
+            var list = new List<string> {"a", "c", "b"};
+            var union = list.Union(new string[0]);
+            union.ShouldHaveTheSameElementsAs("a", "c", "b");
         }
     }
 }
