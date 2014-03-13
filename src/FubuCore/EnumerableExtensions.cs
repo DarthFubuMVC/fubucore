@@ -142,5 +142,10 @@ namespace System.Collections.Generic
 
             return true;
         }
+
+        public static IEnumerable<T> Union<T>(this IEnumerable<T> first, params T[] second)
+        {
+            return first.Union(second as IEnumerable<T>);
+        } 
     }
 }
