@@ -90,7 +90,7 @@ namespace FubuCore.Testing
         public void unions_param_args()
         {
             var list = new List<string> {"a", "c", "b"};
-            var union = list.Union("d", "b", "e");
+            var union = list.UnionWith("d", "b", "e");
             union.ShouldHaveTheSameElementsAs("a", "c", "b", "d", "e");
         }
 
@@ -98,7 +98,7 @@ namespace FubuCore.Testing
         public void unions_param_args_none()
         {
             var list = new List<string> {"a", "c", "b"};
-            var union = list.Union();
+            var union = list.UnionWith();
             union.ShouldHaveTheSameElementsAs("a", "c", "b");
         }
 
@@ -106,7 +106,7 @@ namespace FubuCore.Testing
         public void unions_param_args_empty_array()
         {
             var list = new List<string> {"a", "c", "b"};
-            var union = list.Union(new string[0]);
+            var union = list.UnionWith(new string[0]);
             union.ShouldHaveTheSameElementsAs("a", "c", "b");
         }
     }
