@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
 using FubuCore.Util;
@@ -11,6 +12,7 @@ namespace FubuCore.Configuration
     {
         private readonly Cache<DictionaryPath, SettingsData> _children;
         private readonly IDictionary<string, object> _dictionary;
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         public SettingsData() : this(SettingCategory.core)
         {
@@ -83,14 +85,8 @@ namespace FubuCore.Configuration
 
         public SettingsData Child(string key)
         {
-            if (!HasChild(key))
-            {
-                var dict = new Dictionary<string, object>();
-                _dictionary.Add(key, dict);
-            }
-
-            var childDict = _dictionary.Child(key);
-            return new SettingsData(childDict, Provenance + "." + key);
+            return _lock.MaybeWrite(() => new SettingsData(_dictionary.Child(key), Provenance + "." + key),
+                () => !HasChild(key), () => _dictionary.Add(key, new Dictionary<string, object>()));
         }
 
         public bool HasChild(string key)
