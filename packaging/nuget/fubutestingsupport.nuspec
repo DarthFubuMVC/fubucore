@@ -13,10 +13,10 @@
     <tags>utilities, testing, fubu</tags>
     <dependencies>
       <dependency id="FubuCore" />
-      <dependency id="NUnit" version="[2.5.10.11092]" />
+      <dependency id="NUnit" version="[2.6.3]" />
       <dependency id="RhinoMocks" version="3.6.1" />
-      <dependency id="structuremap" version="2.6.3" />
-      <dependency id="structuremap.automocking" version="2.6.3" />
+      <dependency id="structuremap" version="3.0" />
+      <dependency id="structuremap.automocking" version="3.0" />
     </dependencies>
   </metadata>
   <files>
