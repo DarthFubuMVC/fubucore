@@ -6,6 +6,10 @@ FubuRake::Solution.new do |sln|
 		:product_name => "FubuCore",
 		:copyright => 'Copyright 2008-2015 Jeremy D. Miller, Josh Arnold, Joshua Flanagan, et al. All rights reserved.'
 	}
+
+	sln.options[:nuget_publish_folder] = 'nupkgs'
+	sln.options[:nuget_publish_url] = 'https://www.myget.org/F/fubumvc-edge/'
+
 end
 
 
