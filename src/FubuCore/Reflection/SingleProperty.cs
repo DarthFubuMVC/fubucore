@@ -115,7 +115,7 @@ namespace FubuCore.Reflection
 
         public override int GetHashCode()
         {
-            return (_property != null ? _property.GetHashCode() : 0);
+            return (_property != null ? (_property.DeclaringType.FullName + "." + _property.Name).GetHashCode() : 0);
         }
     }
 }
