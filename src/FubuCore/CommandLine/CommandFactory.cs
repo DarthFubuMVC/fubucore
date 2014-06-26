@@ -12,7 +12,18 @@ namespace FubuCore.CommandLine
     {
         private static readonly string[] _helpCommands = new []{"help", "?"}; 
         private readonly Cache<string, Type> _commandTypes = new Cache<string, Type>();
+        private readonly ICommandCreator _commandCreator;
         private string _appName;
+
+        public CommandFactory()
+        {
+            _commandCreator = new ActivatorCommandCreator();
+        }
+
+        public CommandFactory(ICommandCreator creator)
+        {
+            _commandCreator = creator;
+        }
 
         public CommandRun BuildRun(string commandLine)
         {
@@ -125,15 +136,13 @@ namespace FubuCore.CommandLine
 
         public IEnumerable<IFubuCommand> BuildAllCommands()
         {
-            return _commandTypes.Select(x => {
-                return Activator.CreateInstance(x).As<IFubuCommand>();
-            });
+            return _commandTypes.Select(x => _commandCreator.Create(x));
         }
 
 
         public IFubuCommand Build(string commandName)
         {
-            return (IFubuCommand) Activator.CreateInstance(_commandTypes[commandName.ToLower()]);
+            return _commandCreator.Create(_commandTypes[commandName.ToLower()]);
         }
 
 
