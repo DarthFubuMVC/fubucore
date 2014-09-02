@@ -74,7 +74,7 @@ namespace FubuCore
             var length = pathParts.Count > rootParts.Count ? rootParts.Count : pathParts.Count;
             for (int i = 0; i < length; i++)
             {
-                if (pathParts.First() == rootParts.First())
+                if (pathParts.First().Equals(rootParts.First(), StringComparison.OrdinalIgnoreCase))
                 {
                     pathParts.RemoveAt(0);
                     rootParts.RemoveAt(0);
