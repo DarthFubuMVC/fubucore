@@ -120,6 +120,10 @@ namespace FubuCore.Reflection
             {
                 return GetAccessor((Expression)expression.Body);
             }
+            if (expression.Body.NodeType == ExpressionType.Convert)
+            {
+                return GetAccessor(((UnaryExpression)expression.Body).Operand);
+            }
 
             MemberExpression memberExpression = getMemberExpression(expression);
 
