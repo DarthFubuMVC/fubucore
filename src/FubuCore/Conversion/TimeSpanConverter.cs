@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Linq;
-using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {
@@ -11,21 +10,21 @@ namespace FubuCore.Conversion
     {
         private const string TIMESPAN_PATTERN =
             @"
-(?<quantity>\d+     # quantity is expressed as some digits
-(\.\d+)?)           # optionally followed by a decimal point and more digits
+^(?<quantity>\d+    # quantity is expressed as some digits
+(\.\d+)?)           # optionally followed by a decimal point or colon and more digits
 \s*                 # optional whitespace
-(?<units>\w+)       # units is expressed as a word";
+(?<units>[a-z]*)    # units is expressed as a word
+$                   # match the entire string";
 
 
         public static TimeSpan GetTimeSpan(string timeString)
         {
-            var match = Regex.Match(timeString, TIMESPAN_PATTERN, RegexOptions.IgnorePatternWhitespace);
+            var match = Regex.Match(timeString.Trim(), TIMESPAN_PATTERN, RegexOptions.IgnorePatternWhitespace);
             if (!match.Success)
             {
                 return TimeSpan.Parse(timeString);
             }
 
-            
 
             var number = double.Parse(match.Groups["quantity"].Value);
             var units = match.Groups["units"].Value.ToLower();
@@ -35,6 +34,7 @@ namespace FubuCore.Conversion
                 case "second":
                 case "seconds":
                     return TimeSpan.FromSeconds(number);
+
                 case "m":
                 case "minute":
                 case "minutes":
@@ -49,7 +49,6 @@ namespace FubuCore.Conversion
                 case "day":
                 case "days":
                     return TimeSpan.FromDays(number);
-
             }
 
             if (timeString.Length == 4 && !timeString.Contains(":"))
