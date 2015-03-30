@@ -7,6 +7,9 @@ FubuRake::Solution.new do |sln|
 		:copyright => 'Copyright 2008-2015 Jeremy D. Miller, Josh Arnold, Joshua Flanagan, et al. All rights reserved.'
 	}
 
+	sln.ripple_enabled = true;
+	
+	
 	sln.options[:nuget_publish_folder] = 'nupkgs'
 	sln.options[:nuget_publish_url] = 'https://www.myget.org/F/fubumvc-edge/'
 end
