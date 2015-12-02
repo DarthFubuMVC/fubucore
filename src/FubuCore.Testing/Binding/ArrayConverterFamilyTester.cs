@@ -30,5 +30,14 @@ namespace FubuCore.Testing.Binding
                 setup.Data("Strings=herp, derp"); 
             }).Model.Strings.ShouldHaveTheSameElementsAs("herp","derp");
         }
+
+        [Test]
+        public void will_convert_escaped_comma_delimited_list_into_string_array()
+        {
+            BindingScenario<HerpDerp>.For(setup =>
+            {
+                setup.Data(@"Strings=arp, ""derp,larp"", herp");
+            }).Model.Strings.ShouldHaveTheSameElementsAs("arp", "derp,larp", "herp");
+        }
     }
 }

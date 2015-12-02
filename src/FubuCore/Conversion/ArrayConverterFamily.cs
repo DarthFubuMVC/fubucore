@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel;
+using System.Linq;
+using FubuCore.Csv;
 using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
@@ -45,12 +47,15 @@ namespace FubuCore.Conversion
                     return Array.CreateInstance(_innerType, 0);
                 }
 
-                var strings = stringValue.ToDelimitedArray();
-                var array = Array.CreateInstance(_innerType, strings.Length);
+                var csvTokenizer = new CsvTokenizer();
+                csvTokenizer.Read(stringValue);
+                var tokens = csvTokenizer.Tokens.Select(t=>t.Trim()).ToList();
 
-                for (var i = 0; i < strings.Length; i++)
+                var array = Array.CreateInstance(_innerType, tokens.Count);
+
+                for (var i = 0; i < tokens.Count; i++)
                 {
-                    var value = _inner.Convert(request.AnotherRequest(strings[i]));
+                    var value = _inner.Convert(request.AnotherRequest(tokens[i]));
                     array.SetValue(value, i);
                 }
 
