@@ -67,6 +67,13 @@ namespace FubuCore.Testing
         }
 
         [Test]
+        public void get_relative_path_should_not_be_case_sensitive()
+        {
+            @"c:\build\posh-tf".PathRelativeTo(@"c:\Build\scripts")
+                .ShouldEqual(@"..\posh-tf");
+        }
+
+        [Test]
         public void path_relative_in_parallel_paths()
         {
             fullPath("folder2", "file2.txt")
