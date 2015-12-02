@@ -51,8 +51,5 @@
   </Target>
   -->
   <ItemGroup>
-    <EmbeddedResource Include="pak-WebContent.zip" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
 </Project>
