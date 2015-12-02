@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using FubuCore.CommandLine;
 using FubuTestingSupport;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace FubuCore.Testing.CommandLine
 {
@@ -205,8 +206,23 @@ namespace FubuCore.Testing.CommandLine
             input.ThirdFlag.ShouldBeTrue();
         }
 
-    }
+        [Test]
+        public void build_command_with_a_replacement_commandcreator()
+        {
+            var creator = MockRepository.GenerateMock<ICommandCreator>();
+            creator.Stub(c => c.Create(typeof (MyCommand)))
+                .Repeat.Once()
+                .Return(new MyCommand());
 
+            var factory = new CommandFactory(creator);
+            factory.RegisterCommands(GetType().Assembly);
+
+            var cmd = factory.Build("my");
+
+            creator.VerifyAllExpectations();
+            cmd.ShouldBeOfType<MyCommand>();
+        }
+    }
 
     public class RebuildAuthorizationCommand : FubuCommand<MyCommandInput>
     {

@@ -113,10 +113,12 @@
     <Compile Include="Binding\Values\NamedKeyValues.cs" />
     <Compile Include="Binding\Values\ValueReport.cs" />
     <Compile Include="Binding\Values\ValueReportBase.cs" />
+    <Compile Include="CommandLine\ActivatorCommandCreator.cs" />
     <Compile Include="CommandLine\ArgPreprocessor.cs" />
     <Compile Include="CommandLine\DumpUsagesCommand.cs" />
     <Compile Include="CommandLine\EnumerableFlag.cs" />
     <Compile Include="CommandLine\FlagAliases.cs" />
+    <Compile Include="CommandLine\ICommandCreator.cs" />
     <Compile Include="CommandLine\InvalidUsageException.cs" />
     <Compile Include="CommandLine\UsageReport.cs" />
     <Compile Include="Configuration\SettingsData.cs" />

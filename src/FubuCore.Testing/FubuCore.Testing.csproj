@@ -81,6 +81,7 @@
     <Compile Include="Binding\ConversionPropertyBinderTester.cs" />
     <Compile Include="Binding\ConverterFamilyTester.cs" />
     <Compile Include="Binding\ConvertProblemTester.cs" />
+    <Compile Include="CommandLine\ActivatorCommandCreatorTests.cs" />
     <Compile Include="CommandLine\DumpCommandSmokeTester.cs" />
     <Compile Include="Csv\ColumnDefinitionTester.cs" />
     <Compile Include="Csv\ColumnExpressionTester.cs" />
