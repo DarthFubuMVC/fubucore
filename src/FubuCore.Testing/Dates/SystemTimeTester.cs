@@ -62,6 +62,7 @@ namespace FubuCore.Testing.Dates
             systemTime.LocalTime().Time.ShouldEqual(now);
 
             clock.Live();
+            clock.UtcNow().Kind.ShouldEqual(DateTimeKind.Utc);
 
             var firstNow = SystemTime.Default().LocalTime().Time;
             var secondNow = DateTime.Now;

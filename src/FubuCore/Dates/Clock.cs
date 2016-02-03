@@ -13,7 +13,7 @@ namespace FubuCore.Dates
 
         public void Live()
         {
-            _now = () => DateTime.Now;
+            _now = () => DateTime.UtcNow;
         }
 
         public Clock LocalNow(DateTime localTime, TimeZoneInfo localZone = null)
