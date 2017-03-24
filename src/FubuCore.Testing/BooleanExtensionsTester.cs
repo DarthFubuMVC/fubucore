@@ -8,27 +8,31 @@ namespace FubuCore.Testing
     public class BooleanExtensionsTester
     {
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void If_should_also_return_an_ArgumentException()
         {
-            var test = new TestObject
+            Assert.Throws<ArgumentException>(() =>
             {
-                Boolean = true
-            };
+                var test = new TestObject
+                {
+                    Boolean = true
+                };
 
-            "test".If(() => test.Boolean && test.Boolean);
+                "test".If(() => test.Boolean && test.Boolean);
+            });
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void If_should_return_an_ArgumentException()
         {
-            var test = new TestObject
+            Assert.Throws<ArgumentException>(() =>
             {
-                Value = 1
-            };
+                var test = new TestObject
+                {
+                    Value = 1
+                };
 
-            "test".If(() => test.Value == 1);
+                "test".If(() => test.Value == 1);
+            });
         }
 
         [Test]
@@ -54,27 +58,31 @@ namespace FubuCore.Testing
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void IfNot_should_also_return_an_ArgumentException()
         {
-            var test = new TestObject
+            Assert.Throws<ArgumentException>(() =>
             {
-                Boolean = true
-            };
+                var test = new TestObject
+                {
+                    Boolean = true
+                };
 
-            "test".IfNot(() => test.Boolean && test.Boolean);
+                "test".IfNot(() => test.Boolean && test.Boolean);
+            });
         }
 
         [Test]
-        [ExpectedException(typeof (ArgumentException))]
         public void IfNot_should_return_an_ArgumentException()
         {
-            var test = new TestObject
+            Assert.Throws<ArgumentException>(() =>
             {
-                Value = 1
-            };
+                var test = new TestObject
+                {
+                    Value = 1
+                };
 
-            "test".IfNot(() => test.Value == 1);
+                "test".IfNot(() => test.Value == 1);
+            });
         }
 
         [Test]

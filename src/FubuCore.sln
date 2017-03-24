@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.9
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "__Build_Utilities", "__Build_Utilities", "{7AC4D197-535A-4686-8E21-18257B2ADB3A}"
 	ProjectSection(SolutionItems) = preProject
 		..\InstallGems.bat = ..\InstallGems.bat
@@ -12,8 +14,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuCore.Testing", "FubuCore.Testing\FubuCore.Testing.csproj", "{F2F97121-B7E0-4435-8F38-47EB9B5C8E36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuTestingSupport", "FubuTestingSupport\FubuTestingSupport.csproj", "{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubuCore.Docs", "FubuCore.Docs\FubuCore.Docs.csproj", "{41E2377E-C76B-47C0-9AF3-984BC7106CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,21 +73,6 @@ Global
 		{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}.Retail|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}.Retail|Mixed Platforms.Build.0 = Release|Any CPU
 		{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}.Retail|x86.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Release|x86.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Retail|Any CPU.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Retail|Any CPU.Build.0 = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Retail|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Retail|Mixed Platforms.Build.0 = Release|Any CPU
-		{41E2377E-C76B-47C0-9AF3-984BC7106CEC}.Retail|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
