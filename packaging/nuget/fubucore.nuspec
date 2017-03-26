@@ -1,13 +1,18 @@
 <?xml version="1.0"?>
 <package xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <id>$id$</id>
-    <version>$version$</version>
-    <title>$title$</title>    
-    <authors>$author$</authors>
-    <description>$description$</description>
-    <copyright>$copyright$</copyright>
+    <id>FubuCore</id>
+    <version>0.0.0</version>
+    <authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan</authors>
+    <owners>Jeremy D. Miller</owners>
+    <licenseUrl>https://github.com/DarthFubuMVC/fubucore/raw/master/license.txt</licenseUrl>
+    <projectUrl>http://core.fubu-project.org</projectUrl>
+    <iconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuCore_256.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A foundational library for .Net frameworks including model binding and localization</description>
+    <tags>utilities, fubu</tags>
+    <dependencies>
+    </dependencies>
   </metadata>
   <files>
     <file src="..\..\src\FubuCore\bin\Release\FubuCore.*" target="lib" />
