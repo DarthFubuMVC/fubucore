@@ -488,4 +488,41 @@ namespace FubuCore.Testing.Reflection
         }
     }
 
+    [TestFixture]
+    public class when_using_an_accessor_with_a_cast_in_it
+    {
+        [Test]
+        public void can_get_value_from_expression()
+        {
+            var objInner = new Inner { Value = "the_value" };
+            var objOuter = new Outer { Inner = objInner };
+
+            var result = ReflectionHelper.GetAccessor<Outer>(x => ((Inner)x.Inner).Value);
+
+            result.GetValue(objOuter).ShouldEqual(objInner.Value);
+        }
+
+        [Test]
+        public void can_get_nested_value_from_expression()
+        {
+            var innerNested = new Inner { Value = "the_value_inner" };
+            var objInner = new Inner { InnerNested = innerNested };
+            var objOuter = new Outer { Inner = objInner };
+
+            var result = ReflectionHelper.GetAccessor<Outer>(x => ((Inner)((Inner)x.Inner).InnerNested).Value);
+
+            result.GetValue(objOuter).ShouldEqual(innerNested.Value);
+        }
+
+        public class Outer
+        {
+            public object Inner { get; set; }
+        }
+
+        public class Inner
+        {
+            public string Value { get; set; }
+            public object InnerNested { get; set; }
+        }
+    }
 }
