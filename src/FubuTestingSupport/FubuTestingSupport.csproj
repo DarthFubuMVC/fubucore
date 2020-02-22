@@ -1,83 +1,36 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FubuTestingSupport</RootNamespace>
+    <Description>Specification extensions and automocking utilities for interaction tests.</Description>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Authors>Chad Myers, Jeremy D. Miller, Joshua Flanagan, Corey Kaylor</Authors>
+    <TargetFramework>net462</TargetFramework>
     <AssemblyName>FubuTestingSupport</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <PackageId>FubuTestingSupport</PackageId>
+    <PackageIconUrl>https://github.com/DarthFubuMVC/fubu-collateral/raw/master/Icons/FubuCore_256.png</PackageIconUrl>
+    <PackageProjectUrl>http://core.fubu-project.org</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageLicenseUrl>https://github.com/DarthFubuMVC/fubucore/blob/master/license.txt</PackageLicenseUrl>
+    <PackageTags>utilities, testing, fubu</PackageTags>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.mocks">
-      <HintPath>..\packages\NUnit\lib\nunit.mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework">
-      <HintPath>..\packages\NUnit\lib\pnunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks">
-      <HintPath>..\packages\RhinoMocks\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap">
-      <HintPath>..\packages\structuremap\lib\StructureMap.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap.AutoMocking">
-      <HintPath>..\packages\structuremap.automocking\lib\StructureMap.AutoMocking.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.Mocks" Version="2.6.4" />
+    <PackageReference Include="RhinoMocks" Version="3.6.1" />
+    <PackageReference Include="structuremap" Version="4.7.1" />
+    <PackageReference Include="structuremap.automocking" Version="4.0.0.315" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
   </ItemGroup>
+    
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>Properties\CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="AccessorPersistenceCheck.cs" />
-    <Compile Include="EnumerablePersistenceCheck.cs" />
-    <Compile Include="InteractionContext.cs" />
-    <Compile Include="IPersistenceCheck.cs" />
-    <Compile Include="PersistenceSpecification.cs" />
-    <Compile Include="SelfMockingServiceLocator.cs" />
-    <Compile Include="SpecificationExtensions.cs" />
-    <Compile Include="Wait.cs" />
+    <ProjectReference Include="..\FubuCore\FubuCore.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FubuCore\FubuCore.csproj">
-      <Project>{342B987C-E0A4-4129-958D-8E08084E8A06}</Project>
-      <Name>FubuCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>

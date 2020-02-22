@@ -65,7 +65,7 @@ namespace FubuCore.Testing
         public void get_attribute_on_method()
         {
             ReflectionHelper.GetMethod<AttributeClass>(x => x.GetName())
-                .GetAttribute<DescriptionAttribute>().Description.ShouldEqual("att value");
+                .GetAttribute<DescriptionAttribute>().Properties["Description"].ShouldEqual("att value");
         }
 
         [Test]

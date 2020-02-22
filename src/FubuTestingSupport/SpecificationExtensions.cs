@@ -98,7 +98,7 @@ namespace FubuTestingSupport
 
         public static void ShouldMatch(this string actual, string pattern)
         {
-            Assert.That(actual, Is.StringMatching(pattern));
+            Assert.That(actual, Does.Match(pattern));
         }
 
         public static XmlElement AttributeShouldEqual(this XmlElement element, string attributeName, object expected)

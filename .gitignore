@@ -39,3 +39,4 @@ results/*
 src/Max
 logs
 Gemfile.lock
+.idea/
