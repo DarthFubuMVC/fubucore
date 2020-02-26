@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace FubuCore.Testing.TestingSupport
 {
     [TestFixture]
-    public class SystemTimeMechanicsInInteractionContext : InteractionContext<ThingThatUsesSystemTime>
+    public class SystemTimeMechanicsInInteractionContext : NSubstituteInteractionContext<ThingThatUsesSystemTime>
     {
         private DateTime systemTime;
 

@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 using FubuTestingSupport;
 using NUnit.Framework;
 using FubuCore.Reflection;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Reflection
 {
@@ -22,8 +22,8 @@ namespace FubuCore.Testing.Reflection
         public void SetUp()
         {
             _expression = ph => ph.Age;
-            _callback = MockRepository.GenerateStub<ICallback>();
-            _uncalledCallback = MockRepository.GenerateStub<ICallback>();
+            _callback = Substitute.For<ICallback>();
+            _uncalledCallback = Substitute.For<ICallback>();
         }
 
         [Test]
@@ -37,9 +37,9 @@ namespace FubuCore.Testing.Reflection
         {
             Accessor accessor = _expression.ToAccessor();
             accessor.IfPropertyTypeIs<int>(_callback.Callback);
-            _callback.AssertWasCalled(c=>c.Callback());
+            _callback.Received().Callback();
             accessor.IfPropertyTypeIs<PropertyHolder>(_uncalledCallback.Callback);
-            _uncalledCallback.AssertWasNotCalled(c=>c.Callback());
+            _uncalledCallback.Received(0).Callback();
         }
 
         [Test]

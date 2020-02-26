@@ -5,20 +5,22 @@ using FubuCore.Util;
 using FubuTestingSupport;
 using NUnit.Framework;
 using FubuCore;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Util
 {
+    public interface ICallback
+    {
+        string GetKeyCallback(int value);
+        void OnAdditionCallback(int value);
+    }
+
     [TestFixture]
     public class CacheTester
     {
         private Cache<string, int> cache;
         private const string Key = "someKey";
-        public interface ICallback
-        {
-            string GetKeyCallback(int value);
-            void OnAdditionCallback(int value);
-        }
+        
 
         [SetUp]
         public void SetUp()
@@ -117,21 +119,21 @@ namespace FubuCore.Testing.Util
         [Test]
         public void set_GetKey()
         {
-            ICallback callback = MockRepository.GenerateStub<ICallback>();
+            ICallback callback = Substitute.For<ICallback>();
             cache.GetKey = callback.GetKeyCallback;
             cache.GetKey(42);
-            callback.AssertWasCalled(c=>c.GetKeyCallback(42));
+            callback.Received().GetKeyCallback(42);
         }
 
         [Test]
         public void set_OnAddition()
         {
-            ICallback callback = MockRepository.GenerateStub<ICallback>();
-            cache["firstKey"] = 0;
-            callback.AssertWasNotCalled(c => c.OnAdditionCallback(42));
+            ICallback callback = Substitute.For<ICallback>();
             cache.OnAddition = callback.OnAdditionCallback;
-            cache[Key] = 42;
-            callback.AssertWasCalled(c=>c.OnAdditionCallback(42));
+            cache["first"] = 0;
+            callback.Received(0).OnAdditionCallback(42);
+            cache["differentKey"] = 42;
+            callback.Received().OnAdditionCallback(42);
         }
 
         [Test]

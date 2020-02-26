@@ -2,20 +2,20 @@ using System;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
 using FubuTestingSupport;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
 
     [TestFixture]
-    public class object_resolver_throws_exception_on_bind_model_with_no_matching_model_binder : InteractionContext<ObjectResolver>
+    public class object_resolver_throws_exception_on_bind_model_with_no_matching_model_binder : NSubstituteInteractionContext<ObjectResolver>
     {
         [Test]
         public void throw_fubu_exception_if_there_is_no_suitable_binder()
         {
-            MockFor<IModelBinderCache>().Stub(x => x.BinderFor(GetType())).Return(null);
-
+            MockFor<IModelBinderCache>().BinderFor(GetType()).Returns(null as IModelBinder);
 
             Exception<FubuException>.ShouldBeThrownBy(() =>
             {
@@ -43,11 +43,10 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_throw_fubu_exception_2201()
         {
-            matchingBinder = MockRepository.GenerateStub<IModelBinder>();
-            matchingBinder.Stub(x => x.Matches(_type)).Return(true);
-            matchingBinder.Stub(x => x.Bind(_type, null)).IgnoreArguments().Throw(new Exception("fake message"));
-
-
+            matchingBinder = Substitute.For<IModelBinder>();
+            matchingBinder.Matches(_type).Returns(true);
+            matchingBinder.WhenForAnyArgs(x => x.Bind(_type, null))
+                .Do(x => throw new Exception("fake message"));
 
             var exception = Exception<FubuException>.ShouldBeThrownBy(() =>
             {
@@ -75,11 +74,11 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_resolve_the_requested_model_with_the_first_binder_that_matches()
         {
-            binder1 = MockRepository.GenerateMock<IModelBinder>();
-            binder2 = MockRepository.GenerateMock<IModelBinder>();
+            binder1 = Substitute.For<IModelBinder>();
+            binder2 = Substitute.For<IModelBinder>();
 
-            binder1.Stub(x => x.Matches(typeof(BinderTarget))).Return(false);
-            binder2.Stub(x => x.Matches(typeof(BinderTarget))).Return(false);
+            binder1.Matches(typeof(BinderTarget)).Returns(false);
+            binder2.Matches(typeof(BinderTarget)).Returns(false);
 
             expectedResult = new BinderTarget();
 

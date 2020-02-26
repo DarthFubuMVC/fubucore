@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 using FubuCore.Util.TextWriting;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Util.TextWriting
 {
@@ -15,11 +15,11 @@ namespace FubuCore.Testing.Util.TextWriting
             var line = new DividerLine('=');
             line.Width = 5;
 
-            var writer = MockRepository.GenerateMock<TextWriter>();
+            var writer = Substitute.For<TextWriter>();
 
             line.Write(writer);
 
-            writer.AssertWasCalled(x => x.WriteLine("====="));
+            writer.Received().WriteLine("=====");
         }
 
         [Test]
@@ -28,12 +28,12 @@ namespace FubuCore.Testing.Util.TextWriting
             var line = new DividerLine('=');
             line.Width = 5;
 
-            var writer = MockRepository.GenerateMock<TextWriter>();
+            var writer = Substitute.For<TextWriter>();
             Console.SetOut(writer);
 
             line.WriteToConsole();
 
-            writer.AssertWasCalled(x => x.WriteLine("====="));
+            writer.Received().WriteLine("=====");
         }
     }
 }

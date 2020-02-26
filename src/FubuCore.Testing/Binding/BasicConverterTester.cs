@@ -8,8 +8,8 @@ using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuCore.Testing.Conversion;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -28,10 +28,10 @@ namespace FubuCore.Testing.Binding
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
-            _context = MockRepository.GenerateMock<IPropertyContext>();
-            _context.Stub(x => x.Property).Return(_property);
+            _context = Substitute.For<IPropertyContext>();
+            _context.Property.Returns(_property);
             _propertyValue = new BindingValue { RawValue = "1,000.001" };
-            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
+            _context.RawValueFromRequest.Returns(_propertyValue, _propertyValue, _propertyValue, _propertyValue);
         }
 
         #endregion
@@ -79,10 +79,10 @@ namespace FubuCore.Testing.Binding
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
-            _context = MockRepository.GenerateMock<IPropertyContext>();
-            _context.Stub(x => x.Property).Return(_property);
+            _context = Substitute.For<IPropertyContext>();
+            _context.Property.Returns(_property);
             _propertyValue = new BindingValue { RawValue = "1.000,001" };
-            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
+            _context.RawValueFromRequest.Returns(_propertyValue, _propertyValue, _propertyValue, _propertyValue);
         }
 
         #endregion

@@ -6,7 +6,7 @@ using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -187,16 +187,16 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_hit_at_top_level()
         {
-            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+            var action = Substitute.For<Action<BindingValue>>();
             theDictionary.Add("a", 1);
 
             theSource.As<IValueSource>().Value("a", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue(){
+            action.Received().Invoke(new BindingValue(){
                 RawKey = "a",
                 RawValue = 1,
                 Source = theSource.Provenance
-            }));
+            });
         }
 
         [Test]

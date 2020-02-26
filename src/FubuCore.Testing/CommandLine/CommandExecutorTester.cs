@@ -1,6 +1,6 @@
 using FubuCore.CommandLine;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.CommandLine
 {
@@ -16,8 +16,8 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            factory = MockRepository.GenerateMock<ICommandFactory>();
-            command = MockRepository.GenerateMock<IFubuCommand>();
+            factory = Substitute.For<ICommandFactory>();
+            command = Substitute.For<IFubuCommand>();
             theInput = new object();
             commandLine = "some stuff here";
 
@@ -27,14 +27,14 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void run_command_happy_path_executes_the_command_with_the_input()
         {
-            factory.Stub(x => x.BuildRun(commandLine)).Return(new CommandRun(){
+            factory.BuildRun(commandLine).Returns(new CommandRun(){
                 Command = command,
                 Input = theInput
             });
 
             theExecutor.Execute(commandLine);
 
-            command.AssertWasCalled(x => x.Execute(theInput));
+            command.Received().Execute(theInput);
         }
     }
 }

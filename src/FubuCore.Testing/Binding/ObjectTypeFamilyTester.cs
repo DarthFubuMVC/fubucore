@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace FubuCore.Testing.Binding
 {
     [TestFixture]
-    public class ObjectTypeFamilyTester : InteractionContext<ObjectTypeFamily>
+    public class ObjectTypeFamilyTester : NSubstituteInteractionContext<ObjectTypeFamily>
     {
         private PropertyInfo _objectProperty;
         private PropertyInfo _stringProperty;

@@ -4,8 +4,8 @@ using System.Diagnostics;
 using FubuTestingSupport;
 using NUnit.Framework;
 using FubuCore.Testing;
-using Rhino.Mocks;
 using FubuCore;
+using NSubstitute;
 
 namespace FubuCore.Testing
 {
@@ -81,7 +81,7 @@ namespace FubuCore.Testing
             typeof (Service2).FindInterfaceThatCloses(typeof (IService<>))
                 .ShouldBeNull();
 
-            typeof(IService<>).FindInterfaceThatCloses(Arg<Type>.Is.Anything).ShouldBeNull();
+            typeof(IService<>).FindInterfaceThatCloses(typeof(Service2)).ShouldBeNull();
         }
 
         [Test]

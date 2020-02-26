@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using FubuCore.Util;
 using NUnit.Framework;
-using Rhino.Mocks;
 using FubuTestingSupport;
+using NSubstitute;
 
 namespace FubuCore.Testing.Util
 {
@@ -16,11 +16,11 @@ namespace FubuCore.Testing.Util
             var values = new DictionaryKeyValues();
             values.Dictionary.Add("something", "else");
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = Substitute.For<Action<string, string>>();
 
             values.ForValue("random", action).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            action.ReceivedWithAnyArgs(0).Invoke(null, null);
         }
 
         [Test]
@@ -29,11 +29,11 @@ namespace FubuCore.Testing.Util
             var values = new DictionaryKeyValues();
             values.Dictionary.Add("something", "else");
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = Substitute.For<Action<string, string>>();
 
             values.ForValue("something", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("something", "else"));
+            action.Received().Invoke("something", "else");
         }
     }
 }

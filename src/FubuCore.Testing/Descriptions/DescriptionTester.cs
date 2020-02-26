@@ -1,9 +1,8 @@
-using System;
 using System.Linq;
 using FubuCore.Descriptions;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Descriptions
 {
@@ -13,28 +12,19 @@ namespace FubuCore.Testing.Descriptions
         [Test]
         public void accept_visitor_if_it_only_has_itself()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
+            var visitor = Substitute.For<IDescriptionVisitor>();
 
             var description = new Description();
-
-            using (repo.Record())
-            {
-                visitor.Start(description);
-                visitor.End();
-            }
-
-            using (repo.Playback())
-            {
-                description.AcceptVisitor(visitor);
-            }
+            description.AcceptVisitor(visitor);
+            
+            visitor.Received().Start(description);
+            visitor.Received().End();
         }
 
         [Test]
         public void accept_visitory_with_multiple_bullet_lists()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
+            var visitor = Substitute.For<IDescriptionVisitor>();
 
             var description = new Description();
 
@@ -46,8 +36,9 @@ namespace FubuCore.Testing.Descriptions
             description.BulletLists.Add(list);
             description.BulletLists.Add(new BulletList());
 
-
-            using (repo.Record())
+            description.AcceptVisitor(visitor);
+            
+            Received.InOrder(() =>
             {
                 visitor.Start(description);
 
@@ -69,26 +60,21 @@ namespace FubuCore.Testing.Descriptions
 
 
                 visitor.End();
-            }
-
-            using (repo.Playback())
-            {
-                description.AcceptVisitor(visitor);
-            }
+            });
         }
 
         [Test]
         public void bullet_list_accept_visitor_with_children()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
+            var visitor = Substitute.For<IDescriptionVisitor>();
 
             var list = new BulletList();
             list.Children.Add(new Description());
             list.Children.Add(new Description());
             list.Children.Add(new Description());
 
-            using (repo.Record())
+            list.AcceptVisitor(visitor);
+            Received.InOrder(() =>
             {
                 visitor.StartList(list);
 
@@ -102,32 +88,22 @@ namespace FubuCore.Testing.Descriptions
                 visitor.End();
 
                 visitor.EndList();
-            }
-
-            using (repo.Playback())
-            {
-                list.AcceptVisitor(visitor);
-            }
+            });
         }
 
         [Test]
         public void bullet_list_accept_visitor_with_no_innards()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
+            var visitor = Substitute.For<IDescriptionVisitor>();
 
             var list = new BulletList();
 
-            using (repo.Record())
+            list.AcceptVisitor(visitor);
+            Received.InOrder(() =>
             {
                 visitor.StartList(list);
                 visitor.EndList();
-            }
-
-            using (repo.Playback())
-            {
-                list.AcceptVisitor(visitor);
-            }
+            });
         }
 
         [Test]

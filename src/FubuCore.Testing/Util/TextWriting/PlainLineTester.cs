@@ -3,7 +3,7 @@ using System.IO;
 using FubuCore.Util.TextWriting;
 using NUnit.Framework;
 using FubuTestingSupport;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Util.TextWriting
 {
@@ -25,17 +25,17 @@ namespace FubuCore.Testing.Util.TextWriting
             var text = "a bunch of text";
             var line = new PlainLine(text);
 
-            var writer = MockRepository.GenerateMock<TextWriter>();
+            var writer = Substitute.For<TextWriter>();
 
             line.Write(writer);
 
-            writer.AssertWasCalled(x => x.WriteLine(text));
+            writer.Received().WriteLine(text);
         }
 
         [Test]
         public void write_to_console()
         {
-            var writer = MockRepository.GenerateMock<TextWriter>();
+            var writer = Substitute.For<TextWriter>();
             Console.SetOut(writer);
 
             var text = "a bunch of text";
@@ -43,7 +43,7 @@ namespace FubuCore.Testing.Util.TextWriting
 
             line.Write(writer);
 
-            writer.AssertWasCalled(x => x.WriteLine(text));
+            writer.Received().WriteLine(text);
         }
     }
 }

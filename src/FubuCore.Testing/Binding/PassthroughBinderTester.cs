@@ -1,3 +1,4 @@
+#if NET462
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -5,8 +6,8 @@ using System.Web;
 using FubuCore.Binding;
 using FubuCore.Reflection;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -43,11 +44,11 @@ namespace FubuCore.Testing.Binding
         public void build_passes_through()
         {
             var binder = new PassthroughConverter<HttpPostedFileBase>();
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Expect(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = new object() });
-            ValueConverter converter = binder.Build(MockRepository.GenerateStub<IValueConverterRegistry>(), property(x => x.File));
+            var context = Substitute.For<IPropertyContext>();
+            var registry = Substitute.For<IValueConverterRegistry>();
+            context.RawValueFromRequest.Returns(new BindingValue() { RawValue = new object() });
+            ValueConverter converter = binder.Build(registry, property(x => x.File));
             converter.Convert(context);
-            context.VerifyAllExpectations();
         }
 
         [Test]
@@ -55,8 +56,8 @@ namespace FubuCore.Testing.Binding
         {
             var testValue = "testValue";
             var binder = new PassthroughConverter<HttpPostedFileBase>();
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Stub(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = testValue });
+            var context = Substitute.For<IPropertyContext>();
+            context.RawValueFromRequest.Returns(new BindingValue() { RawValue = testValue });
             binder.Convert(context).ShouldBeTheSameAs(testValue);
         }
 
@@ -73,3 +74,4 @@ namespace FubuCore.Testing.Binding
         public object File3 { get; set; }
     }
 }
+#endif

@@ -4,7 +4,7 @@ using FubuCore.Binding.Values;
 using NUnit.Framework;
 using FubuTestingSupport;
 using System.Linq;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -56,27 +56,27 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_hit()
         {
-            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+            var action = Substitute.For<Action<BindingValue>>();
 
             theSource.Value("a", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue{
+            action.Received().Invoke(new BindingValue{
                 RawKey = "a",
                 RawValue = "a1",
                 Source = theSource.Provenance
-            }));
+            });
         }
 
         [Test]
         public void write_report()
         {
-            var report = MockRepository.GenerateMock<IValueReport>();
+            var report = Substitute.For<IValueReport>();
 
             theSource.WriteReport(report);
 
-            report.AssertWasCalled(x => x.Value("a", "a1"));
-            report.AssertWasCalled(x => x.Value("b", "b1"));
-            report.AssertWasCalled(x => x.Value("c", "c1"));
+            report.Received().Value("a", "a1");
+            report.Received().Value("b", "b1");
+            report.Received().Value("c", "c1");
         }
     }
 }

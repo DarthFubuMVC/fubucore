@@ -2,7 +2,7 @@ using System;
 using FubuCore.Configuration;
 using NUnit.Framework;
 using FubuTestingSupport;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -31,21 +31,21 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void value_miss()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = Substitute.For<Action<string, string>>();
 
             theValues.ForValue("random", action).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            action.ReceivedWithAnyArgs(0).Invoke(null, null);
         }
 
         [Test]
         public void value_hit()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = Substitute.For<Action<string, string>>();
 
             theValues.ForValue("a", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("a", "1"));
+            action.Received().Invoke("a", "1");
         }
 
         [Test]

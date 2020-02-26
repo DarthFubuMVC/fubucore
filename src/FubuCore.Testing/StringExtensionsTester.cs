@@ -4,7 +4,7 @@ using System.IO;
 using FubuTestingSupport;
 using NUnit.Framework;
 using System;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing
 {
@@ -33,22 +33,22 @@ namespace FubuCore.Testing
         [Test]
         public void if_not_null_positive()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = Substitute.For<Action<string>>();
 
             "a".IfNotNull(action);
 
-            action.AssertWasCalled(x => x.Invoke("a"));
+            action.Received().Invoke("a");
         }
 
         [Test]
         public void if_not_null_negative()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = Substitute.For<Action<string>>();
             string a = null;
 
             a.IfNotNull(action);
 
-            action.AssertWasNotCalled(x => x.Invoke(null), x => x.IgnoreArguments());
+            action.ReceivedWithAnyArgs(0).Invoke(null);
         }
 
         [Test]
@@ -186,7 +186,7 @@ e
         [Test]
         public void read_lines_to_an_action()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = Substitute.For<Action<string>>();
 
             var text = @"a
 b
@@ -198,11 +198,11 @@ e
 
             text.ReadLines(action);
 
-            action.AssertWasCalled(x => x.Invoke("a"));
-            action.AssertWasCalled(x => x.Invoke("b"));
-            action.AssertWasCalled(x => x.Invoke("c"));
-            action.AssertWasCalled(x => x.Invoke("d"));
-            action.AssertWasCalled(x => x.Invoke("e"));
+            action.Received().Invoke("a");
+            action.Received().Invoke("b");
+            action.Received().Invoke("c");
+            action.Received().Invoke("d");
+            action.Received().Invoke("e");
 
             
         }

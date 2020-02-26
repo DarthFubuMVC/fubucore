@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using FubuCore;
+using NSubstitute;
 using FubuCore.Util;
-using Rhino.Mocks;
 
 namespace FubuTestingSupport
 {
@@ -65,7 +65,7 @@ namespace FubuTestingSupport
         {
             public object Make()
             {
-                return MockRepository.GenerateMock<T>();
+                return Substitute.For<T>();
             }
         }
 

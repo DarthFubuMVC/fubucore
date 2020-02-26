@@ -2,8 +2,8 @@ using System;
 using FubuCore.Binding;
 using FubuCore.Conversion;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -13,8 +13,8 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void create_default_of_values()
         {
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Stub(x => x.RawValueFromRequest).Return(null);
+            var context = Substitute.For<IPropertyContext>();
+            context.RawValueFromRequest.Returns(null as BindingValue);
 
             new BasicValueConverter(null, typeof (string)).Convert(context)
                 .ShouldBeNull();
@@ -29,9 +29,9 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_get_raw_value_from_binding_value()
         {
-            var context = MockRepository.GenerateMock<IPropertyContext>();
+            var context = Substitute.For<IPropertyContext>();
             var testValue = "testValue";
-            context.Stub(x => x.RawValueFromRequest).Return(new BindingValue{RawValue=testValue});
+            context.RawValueFromRequest.Returns(new BindingValue{RawValue=testValue});
 
             new BasicValueConverter(null, typeof (string)).Convert(context).ShouldEqual(testValue);
         }
@@ -39,12 +39,12 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void should_call_conversion_strategy_if_value_is_not_of_same_property_type()
         {
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            var convertStrategy = MockRepository.GenerateMock<IConverterStrategy>();
+            var context = Substitute.For<IPropertyContext>();
+            var convertStrategy = Substitute.For<IConverterStrategy>();
             var testGuid = Guid.NewGuid();
             var testValue = testGuid.ToString();
-            convertStrategy.Stub(s => s.Convert(context)).Return(testGuid);
-            context.Stub(x => x.RawValueFromRequest).Return(new BindingValue { RawValue = testValue });
+            convertStrategy.Convert(context).Returns(testGuid);
+            context.RawValueFromRequest.Returns(new BindingValue { RawValue = testValue });
 
             new BasicValueConverter(convertStrategy, typeof(Guid)).Convert(context).ShouldEqual(testGuid);
         }

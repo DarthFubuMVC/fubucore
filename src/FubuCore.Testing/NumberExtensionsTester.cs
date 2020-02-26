@@ -1,5 +1,6 @@
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
+using Arg = NSubstitute.Arg;
 
 namespace FubuCore.Testing
 {
@@ -11,8 +12,7 @@ namespace FubuCore.Testing
         [SetUp]
         public void SetUp()
         {
-            _action = MockRepository.GenerateStub<IAction>();
-            _action.Stub(a => a.DoSomething(Arg<int>.Is.LessThan(6))).Repeat.Times(6);
+            _action = Substitute.For<IAction>();
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace FubuCore.Testing
         {
             int maxCount = 6;
             maxCount.Times(_action.DoSomething);
-            _action.AssertWasCalled(a => a.DoSomething(Arg<int>.Is.LessThan(6)), c => c.Repeat.Times(6));
+            _action.Received(6).DoSomething(Arg.Is<int>(x => x < 6));
         }
 
         public interface IAction

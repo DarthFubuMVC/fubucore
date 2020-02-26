@@ -10,7 +10,7 @@ using FubuCore.Reflection;
 using FubuCore.Util;
 using NUnit.Framework;
 using FubuTestingSupport;
-using Rhino.Mocks;
+using NSubstitute;
 
 namespace FubuCore.Testing.Binding
 {
@@ -25,10 +25,10 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             request = new InMemoryRequestData();
-            locator = MockRepository.GenerateMock<IServiceLocator>();
+            locator = Substitute.For<IServiceLocator>();
 
-            var smartRequest = MockRepository.GenerateMock<ISmartRequest>();
-            locator.Stub(x => x.GetInstance<ISmartRequest>()).Return(smartRequest);
+            var smartRequest = Substitute.For<ISmartRequest>();
+            locator.GetInstance<ISmartRequest>().Returns(smartRequest);
 
             context = new BindingContext(request, locator, new NulloBindingLogger());
         }
@@ -200,7 +200,7 @@ HeldClassAge=36
         [Test]
         public void value_as_t_by_name_with_continuation()
         {
-            var action = MockRepository.GenerateMock<Action<Guid>>();
+            var action = Substitute.For<Action<Guid>>();
             var theKey = "some key";
             var theValue = Guid.NewGuid();
 
@@ -208,13 +208,13 @@ HeldClassAge=36
 
             ClassUnderTest.As<IBindingContext>().Data.ValueAs(theKey, action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(theValue));
+            action.Received().Invoke(theValue);
         }
 
         [Test]
         public void value_as_by_name_with_continuation()
         {
-            var action = MockRepository.GenerateMock<Action<object>>();
+            var action = Substitute.For<Action<object>>();
             var theKey = "some key";
             var theValue = Guid.NewGuid();
 
@@ -222,7 +222,7 @@ HeldClassAge=36
 
             ClassUnderTest.As<IBindingContext>().Data.ValueAs(typeof(Guid), theKey, action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(theValue));
+            action.Received().Invoke(theValue);
         }
 
         [Test]
@@ -275,14 +275,14 @@ HeldClassAge=36
             theRawRequest["[Name]"] = theValue;
             theRawRequest["[Name]"] = theValue;
 
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = Substitute.For<Action<string>>();
 
             ClassUnderTest.ForProperty(property, context =>
             {
                 context.ValueAs<string>(action).ShouldBeTrue();
             });
 
-            action.AssertWasCalled(x => x.Invoke(theValue));
+            action.Received().Invoke(theValue);
         }
     }
 
@@ -300,7 +300,7 @@ HeldClassAge=36
             var services = new InMemoryServiceLocator();
             var resolver = new ObjectResolver(services, new BindingRegistry(), new NulloBindingLogger());
             _request = new InMemoryRequestData();
-            _logger = MockRepository.GenerateMock<IBindingLogger>();
+            _logger = Substitute.For<IBindingLogger>();
             _context = new BindingContext(_request, services, _logger);
 
             services.Add<IObjectResolver>(resolver);
@@ -324,7 +324,7 @@ HeldClassAge=36
             [Test]
             public void logs_the_properties_using_the_context_logger()
             {
-                _logger.AssertWasCalled(x => x.Chose(Arg<PropertyInfo>.Is.Equal(_fooProperty), Arg<IPropertyBinder>.Is.Anything));
+                _logger.ReceivedWithAnyArgs().Chose(_fooProperty, Arg.Any<IPropertyBinder>());
             }
         }
 
@@ -339,7 +339,7 @@ HeldClassAge=36
             [Test]
             public void logs_the_properties_using_the_context_logger()
             {
-                _logger.AssertWasCalled(x => x.Chose(Arg<PropertyInfo>.Is.Equal(_fooProperty), Arg<IPropertyBinder>.Is.Anything));
+                _logger.ReceivedWithAnyArgs().Chose(_fooProperty, Arg.Any<IPropertyBinder>());
             }
         }
     }

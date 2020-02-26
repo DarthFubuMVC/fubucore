@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace FubuCore.Testing.TestingSupport
 {
     [TestFixture]
-    public class RecordingLoggerMechanicsInInteractionContext : InteractionContext<SomeClass>
+    public class RecordingLoggerMechanicsInInteractionContext : NSubstituteInteractionContext<SomeClass>
     {
         [Test]
         public void can_inject_and_get_the_recording_logger()

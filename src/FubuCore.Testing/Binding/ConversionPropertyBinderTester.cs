@@ -5,8 +5,8 @@ using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -117,7 +117,7 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             _binder = new IgnorePropertyBinder(info => info.Name == "SomeProperty");
-            _context = MockRepository.GenerateMock<IBindingContext>();
+            _context = Substitute.For<IBindingContext>();
         }
 
         [Test]

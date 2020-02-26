@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace FubuCore.Testing.Csv
 {
     [TestFixture]
-    public class CsvTokenizerTester : InteractionContext<CsvTokenizer>
+    public class CsvTokenizerTester : NSubstituteInteractionContext<CsvTokenizer>
     {
         [Test]
         public void simple_split()

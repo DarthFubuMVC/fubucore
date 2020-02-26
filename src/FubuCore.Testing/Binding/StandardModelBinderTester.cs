@@ -6,14 +6,14 @@ using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuCore.Testing.Reflection.Expressions;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
 
     [TestFixture]
-    public class when_populating_a_property : InteractionContext<StandardModelBinder>
+    public class when_populating_a_property : NSubstituteInteractionContext<StandardModelBinder>
     {
         private PropertyInfo theProperty;
         private IPropertyBinder thePropertyBinder;
@@ -22,7 +22,7 @@ namespace FubuCore.Testing.Binding
         {
             theProperty = ReflectionHelper.GetProperty<Case>(x => x.Identifier);
 
-            MockFor<IBindingContext>().Stub(x => x.Logger).Return(MockFor<IBindingLogger>());
+            MockFor<IBindingContext>().Logger.Returns(MockFor<IBindingLogger>());
 
             thePropertyBinder = MockFor<IPropertyBinder>();
 
@@ -30,14 +30,14 @@ namespace FubuCore.Testing.Binding
             Services.Inject(registry);
             registry.Add(thePropertyBinder);
 
-            thePropertyBinder.Stub(x => x.Matches(null)).IgnoreArguments().Return(true);
+            thePropertyBinder.Matches(null).Returns(true);
             ClassUnderTest.PopulateProperty(typeof(Case), theProperty, MockFor<IBindingContext>());
         }
 
         [Test]
         public void should_log_the_property_binder_chosen()
         {
-            MockFor<IBindingLogger>().AssertWasCalled(x => x.Chose(theProperty, thePropertyBinder));
+            MockFor<IBindingLogger>().ReceivedWithAnyArgs().Chose(theProperty, thePropertyBinder);
         }
     }
 

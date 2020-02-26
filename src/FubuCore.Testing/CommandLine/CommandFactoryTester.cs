@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using FubuCore.CommandLine;
 using FubuTestingSupport;
+using NSubstitute;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.CommandLine
 {
@@ -209,17 +209,16 @@ namespace FubuCore.Testing.CommandLine
         [Test]
         public void build_command_with_a_replacement_commandcreator()
         {
-            var creator = MockRepository.GenerateMock<ICommandCreator>();
-            creator.Stub(c => c.Create(typeof (MyCommand)))
-                .Repeat.Once()
-                .Return(new MyCommand());
+            var creator = Substitute.For<ICommandCreator>();
+            creator.Create(typeof(MyCommand))
+                .Returns(new MyCommand());
 
             var factory = new CommandFactory(creator);
             factory.RegisterCommands(GetType().Assembly);
 
             var cmd = factory.Build("my");
 
-            creator.VerifyAllExpectations();
+            creator.Received(1).Create(typeof(MyCommand));
             cmd.ShouldBeOfType<MyCommand>();
         }
     }

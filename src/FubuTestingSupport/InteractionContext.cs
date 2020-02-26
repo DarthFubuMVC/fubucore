@@ -3,7 +3,6 @@ using FubuCore;
 using FubuCore.Dates;
 using FubuCore.Logging;
 using NUnit.Framework;
-using Rhino.Mocks;
 using StructureMap;
 using StructureMap.AutoMocking;
 
@@ -11,17 +10,16 @@ namespace FubuTestingSupport
 {
     public class InteractionContext<T> where T : class
     {
-        private readonly MockMode _mode;
+        private readonly Func<AutoMocker<T>> _autoMockFactory;
         private SettableClock _clock;
 
-        public InteractionContext() : this(MockMode.AAA) { }
-        public InteractionContext(MockMode mode)
+        public InteractionContext(Func<AutoMocker<T>> autoMockFactory)
         {
-            _mode = mode;
+            _autoMockFactory = autoMockFactory;
         }
 
         public IContainer Container { get { return Services.Container; } }
-        public RhinoAutoMocker<T> Services { get; private set; }
+        public AutoMocker<T> Services { get; private set; }
         public T ClassUnderTest { get { return Services.ClassUnderTest; } }
 
         [SetUp]
@@ -29,7 +27,7 @@ namespace FubuTestingSupport
         {
             _clock = new SettableClock();
 
-            Services = new RhinoAutoMocker<T>(_mode);
+            Services = _autoMockFactory();
             Services.Inject<ISystemTime>(_clock);
             beforeEach();
         }
@@ -54,12 +52,7 @@ namespace FubuTestingSupport
         {
             return Services.Get<TService>();
         }
-
-        public void VerifyCallsFor<TMock>() where TMock : class
-        {
-            MockFor<TMock>().VerifyAllExpectations();
-        }
-
+        
         public DateTime LocalSystemTime
         {
             get

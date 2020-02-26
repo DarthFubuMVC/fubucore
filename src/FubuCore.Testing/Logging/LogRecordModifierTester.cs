@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace FubuCore.Testing.Logging
 {
     [TestFixture]
-    public class LogRecordModifierTester : InteractionContext<LogRecordModifier>
+    public class LogRecordModifierTester : NSubstituteInteractionContext<LogRecordModifier>
     {
         [Test]
         public void matches_only_log_record_things()

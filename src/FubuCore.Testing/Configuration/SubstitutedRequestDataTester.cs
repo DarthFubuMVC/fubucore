@@ -5,8 +5,7 @@ using FubuCore.Configuration;
 using FubuCore.Util;
 using NUnit.Framework;
 using FubuTestingSupport;
-using Rhino.Mocks;
-using Is = Rhino.Mocks.Constraints.Is;
+using NSubstitute;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -69,11 +68,11 @@ namespace FubuCore.Testing.Configuration
             theDictionary.Add("setting", "setting-value");
             theInnerData["Key"] = "*{setting}*";
 
-            var action = MockRepository.GenerateMock<Action<object>>();
+            var action = Substitute.For<Action<object>>();
 
             theSubstitutedData.Value("Key", action).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
+            action.Received().Invoke(new BindingValue { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"});
         }
     }
 }

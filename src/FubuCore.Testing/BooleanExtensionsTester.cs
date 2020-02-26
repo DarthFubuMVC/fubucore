@@ -8,7 +8,6 @@ namespace FubuCore.Testing
     public class BooleanExtensionsTester
     {
         [Test]
-        //[ExpectedException(typeof (ArgumentException))]
         public void If_should_also_return_an_ArgumentException()
         {
             var test = new TestObject
@@ -16,11 +15,10 @@ namespace FubuCore.Testing
                 Boolean = true
             };
 
-            "test".If(() => test.Boolean && test.Boolean);
+            Assert.Throws<ArgumentException>(() => "test".If(() => test.Boolean && test.Boolean));
         }
 
         [Test]
-        //[ExpectedException(typeof (ArgumentException))]
         public void If_should_return_an_ArgumentException()
         {
             var test = new TestObject
@@ -28,7 +26,7 @@ namespace FubuCore.Testing
                 Value = 1
             };
 
-            "test".If(() => test.Value == 1);
+            Assert.Throws<ArgumentException>(() => "test".If(() => test.Value == 1));
         }
 
         [Test]
@@ -54,7 +52,6 @@ namespace FubuCore.Testing
         }
 
         [Test]
-        //[ExpectedException(typeof (ArgumentException))]
         public void IfNot_should_also_return_an_ArgumentException()
         {
             var test = new TestObject
@@ -62,11 +59,10 @@ namespace FubuCore.Testing
                 Boolean = true
             };
 
-            "test".IfNot(() => test.Boolean && test.Boolean);
+            Assert.Throws<ArgumentException>(() => "test".IfNot(() => test.Boolean && test.Boolean));
         }
 
         [Test]
-        //[ExpectedException(typeof (ArgumentException))]
         public void IfNot_should_return_an_ArgumentException()
         {
             var test = new TestObject
@@ -74,7 +70,7 @@ namespace FubuCore.Testing
                 Value = 1
             };
 
-            "test".IfNot(() => test.Value == 1);
+            Assert.Throws<ArgumentException>(() => "test".IfNot(() => test.Value == 1));
         }
 
         [Test]

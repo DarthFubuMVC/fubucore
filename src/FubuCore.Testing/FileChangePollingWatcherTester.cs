@@ -1,7 +1,8 @@
 using System;
 using System.Threading;
+using NSubstitute;
+using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing
 {
@@ -25,9 +26,9 @@ namespace FubuCore.Testing
 			
             theWatcher = new FileChangePollingWatcher();
 
-            action1 = MockRepository.GenerateMock<System.Action>();
-            action2 = MockRepository.GenerateMock<System.Action>();
-            action3 = MockRepository.GenerateMock<System.Action>();
+            action1 = Substitute.For<System.Action>();
+            action2 = Substitute.For<System.Action>();
+            action3 = Substitute.For<System.Action>();
         
             theWatcher.WatchFile("a.txt", action1);
             theWatcher.WatchFile("b.txt", action2);
@@ -51,9 +52,9 @@ namespace FubuCore.Testing
 
             reset.WaitOne(2500);
 
-            action1.AssertWasCalled(x => x.Invoke());
-            action2.AssertWasNotCalled(x => x.Invoke());
-            action3.AssertWasNotCalled(x => x.Invoke());
+            action1.Received().Invoke();
+            action2.Received(0).Invoke();
+            action3.Received(0).Invoke();
         }
 
 
@@ -69,9 +70,9 @@ namespace FubuCore.Testing
 
             reset.WaitOne(2500);
 
-            action1.AssertWasCalled(x => x.Invoke());
-            action2.AssertWasNotCalled(x => x.Invoke());
-            action3.AssertWasCalled(x => x.Invoke());
+            action1.Received().Invoke();
+            action2.Received(0).Invoke();
+            action3.Received().Invoke();
         }
     }
 }
