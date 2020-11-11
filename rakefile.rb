@@ -34,7 +34,7 @@ end
 
 desc 'Run the unit tests'
 task :pack do
-  sh "dotnet pack src/FubuCore/FubuCore.csproj -c #{COMPILE_TARGET} -o ./artifacts --no-build -p:PackageVersion=#{BUILD_NUMBER}"
+  sh "dotnet pack src/FubuCore/FubuCore.csproj -c #{COMPILE_TARGET} -o ./artifacts --no-build -p:PackageVersion=#{build_revision}"
 end
 
 
