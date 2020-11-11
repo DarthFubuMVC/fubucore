@@ -12,8 +12,13 @@ MSBUILD_TOOLSVERSION = "dotnetcli"
 load 'BuildUtils.rb'
 
 desc 'Compile the code'
-task :compile => [:clean, :version] do
+task :compile => [:clean, :version, :restore] do
   MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_VERSION, :extraSwitches => ["p:WarningLevel=1"], :msbuildToolsVersion => MSBUILD_TOOLSVERSION
+end
+
+desc 'Restore dependencies'
+task :restore do
+  sh "dotnet restore src/FubuCore.sln"
 end
 
 desc 'Run the unit tests'
