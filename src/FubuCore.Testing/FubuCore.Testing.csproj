@@ -13,16 +13,16 @@
     <PackageReference Include="Moq" Version="4.15.1" />
     <PackageReference Include="Moq.AutoMock" Version="2.1.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
+    <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.23" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubuCore\FubuCore.csproj" />
   </ItemGroup>
   <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
     <Copy SourceFiles="FubuCore.Testing.dll.config" DestinationFiles="$(OutDir)\FubuCore.Testing.dll.config" />
-  </Target>
-  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="FubuCore.Testing.dll.config" DestinationFiles="$(OutDir)\testhost.dll.config" />
     <Copy SourceFiles="FubuCore.Testing.dll.config" DestinationFiles="$(OutDir)\ReSharperTestRunner64.dll.config" />
   </Target>
 </Project>
