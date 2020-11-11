@@ -1,7 +1,6 @@
 ﻿using System;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing
 {
@@ -14,7 +13,7 @@ namespace FubuCore.Testing
         {
             int? x = null;
 
-            var action = MockRepository.GenerateMock<Action<int>>();
+            var action = new Mock<Action<int>>();
 
             x.IfNotNull(i =>
             {
@@ -23,9 +22,9 @@ namespace FubuCore.Testing
 
             x = 3;
 
-            x.IfNotNull(action);
+            x.IfNotNull(action.Object);
 
-            action.AssertWasCalled(i => i.Invoke(3));
+            action.Verify(i => i.Invoke(3));
 
         }
          

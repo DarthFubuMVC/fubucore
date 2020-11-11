@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Configuration;
 using FubuCore.Util;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Configuration

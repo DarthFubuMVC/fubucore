@@ -1,5 +1,3 @@
-using System;
-
 namespace FubuCore.Binding.Values
 {
     public interface IValueReport

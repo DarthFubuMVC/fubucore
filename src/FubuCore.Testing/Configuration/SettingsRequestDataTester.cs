@@ -1,9 +1,7 @@
 using System;
-using FubuCore.Binding.Values;
 using FubuCore.Configuration;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -17,10 +15,10 @@ namespace FubuCore.Testing.Configuration
 
             var requestData = new SettingsRequestData(new SettingsData[]{core1});
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
-            requestData.ForValue("key2", action).ShouldBeFalse();
+            var action = new Mock<Action<string, string>>();
+            requestData.ForValue("key2", action.Object).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            action.Verify(x => x.Invoke(Arg<string>.Is.Anything, Arg<string>.Is.Anything), Times.Never());
         }
 
         [Test]
@@ -30,10 +28,10 @@ namespace FubuCore.Testing.Configuration
 
             var requestData = new SettingsRequestData(new SettingsData[] { core1 });
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
-            requestData.ForValue("key1", action).ShouldBeTrue();
+            var action = new Mock<Action<string, string>>();
+            requestData.ForValue("key1", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("key1", "core1"));
+            action.Verify(x => x.Invoke("key1", "core1"));
         }
 
 
@@ -107,11 +105,11 @@ namespace FubuCore.Testing.Configuration
 
             var request = SettingsRequestData.For(core1, core2, core3);
 
-            var action = MockRepository.GenerateMock<Action<object>>();
+            var action = new Mock<Action<object>>();
 
-            request.Value("key2", source => action(source.RawValue)).ShouldBeTrue();
+            request.Value("key2", source => action.Object(source.RawValue)).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("val2"));
+            action.Verify(x => x.Invoke("val2"));
         }
 
         [Test]
@@ -123,11 +121,11 @@ namespace FubuCore.Testing.Configuration
 
             var request = SettingsRequestData.For(core1, core2, core3);
 
-            var action = MockRepository.GenerateMock<Action<object>>();
+            var action = new Mock<Action<object>>();
 
-            request.Value("missing key", action).ShouldBeFalse();
+            request.Value("missing key", action.Object).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null), x => x.IgnoreArguments());
+            action.Verify(x => x.Invoke(Arg<object>.Is.Anything), Times.Never());
         }
 
         [Test]

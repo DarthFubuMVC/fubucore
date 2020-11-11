@@ -1,6 +1,5 @@
 ﻿using FubuCore.CommandLine;
 using NUnit.Framework;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.CommandLine
 {

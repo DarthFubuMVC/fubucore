@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using FubuCore.Util.TextWriting;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Util.TextWriting
 {
@@ -25,25 +24,25 @@ namespace FubuCore.Testing.Util.TextWriting
             var text = "a bunch of text";
             var line = new PlainLine(text);
 
-            var writer = MockRepository.GenerateMock<TextWriter>();
+            var writer = new Mock<TextWriter>();
 
-            line.Write(writer);
+            line.Write(writer.Object);
 
-            writer.AssertWasCalled(x => x.WriteLine(text));
+            writer.Verify(x => x.WriteLine(text));
         }
 
         [Test]
         public void write_to_console()
         {
-            var writer = MockRepository.GenerateMock<TextWriter>();
-            Console.SetOut(writer);
+            var writer = new Mock<TextWriter>();
+            Console.SetOut(writer.Object);
 
             var text = "a bunch of text";
             var line = new PlainLine(text);
 
-            line.Write(writer);
+            line.Write(writer.Object);
 
-            writer.AssertWasCalled(x => x.WriteLine(text));
+            writer.Verify(x => x.WriteLine(text));
         }
     }
 }

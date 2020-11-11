@@ -1,9 +1,8 @@
 using System;
 using FubuCore.Binding;
 using FubuCore.Conversion;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -76,12 +75,12 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void found_value_with_continuation()
         {
-            var action = MockRepository.GenerateMock<Action<int>>();
+            var action = new Mock<Action<int>>();
             theData["int"] = "5";
 
-            theRequest.Value<int>("int", action).ShouldBeTrue();
+            theRequest.Value<int>("int", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(5));
+            action.Verify(x => x.Invoke(5));
         }
     }
 

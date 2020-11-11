@@ -1,9 +1,8 @@
 using System;
 using System.Linq.Expressions;
-using FubuTestingSupport;
-using NUnit.Framework;
 using FubuCore.Reflection;
-using Rhino.Mocks;
+using Moq;
+using NUnit.Framework;
 
 namespace FubuCore.Testing.Reflection
 {
@@ -14,16 +13,16 @@ namespace FubuCore.Testing.Reflection
             public int Age { get; set; }}
         public interface ICallback{void Callback();}
 
-        private ICallback _callback;
+        private Mock<ICallback> _callback;
         private Expression<Func<PropertyHolder, object>> _expression;
-        private ICallback _uncalledCallback;
+        private Mock<ICallback> _uncalledCallback;
 
         [SetUp]
         public void SetUp()
         {
             _expression = ph => ph.Age;
-            _callback = MockRepository.GenerateStub<ICallback>();
-            _uncalledCallback = MockRepository.GenerateStub<ICallback>();
+            _callback = new Mock<ICallback>();
+            _uncalledCallback = new Mock<ICallback>();
         }
 
         [Test]
@@ -36,10 +35,10 @@ namespace FubuCore.Testing.Reflection
         public void ifPropertyTypeIs_invokes_method()
         {
             Accessor accessor = _expression.ToAccessor();
-            accessor.IfPropertyTypeIs<int>(_callback.Callback);
-            _callback.AssertWasCalled(c=>c.Callback());
-            accessor.IfPropertyTypeIs<PropertyHolder>(_uncalledCallback.Callback);
-            _uncalledCallback.AssertWasNotCalled(c=>c.Callback());
+            accessor.IfPropertyTypeIs<int>(_callback.Object.Callback);
+            _callback.Verify(c=>c.Callback());
+            accessor.IfPropertyTypeIs<PropertyHolder>(_uncalledCallback.Object.Callback);
+            _uncalledCallback.VerifyNotCalled(c=>c.Callback());
         }
 
         [Test]

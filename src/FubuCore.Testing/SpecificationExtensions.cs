@@ -5,18 +5,14 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 using FubuCore.Reflection;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
-using Rhino.Mocks;
-using Rhino.Mocks.Constraints;
-using Rhino.Mocks.Interfaces;
 using Is = NUnit.Framework.Is;
 
-namespace FubuTestingSupport
+namespace FubuCore.Testing
 {
     public static class Exception<T> where T : Exception
     {
@@ -426,93 +422,5 @@ namespace FubuTestingSupport
 
             Assert.Fail(message);
         }
-
-
-        public static CapturingConstraint CaptureArgumentsFor<MOCK>(this MOCK mock,
-                                                                    Expression<Action<MOCK>> methodExpression)
-            where MOCK : class
-        {
-            return SetupConstraint(
-                ReflectionHelper.GetMethod(methodExpression),
-                mock.Expect(methodExpression.Compile()),
-                null);
-        }
-
-        public static CapturingConstraint CaptureArgumentsFor<MOCK>(this MOCK mock,
-                                                                    Expression<Action<MOCK>> methodExpression,
-                                                                    Action
-                                                                        <IMethodOptions<RhinoMocksExtensions.VoidType>>
-                                                                        optionsAction) where MOCK : class
-        {
-            return SetupConstraint(
-                ReflectionHelper.GetMethod(methodExpression),
-                mock.Expect(methodExpression.Compile()),
-                optionsAction);
-        }
-
-        public static CapturingConstraint CaptureArgumentsFor<MOCK, RESULT>(
-            this MOCK mock,
-            Expression<Func<MOCK, RESULT>> methodExpression,
-            Action<IMethodOptions<RESULT>> optionsAction)
-            where MOCK : class
-        {
-            return SetupConstraint(
-                ReflectionHelper.GetMethod(methodExpression),
-                mock.Expect(new Function<MOCK, RESULT>(methodExpression.Compile())),
-                optionsAction);
-        }
-
-        private static CapturingConstraint SetupConstraint<T>(MethodInfo method, IMethodOptions<T> options,
-                                                              Action<IMethodOptions<T>> optionsAction)
-        {
-            var constraint = new CapturingConstraint();
-            var constraints = new List<AbstractConstraint>();
-
-            foreach (ParameterInfo arg in method.GetParameters())
-            {
-                constraints.Add(constraint);
-            }
-
-            options = options.Constraints(constraints.ToArray()).Repeat.Any();
-
-            if (optionsAction != null)
-            {
-                optionsAction(options);
-            }
-
-            return constraint;
-        }
-
-        #region Nested type: CapturingConstraint
-
-        public class CapturingConstraint : AbstractConstraint
-        {
-            private readonly ArrayList argList = new ArrayList();
-
-            public override string Message { get { return ""; } }
-
-            public override bool Eval(object obj)
-            {
-                argList.Add(obj);
-                return true;
-            }
-
-            public T First<T>()
-            {
-                return ArgumentAt<T>(0);
-            }
-
-            public T ArgumentAt<T>(int pos)
-            {
-                return (T)argList[pos];
-            }
-
-            public T Second<T>()
-            {
-                return ArgumentAt<T>(1);
-            }
-        }
-
-        #endregion
     }
 }

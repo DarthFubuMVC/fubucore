@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.CommandLine;
-using FubuTestingSupport;
-using NUnit.Framework;
 using FubuCore.Reflection;
+using NUnit.Framework;
 
 
 namespace FubuCore.Testing.CommandLine

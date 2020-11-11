@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Binding
@@ -48,13 +45,24 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void exception_should_serialize_properly()
         {
-            var firstProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Month) };
-            var secondProblem = new ConvertProblem { Property = ReflectionHelper.GetProperty<DateTime>(d => d.Day)  };
-            var originalException = new BindResultAssertionException(typeof(string), new[] { firstProblem, secondProblem });
+            var firstProblem = new ConvertProblem
+            {
+                Property = ReflectionHelper.GetProperty<DateTime>(d => d.Month),
+                PropertyName = ReflectionHelper.GetProperty<DateTime>(d => d.Month).Name,
+            };
+            var secondProblem = new ConvertProblem
+            {
+                Property = ReflectionHelper.GetProperty<DateTime>(d => d.Day),
+                PropertyName = ReflectionHelper.GetProperty<DateTime>(d => d.Day).Name
+            };
+
+            var originalException = new BindResultAssertionException(typeof(DateTime), new[] { firstProblem, secondProblem });
             
             var deserializedException = originalException.ShouldTransferViaSerialization();
             deserializedException.Type.ShouldEqual(originalException.Type);
             deserializedException.Problems.ShouldHaveCount(originalException.Problems.Count);
+            deserializedException.Problems[0].Property.Name.ShouldEqual(originalException.Problems[0].Property.Name);
+            deserializedException.Problems[1].Property.Name.ShouldEqual(originalException.Problems[1].Property.Name);
         }
     }
 }

@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Linq;
 
 namespace FubuCore.Binding
 {
@@ -11,6 +9,8 @@ namespace FubuCore.Binding
         public object Item { get; set; }
         public BindingValue Value { get; set; }
         public string ExceptionText { get; set; }
+        public string PropertyName { get; set; }
+        [field: NonSerialized]
         public PropertyInfo Property { get; set; }
 
         public override string ToString()

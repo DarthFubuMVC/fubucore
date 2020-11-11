@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Specialized;
 using FubuCore.Binding.Values;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -53,10 +52,10 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void for_value_miss()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
-            theValues.ForValue("a", action).ShouldBeFalse();
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            theValues.ForValue("a", action.Object).ShouldBeFalse();
+            action.Verify(x => x.Invoke(Arg<string>.Is.Anything, Arg<string>.Is.Anything), Times.Never());
         }
 
         [Test]
@@ -64,11 +63,11 @@ namespace FubuCore.Testing.Binding.Values
         {
             theCollection.Add("a", "1");
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
-            theValues.ForValue("a", action).ShouldBeTrue();
+            theValues.ForValue("a", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("a", "1"));
+            action.Verify(x => x.Invoke("a", "1"));
         }
     }
 }

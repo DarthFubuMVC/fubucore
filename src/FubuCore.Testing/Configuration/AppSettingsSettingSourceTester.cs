@@ -1,9 +1,8 @@
+using System.Linq;
 using FubuCore.Configuration;
 using NUnit.Framework;
-using System.Linq;
-using FubuTestingSupport;
 
-namespace FubuCore.Testing
+namespace FubuCore.Testing.Configuration
 {
     [TestFixture]
     public class AppSettingsSettingSourceTester

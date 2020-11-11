@@ -1,6 +1,4 @@
-using System;
 using System.ComponentModel;
-using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {

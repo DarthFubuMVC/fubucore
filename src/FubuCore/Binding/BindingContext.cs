@@ -183,6 +183,7 @@ namespace FubuCore.Binding
                 ExceptionText = exceptionText,
                 Item = Object,
                 Property = property,
+                PropertyName = property?.Name,
                 Value = value
             };
 

@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using FubuTestingSupport;
 using NUnit.Framework;
 using System;
-using Rhino.Mocks;
+using System.Collections.Generic;
+using Moq;
 
 namespace FubuCore.Testing
 {
@@ -33,22 +32,22 @@ namespace FubuCore.Testing
         [Test]
         public void if_not_null_positive()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = new Mock<Action<string>>();
 
-            "a".IfNotNull(action);
+            "a".IfNotNull(action.Object);
 
-            action.AssertWasCalled(x => x.Invoke("a"));
+            action.Verify(x => x.Invoke("a"));
         }
 
         [Test]
         public void if_not_null_negative()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = new Mock<Action<string>>();
             string a = null;
 
-            a.IfNotNull(action);
+            a.IfNotNull(action.Object);
 
-            action.AssertWasNotCalled(x => x.Invoke(null), x => x.IgnoreArguments());
+            action.VerifyNotCalled(x => x.Invoke(Arg<string>.Is.Anything));
         }
 
         [Test]
@@ -186,7 +185,7 @@ e
         [Test]
         public void read_lines_to_an_action()
         {
-            var action = MockRepository.GenerateMock<Action<string>>();
+            var action = new Mock<Action<string>>();
 
             var text = @"a
 b
@@ -196,13 +195,13 @@ e
 ";
 
 
-            text.ReadLines(action);
+            text.ReadLines(action.Object);
 
-            action.AssertWasCalled(x => x.Invoke("a"));
-            action.AssertWasCalled(x => x.Invoke("b"));
-            action.AssertWasCalled(x => x.Invoke("c"));
-            action.AssertWasCalled(x => x.Invoke("d"));
-            action.AssertWasCalled(x => x.Invoke("e"));
+            action.Verify(x => x.Invoke("a"));
+            action.Verify(x => x.Invoke("b"));
+            action.Verify(x => x.Invoke("c"));
+            action.Verify(x => x.Invoke("d"));
+            action.Verify(x => x.Invoke("e"));
 
             
         }

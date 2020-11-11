@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using FubuTestingSupport;
 using NUnit.Framework;
-using FubuCore.Testing;
-using Rhino.Mocks;
-using FubuCore;
 
 namespace FubuCore.Testing
 {

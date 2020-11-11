@@ -1,6 +1,3 @@
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing

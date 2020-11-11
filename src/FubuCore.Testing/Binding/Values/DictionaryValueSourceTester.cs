@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
 using FubuCore.Configuration;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using System.Linq;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -187,12 +186,12 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_hit_at_top_level()
         {
-            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+            var action = new Mock<Action<BindingValue>>();
             theDictionary.Add("a", 1);
 
-            theSource.As<IValueSource>().Value("a", action).ShouldBeTrue();
+            theSource.As<IValueSource>().Value("a", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue(){
+            action.Verify(x => x.Invoke(new BindingValue(){
                 RawKey = "a",
                 RawValue = 1,
                 Source = theSource.Provenance

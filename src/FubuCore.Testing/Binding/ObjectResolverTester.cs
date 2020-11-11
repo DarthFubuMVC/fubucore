@@ -1,9 +1,8 @@
 using System;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -14,12 +13,12 @@ namespace FubuCore.Testing.Binding
         [Test]
         public void throw_fubu_exception_if_there_is_no_suitable_binder()
         {
-            MockFor<IModelBinderCache>().Stub(x => x.BinderFor(GetType())).Return(null);
+            MockFor<IModelBinderCache>().Setup(x => x.BinderFor(GetType())).Returns((IModelBinder)null);
 
 
             Exception<FubuException>.ShouldBeThrownBy(() =>
             {
-                ClassUnderTest.BindModel(typeof(ClassWithNoCtor), MockFor<IBindingContext>());
+                ClassUnderTest.BindModel(typeof(ClassWithNoCtor), MockFor<IBindingContext>().Object);
             }).ErrorCode.ShouldEqual(2200);
 
 
@@ -37,23 +36,24 @@ namespace FubuCore.Testing.Binding
     [TestFixture]
     public class when_binding_model_throws_exception
     {
-        private IModelBinder matchingBinder;
+        private Mock<IModelBinder> matchingBinder;
         private Type _type = typeof(BinderTarget);
 
         [Test]
         public void should_throw_fubu_exception_2201()
         {
-            matchingBinder = MockRepository.GenerateStub<IModelBinder>();
-            matchingBinder.Stub(x => x.Matches(_type)).Return(true);
-            matchingBinder.Stub(x => x.Bind(_type, null)).IgnoreArguments().Throw(new Exception("fake message"));
-
+            matchingBinder = new Mock<IModelBinder>();
+            matchingBinder.Setup(x => x.Matches(_type)).Returns(true);
+            matchingBinder
+                .Setup(x => x.Bind(Arg<Type>.Is.Equal(_type), Arg<IBindingContext>.Is.Anything))
+                .Throws(new Exception("fake message"));
 
 
             var exception = Exception<FubuException>.ShouldBeThrownBy(() =>
             {
                 BindingScenario<BinderTarget>.Build(x =>
                 {
-                    x.Registry.Add(matchingBinder);
+                    x.Registry.Add(matchingBinder.Object);
                 });
             });
 
@@ -67,19 +67,19 @@ namespace FubuCore.Testing.Binding
     [TestFixture, Ignore("Need an option in FubuCore's BindingScenario so that it's using BindModel(type, foo) instead of BindModel(type, instance, foo)")]
     public class fetching_an_object_should_choose_the_first_model_binder_applicable
     {
-        private IModelBinder binder1;
-        private IModelBinder binder2;
+        private Mock<IModelBinder> binder1;
+        private Mock<IModelBinder> binder2;
         private IModelBinder matchingBinder;
         private BinderTarget expectedResult;
 
         [Test]
         public void should_resolve_the_requested_model_with_the_first_binder_that_matches()
         {
-            binder1 = MockRepository.GenerateMock<IModelBinder>();
-            binder2 = MockRepository.GenerateMock<IModelBinder>();
+            binder1 = new Mock<IModelBinder>();
+            binder2 = new Mock<IModelBinder>();
 
-            binder1.Stub(x => x.Matches(typeof(BinderTarget))).Return(false);
-            binder2.Stub(x => x.Matches(typeof(BinderTarget))).Return(false);
+            binder1.Setup(x => x.Matches(typeof(BinderTarget))).Returns(false);
+            binder2.Setup(x => x.Matches(typeof(BinderTarget))).Returns(false);
 
             expectedResult = new BinderTarget();
 
@@ -87,8 +87,8 @@ namespace FubuCore.Testing.Binding
 
             BindingScenario<BinderTarget>.Build(x =>
             {
-                x.Registry.Add(binder1);
-                x.Registry.Add(binder2);
+                x.Registry.Add(binder1.Object);
+                x.Registry.Add(binder2.Object);
                 x.Registry.Add(matchingBinder);
             }).ShouldBeTheSameAs(expectedResult);
         }

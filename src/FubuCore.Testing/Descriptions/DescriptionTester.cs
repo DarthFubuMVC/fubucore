@@ -1,9 +1,7 @@
-using System;
 using System.Linq;
 using FubuCore.Descriptions;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Descriptions
 {
@@ -13,121 +11,100 @@ namespace FubuCore.Testing.Descriptions
         [Test]
         public void accept_visitor_if_it_only_has_itself()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
-
+            var visitor = new Mock<IDescriptionVisitor>(MockBehavior.Strict);
+        
             var description = new Description();
+            var sequence = new MockSequence();
+            
+            visitor.InSequence(sequence).Setup(_ => _.Start(description));
+            visitor.InSequence(sequence).Setup(_ => _.End());
 
-            using (repo.Record())
-            {
-                visitor.Start(description);
-                visitor.End();
-            }
+            description.AcceptVisitor(visitor.Object);
 
-            using (repo.Playback())
-            {
-                description.AcceptVisitor(visitor);
-            }
+            visitor.VerifyAll();
         }
-
+        
         [Test]
         public void accept_visitory_with_multiple_bullet_lists()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
-
+            
+            var visitor = new Mock<IDescriptionVisitor>(MockBehavior.Strict);
+        
             var description = new Description();
-
+        
             var list = new BulletList();
             list.Children.Add(new Description());
             list.Children.Add(new Description());
             list.Children.Add(new Description());
-
+        
             description.BulletLists.Add(list);
             description.BulletLists.Add(new BulletList());
 
 
-            using (repo.Record())
-            {
-                visitor.Start(description);
+            visitor.Setup(_ => _.Start(description));
 
-                visitor.StartList(list);
+            visitor.Setup(_ => _.StartList(list));
 
-                visitor.Start(list.Children[0]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[0]));
+            visitor.Setup(_ => _.End());
 
-                visitor.Start(list.Children[1]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[1]));
+            visitor.Setup(_ => _.End());
 
-                visitor.Start(list.Children[2]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[2]));
+            visitor.Setup(_ => _.End());
 
-                visitor.EndList();
+            visitor.Setup(_ => _.EndList());
 
-                visitor.StartList(description.BulletLists.Last());
-                visitor.EndList();
+            visitor.Setup(_ => _.StartList(description.BulletLists.Last()));
+            visitor.Setup(_ => _.EndList());
 
 
-                visitor.End();
-            }
+            visitor.Setup(_ => _.End());
 
-            using (repo.Playback())
-            {
-                description.AcceptVisitor(visitor);
-            }
+            description.AcceptVisitor(visitor.Object);
+            visitor.VerifyAll();
         }
-
+        
         [Test]
         public void bullet_list_accept_visitor_with_children()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
-
+            var visitor = new Mock<IDescriptionVisitor>(MockBehavior.Strict);
+        
             var list = new BulletList();
             list.Children.Add(new Description());
             list.Children.Add(new Description());
             list.Children.Add(new Description());
 
-            using (repo.Record())
-            {
-                visitor.StartList(list);
+            visitor.Setup(_ => _.StartList(list));
 
-                visitor.Start(list.Children[0]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[0]));
+            visitor.Setup(_ => _.End());
 
-                visitor.Start(list.Children[1]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[1]));
+            visitor.Setup(_ => _.End());
 
-                visitor.Start(list.Children[2]);
-                visitor.End();
+            visitor.Setup(_ => _.Start(list.Children[2]));
+            visitor.Setup(_ => _.End());
 
-                visitor.EndList();
-            }
+            visitor.Setup(_ => _.EndList());
 
-            using (repo.Playback())
-            {
-                list.AcceptVisitor(visitor);
-            }
+            list.AcceptVisitor(visitor.Object);
+            visitor.VerifyAll();
         }
-
+        
         [Test]
         public void bullet_list_accept_visitor_with_no_innards()
         {
-            var repo = new MockRepository();
-            var visitor = repo.StrictMock<IDescriptionVisitor>();
-
+            var visitor = new Mock<IDescriptionVisitor>(MockBehavior.Strict);
+        
             var list = new BulletList();
 
-            using (repo.Record())
-            {
-                visitor.StartList(list);
-                visitor.EndList();
-            }
+            visitor.Setup(_ => _.StartList(list));
+            visitor.Setup(_ => _.EndList());
 
-            using (repo.Playback())
-            {
-                list.AcceptVisitor(visitor);
-            }
+            list.AcceptVisitor(visitor.Object);
+            visitor.VerifyAll();
         }
 
         [Test]

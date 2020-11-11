@@ -1,11 +1,8 @@
-using System;
-using System.Reflection;
+using System.Linq;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 using NUnit.Framework;
-using System.Linq;
 
 namespace FubuCore.Testing.Binding
 {

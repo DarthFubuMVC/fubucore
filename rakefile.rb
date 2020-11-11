@@ -1,19 +1,24 @@
+require 'win32/registry'
+
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
-BUILD_VERSION = '100.0.0'
+BUILD_VERSION = '101.0.0'
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
 BUILD_NUMBER = build_number 
+CLR_VERSION = "v4.0.30319"
+MSBUILD_TOOLSVERSION = "dotnetcli"
+
+load 'BuildUtils.rb'
 
 desc 'Compile the code'
 task :compile => [:clean, :version] do
-  msbuild = '"C:\Program Files (x86)\MSBuild\14.0\Bin\msbuild.exe"'
-  sh "#{msbuild} src/FubuCore.sln /property:Configuration=#{COMPILE_TARGET} /v:m /t:rebuild /nr:False /maxcpucount:8"
+  MSBuildRunner.compile :compilemode => COMPILE_TARGET, :solutionfile => 'src/FubuCore.sln', :clrversion => CLR_VERSION, :extraSwitches => ["p:WarningLevel=1"], :msbuildToolsVersion => MSBUILD_TOOLSVERSION
 end
 
 desc 'Run the unit tests'
 task :test => [:compile] do
-  sh "src/packages/NUnit.ConsoleRunner.3.6.1/tools/nunit3-console.exe src/fubucore.testing/bin/#{COMPILE_TARGET}/fubucore.Testing.dll"
+  sh "dotnet test src/FubuCore.sln"
 end
 
 desc "Prepares the working directory for a new build"

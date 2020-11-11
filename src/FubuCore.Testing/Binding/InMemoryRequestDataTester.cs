@@ -1,7 +1,6 @@
 using FubuCore.Binding;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -10,14 +9,14 @@ namespace FubuCore.Testing.Binding
     {
         public interface ICalledUpon{void Action();}
         private InMemoryRequestData _data;
-        private ICalledUpon _calledUpon;
+        private Mock<ICalledUpon> _calledUpon;
 
         [SetUp]
         public void SetUp()
         {
-            _calledUpon = MockRepository.GenerateStub<ICalledUpon>();
+            _calledUpon = new Mock<ICalledUpon>();
             _data = new InMemoryRequestData();
-            _calledUpon.Stub(c => c.Action());
+            _calledUpon.Setup(c => c.Action());
         }
 
         [Test]
@@ -27,8 +26,8 @@ namespace FubuCore.Testing.Binding
             _data["key"] = value;
             _data["key"].ShouldEqual(value);
             _data.Value("key").ShouldEqual(value);
-            _data.Value("key", o => _calledUpon.Action());
-            _calledUpon.AssertWasCalled(c=>c.Action());
+            _data.Value("key", o => _calledUpon.Object.Action());
+            _calledUpon.Verify(c=>c.Action());
             _data.Value("non_existing_key").ShouldBeNull();
         }
 

@@ -1,10 +1,9 @@
 using System;
+using System.Linq;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using System.Linq;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -56,11 +55,11 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_hit()
         {
-            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+            var action = new Mock<Action<BindingValue>>();
 
-            theSource.Value("a", action).ShouldBeTrue();
+            theSource.Value("a", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue{
+            action.Verify(x => x.Invoke(new BindingValue{
                 RawKey = "a",
                 RawValue = "a1",
                 Source = theSource.Provenance
@@ -70,13 +69,13 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void write_report()
         {
-            var report = MockRepository.GenerateMock<IValueReport>();
+            var report = new Mock<IValueReport>();
 
-            theSource.WriteReport(report);
+            theSource.WriteReport(report.Object);
 
-            report.AssertWasCalled(x => x.Value("a", "a1"));
-            report.AssertWasCalled(x => x.Value("b", "b1"));
-            report.AssertWasCalled(x => x.Value("c", "c1"));
+            report.Verify(x => x.Value("a", "a1"));
+            report.Verify(x => x.Value("b", "b1"));
+            report.Verify(x => x.Value("c", "c1"));
         }
     }
 }

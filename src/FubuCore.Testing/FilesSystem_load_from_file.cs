@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Xml.Serialization;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing

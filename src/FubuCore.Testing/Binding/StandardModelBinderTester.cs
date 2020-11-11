@@ -5,9 +5,8 @@ using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
 using FubuCore.Reflection;
 using FubuCore.Testing.Reflection.Expressions;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -16,28 +15,28 @@ namespace FubuCore.Testing.Binding
     public class when_populating_a_property : InteractionContext<StandardModelBinder>
     {
         private PropertyInfo theProperty;
-        private IPropertyBinder thePropertyBinder;
+        private Mock<IPropertyBinder> thePropertyBinder;
 
         protected override void beforeEach()
         {
             theProperty = ReflectionHelper.GetProperty<Case>(x => x.Identifier);
 
-            MockFor<IBindingContext>().Stub(x => x.Logger).Return(MockFor<IBindingLogger>());
+            MockFor<IBindingContext>().Setup(x => x.Logger).Returns(MockFor<IBindingLogger>().Object);
 
             thePropertyBinder = MockFor<IPropertyBinder>();
 
             var registry = new BindingRegistry();
             Services.Inject(registry);
-            registry.Add(thePropertyBinder);
+            registry.Add(thePropertyBinder.Object);
 
-            thePropertyBinder.Stub(x => x.Matches(null)).IgnoreArguments().Return(true);
-            ClassUnderTest.PopulateProperty(typeof(Case), theProperty, MockFor<IBindingContext>());
+            thePropertyBinder.Setup(x => x.Matches(Arg<PropertyInfo>.Is.Anything)).Returns(true);
+            ClassUnderTest.PopulateProperty(typeof(Case), theProperty, MockFor<IBindingContext>().Object);
         }
 
         [Test]
         public void should_log_the_property_binder_chosen()
         {
-            MockFor<IBindingLogger>().AssertWasCalled(x => x.Chose(theProperty, thePropertyBinder));
+            MockFor<IBindingLogger>().Verify(x => x.Chose(theProperty, thePropertyBinder.Object));
         }
     }
 
@@ -99,14 +98,13 @@ namespace FubuCore.Testing.Binding
 
 
         [Test]
-        public void
-            Checkbox_handling__if_the_property_type_is_boolean_and_the_value_does_not_equal_the_name_and_isnt_a_recognizeable_boolean_a_problem_should_be_attached
-            ()
+        public void Checkbox_handling__if_the_property_type_is_boolean_and_the_value_does_not_equal_the_name_and_isnt_a_recognizeable_boolean_a_problem_should_be_attached()
         {
             usingData(x => x.Data(o => o.Alive, "BOGUS"));
 
             ConvertProblem problem = theScenario.Problems.Single();
 
+            problem.PropertyName.ShouldEqual("Alive");
             problem.Property.Name.ShouldEqual("Alive");
         }
 

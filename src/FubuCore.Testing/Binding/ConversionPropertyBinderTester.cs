@@ -2,11 +2,9 @@ using System;
 using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
-using FubuCore.Conversion;
 using FubuCore.Reflection;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -108,7 +106,7 @@ namespace FubuCore.Testing.Binding
     public class IgnorePropertyBinderTester
     {
         private IgnorePropertyBinder _binder;
-        private IBindingContext _context;
+        private Mock<IBindingContext> _context;
         private PropertyInfo _property;
 
         private class SomeObject{public object SomeProperty { get; set; }}
@@ -117,7 +115,7 @@ namespace FubuCore.Testing.Binding
         public void SetUp()
         {
             _binder = new IgnorePropertyBinder(info => info.Name == "SomeProperty");
-            _context = MockRepository.GenerateMock<IBindingContext>();
+            _context = new Mock<IBindingContext>();
         }
 
         [Test]
@@ -131,7 +129,7 @@ namespace FubuCore.Testing.Binding
         public void should_ignore_binding()
         {
             //NOTE: Nothing to test, Bind method is empty
-            _binder.Bind(_property, _context);
+            _binder.Bind(_property, _context.Object);
         }
     }
 }

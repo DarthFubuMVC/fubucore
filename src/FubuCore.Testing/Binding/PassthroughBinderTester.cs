@@ -1,12 +1,10 @@
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Web;
 using FubuCore.Binding;
 using FubuCore.Reflection;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -43,11 +41,11 @@ namespace FubuCore.Testing.Binding
         public void build_passes_through()
         {
             var binder = new PassthroughConverter<HttpPostedFileBase>();
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Expect(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = new object() });
-            ValueConverter converter = binder.Build(MockRepository.GenerateStub<IValueConverterRegistry>(), property(x => x.File));
-            converter.Convert(context);
-            context.VerifyAllExpectations();
+            var context = new Mock<IPropertyContext>();
+            context.Setup(c => c.RawValueFromRequest).Returns(new BindingValue() { RawValue = new object() });
+            ValueConverter converter = binder.Build(Mock.Of<IValueConverterRegistry>(), property(x => x.File));
+            converter.Convert(context.Object);
+            context.VerifyAll();
         }
 
         [Test]
@@ -55,9 +53,9 @@ namespace FubuCore.Testing.Binding
         {
             var testValue = "testValue";
             var binder = new PassthroughConverter<HttpPostedFileBase>();
-            var context = MockRepository.GenerateMock<IPropertyContext>();
-            context.Stub(c => c.RawValueFromRequest).Return(new BindingValue() { RawValue = testValue });
-            binder.Convert(context).ShouldBeTheSameAs(testValue);
+            var context = new Mock<IPropertyContext>();
+            context.Setup(c => c.RawValueFromRequest).Returns(new BindingValue() { RawValue = testValue });
+            binder.Convert(context.Object).ShouldBeTheSameAs(testValue);
         }
 
         private PropertyInfo property(Expression<Func<ModelWithHttpPostedFileBase, object>> expression)
@@ -71,5 +69,10 @@ namespace FubuCore.Testing.Binding
         public HttpPostedFileBase File { get; set; }
         public string File2 { get; set; }
         public object File3 { get; set; }
+    }
+
+    public class HttpPostedFileBase
+    {
+
     }
 }

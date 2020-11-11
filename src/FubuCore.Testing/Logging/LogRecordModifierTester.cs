@@ -1,6 +1,5 @@
 using System;
 using FubuCore.Logging;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Logging
@@ -23,11 +22,11 @@ namespace FubuCore.Testing.Logging
         public void modify()
         {
             LocalSystemTime = DateTime.Today.AddHours(7);
-
+        
             var record = new FakeLogRecord1();
-
+        
             ClassUnderTest.Modify(record);
-
+        
             record.Time.ShouldEqual(UtcSystemTime);
         }
     }

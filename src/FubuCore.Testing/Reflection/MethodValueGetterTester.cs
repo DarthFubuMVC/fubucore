@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Reflection

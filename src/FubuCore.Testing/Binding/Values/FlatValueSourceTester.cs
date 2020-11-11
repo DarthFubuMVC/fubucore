@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FubuCore.Binding;
 using FubuCore.Binding.Values;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using System.Linq;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -85,7 +84,7 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void write_the_report()
         {
-            var report = MockRepository.GenerateMock<IValueReport>();
+            var report = new Mock<IValueReport>();
 
             theDictionary.Add("a", "1");
             theDictionary.Add("b", "2");
@@ -93,13 +92,13 @@ namespace FubuCore.Testing.Binding.Values
             theDictionary.Add("d", "4");
             theDictionary.Add("e", "5");
 
-            theValues.WriteReport(report);
+            theValues.WriteReport(report.Object);
 
-            report.AssertWasCalled(x => x.Value("a", "1"));
-            report.AssertWasCalled(x => x.Value("b", "2"));
-            report.AssertWasCalled(x => x.Value("c", "3"));
-            report.AssertWasCalled(x => x.Value("d", "4"));
-            report.AssertWasCalled(x => x.Value("e", "5"));
+            report.Verify(x => x.Value("a", "1"));
+            report.Verify(x => x.Value("b", "2"));
+            report.Verify(x => x.Value("c", "3"));
+            report.Verify(x => x.Value("d", "4"));
+            report.Verify(x => x.Value("e", "5"));
         }
 
         [Test]
@@ -107,11 +106,11 @@ namespace FubuCore.Testing.Binding.Values
         {
             theDictionary.Add("a", "1");
 
-            var action = MockRepository.GenerateMock<Action<BindingValue>>();
+            var action = new Mock<Action<BindingValue>>();
 
-            theValues.Value("a", action).ShouldBeTrue();
+            theValues.Value("a", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue{
+            action.Verify(x => x.Invoke(new BindingValue{
                 RawKey = "a",
                 RawValue = "1",
                 Source = theValues.Provenance

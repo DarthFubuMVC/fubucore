@@ -1,8 +1,7 @@
 using System;
 using FubuCore.Binding.Values;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding.Values
 {
@@ -56,15 +55,15 @@ namespace FubuCore.Testing.Binding.Values
         [Test]
         public void value_miss()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
             theValues["Key1"] = "a";
             theValues["Key2"] = "a";
             theValues["Key3"] = "a";
 
-            thePrefixedValues.ForValue("Key1", action).ShouldBeFalse();
+            thePrefixedValues.ForValue("Key1", action.Object).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            action.Verify(x => x.Invoke(Arg<string>.Is.Anything, Arg<string>.Is.Anything), Times.Never());
         }
 
         [Test]
@@ -77,11 +76,11 @@ namespace FubuCore.Testing.Binding.Values
             theValues["OneKey5"] = "a";
             theValues["OneKey6"] = "a";
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
-            thePrefixedValues.ForValue("Key4", action).ShouldBeTrue();
+            thePrefixedValues.ForValue("Key4", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("OneKey4", "a4"));
+            action.Verify(x => x.Invoke("OneKey4", "a4"));
         }
 
         [Test]
@@ -95,12 +94,12 @@ namespace FubuCore.Testing.Binding.Values
             theValues["OneKey5"] = "a";
             theValues["OneKey6"] = "a";
 
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
             var grandchild = new PrefixedKeyValues("Two", thePrefixedValues);
 
-            grandchild.ForValue("Key11", action).ShouldBeTrue();
+            grandchild.ForValue("Key11", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("OneTwoKey11", "1211"));
+            action.Verify(x => x.Invoke("OneTwoKey11", "1211"));
         }
     }
 }

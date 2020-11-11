@@ -1,9 +1,7 @@
 using System;
+using System.Collections.Generic;
 using FubuCore.Dates;
 using NUnit.Framework;
-using FubuTestingSupport;
-using FubuCore;
-using System.Collections.Generic;
 
 namespace FubuCore.Testing.Dates
 {
@@ -37,7 +35,7 @@ namespace FubuCore.Testing.Dates
         }
 
         [Test]
-        public void stub()
+        public void Setup()
         {
             var now = DateTime.Today.AddDays(1).AddHours(8);
 

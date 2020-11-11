@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using FubuCore.Binding.Values;
-using FubuCore.Configuration;
 using NUnit.Framework;
 using System.Linq;
-using FubuTestingSupport;
 using System.IO;
+using FubuCore.Configuration;
 
 namespace FubuCore.Testing.Configuration
 {
