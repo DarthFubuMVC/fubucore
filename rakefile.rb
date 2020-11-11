@@ -1,7 +1,7 @@
 require 'win32/registry'
 
 COMPILE_TARGET = ENV['config'].nil? ? "debug" : ENV['config']
-BUILD_VERSION = '100.0.0'
+BUILD_VERSION = '101.0.0'
 tc_build_number = ENV["BUILD_NUMBER"]
 build_revision = tc_build_number || Time.new.strftime('5%H%M')
 build_number = "#{BUILD_VERSION}.#{build_revision}"
