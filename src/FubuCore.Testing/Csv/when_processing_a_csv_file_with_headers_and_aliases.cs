@@ -1,8 +1,6 @@
-using System;
 using System.IO;
 using FubuCore.Csv;
 using NUnit.Framework;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Csv
 {

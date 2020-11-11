@@ -1,7 +1,5 @@
-using FubuCore.Binding.InMemory;
 using FubuCore.Conversion;
 using NUnit.Framework;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Binding.InMemory
 {

@@ -1,267 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F2F97121-B7E0-4435-8F38-47EB9B5C8E36}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FubuCore.Testing</RootNamespace>
-    <AssemblyName>FubuCore.Testing</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <WarningsAsErrors />
+    <NoWarn />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.6.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net40\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap, Version=2.6.3.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
-      <HintPath>..\packages\structuremap.2.6.3\lib\StructureMap.dll</HintPath>
-    </Reference>
-    <Reference Include="StructureMap.AutoMocking, Version=2.6.3.0, Culture=neutral, PublicKeyToken=e60ad81abae3c223, processorArchitecture=MSIL">
-      <HintPath>..\packages\structuremap.automocking.2.6.3\lib\StructureMap.AutoMocking.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Abstractions" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.0" />
+    <PackageReference Include="Moq" Version="4.15.1" />
+    <PackageReference Include="Moq.AutoMock" Version="2.1.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.15.1" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\CommonAssemblyInfo.cs">
-      <Link>CommonAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="BasicExtensionsTester.cs" />
-    <Compile Include="Binding\ArrayConverterFamilyTester.cs" />
-    <Compile Include="Binding\ArrayPropertyBinderTester.cs" />
-    <Compile Include="Binding\BasicConverterTester.cs" />
-    <Compile Include="Binding\BasicValueConverterTester.cs" />
-    <Compile Include="Binding\BindingAttributeTester.cs" />
-    <Compile Include="Binding\BindingContextTester.cs" />
-    <Compile Include="Binding\BindingRegistry_Description_Tester.cs" />
-    <Compile Include="Binding\BindingResultTester.cs" />
-    <Compile Include="Binding\BooleanFamilyTester.cs" />
-    <Compile Include="Binding\CollectionBinding_Acceptance_Tests.cs" />
-    <Compile Include="Binding\CollectionPropertyBinderTester.cs" />
-    <Compile Include="Binding\ConversionPropertyBinderTester.cs" />
-    <Compile Include="Binding\ConverterFamilyTester.cs" />
-    <Compile Include="Binding\ConvertProblemTester.cs" />
-    <Compile Include="CommandLine\DumpCommandSmokeTester.cs" />
-    <Compile Include="Csv\ColumnDefinitionTester.cs" />
-    <Compile Include="Csv\ColumnExpressionTester.cs" />
-    <Compile Include="Csv\ColumnMappingTester.cs" />
-    <Compile Include="Csv\creating_a_value_source_when_not_all_values_exist.cs" />
-    <Compile Include="Csv\creating_a_value_source_when_all_values_exist.cs" />
-    <Compile Include="Csv\CsvReaderHarness.cs" />
-    <Compile Include="Csv\CsvRequestTester.cs" />
-    <Compile Include="Csv\CsvTokenizerTester.cs" />
-    <Compile Include="Csv\SpecialCharacterHeaderHarness.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_empty_last_column.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_headers_and_aliases.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_without_headers.cs" />
-    <Compile Include="Csv\TestCsvObject.cs" />
-    <Compile Include="Binding\descriptors_on_all_binding_support_classes.cs" />
-    <Compile Include="Binding\EnumerateFlatRequestDataTester.cs" />
-    <Compile Include="Binding\ExpandEnvironmentVariablesFamilyTester.cs" />
-    <Compile Include="Binding\FlatFileRequestDataTester.cs" />
-    <Compile Include="Binding\InMemoryRequestDataTester.cs" />
-    <Compile Include="Binding\InMemory\InMemoryServiceLocatorTester.cs" />
-    <Compile Include="Binding\NestedObjectConversionIntegrationTester.cs" />
-    <Compile Include="Binding\ObjectResolverTester.cs" />
-    <Compile Include="Binding\ObjectTypeFamilyTester.cs" />
-    <Compile Include="Binding\PassthroughBinderTester.cs" />
-    <Compile Include="Binding\PropertyBinderCacheTester.cs" />
-    <Compile Include="Binding\PropertyBinderTester.cs" />
-    <Compile Include="Binding\ReaderBinderTester.cs" />
-    <Compile Include="Binding\RecordingBindingLogger_acceptance_testing.cs" />
-    <Compile Include="Binding\RequestDataTesting.cs" />
-    <Compile Include="Binding\ResolveConnectionStringFamilyTester.cs" />
-    <Compile Include="Binding\ServiceArgumentsTester.cs" />
-    <Compile Include="Binding\SmartRequestTester.cs" />
-    <Compile Include="Binding\StandardModelBinderTester.cs" />
-    <Compile Include="Binding\Values\DictionaryPathTester.cs" />
-    <Compile Include="Binding\Values\DictionaryValueSourceReportWritingTester.cs" />
-    <Compile Include="Binding\Values\DictionaryValueSourceTester.cs" />
-    <Compile Include="Binding\Values\FlatValueSourceTester.cs" />
-    <Compile Include="Binding\Values\GenericValuesSourceTester.cs" />
-    <Compile Include="Binding\Values\NamedKeyValuesTester.cs" />
-    <Compile Include="Binding\Values\PrefixedKeyValuesTester.cs" />
-    <Compile Include="Binding\Values\ValueDiagnosticReportTester.cs" />
-    <Compile Include="CommandLine\ArgPreprocessorTester.cs" />
-    <Compile Include="Configuration\AppSettingsKeyValuesTester.cs" />
-    <Compile Include="Configuration\AppSettingsProviderIntegratedTester.cs" />
-    <Compile Include="Configuration\Settings_provider_sources.cs" />
-    <Compile Include="Conversion\descriptions_on_every_converter.cs" />
-    <Compile Include="Conversion\TimeSpanConverterTester.cs" />
-    <Compile Include="Conversion\TypeDescripterConverterFamilyTester.cs" />
-    <Compile Include="Binding\TypeDescriptorCacheTester.cs" />
-    <Compile Include="Binding\ValueConverterRegistryTester.cs" />
-    <Compile Include="BooleanExtensionsTester.cs" />
-    <Compile Include="CommandLine\ArgumentTester.cs" />
-    <Compile Include="CommandLine\BooleanFlagTester.cs" />
-    <Compile Include="CommandLine\CommandExecutorTester.cs" />
-    <Compile Include="CommandLine\CommandFactoryTester.cs" />
-    <Compile Include="CommandLine\ConsoleWriterTester.cs" />
-    <Compile Include="CommandLine\EnumerableArgumentTester.cs" />
-    <Compile Include="CommandLine\FlagTester.cs" />
-    <Compile Include="CommandLine\InputParserTester.cs" />
-    <Compile Include="CommandLine\StringTokenizerTester.cs" />
-    <Compile Include="CommandLine\UsageGraphTester.cs" />
-    <Compile Include="Configuration\AppSettingsSettingSourceTester.cs" />
-    <Compile Include="Configuration\OverrideSubstitutedRequestDataTester.cs" />
-    <Compile Include="Configuration\SettingsDataTester.cs" />
-    <Compile Include="Configuration\SettingsProviderDiagnosticsTester.cs" />
-    <Compile Include="Configuration\SettingsProviderIntegratedTester.cs" />
-    <Compile Include="Configuration\SettingsProviderResolvableDiagnosticsTester.cs" />
-    <Compile Include="Configuration\SettingsRequestDataTester.cs" />
-    <Compile Include="Configuration\SubstitutedRequestDataTester.cs" />
-    <Compile Include="Configuration\XmlSettingsDataTester.cs" />
-    <Compile Include="Configuration\XmlSettingsIntegratedTester.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_headers.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_headers_that_are_ignored.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_non_default_delimiter.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_special_characters.cs" />
-    <Compile Include="Csv\when_processing_a_csv_file_with_special_characters_in_headers.cs" />
-    <Compile Include="Dates\DateTester.cs" />
-    <Compile Include="Dates\DateTimeExtensionTester.cs" />
-    <Compile Include="Dates\LocalTimeTester.cs" />
-    <Compile Include="Dates\MilestoneTester.cs" />
-    <Compile Include="Dates\PeriodTester.cs" />
-    <Compile Include="Dates\SettableClockTester.cs" />
-    <Compile Include="Dates\SystemTimeTester.cs" />
-    <Compile Include="DependencyAnalysis\Bottle.cs" />
-    <Compile Include="DependencyAnalysis\DependencyGraphTester.cs" />
-    <Compile Include="Descriptions\DescriptionTester.cs" />
-    <Compile Include="Descriptions\DescriptionTextWriterSmokeTester.cs" />
-    <Compile Include="DictionaryExtensionsTester.cs" />
-    <Compile Include="FileChangePollingWatcherTester.cs" />
-    <Compile Include="FileHashingExtensionsTester.cs" />
-    <Compile Include="FileSetTester.cs" />
-    <Compile Include="FilesSystem_load_from_file.cs" />
-    <Compile Include="FileSystemTester.cs" />
-    <Compile Include="FlatFileWriterTester.cs" />
-    <Compile Include="Formatting\GetStringRequestTester.cs" />
-    <Compile Include="Formatting\StringifierTester.cs" />
-    <Compile Include="FubuExceptionTester.cs" />
-    <Compile Include="GenericEnumerableExtensionsTester.cs" />
-    <Compile Include="Logging\DebugListenerSmokeTester.cs" />
-    <Compile Include="Logging\ConsoleListenerSmokeTester.cs" />
-    <Compile Include="Logging\ExceptionReportTester.cs" />
-    <Compile Include="Logging\FilteredListenerTester.cs" />
-    <Compile Include="Logging\LoggerTester.cs" />
-    <Compile Include="Logging\LogRecordModifierTester.cs" />
-    <Compile Include="Logging\RecordingLoggerTester.cs" />
-    <Compile Include="NumberExtensionsTester.cs" />
-    <Compile Include="Conversion\ObjectConverterTester.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReflectionExtensionsTester.cs" />
-    <Compile Include="Reflection\AccessorRulesTester.cs" />
-    <Compile Include="Reflection\Expressions\ConstructorBuilderTester.cs" />
-    <Compile Include="Reflection\Expressions\ConstructorFunctionBuilderTester.cs" />
-    <Compile Include="Reflection\Expressions\EqualsPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\ExpressionDebugging.cs" />
-    <Compile Include="Reflection\Expressions\GreaterThanOrEqualPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\GreaterThanPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\LessThanOrEqualPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\LessThanPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\NotEqualPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\StringContainsPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\StringEndsWithPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\StringEqualsPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\StringStartsWithPropertyOperationTester.cs" />
-    <Compile Include="Reflection\Expressions\when_building_an_or_predicate.cs" />
-    <Compile Include="Reflection\MethodValueGetterTester.cs" />
-    <Compile Include="Reflection\PropertyChainTester.cs" />
-    <Compile Include="Reflection\ReflectionExtensionsTester.cs" />
-    <Compile Include="Reflection\ReflectionHelperTester.cs" />
-    <Compile Include="Reflection\SinglePropertyTester.cs" />
-    <Compile Include="Conversion\StringConstructorConverterFamilyTester.cs" />
-    <Compile Include="StringExtensionsTester.cs" />
-    <Compile Include="TemplateParserTester.cs" />
-    <Compile Include="TestingSupport\AccessorPersistenceCheckTester.cs" />
-    <Compile Include="TestingSupport\EnumerablePersistenceCheckTester.cs" />
-    <Compile Include="TestingSupport\PersistenceSpecificationTester.cs" />
-    <Compile Include="TestingSupport\SystemTimeMechanicsInInteractionContext.cs" />
-    <Compile Include="TestObject.cs" />
-    <Compile Include="debugging.cs" />
-    <Compile Include="TimeSpanExtensionsTester.cs" />
-    <Compile Include="TypeExtensionsTester.cs" />
-    <Compile Include="TypeResolverTester.cs" />
-    <Compile Include="Util\CacheTester.cs" />
-    <Compile Include="Util\CompositePredicateTester.cs" />
-    <Compile Include="Util\DictionaryKeyValuesTester.cs" />
-    <Compile Include="Util\IndexerTester.cs" />
-    <Compile Include="Util\StringPropertyReaderTester.cs" />
-    <Compile Include="Util\TextWriting\ColumnLineTester.cs" />
-    <Compile Include="Util\TextWriting\ColumnSetTester.cs" />
-    <Compile Include="Util\TextWriting\ColumnTester.cs" />
-    <Compile Include="Util\TextWriting\DividerLineTester.cs" />
-    <Compile Include="Util\TextWriting\PlainLineTester.cs" />
-    <Compile Include="Util\TextWriting\TextReportTester.cs" />
+    <ProjectReference Include="..\FubuCore\FubuCore.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FubuCore\FubuCore.csproj">
-      <Project>{342B987C-E0A4-4129-958D-8E08084E8A06}</Project>
-      <Name>FubuCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\FubuTestingSupport\FubuTestingSupport.csproj">
-      <Project>{CEF04237-F832-4BAF-BA5F-C5DEA0635E8E}</Project>
-      <Name>FubuTestingSupport</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FubuCore.Testing.dll.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Configuration\Environment.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Configuration\One.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Configuration\Three.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Configuration\Two.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="FubuCore.Testing.dll.config" DestinationFiles="$(OutDir)\FubuCore.Testing.dll.config" />
   </Target>
-  <Target Name="AfterBuild">
+  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+    <Copy SourceFiles="FubuCore.Testing.dll.config" DestinationFiles="$(OutDir)\ReSharperTestRunner64.dll.config" />
   </Target>
-  -->
 </Project>

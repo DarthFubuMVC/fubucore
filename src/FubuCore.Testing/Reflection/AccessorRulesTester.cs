@@ -1,7 +1,6 @@
-﻿using FubuCore.Reflection;
+﻿using System.Linq;
+using FubuCore.Reflection;
 using NUnit.Framework;
-using FubuTestingSupport;
-using System.Linq;
 
 namespace FubuCore.Testing.Reflection
 {

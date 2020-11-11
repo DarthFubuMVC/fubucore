@@ -3,7 +3,6 @@ using System.Linq.Expressions;
 using FubuCore.CommandLine;
 using FubuCore.Conversion;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.CommandLine

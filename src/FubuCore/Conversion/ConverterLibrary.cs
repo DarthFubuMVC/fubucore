@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FubuCore.Descriptions;
 using FubuCore.Util;
-using FubuCore.Util.TextWriting;
 
 namespace FubuCore.Conversion
 {

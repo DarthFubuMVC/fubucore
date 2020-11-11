@@ -1,6 +1,5 @@
 using FubuCore.Util.TextWriting;
 using NUnit.Framework;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Util.TextWriting
 {

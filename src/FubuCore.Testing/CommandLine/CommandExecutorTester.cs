@@ -1,14 +1,14 @@
 using FubuCore.CommandLine;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.CommandLine
 {
     [TestFixture]
     public class CommandExecutorTester
     {
-        private ICommandFactory factory;
-        private IFubuCommand command;
+        private Mock<ICommandFactory> factory;
+        private Mock<IFubuCommand> command;
         private CommandExecutor theExecutor;
         private object theInput;
         private string commandLine;
@@ -16,25 +16,25 @@ namespace FubuCore.Testing.CommandLine
         [SetUp]
         public void SetUp()
         {
-            factory = MockRepository.GenerateMock<ICommandFactory>();
-            command = MockRepository.GenerateMock<IFubuCommand>();
+            factory = new Mock<ICommandFactory>();
+            command = new Mock<IFubuCommand>();
             theInput = new object();
             commandLine = "some stuff here";
 
-            theExecutor = new CommandExecutor(factory);
+            theExecutor = new CommandExecutor(factory.Object);
         }
 
         [Test]
         public void run_command_happy_path_executes_the_command_with_the_input()
         {
-            factory.Stub(x => x.BuildRun(commandLine)).Return(new CommandRun(){
-                Command = command,
+            factory.Setup(x => x.BuildRun(commandLine)).Returns(new CommandRun(){
+                Command = command.Object,
                 Input = theInput
             });
 
             theExecutor.Execute(commandLine);
 
-            command.AssertWasCalled(x => x.Execute(theInput));
+            command.Verify(x => x.Execute(theInput));
         }
     }
 }

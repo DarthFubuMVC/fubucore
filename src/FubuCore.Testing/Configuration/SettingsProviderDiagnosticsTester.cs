@@ -1,8 +1,6 @@
-using FubuCore.Binding.Values;
+using System.Linq;
 using FubuCore.Configuration;
 using NUnit.Framework;
-using FubuTestingSupport;
-using System.Linq;
 
 namespace FubuCore.Testing.Configuration
 {

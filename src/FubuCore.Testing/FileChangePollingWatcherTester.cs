@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing
 {
@@ -9,9 +9,9 @@ namespace FubuCore.Testing
     public class FileChangePollingWatcherTester
     {
         private FileChangePollingWatcher theWatcher;
-        private Action action1;
-        private Action action2;
-        private Action action3;
+        private Mock<System.Action> action1;
+        private Mock<System.Action> action2;
+        private Mock<System.Action> action3;
 
         [SetUp]
         public void SetUp()
@@ -25,13 +25,13 @@ namespace FubuCore.Testing
 			
             theWatcher = new FileChangePollingWatcher();
 
-            action1 = MockRepository.GenerateMock<System.Action>();
-            action2 = MockRepository.GenerateMock<System.Action>();
-            action3 = MockRepository.GenerateMock<System.Action>();
+            action1 = new Mock<System.Action>();
+            action2 = new Mock<System.Action>();
+            action3 = new Mock<System.Action>();
         
-            theWatcher.WatchFile("a.txt", action1);
-            theWatcher.WatchFile("b.txt", action2);
-            theWatcher.WatchFile("c.txt", action3);
+            theWatcher.WatchFile("a.txt", action1.Object);
+            theWatcher.WatchFile("b.txt", action2.Object);
+            theWatcher.WatchFile("c.txt", action3.Object);
         }
 
         [TearDown]
@@ -51,9 +51,9 @@ namespace FubuCore.Testing
 
             reset.WaitOne(2500);
 
-            action1.AssertWasCalled(x => x.Invoke());
-            action2.AssertWasNotCalled(x => x.Invoke());
-            action3.AssertWasNotCalled(x => x.Invoke());
+            action1.Verify(x => x.Invoke());
+            action2.VerifyNotCalled(x => x.Invoke());
+            action3.VerifyNotCalled(x => x.Invoke());
         }
 
 
@@ -69,9 +69,9 @@ namespace FubuCore.Testing
 
             reset.WaitOne(2500);
 
-            action1.AssertWasCalled(x => x.Invoke());
-            action2.AssertWasNotCalled(x => x.Invoke());
-            action3.AssertWasCalled(x => x.Invoke());
+            action1.Verify(x => x.Invoke());
+            action2.VerifyNotCalled(x => x.Invoke());
+            action3.Verify(x => x.Invoke());
         }
     }
 }

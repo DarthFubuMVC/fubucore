@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq.Expressions;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Reflection

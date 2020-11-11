@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using FubuCore.Binding;
 using FubuCore.Reflection;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Binding
 {

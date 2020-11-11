@@ -1,6 +1,5 @@
 ﻿using FubuCore.Logging;
 using NUnit.Framework;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Logging
 {

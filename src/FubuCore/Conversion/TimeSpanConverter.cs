@@ -2,7 +2,6 @@ using System;
 using System.ComponentModel;
 using System.Text.RegularExpressions;
 using System.Linq;
-using FubuCore.Descriptions;
 
 namespace FubuCore.Conversion
 {

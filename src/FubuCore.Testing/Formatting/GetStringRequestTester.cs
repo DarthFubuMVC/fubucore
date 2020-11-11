@@ -2,9 +2,8 @@ using FubuCore.Formatting;
 using FubuCore.Reflection;
 using FubuCore.Testing.Conversion;
 using FubuCore.Testing.Reflection.Expressions;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Formatting
 {
@@ -14,10 +13,10 @@ namespace FubuCore.Testing.Formatting
         [Test]
         public void when_creating_a_string_request_with_services_via_constructor()
         {
-            var locator = MockRepository.GenerateMock<IServiceLocator>();
+            var locator = new Mock<IServiceLocator>();
             var accessor = ReflectionHelper.GetAccessor<Case>(x => x.Contact.FirstName);
 
-            var request = new GetStringRequest(accessor, "something", locator);
+            var request = new GetStringRequest(accessor, "something", locator.Object);
 
             request.PropertyType.ShouldEqual(typeof (string));
             request.OwnerType.ShouldEqual(typeof (Contact));

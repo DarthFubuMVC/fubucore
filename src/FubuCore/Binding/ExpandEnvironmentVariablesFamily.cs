@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel;
 using System.Reflection;
-using FubuCore.Descriptions;
 using FubuCore.Reflection;
 
 namespace FubuCore.Binding

@@ -2,9 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using FubuCore.Binding;
-using FubuCore.Conversion;
 using FubuCore.Descriptions;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Binding

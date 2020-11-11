@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using FubuCore.Conversion;
 using FubuCore.Testing.Formatting;
-using FubuTestingSupport;
 using NUnit.Framework;
 using Address = FubuCore.Testing.Formatting.Address;
 
@@ -185,13 +184,13 @@ namespace FubuCore.Testing.Conversion
 
 			date.ShouldEqual(new DateTime(2012, 06, 01, 14, 52, 35, DateTimeKind.Utc));
 		}
-
+        
 		[Test]
 		public void get_date_time_from_partial_iso_8601_uses_default_parser_and_is_local()
 		{
 			var date = DateTimeConverter.GetDateTime("2012-06-01T12:52:35Z");
-
-			var gmtOffsetInHours = (int) TimeZone.CurrentTimeZone.GetUtcOffset(date).TotalHours;
+		
+			var gmtOffsetInHours = (int) TimeZoneInfo.Local.GetUtcOffset(date).TotalHours;
 			date.ShouldEqual(new DateTime(2012, 06, 01, 12 + gmtOffsetInHours, 52, 35, DateTimeKind.Local));
 		}
 

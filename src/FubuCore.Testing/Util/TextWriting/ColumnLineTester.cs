@@ -1,8 +1,6 @@
 using System.IO;
 using FubuCore.Util.TextWriting;
 using NUnit.Framework;
-using Rhino.Mocks;
-using FubuTestingSupport;
 
 namespace FubuCore.Testing.Util.TextWriting
 {

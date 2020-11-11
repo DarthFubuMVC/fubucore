@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FubuCore.Util;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using FubuCore;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Util
 {
@@ -117,21 +115,21 @@ namespace FubuCore.Testing.Util
         [Test]
         public void set_GetKey()
         {
-            ICallback callback = MockRepository.GenerateStub<ICallback>();
-            cache.GetKey = callback.GetKeyCallback;
+            var callback = new Mock<ICallback>();
+            cache.GetKey = callback.Object.GetKeyCallback;
             cache.GetKey(42);
-            callback.AssertWasCalled(c=>c.GetKeyCallback(42));
+            callback.Verify(c=>c.GetKeyCallback(42));
         }
 
         [Test]
         public void set_OnAddition()
         {
-            ICallback callback = MockRepository.GenerateStub<ICallback>();
+            var callback = new Mock<ICallback>();
             cache["firstKey"] = 0;
-            callback.AssertWasNotCalled(c => c.OnAdditionCallback(42));
-            cache.OnAddition = callback.OnAdditionCallback;
+            callback.VerifyNotCalled(c => c.OnAdditionCallback(42));
+            cache.OnAddition = callback.Object.OnAdditionCallback;
             cache[Key] = 42;
-            callback.AssertWasCalled(c=>c.OnAdditionCallback(42));
+            callback.Verify(c=>c.OnAdditionCallback(42));
         }
 
         [Test]

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using FubuCore.Binding;
 using FubuCore.Configuration;
 using FubuCore.Util;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
-using Is = Rhino.Mocks.Constraints.Is;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -69,11 +67,11 @@ namespace FubuCore.Testing.Configuration
             theDictionary.Add("setting", "setting-value");
             theInnerData["Key"] = "*{setting}*";
 
-            var action = MockRepository.GenerateMock<Action<object>>();
+            var action = new Mock<Action<object>>();
 
-            theSubstitutedData.Value("Key", action).ShouldBeTrue();
+            theSubstitutedData.Value("Key", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke(new BindingValue { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
+            action.Verify(x => x.Invoke(new BindingValue { RawValue = "*setting-value*" , RawKey = "Key", Source = "in memory"}));
         }
     }
 }

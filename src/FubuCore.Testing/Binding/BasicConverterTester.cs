@@ -4,12 +4,9 @@ using System.Linq;
 using System.Reflection;
 using FubuCore.Binding;
 using FubuCore.Binding.InMemory;
-using FubuCore.Conversion;
-using FubuCore.Reflection;
 using FubuCore.Testing.Conversion;
-using FubuTestingSupport;
+using Moq;
 using NUnit.Framework;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Binding
 {
@@ -28,10 +25,10 @@ namespace FubuCore.Testing.Binding
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
-            _context = MockRepository.GenerateMock<IPropertyContext>();
-            _context.Stub(x => x.Property).Return(_property);
+            _context = new Mock<IPropertyContext>();
+            _context.Setup(x => x.Property).Returns(_property);
             _propertyValue = new BindingValue { RawValue = "1,000.001" };
-            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
+            _context.Setup(c => c.RawValueFromRequest).Returns(_propertyValue);//.Repeat.Times(4);
         }
 
         #endregion
@@ -39,7 +36,7 @@ namespace FubuCore.Testing.Binding
         private BindingRegistry _registry;
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
-        private IPropertyContext _context;
+        private Mock<IPropertyContext> _context;
         private BindingValue _propertyValue;
 
         private class PropertyHolder
@@ -79,10 +76,10 @@ namespace FubuCore.Testing.Binding
                                                                    cf.Matches(_property)) as NumericTypeFamily;
             _numericTypeFamily.ShouldNotBeNull();
 
-            _context = MockRepository.GenerateMock<IPropertyContext>();
-            _context.Stub(x => x.Property).Return(_property);
+            _context = new Mock<IPropertyContext>();
+            _context.Setup(x => x.Property).Returns(_property);
             _propertyValue = new BindingValue { RawValue = "1.000,001" };
-            _context.Expect(c => c.RawValueFromRequest).Return(_propertyValue).Repeat.Times(4);
+            _context.Setup(c => c.RawValueFromRequest).Returns(_propertyValue);//.Repeat.Times(4);
         }
 
         #endregion
@@ -90,7 +87,7 @@ namespace FubuCore.Testing.Binding
         private BindingRegistry _registry;
         private NumericTypeFamily _numericTypeFamily;
         private PropertyInfo _property;
-        private IPropertyContext _context;
+        private Mock<IPropertyContext> _context;
         private BindingValue _propertyValue;
 
         private class PropertyHolder

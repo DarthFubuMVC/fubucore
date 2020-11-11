@@ -1,9 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using FubuCore.Binding;
-using FubuTestingSupport;
 using NUnit.Framework;
 using System.Linq;
+using FubuCore.Binding;
 
 namespace FubuCore.Testing.Binding
 {

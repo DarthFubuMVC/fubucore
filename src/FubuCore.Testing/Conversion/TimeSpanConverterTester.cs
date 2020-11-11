@@ -1,6 +1,5 @@
 using System;
 using FubuCore.Conversion;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Conversion

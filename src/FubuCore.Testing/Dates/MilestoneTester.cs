@@ -1,6 +1,5 @@
 ﻿using System;
 using FubuCore.Dates;
-using FubuTestingSupport;
 using NUnit.Framework;
 
 namespace FubuCore.Testing.Dates

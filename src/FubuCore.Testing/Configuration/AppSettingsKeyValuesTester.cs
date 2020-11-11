@@ -1,8 +1,7 @@
 using System;
 using FubuCore.Configuration;
+using Moq;
 using NUnit.Framework;
-using FubuTestingSupport;
-using Rhino.Mocks;
 
 namespace FubuCore.Testing.Configuration
 {
@@ -31,21 +30,21 @@ namespace FubuCore.Testing.Configuration
         [Test]
         public void value_miss()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
-            theValues.ForValue("random", action).ShouldBeFalse();
+            theValues.ForValue("random", action.Object).ShouldBeFalse();
 
-            action.AssertWasNotCalled(x => x.Invoke(null, null), x => x.IgnoreArguments());
+            action.Verify(x => x.Invoke(Arg<string>.Is.Anything, Arg<string>.Is.Anything), Times.Never());
         }
 
         [Test]
         public void value_hit()
         {
-            var action = MockRepository.GenerateMock<Action<string, string>>();
+            var action = new Mock<Action<string, string>>();
 
-            theValues.ForValue("a", action).ShouldBeTrue();
+            theValues.ForValue("a", action.Object).ShouldBeTrue();
 
-            action.AssertWasCalled(x => x.Invoke("a", "1"));
+            action.Verify(x => x.Invoke("a", "1"));
         }
 
         [Test]

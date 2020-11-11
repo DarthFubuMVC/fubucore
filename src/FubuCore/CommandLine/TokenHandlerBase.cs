@@ -2,8 +2,6 @@
 using System.ComponentModel;
 using System.Reflection;
 using FubuCore.Reflection;
-using System.Linq;
-using FubuCore;
 
 namespace FubuCore.CommandLine
 {
