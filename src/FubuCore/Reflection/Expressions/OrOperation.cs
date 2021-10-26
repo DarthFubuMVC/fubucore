@@ -99,7 +99,7 @@ namespace FubuCore.Reflection.Expressions
         protected override Expression VisitBinary(BinaryExpression exp)
         {
             var a = VisitMemberAccess((MemberExpression) exp.Left);
-            return Expression.Equal(a, exp.Right);    
+            return Expression.Equal(a, exp.Right, exp.IsLiftedToNull, exp.Method);    
         }
 
         protected override Expression VisitMemberAccess(MemberExpression m)

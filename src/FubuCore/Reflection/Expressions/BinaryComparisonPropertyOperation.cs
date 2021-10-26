@@ -19,6 +19,8 @@ namespace FubuCore.Reflection.Expressions
         public abstract string OperationName { get; }
         public abstract string Text { get; }
 
+        public virtual MethodInfo Method(object expected) => null;
+
         public Func<object, Expression<Func<T, bool>>> GetPredicateBuilder<T>(MemberExpression propertyPath)
         {
             return expected =>
@@ -29,7 +31,7 @@ namespace FubuCore.Reflection.Expressions
                     ? Expression.Constant(expected, propertyPath.Member.As<PropertyInfo>().PropertyType)
                     : Expression.Constant(expected);
 
-                BinaryExpression comparison = Expression.MakeBinary(_comparisonType, propertyPath, expectedHolder);
+                BinaryExpression comparison = Expression.MakeBinary(_comparisonType, propertyPath, expectedHolder, false, Method(expected));
                 ParameterExpression lambdaParameter = propertyPath.GetParameter<T>();
 
                 return Expression.Lambda<Func<T, bool>>(comparison, lambdaParameter);
