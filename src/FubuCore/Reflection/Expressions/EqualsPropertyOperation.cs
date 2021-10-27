@@ -14,7 +14,8 @@ namespace FubuCore.Reflection.Expressions
         {
         }
 
-        public override MethodInfo Method(object expected) => EqualityMethodCache[expected.GetType()];
+        public override MethodInfo Method(object expected) =>
+            expected != null ? EqualityMethodCache[expected.GetType()] : null;
 
         static MethodInfo LookupEqualityMethod(Type type)
         {

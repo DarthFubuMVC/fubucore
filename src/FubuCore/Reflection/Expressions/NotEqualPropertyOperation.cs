@@ -7,14 +7,15 @@ namespace FubuCore.Reflection.Expressions
 {
     public class NotEqualPropertyOperation : BinaryComparisonPropertyOperation
     {
-        static readonly Cache<Type, MethodInfo> EqualityMethodCache = new Cache<Type, MethodInfo>(LookupInequalityMethod);
+        static readonly Cache<Type, MethodInfo> InequalityMethodCache = new Cache<Type, MethodInfo>(LookupInequalityMethod);
 
         public NotEqualPropertyOperation()
             : base(ExpressionType.NotEqual)
         {
         }
 
-        public override MethodInfo Method(object expected) => EqualityMethodCache[expected.GetType()];
+        public override MethodInfo Method(object expected) =>
+            expected != null ? InequalityMethodCache[expected.GetType()] : null;
 
         static MethodInfo LookupInequalityMethod(Type type)
         {
