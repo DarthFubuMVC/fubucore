@@ -1,6 +1,6 @@
-using System;
 using FubuCore.Reflection.Expressions;
 using NUnit.Framework;
+using System;
 
 namespace FubuCore.Testing.Reflection.Expressions
 {
@@ -54,14 +54,35 @@ namespace FubuCore.Testing.Reflection.Expressions
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (Signature)) return false;
-            return Equals((Signature) obj);
+            if (obj is Signature) return Equals((Signature) obj);
+            return false;
         }
 
         public override int GetHashCode()
         {
             return (Name != null ? Name.GetHashCode() : 0);
         }
+
+        public static bool operator ==(Signature left, Signature right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Signature left, Signature right)
+        {
+            return !Equals(left, right);
+        }
+    }
+
+    public class ProxySignature : Signature
+    {
+        public ProxySignature(string name, string signedBy) 
+            : base(name)
+        {
+            SignedBy = signedBy;
+        }
+
+        public string SignedBy { get; set; }
     }
 
     [TestFixture]
@@ -87,6 +108,70 @@ namespace FubuCore.Testing.Reflection.Expressions
         public void should_not_succeed_when_the_property_contains_a_different_value()
         {
             var contract = Contract.For("Closed");
+            _builtPredicate(contract).ShouldBeFalse();
+        }
+    }
+
+    [TestFixture]
+    public class when_building_a_predicate_for_object_equality_with_operator_overload_on_base_class
+    {
+        private Func<Contract, bool> _builtPredicate;
+        private string signatureName;
+
+        [SetUp]
+        public void Setup()
+        {
+            signatureName = Guid.NewGuid().ToString();
+            var signature = new ProxySignature(signatureName, Guid.NewGuid().ToString());
+            var builder = new EqualsPropertyOperation();
+            _builtPredicate = builder.GetPredicateBuilder<Contract>(c => c.Signature)(signature).Compile();
+        }
+
+        [Test]
+        public void should_succeed_when_the_object_is_equal()
+        {
+            var contract = Contract.For("Open");
+            contract.Signature = new ProxySignature(signatureName, Guid.NewGuid().ToString());
+            _builtPredicate(contract).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_not_succeed_when_the_object_is_not_equal()
+        {
+            var contract = Contract.For("Open");
+            contract.Signature = new ProxySignature(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
+            _builtPredicate(contract).ShouldBeFalse();
+        }
+    }
+
+    [TestFixture]
+    public class when_building_a_predicate_for_object_equality_with_operator_overload_on_object
+    {
+        private Func<Contract, bool> _builtPredicate;
+        private string signatureName;
+
+        [SetUp]
+        public void Setup()
+        {
+            signatureName = Guid.NewGuid().ToString();
+            var signature = new Signature(signatureName);
+            var builder = new EqualsPropertyOperation();
+            _builtPredicate = builder.GetPredicateBuilder<Contract>(c => c.Signature)(signature).Compile();
+        }
+
+        [Test]
+        public void should_succeed_when_the_object_is_equal()
+        {
+            var contract = Contract.For("Open");
+            contract.Signature = new Signature(signatureName);
+            _builtPredicate(contract).ShouldBeTrue();
+        }
+
+        [Test]
+        public void should_not_succeed_when_the_object_is_not_equal()
+        {
+            var contract = Contract.For("Open");
+            contract.Signature = new Signature(Guid.NewGuid().ToString());
             _builtPredicate(contract).ShouldBeFalse();
         }
     }

@@ -183,6 +183,27 @@ namespace FubuCore.Testing.Reflection.Expressions
         }
 
         [Test]
+        public void should_work_for_non_primitive_collections_with_equality_overloads()
+        {
+            var sigs = new List<Signature>
+            {
+                new ProxySignature("rex", "joe")
+            };
+
+            var orish = new ComposableOrOperation();
+            orish.Set<Contract>(c => c.Part.IsUsed, true);
+            orish.Set<Contract>(c => c.Signature, sigs);
+
+            var x = orish.GetPredicateBuilder<Contract>();
+
+            var contract = new Contract();
+            contract.Part.IsUsed = false;
+            contract.Signature = new Signature("rex");
+
+            x.Compile()(contract).ShouldBeTrue();
+        }
+
+        [Test]
         public void should_work_for_two_where()
         {
             var orish = new ComposableOrOperation();
@@ -200,7 +221,6 @@ namespace FubuCore.Testing.Reflection.Expressions
             
             x.Compile()(contract).ShouldBeTrue();
         }
-
-
+        
     }
 }
