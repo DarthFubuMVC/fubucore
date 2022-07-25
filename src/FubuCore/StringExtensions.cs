@@ -184,6 +184,11 @@ namespace FubuCore
 
         public static bool IsValidNumber(this string number, CultureInfo culture)
         {
+            if (number == null || number.IsEmpty())
+            {
+                return false;
+            }
+
             string _validNumberPattern =
             @"^-?(?:\d+|\d{1,3}(?:" 
             + culture.NumberFormat.NumberGroupSeparator + 

@@ -141,6 +141,8 @@ namespace FubuCore.Testing
                                   "100,1",
                                   "100,1.01",
                                   "A,Jun.K",
+                                  "",
+                                  null
                               };
 
             numbers.Each(x => x.IsValidNumber(CultureInfo.CreateSpecificCulture("en-us")).ShouldBeFalse());

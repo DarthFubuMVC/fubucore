@@ -25,6 +25,11 @@ namespace FubuCore.Binding
             {
                 var rawValue = context.RawValueFromRequest.RawValue;
 
+                if (rawValue == null || !rawValue.ToString().IsValidNumber())
+                {
+                    return 0;
+                }
+
                 if (rawValue.GetType() == propertyType)
                 {
                     return rawValue;
